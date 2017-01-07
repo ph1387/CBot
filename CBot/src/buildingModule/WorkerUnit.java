@@ -228,7 +228,7 @@ class WorkerUnit {
 		}
 		return spaceFree;
 	}
-
+	
 	// ------------------------------ Getter / Setter
 
 	public Unit getUnit() {

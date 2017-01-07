@@ -91,6 +91,7 @@ public class ScoutCommandManager {
 			this.assignedScout.execute();
 		} catch (Exception e) {
 			System.out.println("---SCOUTCOMMANDMANAGER: error---");
+			e.printStackTrace();
 		}
 	}
 }

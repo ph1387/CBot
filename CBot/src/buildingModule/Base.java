@@ -12,8 +12,10 @@ import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import display.Display;
+import unitControlModule.SeperateUnitEventListener;
+import unitControlModule.UnitControlModule;
 
-class Base implements CBotBWEventListener {
+class Base implements CBotBWEventListener, SeperateUnitEventListener {
 	protected static boolean mineralsBlocked = false;
 	
 	private TilePosition tilePosition;
@@ -48,6 +50,7 @@ class Base implements CBotBWEventListener {
 		this.buildingList.add(base);
 
 		CBotBWEventDistributor.getInstance().addListener(this);
+		UnitControlModule.getInstance().addSeperateUnitEventListener(this);
 	}
 
 	// -------------------- Functions
@@ -249,6 +252,16 @@ class Base implements CBotBWEventListener {
 
 	// -------------------- Eventlisteners
 
+	// ------------------------------ Seperating a unit from a base
+	@Override
+	public void onSeperateUnit(Unit unit) {
+		for (WorkerUnit worker : this.workerList) {
+			if(worker.getUnit() == unit) {
+				this.workerList.remove(worker);
+			}
+		}
+	}
+	
 	// ------------------------------ Own CBotBWEventListener
 	@Override
 	public void onUnitDestroy(Unit unit) {
