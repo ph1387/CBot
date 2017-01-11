@@ -6,6 +6,7 @@ import bwapi.Game;
 import bwapi.Mirror;
 import bwta.BWTA;
 import core.Core;
+import enemyTrackerModule.EnemyTrackerModule;
 import unitControlModule.UnitControlModule;
 
 public class Init {
@@ -26,6 +27,7 @@ public class Init {
 			BuildingModule.getInstance();
 			BuildingOrderModule.getInstance();
 			UnitControlModule.getInstance();
+			EnemyTrackerModule.getInstance();
 
 			// Use BWTA to analyze map
 			BWTA.readMap();
