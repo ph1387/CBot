@@ -1,4 +1,4 @@
-package enemyTrackerModule;
+package unitTrackerModule;
 
 import bwapi.TilePosition;
 import bwapi.Unit;
