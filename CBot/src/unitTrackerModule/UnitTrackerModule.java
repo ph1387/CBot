@@ -12,6 +12,7 @@ import bwapi.Player;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
+import bwapi.WeaponType;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
@@ -20,9 +21,9 @@ import unitControlModule.UnitControlModule;
 public class UnitTrackerModule implements CBotBWEventListener {
 
 	private static UnitTrackerModule instance;
-	private static final int MAX_TIME_UPDATE_WAIT = 3;
+	private static final int MAX_TIME_UPDATE_WAIT = 1;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
-	private static final int MAX_ATTACK_TILE_RANGE = 3;
+	private static final int TILESIZE = 32;
 
 	private Integer lastUpdateTimestamp = null;
 
@@ -59,16 +60,17 @@ public class UnitTrackerModule implements CBotBWEventListener {
 
 		// Remove all outdated unitpositions
 		this.removeOutdatedEntries(this.enemyUnits);
-		
-		// Generate the lists of tilepositions which contain the attack power of the enemies and the players units 
-//		this.enemyAirAttackTilePositions = this.generateEnemyAirAttackTilePositions();
+
+		// Generate the lists of tilepositions which contain the attack power of
+		// the enemies and the players units
+		this.enemyAirAttackTilePositions = this.generateEnemyAirAttackTilePositions();
 		this.enemyGroundAttackTilePositions = this.generateEnemyGroundAttackTilePositions();
-//		this.playerAirAttackTilePositions = this.generatePlayerAirAttackTilePositions();
+		this.playerAirAttackTilePositions = this.generatePlayerAirAttackTilePositions();
 		this.playerGroundAttackTilePositions = this.generatePlayerGroundAttackTilePositions();
 	}
 
 	// Add visible units to the corresponding lists if they are not already in
-	// them
+	// them.
 	private void addVisibleUnits(List<EnemyUnit> unitList, List<EnemyUnit> buildingList) {
 		Game game = Core.getInstance().getGame();
 
@@ -104,10 +106,11 @@ public class UnitTrackerModule implements CBotBWEventListener {
 		Game game = Core.getInstance().getGame();
 		List<Unit> enemieUnits = game.enemy().getUnits();
 
-		// Since units get removed, start at the end of the list (-> left shifting)
+		// Since units get removed, start at the end of the list (-> left
+		// shifting)
 		for (int i = unitList.size() - 1; i >= 0; i--) {
 			EnemyUnit unit = unitList.get(i);
-			
+
 			if (game.isVisible(unit.getLastSeenTilePosition())) {
 				boolean missing = true;
 
@@ -142,115 +145,145 @@ public class UnitTrackerModule implements CBotBWEventListener {
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// Function used to generate the list of value tiles showing the air forces strength of the player units.
+
+	// Function used to generate the list of value tiles showing the air forces
+	// strength of the player units.
 	private List<ValueTilePosition> generatePlayerAirAttackTilePositions() {
-		return null;
+		List<ValueTilePosition> valueTiles = new ArrayList<ValueTilePosition>();
+
+		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+			if (unit.getType().airWeapon() != null && unit.getType().airWeapon().damageAmount() > 0) {
+				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles, unit.getType(),
+						unit.getType().airWeapon());
+			}
+		}
+		return valueTiles;
 	}
-	
-	// Function used to generate the list of value tiles showing the ground forces strength of the player units.
+
+	// Function used to generate the list of value tiles showing the ground
+	// forces strength of the player units.
 	private List<ValueTilePosition> generatePlayerGroundAttackTilePositions() {
 		List<ValueTilePosition> valueTiles = new ArrayList<ValueTilePosition>();
-		Player player = Core.getInstance().getPlayer();
-		
-		for (Unit unit : player.getUnits()) {
-			if(unit.getType().groundWeapon() != null && unit.getType().groundWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles, unit.getType());
+
+		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+			if (unit.getType().groundWeapon() != null && unit.getType().groundWeapon().damageAmount() > 0) {
+				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles, unit.getType(),
+						unit.getType().groundWeapon());
 			}
 		}
 		return valueTiles;
 	}
-	
-	// Function used to generate the list of value tiles showing the air forces strength of the enemy units and buildings.
+
+	// Function used to generate the list of value tiles showing the air forces
+	// strength of the enemy units and buildings.
 	private List<ValueTilePosition> generateEnemyAirAttackTilePositions() {
-		return null;
-	}
-	
-	// Function used to generate the list of value tiles showing the ground forces strength of the enemy units and buildings.
-	private List<ValueTilePosition> generateEnemyGroundAttackTilePositions() {
 		List<ValueTilePosition> valueTiles = new ArrayList<ValueTilePosition>();
-		
+
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
-			if(enemyUnit.getUnitType().groundWeapon() != null && enemyUnit.getUnitType().groundWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles, enemyUnit.getUnitType());
+			if (enemyUnit.getUnitType().airWeapon() != null
+					&& enemyUnit.getUnitType().airWeapon().damageAmount() > 0) {
+				this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
+						enemyUnit.getUnitType(), enemyUnit.getUnitType().airWeapon());
 			}
 		}
-		
+
 		// Buildings
 		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
-			if(enemyBuilding.getUnitType().groundWeapon() != null && enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles, enemyBuilding.getUnitType());
+			if (enemyBuilding.getUnitType().airWeapon() != null
+					&& enemyBuilding.getUnitType().airWeapon().damageAmount() > 0) {
+				this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+						enemyBuilding.getUnitType(), enemyBuilding.getUnitType().airWeapon());
 			}
 		}
 		return valueTiles;
 	}
-	
-	// Function for adding a units attack value to the corresponding valuetileposition list. The 
-	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, List<ValueTilePosition> valueTiles, UnitType unitType) {
-		// In an area around the last seen tileposition add the attack value proportional to the distance to the tiles
-		for(int i = - MAX_ATTACK_TILE_RANGE; i < MAX_ATTACK_TILE_RANGE; i++) {
-			for(int j = - MAX_ATTACK_TILE_RANGE; j < MAX_ATTACK_TILE_RANGE; j++) {
-				if(tilePosition.getX() + i > 0 && tilePosition.getY() + j > 0) {
-					// Try to find the valuetileposition inside the list created before. If it is not found, create a new instance
-					ValueTilePosition foundValueTilePosition = this.tryToFindTilePositionInValueList(valueTiles, tilePosition, i, j);
-					
-					// If no valuetileposition in the list is found, create a new one and add it to the list for further tests
-					if(foundValueTilePosition == null) {
-						foundValueTilePosition = new ValueTilePosition(new TilePosition(tilePosition.getX() + i, tilePosition.getY() + j));
+
+	// Function used to generate the list of value tiles showing the ground
+	// forces strength of the enemy units and buildings.
+	private List<ValueTilePosition> generateEnemyGroundAttackTilePositions() {
+		List<ValueTilePosition> valueTiles = new ArrayList<ValueTilePosition>();
+
+		// Units
+		for (EnemyUnit enemyUnit : this.enemyUnits) {
+			if (enemyUnit.getUnitType().groundWeapon() != null
+					&& enemyUnit.getUnitType().groundWeapon().damageAmount() > 0) {
+				this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
+						enemyUnit.getUnitType(), enemyUnit.getUnitType().groundWeapon());
+			}
+		}
+
+		// Buildings
+		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
+			if (enemyBuilding.getUnitType().groundWeapon() != null
+					&& enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0) {
+				this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+						enemyBuilding.getUnitType(), enemyBuilding.getUnitType().groundWeapon());
+			}
+		}
+		return valueTiles;
+	}
+
+	// Function for adding a units attack value to the corresponding
+	// valuetileposition list. The range is determined by the weapontype the
+	// unit is using. greater range has a bigger impact on tiles further away
+	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, List<ValueTilePosition> valueTiles,
+			UnitType unitType, WeaponType weaponType) {
+		// Calculate the weapon range in tiles
+		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange()) / Double.valueOf(TILESIZE));
+
+		// If the unit is a meele unit, the attack range is 0 and there will be
+		// no calculations regarding the valuetile lists. So the range has to be
+		// set to 1.
+		if (maxAttackTileRange == 0) {
+			maxAttackTileRange = 1;
+		}
+
+		// In an area around the last seen tileposition add the attack value
+		// proportional to the distance to the tiles
+		for (int i = -maxAttackTileRange; i < maxAttackTileRange; i++) {
+			for (int j = -maxAttackTileRange; j < maxAttackTileRange; j++) {
+				if (tilePosition.getX() + i > 0 && tilePosition.getY() + j > 0) {
+					// Try to find the valuetileposition inside the list created
+					// before. If it is not found, create a new instance
+					ValueTilePosition foundValueTilePosition = this.tryToFindTilePositionInValueList(valueTiles,
+							tilePosition, i, j);
+
+					// If no valuetileposition in the list is found, create a
+					// new one and add it to the list for further tests
+					if (foundValueTilePosition == null) {
+						foundValueTilePosition = new ValueTilePosition(
+								new TilePosition(tilePosition.getX() + i, tilePosition.getY() + j));
 						valueTiles.add(foundValueTilePosition);
 					}
-					
-					// Add the strength of the unit to the tiles value proportional to the distance between the units tile and the current tile
-					foundValueTilePosition.addToTileValue((int)(unitType.groundWeapon().damageAmount() / (Math.abs(Math.min(i, j)) + 1)));
+
+					// Add the strength of the unit to the tiles value
+					// proportional to the distance between the units tile and
+					// the current tile
+					foundValueTilePosition.addToTileValue(
+							(int) (unitType.groundWeapon().damageAmount() / (Math.max(Math.abs(i), Math.abs(j)) + 1)));
 				}
 			}
 		}
 	}
-	
-	// Function for finding a specific tileposition in the valuetileposition list
-	private ValueTilePosition tryToFindTilePositionInValueList(List<ValueTilePosition> valueTiles, TilePosition tilePosition, int i, int j) {
+
+	// Function for finding a specific tileposition in the valuetileposition
+	// list
+	private ValueTilePosition tryToFindTilePositionInValueList(List<ValueTilePosition> valueTiles,
+			TilePosition tilePosition, int i, int j) {
 		ValueTilePosition foundValueTilePosition = null;
-		
-		for(int k = 0; k < valueTiles.size() && foundValueTilePosition == null; k++) {
+
+		for (int k = 0; k < valueTiles.size() && foundValueTilePosition == null; k++) {
 			ValueTilePosition valueTilePosition = valueTiles.get(k);
-			
-			if(valueTilePosition.getTilePosition().getX() == tilePosition.getX() + i && valueTilePosition.getTilePosition().getY() == tilePosition.getY() + j) {
+
+			if (valueTilePosition.getTilePosition().getX() == tilePosition.getX() + i
+					&& valueTilePosition.getTilePosition().getY() == tilePosition.getY() + j) {
 				foundValueTilePosition = valueTilePosition;
 			}
 		}
 		return foundValueTilePosition;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	// ------------------------------ Getter / Setter
 
 	public List<EnemyUnit> getEnemyBuildings() {
@@ -283,8 +316,10 @@ public class UnitTrackerModule implements CBotBWEventListener {
 		// Update the display of those units
 		UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
 		UnitTrackerDisplay.showUnitsLastPosition(this.enemyUnits);
-		
-		// Update the display of the calculated combat values of the ground and air forces of the enemy and the player. Player has to the shown first, since the enemy list is empty.
+
+		// Update the display of the calculated combat values of the ground and
+		// air forces of the enemy and the player. Player has to the shown
+		// first, since the enemy list is empty.
 		UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
 		UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
 	}
