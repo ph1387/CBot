@@ -9,6 +9,7 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Chokepoint;
 import core.Core;
+import unitControlModule.SeperateUnitEventListener;
 import unitControlModule.scoutCommandManager.commands.Command;
 import unitControlModule.scoutCommandManager.commands.CommandGoal;
 import unitControlModule.scoutCommandManager.commands.ScoutCommandMove;
@@ -24,6 +25,12 @@ public class ScoutCommandManager {
 	// Requirementlist, which the object has to check before executing a command
 	private List<ScoutCommandMove> scoutGoalList = new ArrayList<ScoutCommandMove>();
 
+	private List<Object> scoutingFinishedListeners = new ArrayList<Object>();
+
+	public ScoutCommandManager() {
+		
+	}
+	
 	public ScoutCommandManager(Unit unit) {
 		this.assignedScout = new Scout(unit);
 	}
@@ -35,7 +42,7 @@ public class ScoutCommandManager {
 	public void generateBaseScoutingList() {
 		List<BaseLocation> baseLocations = BWTA.getBaseLocations();
 		TilePosition currentBaseTilePosition = Core.getInstance().getPlayer().getStartLocation();
-		
+
 		// Assign all base locations to a command for the scout
 		while (!baseLocations.isEmpty()) {
 			BaseLocation nearestBaseLocation = null;
@@ -74,24 +81,61 @@ public class ScoutCommandManager {
 	}
 
 	public void runCommands() {
-		// Test if the current command is finished before assigning the next
-		// command to the unit
-		try {
-			// The first command has to apply always. Check the stateCounter - 1
-			// afterwards since the previous action has to achieve its goal
-			// first
-			if (this.stateCounter == 0 || this.stateCounter < this.scoutCommandList.size()
-					&& this.scoutGoalList.get(stateCounter - 1).commandGoalReached()) {
+		if (this.assignedScout != null) {
+			// Test if the current command is finished before assigning the next
+			// command to the unit
+			try {
+				// The first command has to apply always. Check the stateCounter
+				// - 1 afterwards since the previous action has to achieve its
+				// goal first.
+				if (this.stateCounter == 0 || this.stateCounter < this.scoutCommandList.size()
+						&& this.scoutGoalList.get(stateCounter - 1).commandGoalReached()) {
 
-				this.assignedScout.setCommand(this.scoutCommandList.get(this.stateCounter));
-				this.stateCounter++;
+					this.assignedScout.setCommand(this.scoutCommandList.get(this.stateCounter));
+					this.stateCounter++;
+				}
+				// If all bases got checked, dispatch a event signaling the
+				// scout is not used anymore.
+				else if (this.stateCounter == this.scoutCommandList.size()
+						&& this.scoutGoalList.get(stateCounter - 1).commandGoalReached()) {
+					this.dispatchNewScoutingFinishedEvent(this.assignedScout.getUnit());
+					this.assignedScout = null;
+				}
+
+				if(this.assignedScout != null) {
+					// Execute the currently active command
+					this.assignedScout.execute();
+				}
+			} catch (Exception e) {
+				System.out.println("---SCOUTCOMMANDMANAGER: error---");
 			}
+		}
+	}
+	
+	// ------------------------------ Getter / Setter
+	
+	public void setAssignedScout(Scout assignedScout) {
+		this.assignedScout = assignedScout;
+	}
+	
+	public void setAssignedScout(Unit unit) {
+		this.assignedScout = new Scout(unit);
+	}
 
-			// Execute the currently active command
-			this.assignedScout.execute();
-		} catch (Exception e) {
-			System.out.println("---SCOUTCOMMANDMANAGER: error---");
-			e.printStackTrace();
+	// -------------------- Events
+
+	// ------------------------------ Separate a worker from a base
+	public synchronized void addScoutingFinishedEventListener(ScoutingFinishedEventListener listener) {
+		this.scoutingFinishedListeners.add(listener);
+	}
+
+	public synchronized void removeScoutingFinishedEventListener(ScoutingFinishedEventListener listener) {
+		this.scoutingFinishedListeners.remove(listener);
+	}
+
+	private synchronized void dispatchNewScoutingFinishedEvent(Unit unit) {
+		for (Object listener : this.scoutingFinishedListeners) {
+			((ScoutingFinishedEventListener) listener).onScoutingFinished(unit);
 		}
 	}
 }

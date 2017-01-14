@@ -15,7 +15,7 @@ public class UnitControlModule implements CBotBWEventListener {
 	private static UnitControlModule instance;
 	private static int WORKER_SCOUTING_TRIGGER = 9;
 
-	private ScoutCommandManager scoutCommandManager = null;
+	private ScoutCommandManager scoutCommandManager = new ScoutCommandManager();
 	private boolean scoutingNeeded = true;
 
 	private List<Unit> combatUnits = new ArrayList<Unit>();
@@ -33,6 +33,12 @@ public class UnitControlModule implements CBotBWEventListener {
 			instance = new UnitControlModule();
 		}
 		return instance;
+	}
+	
+	// ------------------------------ Getter / Setter
+	
+	public ScoutCommandManager getScoutCommandManager() {
+		return scoutCommandManager;
 	}
 
 	// -------------------- Eventlisteners
@@ -58,7 +64,7 @@ public class UnitControlModule implements CBotBWEventListener {
 			if(workerCount >= this.WORKER_SCOUTING_TRIGGER) {
 				for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 					if(unit.isGatheringMinerals() && this.scoutingNeeded) {
-						this.scoutCommandManager = new ScoutCommandManager(unit);
+						this.scoutCommandManager.setAssignedScout(unit);
 						this.scoutCommandManager.generateBaseScoutingList();
 						this.scoutingNeeded = false;
 						this.dispatchNewSperateUnitEvent(unit);
@@ -97,7 +103,7 @@ public class UnitControlModule implements CBotBWEventListener {
 	
 	// -------------------- Events
 
-	// ------------------------------ Seperate Unit
+	// ------------------------------ Separate a worker from a base
 	public synchronized void addSeperateUnitEventListener(SeperateUnitEventListener listener) {
 		this.seperateUnitListeners.add(listener);
 	}
@@ -107,7 +113,7 @@ public class UnitControlModule implements CBotBWEventListener {
 	}
 
 	private synchronized void dispatchNewSperateUnitEvent(Unit unit) {
-		for (Object listener : seperateUnitListeners) {
+		for (Object listener : this.seperateUnitListeners) {
 			((SeperateUnitEventListener) listener).onSeperateUnit(unit);
 		}
 	}

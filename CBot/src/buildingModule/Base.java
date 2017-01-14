@@ -170,8 +170,7 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 
 			if (nextBuilding.isAddon()) {
 				this.buildingAddonBuildList.add(this.buildingBuildQueue.poll());
-			} else if (this.player.minerals() >= nextBuilding.mineralPrice()
-					&& this.player.gas() >= nextBuilding.gasPrice()) {
+			} else {
 				// Worker must be collecting minerals at the moment since this
 				// is the default action
 				if (worker.getJob() == WorkerUnit.Action.GATHERING_MINERALS) {

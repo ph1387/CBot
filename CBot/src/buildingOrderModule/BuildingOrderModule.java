@@ -33,7 +33,7 @@ public class BuildingOrderModule implements CBotBWEventListener {
 		// Default building queue in the beginning
 		BuildingCommandManager beginningSender = new BuildingCommandManager();
 		beginningSender.addCommand(new BuildBuildingCommandWorkerCount(UnitType.Terran_Barracks, 11));
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 25; i++) {
 			beginningSender.addCommand(new BuildUnitCommand(UnitType.Terran_Marine));
 		}
 		beginningSender.addCommand(new BuildBuildingCommandWorkerCount(UnitType.Terran_Barracks, 13));
@@ -41,7 +41,9 @@ public class BuildingOrderModule implements CBotBWEventListener {
 		beginningSender.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Command_Center, 24));
 		beginningSender.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Factory, 26));
 		beginningSender.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Factory, 28));
-		beginningSender.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Machine_Shop, 28));
+		for (int i = 0; i < 10; i++) {
+			beginningSender.addCommand(new BuildUnitCommand(UnitType.Terran_Vulture));
+		}
 
 		this.currentBuildingCommandManager = beginningSender;
 		

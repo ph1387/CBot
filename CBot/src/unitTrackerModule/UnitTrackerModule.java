@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.swing.text.html.InlineView;
 import javax.xml.bind.ValidationEvent;
 
 import bwapi.Color;
@@ -16,6 +17,7 @@ import bwapi.WeaponType;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
+import display.Display;
 import unitControlModule.UnitControlModule;
 
 public class UnitTrackerModule implements CBotBWEventListener {
@@ -23,7 +25,6 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	private static UnitTrackerModule instance;
 	private static final int MAX_TIME_UPDATE_WAIT = 1;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
-	private static final int TILESIZE = 32;
 
 	private Integer lastUpdateTimestamp = null;
 
@@ -50,17 +51,17 @@ public class UnitTrackerModule implements CBotBWEventListener {
 
 	// Function for updating all lists regarding the enemies units and buildings
 	private void updateEnemyUnitLists() {
-		// Add new units to the corresponding lists
-		this.addVisibleUnits(this.enemyUnits, this.enemyBuildings);
-
 		// Update the known units based on the currently visible tiles (units
 		// and buildings)
 		this.verifyKnownTiles(this.enemyBuildings);
 		this.verifyKnownTiles(this.enemyUnits);
-
+		
+		// Add new units to the corresponding lists
+		this.addVisibleUnits(this.enemyUnits, this.enemyBuildings);
+		
 		// Remove all outdated unitpositions
 		this.removeOutdatedEntries(this.enemyUnits);
-
+		
 		// Generate the lists of tilepositions which contain the attack power of
 		// the enemies and the players units
 		this.enemyAirAttackTilePositions = this.generateEnemyAirAttackTilePositions();
@@ -73,12 +74,12 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	// them.
 	private void addVisibleUnits(List<EnemyUnit> unitList, List<EnemyUnit> buildingList) {
 		Game game = Core.getInstance().getGame();
-
+		
 		for (Unit unit : game.enemy().getUnits()) {
 			if (unit.isVisible()) {
 				EnemyUnit newEnemyUnit = new EnemyUnit(unit.getTilePosition(), unit, game.elapsedTime());
 
-				// Tileposition is not in list
+				// Tileposition has not been added to the corresponding list yet
 				if (unit.getType().isBuilding() && !this.isInUnitList(this.enemyBuildings, unit)) {
 					buildingList.add(newEnemyUnit);
 				} else if (!this.isInUnitList(this.enemyUnits, unit)) {
@@ -93,10 +94,11 @@ public class UnitTrackerModule implements CBotBWEventListener {
 		boolean isInList = false;
 
 		for (int i = 0; i < unitList.size() && !isInList; i++) {
-			if (unitList.get(i).getLastSeenTilePosition() == unit.getTilePosition()) {
+			if (unitList.get(i).getLastSeenTilePosition().equals(unit.getTilePosition())) {
 				isInList = true;
 			}
 		}
+		
 		return isInList;
 	}
 
@@ -230,7 +232,7 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, List<ValueTilePosition> valueTiles,
 			UnitType unitType, WeaponType weaponType) {
 		// Calculate the weapon range in tiles
-		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange()) / Double.valueOf(TILESIZE));
+		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange()) / Double.valueOf(Display.TILESIZE));
 
 		// If the unit is a meele unit, the attack range is 0 and there will be
 		// no calculations regarding the valuetile lists. So the range has to be
