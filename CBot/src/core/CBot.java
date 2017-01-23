@@ -8,7 +8,6 @@ import bwapi.Unit;
 import bwta.BWTA;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
-import display.Display;
 import init.Init;
 
 class CBot implements CBotBWEventListener {

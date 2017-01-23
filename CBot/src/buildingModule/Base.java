@@ -10,8 +10,8 @@ import bwapi.*;
 import bwta.BWTA;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
+import core.Display;
 import cBotBWEventDistributor.CBotBWEventDistributor;
-import display.Display;
 import unitControlModule.SeperateUnitEventListener;
 import unitControlModule.UnitControlModule;
 
@@ -257,6 +257,8 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 		for (WorkerUnit worker : this.workerList) {
 			if(worker.getUnit() == unit) {
 				this.workerList.remove(worker);
+				
+				System.out.println("Unit " + unit + " seperated from base " + this);
 			}
 		}
 	}

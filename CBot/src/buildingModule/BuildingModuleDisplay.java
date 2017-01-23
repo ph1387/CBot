@@ -1,7 +1,7 @@
 package buildingModule;
 
 import bwapi.Game;
-import display.Display;
+import core.Display;
 
 class BuildingModuleDisplay {
 	// Display the job of a worker

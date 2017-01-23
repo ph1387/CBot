@@ -1,24 +1,22 @@
 package unitControlModule;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-import buildingOrderModule.DistributeBuildingOrdersEventListener;
 import bwapi.*;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
-import unitControlModule.scoutCommandManager.ScoutCommandManager;
 
 public class UnitControlModule implements CBotBWEventListener {
 
 	private static UnitControlModule instance;
 	private static int WORKER_SCOUTING_TRIGGER = 9;
 
-	private ScoutCommandManager scoutCommandManager = new ScoutCommandManager();
-	private boolean scoutingNeeded = true;
+	private boolean workerOnceAssigned = false;
 
-	private List<Unit> combatUnits = new ArrayList<Unit>();
+	private HashSet<Unit> combatUnits = new HashSet<Unit>();
 	private List<Object> seperateUnitListeners = new ArrayList<Object>();
 
 	private UnitControlModule() {
@@ -34,12 +32,30 @@ public class UnitControlModule implements CBotBWEventListener {
 		}
 		return instance;
 	}
-	
-	// ------------------------------ Getter / Setter
-	
-	public ScoutCommandManager getScoutCommandManager() {
-		return scoutCommandManager;
+
+	// Function for transferring a single worker to the combat units, so that it
+	// is used to scout the enemy base at a certain worker amount.
+	private void tryTransferringWorkerToCombatUnits() {
+		int workerCount = 0;
+
+		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+			if (unit.getType().isWorker()) {
+				workerCount++;
+			}
+		}
+
+		if (workerCount >= WORKER_SCOUTING_TRIGGER) {
+			for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+				if (unit.isGatheringMinerals() && !this.workerOnceAssigned) {
+					this.combatUnits.add(unit);
+					this.workerOnceAssigned = true;
+					this.dispatchNewSperateUnitEvent(unit);
+				}
+			}
+		}
 	}
+
+	// ------------------------------ Getter / Setter
 
 	// -------------------- Eventlisteners
 
@@ -51,31 +67,9 @@ public class UnitControlModule implements CBotBWEventListener {
 
 	@Override
 	public void onFrame() {
-		if(this.scoutingNeeded) {
-			int workerCount = 0;
-			
-			// Get the worker count, if it is at a certain point, take a worker from the base and go scouting with it
-			for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-				if(unit.getType().isWorker()) {
-					workerCount++;
-				}
-			}
-			
-			if(workerCount >= this.WORKER_SCOUTING_TRIGGER) {
-				for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-					if(unit.isGatheringMinerals() && this.scoutingNeeded) {
-						this.scoutCommandManager.setAssignedScout(unit);
-						this.scoutCommandManager.generateBaseScoutingList();
-						this.scoutingNeeded = false;
-						this.dispatchNewSperateUnitEvent(unit);
-					}
-				}
-			}
-		}
-		
-		// Run the scout manager
-		if (this.scoutCommandManager != null) {
-			this.scoutCommandManager.runCommands();
+		// First scouting unit has to be a worker
+		if (this.combatUnits.isEmpty() && !this.workerOnceAssigned) {
+			this.tryTransferringWorkerToCombatUnits();
 		}
 	}
 
@@ -86,21 +80,14 @@ public class UnitControlModule implements CBotBWEventListener {
 
 	@Override
 	public void onUnitComplete(Unit unit) {
-		// Every time a combat unit is completed, add it to the list of combat
-		// units
-		if (!unit.getType().isBuilding() && !unit.getType().isWorker()) {
-			this.combatUnits.add(unit);
-		}
+
 	}
 
 	@Override
 	public void onUnitDestroy(Unit unit) {
-		// When a unit gets destroyed, test if it was a combat unit of the list
-		if (!unit.getType().isBuilding() && !unit.getType().isWorker()) {
-			this.combatUnits.remove(unit);
-		}
+
 	}
-	
+
 	// -------------------- Events
 
 	// ------------------------------ Separate a worker from a base
@@ -115,6 +102,8 @@ public class UnitControlModule implements CBotBWEventListener {
 	private synchronized void dispatchNewSperateUnitEvent(Unit unit) {
 		for (Object listener : this.seperateUnitListeners) {
 			((SeperateUnitEventListener) listener).onSeperateUnit(unit);
+
+			System.out.println("DISPATCHED");
 		}
 	}
 }

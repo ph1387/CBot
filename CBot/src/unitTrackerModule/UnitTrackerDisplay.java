@@ -7,7 +7,7 @@ import bwapi.Game;
 import bwapi.Position;
 import bwapi.TilePosition;
 import core.Core;
-import display.Display;
+import core.Display;
 
 class UnitTrackerDisplay {
 

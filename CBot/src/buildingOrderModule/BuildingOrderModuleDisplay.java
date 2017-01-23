@@ -7,7 +7,7 @@ import java.util.List;
 import buildingOrderModule.commands.BuildCommand;
 import buildingOrderModule.commands.Command;
 import core.Core;
-import display.Display;
+import core.Display;
 
 class BuildingOrderModuleDisplay {
 	

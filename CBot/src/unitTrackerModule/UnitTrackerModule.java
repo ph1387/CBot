@@ -17,7 +17,7 @@ import bwapi.WeaponType;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
-import display.Display;
+import core.Display;
 import unitControlModule.UnitControlModule;
 
 public class UnitTrackerModule implements CBotBWEventListener {

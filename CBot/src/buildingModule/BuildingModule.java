@@ -13,12 +13,10 @@ import bwta.BaseLocation;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
-import display.Display;
+import core.Display;
 import unitControlModule.UnitControlModule;
-import unitControlModule.scoutCommandManager.ScoutCommandManager;
-import unitControlModule.scoutCommandManager.ScoutingFinishedEventListener;
 
-public class BuildingModule implements CBotBWEventListener, DistributeBuildingOrdersEventListener, ScoutingFinishedEventListener {
+public class BuildingModule implements CBotBWEventListener, DistributeBuildingOrdersEventListener {
 	private static BuildingModule instance;
 	private static int MAX_BUILDING_SEARCH_RADIUS = 30;
 
@@ -35,7 +33,6 @@ public class BuildingModule implements CBotBWEventListener, DistributeBuildingOr
 
 		CBotBWEventDistributor.getInstance().addListener(this);
 		BuildingOrderModule.getInstance().addBuildingOrdersEventListener(this);
-		UnitControlModule.getInstance().getScoutCommandManager().addScoutingFinishedEventListener(this);
 	}
 
 	// -------------------- Functions
@@ -307,14 +304,5 @@ public class BuildingModule implements CBotBWEventListener, DistributeBuildingOr
 	public void onDistributeUnitBuildingOrders(UnitType unit) {
 		// Add the unit to the queue of units being build
 		this.unitBuildQueue.add(unit);
-	}
-
-	// ------------------------------ Scout commander
-	@Override
-	public void onScoutingFinished(Unit unit) {
-		// The main base receives the scout if it is a worker
-		if(unit.getType().isWorker()) {
-			this.basesPlayer.get(0).addWorker(unit);
-		}
 	}
 }
