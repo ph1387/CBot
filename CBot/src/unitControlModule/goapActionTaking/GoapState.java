@@ -1,6 +1,10 @@
 package unitControlModule.goapActionTaking;
 
 public class GoapState {
+	/**
+	 * GoapState.java --- States which the GoapActions use to build a graph
+	 * @author P H - 28.01.2017
+	 */
 	
 	public Integer importance = 0;
 	public String effect;

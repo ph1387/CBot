@@ -1,22 +1,33 @@
 package unitControlModule.goapActionTaking;
 
 import java.util.Queue;
-//TODO: REMOVE
+
 final class RunActionState implements IFSMState {
+	/**
+	 * RunActionState.java --- State on the FSM Stack
+	 * 
+	 * @author P H - 28.01.2017
+	 */
 
 	private Queue<GoapAction> currentActions;
-	
-	RunActionState(Queue<GoapAction> currentActions) {
+	private FSM fsm;
+
+	RunActionState(FSM fsm, Queue<GoapAction> currentActions) {
+		this.fsm = fsm;
 		this.currentActions = currentActions;
 	}
 
 	// -------------------- Functions
 
-	// Cycle trough all actions until an invalid one or the end of the Queue is
-	// reached. A false return type here causes the FSM to pop the state from
-	// its stack.
+	/**
+	 * Cycle trough all actions until an invalid one or the end of the Queue is
+	 * reached. A false return type here causes the FSM to pop the state from
+	 * its stack.
+	 * 
+	 * @see unitControlModule.goapActionTaking.IFSMState#runGoapAction(unitControlModule.goapActionTaking.GoapUnit)
+	 */
 	@Override
-	public boolean runGoapAction(GoapUnit goapUnit) {
+	public boolean runGoapAction(GoapUnit goapUnit) throws Exception {
 		boolean workingOnQueue = false;
 
 		if (this.currentActions.peek().isDone()) {
@@ -24,20 +35,25 @@ final class RunActionState implements IFSMState {
 		}
 
 		if (!this.currentActions.isEmpty()) {
-			try {
-				GoapAction currentAction = this.currentActions.peek();
+			GoapAction currentAction = this.currentActions.peek();
 
-				if(currentAction.target == null) {
-					throw new Exception("Target is null!");
-				} else if (currentAction.checkProceduralPrecondition(goapUnit) && !currentAction.performAction(goapUnit)) {
-					throw new Exception("Action failed!");
-				}
-				
-				workingOnQueue = true;
-			} catch (Exception e) {
-				e.printStackTrace(); // TODO: Maybe add a System.out
+			if (currentAction.target == null) {
+				throw new Exception("Target is null!");
+			} else if (currentAction.requiresInRange(goapUnit) && !currentAction.isInRange(goapUnit)) {
+				this.fsm.pushStack(new MoveToState(currentAction.target, currentAction));
+			} else if (currentAction.checkProceduralPrecondition(goapUnit)
+					&& !currentAction.performAction(goapUnit)) {
+				throw new Exception("Action not possible (ProceduralPrecondition)!");
 			}
+
+			workingOnQueue = true;
 		}
 		return workingOnQueue;
+	}
+	
+	// ------------------------------ Getter / Setter
+	
+	Queue<GoapAction> getCurrentActions() {
+		return this.currentActions;
 	}
 }

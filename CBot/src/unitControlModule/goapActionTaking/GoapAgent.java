@@ -2,7 +2,12 @@ package unitControlModule.goapActionTaking;
 
 import java.util.Queue;
 
-public class GoapAgent implements ImportantUnitGoalChangeEventListener, PlanCreatedEventListener {
+public class GoapAgent implements ImportantUnitGoalChangeEventListener, PlanCreatedEventListener, FSMPlanEventListener {
+	/**
+	 * GoapAgent.java --- The Agent which controls a units actions
+	 * 
+	 * @author P H - 28.01.2017
+	 */
 
 	private FSM fsm = new FSM();
 	private IdleState idleState = new IdleState();
@@ -35,20 +40,39 @@ public class GoapAgent implements ImportantUnitGoalChangeEventListener, PlanCrea
 	// -------------------- Eventlisteners
 
 	// ------------------------------ IdleState
-	// This event is needed to push real action Queues on the FSM-Stack. Has to
-	// pop the FSM-Stack, since the event fires before the return value of the
-	// state gets checked.
+	/**
+	 * This event is needed to push real action Queues on the FSM-Stack. Has to
+	 * pop the FSM-Stack, since the event fires before the return value of the
+	 * state gets checked.
+	 * 
+	 * @see unitControlModule.goapActionTaking.PlanCreatedEventListener#onPlanCreated(java.util.Queue)
+	 */
 	@Override
 	public void onPlanCreated(Queue<GoapAction> plan) {
 		this.fsm.popStack();
-		this.fsm.pushStack(new RunActionState(plan));
+		this.fsm.pushStack(new RunActionState(this.fsm, plan));
 	}
 
 	// ------------------------------ GoapUnit
-	// This event is needed to change a current goal to a new one, while keeping
-	// the old one on the FSM-Stack for its later Queue execution.
+	/**
+	 * This event is needed to change a current goal to a new one, while keeping
+	 * the old one on the FSM-Stack for its later Queue execution.
+	 * 
+	 * @see unitControlModule.goapActionTaking.ImportantUnitGoalChangeEventListener#onImportantUnitGoalChange(unitControlModule.goapActionTaking.GoapState)
+	 */
 	@Override
 	public void onImportantUnitGoalChange(GoapState newGoalState) {
 		this.fsm.pushStack(this.idleState);
+	}
+
+	// ------------------------------ FSM
+	@Override
+	public void onPlanFailed(Queue<GoapAction> actions) {
+		this.assignedGoapUnit.goapPlanFailed(actions);
+	}
+
+	@Override
+	public void onPlanFinished(Queue<GoapAction> actions) {
+		this.assignedGoapUnit.goapPlanFinished();
 	}
 }
