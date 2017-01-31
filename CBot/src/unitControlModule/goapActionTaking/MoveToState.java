@@ -1,17 +1,20 @@
 package unitControlModule.goapActionTaking;
 
+/**
+ * MoveToState.java --- State on the FSM Stack
+ * 
+ * @author P H - 28.01.2017
+ */
 final class MoveToState implements IFSMState {
-	/**
-	 * MoveToState.java --- State on the FSM Stack
-	 * 
-	 * @author P H - 28.01.2017
-	 */
 
-	Object target;
 	GoapAction currentAction;
 
-	MoveToState(Object target, GoapAction currentAction) {
-		this.target = target;
+	/**
+	 * @param currentAction
+	 *            the action which requires the unit to be in a certain range to
+	 *            its target.
+	 */
+	MoveToState(GoapAction currentAction) {
 		this.currentAction = currentAction;
 	}
 
@@ -23,15 +26,15 @@ final class MoveToState implements IFSMState {
 	 */
 	@Override
 	public boolean runGoapAction(GoapUnit goapUnit) {
-		boolean movingFinished = false;
+		boolean stillMoving = true;
 
-		if (!this.currentAction.requiresInRange(goapUnit) || this.currentAction.isInRange(goapUnit)
+		if ((this.currentAction.requiresInRange(goapUnit) && this.currentAction.isInRange(goapUnit))
 				|| this.currentAction.target == null) {
-			movingFinished = true;
+			stillMoving = false;
 		} else {
-			goapUnit.moveTo(this.target);
+			goapUnit.moveTo(this.currentAction.target);
 		}
-		return movingFinished;
+		return stillMoving;
 	}
 
 }

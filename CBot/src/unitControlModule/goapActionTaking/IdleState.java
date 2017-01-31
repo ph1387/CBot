@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * IdleState.java --- State on the FSM Stack
+ * 
+ * @author P H - 28.01.2017
+ */
 class IdleState implements IFSMState {
-	/**
-	 * IdleState.java --- State on the FSM Stack
-	 * 
-	 * @author P H - 28.01.2017
-	 */
 
 	private List<GoapState> previousGoalState;
 	private HashSet<GoapState> previousWorldState;
@@ -41,19 +41,22 @@ class IdleState implements IFSMState {
 
 		// Any state changed causes the idle state to try to plan a new Queue of
 		// GoapActions
-		if (defaultValuesSet || !this.previousGoalState.equals(goapUnit.getGoalState())
-				|| !this.previousWorldState.equals(goapUnit.getWorldState())
-				|| !this.previousAvailableActions.equals(goapUnit.getAvailableActions())) {
-			Queue<GoapAction> plannedQueue = GoapPlanner.plan(goapUnit);
+		// if (defaultValuesSet ||
+		// !this.previousGoalState.equals(goapUnit.getGoalState())
+		// || !this.previousWorldState.equals(goapUnit.getWorldState())
+		// ||
+		// !this.previousAvailableActions.equals(goapUnit.getAvailableActions()))
+		// {
+		Queue<GoapAction> plannedQueue = GoapPlanner.plan(goapUnit);
 
-			if (plannedQueue != null) {
-				this.dispatchNewPlanCreatedEvent(plannedQueue);
-			} else {
-				// No plan was created = no combination of the states needs to
-				// be planned for the current goals
-				this.copyLists(goapUnit);
-			}
+		if (plannedQueue != null) {
+			this.dispatchNewPlanCreatedEvent(plannedQueue);
+		} else {
+			// No plan was created = no combination of the states needs to
+			// be planned for the current goals
+			this.copyLists(goapUnit);
 		}
+		// }
 
 		// Returning false would result in the RunActionState, which gets added
 		// to the Stack by the Agent, to be removed.

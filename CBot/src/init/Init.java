@@ -38,6 +38,7 @@ public class Init {
 			game.setLocalSpeed(GAME_SPEED);
 		} catch (Exception e) {
 			System.out.println("---INIT FAILED---");
+			e.printStackTrace();
 			successful = false;
 		}
 		return successful;

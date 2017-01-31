@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
+/**
+ * FSM.java --- FSM for all unit states
+ * 
+ * @author P H - 28.01.2017
+ */
 final class FSM {
-	/**
-	 * FSM.java --- FSM for all unit states
-	 * 
-	 * @author P H - 28.01.2017
-	 */
 
 	private Stack<IFSMState> states = new Stack<IFSMState>();
 	private List<Object> planEventListeners = new ArrayList<Object>();
@@ -46,6 +46,7 @@ final class FSM {
 			}
 
 			// TODO: Possible Change: Add System.out
+			e.printStackTrace();
 		}
 	}
 

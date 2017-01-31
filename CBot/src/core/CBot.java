@@ -22,7 +22,11 @@ class CBot implements CBotBWEventListener {
 
 	// -------------------- Functions
 
-	// Singleton function
+	/**
+	 * Singleton function.
+	 * 
+	 * @return instance of the class.
+	 */
 	public static CBot getInstance() {
 		if (instance == null) {
 			instance = new CBot();
@@ -45,6 +49,7 @@ class CBot implements CBotBWEventListener {
 			System.out.println("---RUN: success---");
 		} catch(Exception e) {
 			System.out.println("---RUN: failed---");
+			e.printStackTrace();
 		}
 	}
 
@@ -63,6 +68,7 @@ class CBot implements CBotBWEventListener {
 			System.out.println("---STARTUP: success---");
 		} catch (Exception e) {
 			System.out.println("---STARTUP: failed---");
+			e.printStackTrace();
 		}
 	}
 

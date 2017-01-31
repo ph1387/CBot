@@ -84,7 +84,7 @@ class BuildingCommandManager {
 			this.commandList.add(index, command);
 			this.requirementList.add(index, requirement);
 		} catch(Exception e) {
-			System.out.println("---BUILDINGCOMMANDMANAGER: failed to insert command at index [" + index + "]---");
+			e.printStackTrace();
 		}
 	}
 
@@ -97,7 +97,7 @@ class BuildingCommandManager {
 				stateCounter++;
 			}
 		} catch (Exception e) {
-			System.out.println("---BUILDINGCOMMANDMANAGER: error---");
+			e.printStackTrace();
 		}
 	}
 	

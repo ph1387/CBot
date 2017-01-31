@@ -136,9 +136,8 @@ class WorkerUnit {
 		// If a location is found, assign the construction job to this worker
 		if (buildLocation != null) {
 			this.setConstructionJob(new ConstructionJob(building, buildLocation));
-
-			System.out.println("CONSTRUCTION SET: " + this.getUnit() + " - " + buildLocation + " - " + building);
 		} else {
+			// TODO: REMOVE System.out
 			System.out.println("---CONSTRUCTION SET: fail, build location was null---");
 		}
 	}
@@ -169,7 +168,7 @@ class WorkerUnit {
 							}
 						}
 					} catch (Exception e) {
-						System.out.println("---BUILDINGLOCATION: error---");
+						e.printStackTrace();
 					}
 				}
 			}
@@ -177,6 +176,7 @@ class WorkerUnit {
 			counter++;
 		}
 		
+		// TODO: REMOVE System.out
 		if(buildLocation == null) {
 			System.out.println("---BUILDINGLOCATION: No building location found! " + building + " ---");
 		} else if(counter == counterMax) {

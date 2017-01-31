@@ -4,24 +4,40 @@ import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 
-class EnemyUnit {
-	
+/**
+ * EnemyUnit.java --- Used for storing positions mapped to enemy units and
+ * timeStamps.
+ * 
+ * @author P H - 31.01.2017
+ *
+ */
+public class EnemyUnit {
+
 	private TilePosition lastSeenTilePosition;
 	private Unit unit;
 	private int timestampLastSeen = 0;
 	private UnitType unitType;
-	
+
+	/**
+	 * @param lastSeenTilePosition
+	 *            the TilePosition the unit was last seen at.
+	 * @param unit
+	 *            the unit which was seen. -> If the unit is in the fog of war
+	 *            this value becomes null.
+	 * @param timestampLastSeen
+	 *            the time the unit was last seen.
+	 */
 	public EnemyUnit(TilePosition lastSeenTilePosition, Unit unit, int timestampLastSeen) {
 		this.lastSeenTilePosition = lastSeenTilePosition;
 		this.unit = unit;
 		this.timestampLastSeen = timestampLastSeen;
 		this.unitType = this.unit.getType();
 	}
-	
+
 	// -------------------- Functions
-	
+
 	// -------------------- Getter / Setter
-	
+
 	public TilePosition getLastSeenTilePosition() {
 		return lastSeenTilePosition;
 	}
@@ -41,7 +57,7 @@ class EnemyUnit {
 	public Unit getUnit() {
 		return unit;
 	}
-	
+
 	public UnitType getUnitType() {
 		return this.unitType;
 	}

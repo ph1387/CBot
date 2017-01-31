@@ -2,18 +2,21 @@ package unitControlModule.goapActionTaking;
 
 import java.util.HashSet;
 
+/**
+ * GoapAction.java --- Superclass for all actions a unit can perform
+ * 
+ * @author P H - 28.01.2017
+ */
 public abstract class GoapAction {
-	/**
-	 * GoapAction.java --- Superclass for all actions a unit can perform
-	 * 
-	 * @author P H - 28.01.2017
-	 */
 
 	protected Object target;
 
 	private HashSet<GoapState> preconditions = new HashSet<GoapState>();
 	private HashSet<GoapState> effects = new HashSet<GoapState>();
 
+	/**
+	 * @param target the target of the action. Since "Object" is being used this is NOT type safe!
+	 */
 	public GoapAction(Object target) {
 		this.target = target;
 	}
@@ -34,7 +37,16 @@ public abstract class GoapAction {
 
 	protected abstract void reset();
 
-	protected abstract boolean isDone();
+	/**
+	 * Checks if the current action of the GoapAction Queue is finished. Gets
+	 * called until it returns true.
+	 *
+	 * @param goapUnit
+	 *            the unit the action is checked for.
+	 * @return true or false depending on the success of the action. Returning
+	 *         true causes the swap to the next action in the Queue.
+	 */
+	protected abstract boolean isDone(GoapUnit goapUnit);
 
 	protected abstract boolean performAction(GoapUnit goapUnit);
 
@@ -55,14 +67,60 @@ public abstract class GoapAction {
 		return generateBaseCost(goapUnit) + generateCostRelativeToTarget(goapUnit);
 	}
 
+	/**
+	 * Defines the base cost of the action.
+	 * 
+	 * @param goapUnit
+	 *            the unit the action is being executed from.
+	 * @return the base cost of the action which is added to the cost relative
+	 *         to the target.
+	 */
 	protected abstract float generateBaseCost(GoapUnit goapUnit);
 
+	/**
+	 * Defines the relative cost of the action.
+	 * 
+	 * @param goapUnit
+	 *            the unit the action is being executed from.
+	 * @return the relative cost of the action in relation to the current
+	 *         target, which is added to the bast cost.
+	 */
 	protected abstract float generateCostRelativeToTarget(GoapUnit goapUnit);
 
+	/**
+	 * Gets called to determine if the preconditions of an action are met. If
+	 * they are not, the action will not be taken in consideration for the
+	 * generation of the action graph.
+	 * 
+	 * @param goapUnit
+	 *            the unit the action is being executed from.
+	 * @return true or false depending if the action can be taken in the first
+	 *         place.
+	 */
 	protected abstract boolean checkProceduralPrecondition(GoapUnit goapUnit);
 
+	/**
+	 * Defines if the unit needs to be in a certain range in relation to the
+	 * target to execute the action.
+	 * 
+	 * @param goapUnit
+	 *            the unit the action is being executed from.
+	 * @return true or false depending if the action requires the unit to be in
+	 *         a certain range near the target.
+	 */
 	protected abstract boolean requiresInRange(GoapUnit goapUnit);
 
+	/**
+	 * Function to determine if the unit is in a certain range. Only gets called
+	 * if the action requires to be in range relative to the target.
+	 * 
+	 * @see #requiresInRange(GoapUnit goapUnit)
+	 * 
+	 * @param goapUnit
+	 *            the unit the action is being executed from.
+	 * @return true or false depending if the unit is in range to execute the
+	 *         action.
+	 */
 	protected abstract boolean isInRange(GoapUnit goapUnit);
 
 	// ------------------------------ Getter / Setter

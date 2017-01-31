@@ -18,7 +18,11 @@ public class Core {
 	
 	// -------------------- Functions
 	
-	// Singleton function
+	/**
+	 * Singleton function.
+	 * 
+	 * @return instance of the class.
+	 */
 	public static Core getInstance() {
 		if(instance == null) {
 			instance = new Core();

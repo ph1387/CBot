@@ -17,6 +17,8 @@ public class CBotBWEventDistributor extends DefaultBWListener {
 	public static CBotBWEventDistributor instance;
 
 	private List<Object> listeners = new ArrayList<Object>();
+	private List<Object> endListeners = new ArrayList<Object>();
+	
 	// Wait until the first frame passed, so that the start units and minerals
 	// do not get added to the lists
 	private boolean firstFrameOver = false;
@@ -65,15 +67,32 @@ public class CBotBWEventDistributor extends DefaultBWListener {
 			this.dispatchNewUnitDestroyEvent(unit);
 		}
 	}
-
+	
+	@Override
+	public void onEnd(boolean value) {
+		super.onEnd(value);
+		
+		this.disPatchNewEndEvent(value);
+	}
+	
 	// -------------------- Events
 
+	// ------------------------------ General Events
 	public synchronized void addListener(Object listener) {
 		this.listeners.add(listener);
 	}
 
 	public synchronized void removeListener(Object listener) {
 		this.listeners.remove(listener);
+	}
+	
+	// ------------------------------ End of the Application
+	public synchronized void addEndListener(Object listener) {
+		this.endListeners.add(listener);
+	}
+
+	public synchronized void removeEndListener(Object listener) {
+		this.endListeners.remove(listener);
 	}
 
 	// ------------------------------ Unit completed
@@ -108,6 +127,13 @@ public class CBotBWEventDistributor extends DefaultBWListener {
 	private synchronized void dispatchNewUnitDestroyEvent(Unit unit) {
 		for (Object listener : this.listeners) {
 			((CBotBWEventListener) listener).onUnitDestroy(unit);
+		}
+	}
+	
+	// ------------------------------ End
+	private synchronized void disPatchNewEndEvent(boolean value) {
+		for (Object listener : this.endListeners) {
+			((CBotBWEndEventListener) listener).onEnd(value);
 		}
 	}
 }

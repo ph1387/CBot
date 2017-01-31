@@ -8,12 +8,12 @@ import java.util.List;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
+/**
+ * GraphNode.java --- Node on the JGraph
+ * 
+ * @author P H - 28.01.2017
+ */
 class GraphNode {
-	/**
-	 * GraphNode.java --- Node on the JGraph
-	 * 
-	 * @author P H - 28.01.2017
-	 */
 
 	GoapAction action = null;
 
@@ -22,11 +22,25 @@ class GraphNode {
 	List<GraphPath<GraphNode, DefaultWeightedEdge>> pathsToThisNode = new ArrayList<GraphPath<GraphNode, DefaultWeightedEdge>>();
 	private Hashtable<GraphPath<GraphNode, DefaultWeightedEdge>, HashSet<GoapState>> storedEffectStates = new Hashtable<>();
 
+	/**
+	 * @param preconditions
+	 *            the HashSet of preconditions the node has. Each preconditions
+	 *            has to be met before another node can be connected to this
+	 *            node.
+	 * @param effects
+	 *            the HashSet of effects the node has on the graph. Effects get
+	 *            added together along the graph to hopefully meet a goalState.
+	 */
 	GraphNode(HashSet<GoapState> preconditions, HashSet<GoapState> effects) {
 		this.preconditions = preconditions;
 		this.effects = effects;
 	}
 
+	/**
+	 * @param goapAction
+	 *            the action whose effects and preconditions are being used to
+	 *            define the node.
+	 */
 	GraphNode(GoapAction goapAction) {
 		if (goapAction != null) {
 			this.preconditions = goapAction.getPreconditions();

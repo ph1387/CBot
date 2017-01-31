@@ -12,13 +12,13 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.GraphWalk;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
+/**
+ * GoapPlanner.java --- Class for generating a Queue of GoapActions using the
+ * JGraphT library.
+ * 
+ * @author P H - 28.01.2017
+ */
 class GoapPlanner {
-	/**
-	 * GoapPlanner.java --- Class for generating a Queue of GoapActions using
-	 * the JGraphT library.
-	 * 
-	 * @author P H - 28.01.2017
-	 */
 
 	// -------------------- Functions
 
@@ -198,7 +198,8 @@ class GoapPlanner {
 
 		addDefaultEdges(graph, startNode, nodesToWorkOn);
 
-		// TODO: Possible Change: Add a HashSet to keep track of all nodes already
+		// TODO: Possible Change: Add a HashSet to keep track of all nodes
+		// already
 		// connected once so that those nodes do not get added to the queue
 		// again. -> performance!
 

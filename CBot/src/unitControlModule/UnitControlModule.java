@@ -3,29 +3,51 @@ package unitControlModule;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import bwapi.*;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
+import unitControlModule.goapActionTaking.GoapAgent;
 
+/**
+ * UnitControlModule.java --- Module for controlling the player units
+ * 
+ * @author P H - 29.01.2017
+ *
+ */
 public class UnitControlModule implements CBotBWEventListener {
 
 	private static UnitControlModule instance;
 	private static int WORKER_SCOUTING_TRIGGER = 9;
 
 	private boolean workerOnceAssigned = false;
+	boolean aiThreadRunning = true;
 
-	private HashSet<Unit> combatUnits = new HashSet<Unit>();
+	// Units the AIThread is going to assign to GoapAgents / removes from them.
+	ConcurrentLinkedQueue<Unit> newCombatUnits = new ConcurrentLinkedQueue<Unit>();
+	ConcurrentLinkedQueue<Unit> unitsDead = new ConcurrentLinkedQueue<Unit>();
+
 	private List<Object> seperateUnitListeners = new ArrayList<Object>();
 
 	private UnitControlModule() {
+		GoapAIThread aiThread = new GoapAIThread();
+
+		aiThread.start();
+
 		CBotBWEventDistributor.getInstance().addListener(this);
 	}
 
 	// -------------------- Functions
 
-	// Singleton function
+	/**
+	 * Singleton function.
+	 * 
+	 * @return instance of the class.
+	 */
 	public static UnitControlModule getInstance() {
 		if (instance == null) {
 			instance = new UnitControlModule();
@@ -33,8 +55,11 @@ public class UnitControlModule implements CBotBWEventListener {
 		return instance;
 	}
 
-	// Function for transferring a single worker to the combat units, so that it
-	// is used to scout the enemy base at a certain worker amount.
+	// TODO: Implementation: tryTransferringWorkerToCombatUnits
+	/**
+	 * Function for transferring a single worker to the combat units, so that it
+	 * is used to scout the enemy base at a certain worker amount.
+	 */
 	private void tryTransferringWorkerToCombatUnits() {
 		int workerCount = 0;
 
@@ -46,10 +71,22 @@ public class UnitControlModule implements CBotBWEventListener {
 
 		if (workerCount >= WORKER_SCOUTING_TRIGGER) {
 			for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-				if (unit.isGatheringMinerals() && !this.workerOnceAssigned) {
-					this.combatUnits.add(unit);
-					this.workerOnceAssigned = true;
+
+				// TODO: REMOVE
+				System.out.println("UNIT: " + unit + " " + unit.getType() + " " + unit.getType().isWorker() + " "
+						+ unit.isGatheringMinerals() + " " + unit.isCompleted() + " " + this.workerOnceAssigned);
+				// Unit references are still not the same
+
+				if (unit.getType().isWorker() && unit.isGatheringMinerals() && unit.isCompleted()
+						&& !this.workerOnceAssigned) {
+
+					// TODO: REMOVE
+					System.out.println("CHOSEN: " + unit);
+
 					this.dispatchNewSperateUnitEvent(unit);
+					// TODO: References are not equal
+					// this.newCombatUnits.add(unit);
+					this.workerOnceAssigned = true;
 				}
 			}
 		}
@@ -67,10 +104,15 @@ public class UnitControlModule implements CBotBWEventListener {
 
 	@Override
 	public void onFrame() {
+
+		// TODO: Unit references do not match!
+		// Also Nullpointer at units target! this.action == null in actions
+		// -> Be careful!
+
 		// First scouting unit has to be a worker
-		if (this.combatUnits.isEmpty() && !this.workerOnceAssigned) {
-			this.tryTransferringWorkerToCombatUnits();
-		}
+		// if (!this.workerOnceAssigned) {
+		// this.tryTransferringWorkerToCombatUnits();
+		// }
 	}
 
 	@Override
@@ -78,14 +120,24 @@ public class UnitControlModule implements CBotBWEventListener {
 
 	}
 
+	/**
+	 * OnUnitComplete does also trigger for enemy units!
+	 * 
+	 * @see cBotBWEventDistributor.CBotBWEventListener#onUnitComplete(bwapi.Unit)
+	 */
 	@Override
 	public void onUnitComplete(Unit unit) {
-
+		if (unit.getPlayer() == Core.getInstance().getPlayer() && !unit.getType().isBuilding()
+				&& !unit.getType().isWorker()) {
+			this.newCombatUnits.add(unit);
+		}
 	}
 
 	@Override
 	public void onUnitDestroy(Unit unit) {
-
+		if (!unit.getType().isBuilding() && !unit.getType().isWorker()) {
+			this.unitsDead.add(unit);
+		}
 	}
 
 	// -------------------- Events
@@ -103,7 +155,8 @@ public class UnitControlModule implements CBotBWEventListener {
 		for (Object listener : this.seperateUnitListeners) {
 			((SeperateUnitEventListener) listener).onSeperateUnit(unit);
 
-			System.out.println("DISPATCHED");
+			// TODO: REMOVE System.out
+			System.out.println("Tried to seperate worker.");
 		}
 	}
 }

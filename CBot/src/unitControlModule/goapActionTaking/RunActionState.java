@@ -2,16 +2,22 @@ package unitControlModule.goapActionTaking;
 
 import java.util.Queue;
 
+/**
+ * RunActionState.java --- State on the FSM Stack
+ * 
+ * @author P H - 28.01.2017
+ */
 final class RunActionState implements IFSMState {
-	/**
-	 * RunActionState.java --- State on the FSM Stack
-	 * 
-	 * @author P H - 28.01.2017
-	 */
 
 	private Queue<GoapAction> currentActions;
 	private FSM fsm;
 
+	/**
+	 * @param fsm
+	 *            the FSM on which all states are being stacked.
+	 * @param currentActions
+	 *            the Queue of actions to be taken in order to archive a goal.
+	 */
 	RunActionState(FSM fsm, Queue<GoapAction> currentActions) {
 		this.fsm = fsm;
 		this.currentActions = currentActions;
@@ -30,7 +36,7 @@ final class RunActionState implements IFSMState {
 	public boolean runGoapAction(GoapUnit goapUnit) throws Exception {
 		boolean workingOnQueue = false;
 
-		if (this.currentActions.peek().isDone()) {
+		if (this.currentActions.peek().isDone(goapUnit)) {
 			this.currentActions.poll();
 		}
 
@@ -40,9 +46,8 @@ final class RunActionState implements IFSMState {
 			if (currentAction.target == null) {
 				throw new Exception("Target is null!");
 			} else if (currentAction.requiresInRange(goapUnit) && !currentAction.isInRange(goapUnit)) {
-				this.fsm.pushStack(new MoveToState(currentAction.target, currentAction));
-			} else if (currentAction.checkProceduralPrecondition(goapUnit)
-					&& !currentAction.performAction(goapUnit)) {
+				this.fsm.pushStack(new MoveToState(currentAction));
+			} else if (currentAction.checkProceduralPrecondition(goapUnit) && !currentAction.performAction(goapUnit)) {
 				throw new Exception("Action not possible (ProceduralPrecondition)!");
 			}
 
@@ -50,9 +55,9 @@ final class RunActionState implements IFSMState {
 		}
 		return workingOnQueue;
 	}
-	
+
 	// ------------------------------ Getter / Setter
-	
+
 	Queue<GoapAction> getCurrentActions() {
 		return this.currentActions;
 	}

@@ -37,7 +37,11 @@ public class BuildingModule implements CBotBWEventListener, DistributeBuildingOr
 
 	// -------------------- Functions
 
-	// Singleton function
+	/**
+	 * Singleton function.
+	 * 
+	 * @return instance of the class.
+	 */
 	public static BuildingModule getInstance() {
 		if (instance == null) {
 			instance = new BuildingModule();
@@ -175,7 +179,7 @@ public class BuildingModule implements CBotBWEventListener, DistributeBuildingOr
 			
 			freeWorker.setConstructionJob(new ConstructionJob(this.buildingBuildQueue.poll(), newBaseLocation.getTilePosition()));
 		} catch (Exception e) {
-			System.out.println("---COMMANDCENTERCONSTRUCTION: error---");
+			e.printStackTrace();
 		}
 	}
 	
@@ -237,10 +241,12 @@ public class BuildingModule implements CBotBWEventListener, DistributeBuildingOr
 		
 	}
 
+	// TODO: Possible Change: Own function
+	// OnUnitComplete does also trigger for enemy units!
 	@Override
 	public void onUnitComplete(Unit unit) {
 		// Assign buildings and workers to the closest base they are build at
-		if (!unit.getType().isNeutral()) {
+		if (!unit.getType().isNeutral() && unit.getPlayer() == Core.getInstance().getPlayer()) {
 			// If the new Unit is a base do not assign it to another base
 			if (unit.getType() == UnitType.Terran_Command_Center) {
 				if (this.basesPlayer.isEmpty()) {

@@ -17,7 +17,7 @@ import unitControlModule.UnitControlModule;
 
 class Base implements CBotBWEventListener, SeperateUnitEventListener {
 	protected static boolean mineralsBlocked = false;
-	
+
 	private TilePosition tilePosition;
 	private Player player;
 	private Game game;
@@ -81,7 +81,7 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 			this.updateWorkers();
 			this.updateBuildings();
 		} catch (Exception e) {
-			System.out.println("---BASE: update failed---");
+			e.printStackTrace();
 		}
 	}
 
@@ -99,12 +99,12 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 
 	// Set actions of all buildings accordingly
 	private void updateBuildings() {
-		if(!this.mineralsBlocked) {
+		if (!this.mineralsBlocked) {
 			for (Unit building : buildingList) {
-				// Train workers if the command center is currently free and workers
+				// Train workers if the command center is currently free and
+				// workers
 				// are needed
-				if (this.buildingBuildQueue.isEmpty()
-						&& building.getType() == UnitType.Terran_Command_Center
+				if (this.buildingBuildQueue.isEmpty() && building.getType() == UnitType.Terran_Command_Center
 						&& this.workerList.size() < WORKER_BASE_MAX_COUNT && !building.isTraining()
 						&& this.player.minerals() >= UnitType.Terran_SCV.mineralPrice()) {
 					building.train(UnitType.Terran_SCV);
@@ -121,7 +121,8 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 				if (this.buildingBuildQueue.isEmpty() && building.canBuildAddon()) {
 					boolean addonPossible = true;
 
-					// Try to find a suitable addon for the building in the addon
+					// Try to find a suitable addon for the building in the
+					// addon
 					// list
 					for (int i = 0; i < this.buildingAddonBuildList.size() && addonPossible; i++) {
 						if (building.canBuildAddon(this.buildingAddonBuildList.get(i))) {
@@ -131,6 +132,7 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 
 							addonPossible = false;
 
+							// TODO: REMOVE System.out
 							System.out.println("BUILDING ADDON: " + building + " - " + buildingAddon);
 						}
 					}
@@ -175,10 +177,10 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 				// is the default action
 				if (worker.getJob() == WorkerUnit.Action.GATHERING_MINERALS) {
 					// Block minerals if a base is being build
-					if(nextBuilding == UnitType.Terran_Command_Center) {
+					if (nextBuilding == UnitType.Terran_Command_Center) {
 						mineralsBlocked = true;
 					}
-					
+
 					worker.generateConstructionJob(this.getBuildingQueue().poll());
 				}
 			}
@@ -201,7 +203,7 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 		try {
 			this.workerList.remove(worker);
 		} catch (Exception e) {
-			System.out.println("---BASE: remove worker failed---");
+			e.printStackTrace();
 		}
 	}
 
@@ -215,7 +217,7 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 		try {
 			this.buildingList.remove(building);
 		} catch (Exception e) {
-			System.out.println("---BASE: remove building failed---");
+			e.printStackTrace();
 		}
 	}
 
@@ -251,24 +253,43 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 
 	// -------------------- Eventlisteners
 
-	// ------------------------------ Seperating a unit from a base
+	// ------------------------------ Separating a unit from a base
 	@Override
 	public void onSeperateUnit(Unit unit) {
 		for (WorkerUnit worker : this.workerList) {
-			if(worker.getUnit() == unit) {
+
+			// TODO: REMOVE
+			boolean is = worker.getUnit() == unit;
+			boolean eq = worker.getUnit().equals(unit);
+			System.out.println(
+					worker.getUnit().getType() + " | " + worker.getUnit() + " :" + unit + " == " + is + " / eq." + eq);
+
+			if (worker.getUnit() == unit) {
+				// TODO: REMOVE
+				System.out.println("REMOVED");
+
 				this.workerList.remove(worker);
-				
+
+				// TODO: REMOVE
 				System.out.println("Unit " + unit + " seperated from base " + this);
 			}
 		}
+
+		// TODO: REMOVE
+		for (Unit unitType : Core.getInstance().getPlayer().getUnits()) {
+			System.out.println(
+					"BASE CHECK: UNIT: " + unitType + " " + unitType.getType() + " " + unitType.getType().isWorker()
+							+ " " + unitType.isGatheringMinerals() + " " + unitType.isCompleted());
+		}
 	}
-	
+
 	// ------------------------------ Own CBotBWEventListener
 	@Override
 	public void onUnitDestroy(Unit unit) {
+		// TODO: Implementation: onUnitDestroy Base
 		// If a unit had a assigned construction job and got destroyed order a
 		// random other worker to finish it
-		// -> rightclick
+		// -> right click
 
 		// If a building got destroyed while a unit was building it, build it
 		// again
@@ -300,9 +321,10 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 					worker.setCreatedBuilding(unit);
 				}
 			}
-			
-			// If the unit is a command center, remove the mineral lock from all bases
-			if(unit.getType() == UnitType.Terran_Command_Center) {
+
+			// If the unit is a command center, remove the mineral lock from all
+			// bases
+			if (unit.getType() == UnitType.Terran_Command_Center) {
 				mineralsBlocked = false;
 			}
 		}
@@ -312,24 +334,14 @@ class Base implements CBotBWEventListener, SeperateUnitEventListener {
 	public void onUnitComplete(Unit unit) {
 		// Signal that the construction of a building has been finished
 		for (WorkerUnit worker : workerList) {
-			boolean workerMissing = true;
-			
+
 			// Find the worker, which constructed the building and remove the
 			// building from the units construction job.
 			// -> Refinery is a "special" case...
-			if (worker.getCreatedBuilding() == unit) {
+			if (worker.getCreatedBuilding() == unit || (unit.getType() == UnitType.Terran_Refinery
+					&& worker.getConstructionJob().getBuilding() == unit.getType())) {
 				worker.setConstructionJob(null);
 				worker.setCreatedBuilding(null);
-				workerMissing = false;
-			} else if(unit.getType() == UnitType.Terran_Refinery && worker.getConstructionJob().getBuilding() == unit.getType()) {
-				worker.setConstructionJob(null);
-				worker.setCreatedBuilding(null);
-				workerMissing = false;
-			}
-			
-			if(!workerMissing) {
-				System.out.println("CONSTRUCTION END: " + worker.getUnit() + " - " + unit.getTilePosition() + " - "
-						+ unit.getType());
 			}
 		}
 	}

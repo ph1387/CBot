@@ -33,7 +33,7 @@ public class BuildingOrderModule implements CBotBWEventListener {
 		// Default building queue in the beginning
 		BuildingCommandManager beginningSender = new BuildingCommandManager();
 		beginningSender.addCommand(new BuildBuildingCommandWorkerCount(UnitType.Terran_Barracks, 11));
-		for (int i = 0; i < 25; i++) {
+		for (int i = 0; i < 15; i++) {
 			beginningSender.addCommand(new BuildUnitCommand(UnitType.Terran_Marine));
 		}
 		beginningSender.addCommand(new BuildBuildingCommandWorkerCount(UnitType.Terran_Barracks, 13));
@@ -41,7 +41,7 @@ public class BuildingOrderModule implements CBotBWEventListener {
 		beginningSender.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Command_Center, 24));
 		beginningSender.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Factory, 26));
 		beginningSender.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Factory, 28));
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 0; i++) {
 			beginningSender.addCommand(new BuildUnitCommand(UnitType.Terran_Vulture));
 		}
 
@@ -65,7 +65,11 @@ public class BuildingOrderModule implements CBotBWEventListener {
 
 	// -------------------- Functions
 
-	// Singleton function
+	/**
+	 * Singleton function.
+	 * 
+	 * @return instance of the class.
+	 */
 	public static BuildingOrderModule getInstance() {
 		if (instance == null) {
 			instance = new BuildingOrderModule();
@@ -106,7 +110,7 @@ public class BuildingOrderModule implements CBotBWEventListener {
 		try {
 			this.currentBuildingCommandManager.runCommands();
 		} catch (Exception e) {
-			System.out.println("---BUILDINGCOMMAND: error onFrame---");
+			e.printStackTrace();
 		}
 
 		this.updateSupplyTriggerPoint();

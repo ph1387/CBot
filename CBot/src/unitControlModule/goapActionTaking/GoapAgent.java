@@ -2,22 +2,26 @@ package unitControlModule.goapActionTaking;
 
 import java.util.Queue;
 
+/**
+ * GoapAgent.java --- The Agent which controls a units actions
+ * 
+ * @author P H - 28.01.2017
+ */
 public class GoapAgent implements ImportantUnitGoalChangeEventListener, PlanCreatedEventListener, FSMPlanEventListener {
-	/**
-	 * GoapAgent.java --- The Agent which controls a units actions
-	 * 
-	 * @author P H - 28.01.2017
-	 */
 
 	private FSM fsm = new FSM();
 	private IdleState idleState = new IdleState();
 	private GoapUnit assignedGoapUnit;
 
+	/**
+	 * @param assignedUnit the GoapUnit the agent works with.
+	 */
 	public GoapAgent(GoapUnit assignedUnit) {
 		this.assignedGoapUnit = assignedUnit;
 
 		this.assignedGoapUnit.addImportantUnitGoalChangeListener(this);
 		this.idleState.addPlanCreatedListener(this);
+		this.fsm.addPlanEventListener(this);
 	}
 
 	// -------------------- Functions
