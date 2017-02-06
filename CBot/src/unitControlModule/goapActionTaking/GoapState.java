@@ -15,7 +15,9 @@ public class GoapState {
 	 * @param importance
 	 *            the importance of the state being reached Only necessary if
 	 *            the state is used to define a worldState. Has no effect in
-	 *            Actions being taken.
+	 *            Actions being taken. Do NOT set this to Integer.MaxValue since
+	 *            this causes the goal to be removed from the HashSet by the
+	 *            Planner.
 	 * @param effect
 	 *            the effect the state has.
 	 * @param value

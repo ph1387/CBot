@@ -25,10 +25,30 @@ public abstract class GoapUnit {
 	// -------------------- Functions
 
 	/**
+	 * This function can be called by a subclass if the efforts of the unit
+	 * trying to archive a specific goal should be paused to fulfill a more
+	 * urgent goal. The GoapState is added to the main goal HashSet and changed
+	 * by the GoapAgent.
+	 *
+	 * @param newGoapState
+	 *            the new goal the unit tries to archive.
+	 */
+	protected final void changeGoalImmediatly(GoapState newGoapState) {
+		this.goalState.add(newGoapState);
+
+		this.dispatchNewImportantUnitGoalChangeEvent(newGoapState);
+	}
+
+	/**
+	 * Can be called to remove any existing GoapActions and start fresh.
+	 */
+	protected final void resetActions() {
+		this.dispatchNewImportantUnitStackResetEvent();
+	}
+
+	/**
 	 * Gets called when a plan was found by the planner.
 	 * 
-	 * @param goal
-	 *            the goal the unit tries to archive.
 	 * @param actions
 	 *            the actions the unit hat to take in order to archive the goal.
 	 */
@@ -38,7 +58,7 @@ public abstract class GoapUnit {
 	 * Gets called when a plan failed to execute.
 	 *
 	 * @param goal
-	 *            the goal the unit tried to archive.
+	 *            the remaining actions in the action Queue that failed.
 	 */
 	protected abstract void goapPlanFailed(Queue<GoapAction> actions);
 
@@ -175,7 +195,7 @@ public abstract class GoapUnit {
 
 	// -------------------- Events
 
-	// ------------------------------ Important unit goal changes
+	// ------------------------------ Important unit changes
 	synchronized void addImportantUnitGoalChangeListener(Object listener) {
 		this.importantUnitGoalChangeListeners.add(listener);
 	}
@@ -184,9 +204,15 @@ public abstract class GoapUnit {
 		this.importantUnitGoalChangeListeners.remove(listener);
 	}
 
-	protected synchronized void dispatchNewImportantUnitGoalChangeEvent(GoapState newGoalState) {
+	private synchronized void dispatchNewImportantUnitGoalChangeEvent(GoapState newGoalState) {
 		for (Object listener : this.importantUnitGoalChangeListeners) {
-			((ImportantUnitGoalChangeEventListener) listener).onImportantUnitGoalChange(newGoalState);
+			((ImportantUnitChangeEventListener) listener).onImportantUnitGoalChange(newGoalState);
+		}
+	}
+
+	private synchronized void dispatchNewImportantUnitStackResetEvent() {
+		for (Object listener : this.importantUnitGoalChangeListeners) {
+			((ImportantUnitChangeEventListener) listener).onImportantUnitStackResetChange();
 		}
 	}
 }

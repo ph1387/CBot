@@ -7,14 +7,15 @@ import java.util.Queue;
  * 
  * @author P H - 28.01.2017
  */
-public class GoapAgent implements ImportantUnitGoalChangeEventListener, PlanCreatedEventListener, FSMPlanEventListener {
+public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedEventListener, FSMPlanEventListener {
 
 	private FSM fsm = new FSM();
 	private IdleState idleState = new IdleState();
 	private GoapUnit assignedGoapUnit;
 
 	/**
-	 * @param assignedUnit the GoapUnit the agent works with.
+	 * @param assignedUnit
+	 *            the GoapUnit the agent works with.
 	 */
 	public GoapAgent(GoapUnit assignedUnit) {
 		this.assignedGoapUnit = assignedUnit;
@@ -60,13 +61,26 @@ public class GoapAgent implements ImportantUnitGoalChangeEventListener, PlanCrea
 	// ------------------------------ GoapUnit
 	/**
 	 * This event is needed to change a current goal to a new one, while keeping
-	 * the old one on the FSM-Stack for its later Queue execution.
+	 * the old one on the FSM-Stack for its later execution. The importance is
+	 * set to the highest possible value to ensure that the given goal is the
+	 * main one of the unit. This causes the Idle Stack to create a Queue
+	 * specifically for this GoapState, which is empty if no valid Queue is
+	 * found (null not possible since that would result in the IdleState to try
+	 * until one is found). The empty Queue causes the unit to proceed with its
+	 * previous action.
 	 * 
-	 * @see unitControlModule.goapActionTaking.ImportantUnitGoalChangeEventListener#onImportantUnitGoalChange(unitControlModule.goapActionTaking.GoapState)
+	 * @see unitControlModule.goapActionTaking.ImportantUnitChangeEventListener#onImportantUnitGoalChange(unitControlModule.goapActionTaking.GoapState)
 	 */
 	@Override
 	public void onImportantUnitGoalChange(GoapState newGoalState) {
+		newGoalState.importance = Integer.MAX_VALUE;
+
 		this.fsm.pushStack(this.idleState);
+	}
+
+	@Override
+	public void onImportantUnitStackResetChange() {
+		this.fsm.clearStack();
 	}
 
 	// ------------------------------ FSM
@@ -76,7 +90,7 @@ public class GoapAgent implements ImportantUnitGoalChangeEventListener, PlanCrea
 	}
 
 	@Override
-	public void onPlanFinished(Queue<GoapAction> actions) {
+	public void onPlanFinished() {
 		this.assignedGoapUnit.goapPlanFinished();
 	}
 }

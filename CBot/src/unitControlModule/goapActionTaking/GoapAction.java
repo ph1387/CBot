@@ -23,6 +23,7 @@ public abstract class GoapAction {
 
 	// -------------------- Functions
 
+	// TODO: Possible Change: Remove doReset() and reset()
 	/**
 	 * Set the target after a reset or the FSM will dispose of the Queue of this
 	 * GoapAction!

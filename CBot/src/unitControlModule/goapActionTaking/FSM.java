@@ -35,7 +35,7 @@ final class FSM {
 				IFSMState state = this.states.pop();
 
 				if (state instanceof RunActionState) {
-					this.dispatchNewPlanFinishedEvent(((RunActionState) state).getCurrentActions());
+					this.dispatchNewPlanFinishedEvent();
 				}
 			}
 		} catch (Exception e) {
@@ -82,9 +82,9 @@ final class FSM {
 		}
 	}
 
-	private synchronized void dispatchNewPlanFinishedEvent(Queue<GoapAction> actions) {
+	private synchronized void dispatchNewPlanFinishedEvent() {
 		for (Object listener : this.planEventListeners) {
-			((FSMPlanEventListener) listener).onPlanFinished(actions);
+			((FSMPlanEventListener) listener).onPlanFinished();
 		}
 	}
 }

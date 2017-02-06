@@ -1,5 +1,7 @@
 package unitControlModule.goapActionTaking;
 
-interface ImportantUnitGoalChangeEventListener {
+interface ImportantUnitChangeEventListener {
 	public void onImportantUnitGoalChange(GoapState newGoalState);
+	
+	public void onImportantUnitStackResetChange();
 }

@@ -36,22 +36,26 @@ final class RunActionState implements IFSMState {
 	public boolean runGoapAction(GoapUnit goapUnit) throws Exception {
 		boolean workingOnQueue = false;
 
-		if (this.currentActions.peek().isDone(goapUnit)) {
-			this.currentActions.poll();
-		}
-
-		if (!this.currentActions.isEmpty()) {
-			GoapAction currentAction = this.currentActions.peek();
-
-			if (currentAction.target == null) {
-				throw new Exception("Target is null!");
-			} else if (currentAction.requiresInRange(goapUnit) && !currentAction.isInRange(goapUnit)) {
-				this.fsm.pushStack(new MoveToState(currentAction));
-			} else if (currentAction.checkProceduralPrecondition(goapUnit) && !currentAction.performAction(goapUnit)) {
-				throw new Exception("Action not possible (ProceduralPrecondition)!");
+		try {
+			if (this.currentActions.peek().isDone(goapUnit)) {
+				this.currentActions.poll();
 			}
 
-			workingOnQueue = true;
+			if (!this.currentActions.isEmpty()) {
+				GoapAction currentAction = this.currentActions.peek();
+
+				if (currentAction.target == null) {
+					throw new Exception("Target is null!");
+				} else if (currentAction.requiresInRange(goapUnit) && !currentAction.isInRange(goapUnit)) {
+					this.fsm.pushStack(new MoveToState(currentAction));
+				} else if (currentAction.checkProceduralPrecondition(goapUnit) && !currentAction.performAction(goapUnit)) {
+					throw new Exception("Action not possible (ProceduralPrecondition)!");
+				}
+
+				workingOnQueue = true;
+			}
+		} catch(Exception e) {
+			
 		}
 		return workingOnQueue;
 	}

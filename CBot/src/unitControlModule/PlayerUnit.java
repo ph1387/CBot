@@ -62,12 +62,12 @@ public class PlayerUnit extends GoapUnit {
 
 	@Override
 	protected void goapPlanFailed(Queue<GoapAction> actions) {
-
+		
 	}
 
 	@Override
 	protected void goapPlanFinished() {
-
+		
 	}
 
 	@Override
