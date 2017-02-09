@@ -1,6 +1,7 @@
 package unitControlModule;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Queue;
@@ -12,7 +13,8 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
 import core.Core;
-import unitControlModule.actions.AttackMoveUnitAction;
+import unitControlModule.actions.AttackMoveAction;
+import unitControlModule.actions.AttackUnitAction;
 import unitControlModule.actions.ScoutBaseLocationAction;
 import unitControlModule.goapActionTaking.GoapAction;
 import unitControlModule.goapActionTaking.GoapState;
@@ -33,6 +35,7 @@ public class PlayerUnit extends GoapUnit {
 	protected static Integer DEFAULT_SEARCH_RADIUS = 5;
 
 	protected Unit unit;
+	protected Unit nearestEnemyUnit;
 
 	protected enum UnitStates {
 		ENEMY_MISSING, ENEMY_KNOWN
@@ -49,6 +52,7 @@ public class PlayerUnit extends GoapUnit {
 
 		this.addWorldState(new GoapState(1, "enemyKnown", false));
 		this.addWorldState(new GoapState(1, "destroyUnit", false));
+		this.addWorldState(new GoapState(1, "enemyUnitNear", false));
 
 		this.addGoalState(new GoapState(1, "enemyKnown", true));
 		this.addGoalState(new GoapState(2, "destroyUnit", true));
@@ -87,12 +91,14 @@ public class PlayerUnit extends GoapUnit {
 
 			this.actOnBuildingsMissing();
 
-			if(UnitTrackerModule.getInstance().enemyUnits.size() != 0 || UnitTrackerModule.getInstance().enemyBuildings.size() != 0) {
+			if (UnitTrackerModule.getInstance().enemyUnits.size() != 0
+					|| UnitTrackerModule.getInstance().enemyBuildings.size() != 0) {
 				this.resetActions();
 				this.currentState = UnitStates.ENEMY_KNOWN;
 			}
 		} else if (this.currentState == UnitStates.ENEMY_KNOWN) {
-			if(UnitTrackerModule.getInstance().enemyUnits.size() == 0 && UnitTrackerModule.getInstance().enemyBuildings.size() == 0) {
+			if (UnitTrackerModule.getInstance().enemyUnits.size() == 0
+					&& UnitTrackerModule.getInstance().enemyBuildings.size() == 0) {
 				this.changeEnemyKnown(false);
 				this.currentState = UnitStates.ENEMY_MISSING;
 			} else {
@@ -181,30 +187,68 @@ public class PlayerUnit extends GoapUnit {
 	}
 
 	/**
-	 * Create a new AttackMoveUnitAction instance or change the current one to
-	 * target a new TilePosition of another unit.
+	 * Function for acting on the fact that enemy units (units and buildings)
+	 * are known of and can be attacked by this Unit.
 	 */
 	private void actOnUnitsKnown() {
-		GoapAction attackMoveUnitAction = this.getActionFromInstance(AttackMoveUnitAction.class);
+		// TODO: Possible Change: Own function
+		GoapAction attackMoveUnitAction = this.getActionFromInstance(AttackMoveAction.class);
 		TilePosition closestUnitTilePosition = null;
-		
+
 		List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(UnitTrackerModule.getInstance().enemyUnits);
 		enemyUnits.addAll(UnitTrackerModule.getInstance().enemyBuildings);
 
 		// Find the closest unit of the known ones
 		for (EnemyUnit unit : enemyUnits) {
-			if (closestUnitTilePosition == null || this.unit.getDistance(unit.getLastSeenTilePosition().toPosition()) < this.unit
-					.getDistance(closestUnitTilePosition.toPosition())) {
+			if (closestUnitTilePosition == null
+					|| this.unit.getDistance(unit.getLastSeenTilePosition().toPosition()) < this.unit
+							.getDistance(closestUnitTilePosition.toPosition())) {
 				closestUnitTilePosition = unit.getLastSeenTilePosition();
 			}
 		}
-		
+
 		// Check actions first to prevent an infinite amount of action
 		// generations
 		if (attackMoveUnitAction == null) {
-			this.addAvailableAction(new AttackMoveUnitAction(closestUnitTilePosition));
+			this.addAvailableAction(new AttackMoveAction(closestUnitTilePosition));
 		} else {
-			((AttackMoveUnitAction) attackMoveUnitAction).setTarget(closestUnitTilePosition);
+			((AttackMoveAction) attackMoveUnitAction).setTarget(closestUnitTilePosition);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		// TODO: Possible Change: Own function
+		// Find the closest enemy unit in the List
+		Unit closestUnit = null;
+		
+		for (Unit unit : this.getAllEnemyUnitsInWeaponRange()) {
+			if (closestUnit == null
+					|| this.unit.getDistance(unit.getPosition()) < this.unit
+							.getDistance(closestUnit.getPosition())) {
+				closestUnit = unit;
+			}
+		}
+		
+		if(closestUnit != null) {
+			if(this.nearestEnemyUnit == null || this.nearestEnemyUnit != closestUnit) {
+				GoapAction attackUnitAction = this.getActionFromInstance(AttackUnitAction.class);
+				this.nearestEnemyUnit = closestUnit;
+				
+				// Check actions first to prevent an infinite amount of action
+				// generations
+				if(attackUnitAction == null) {
+					this.addAvailableAction(new AttackUnitAction(this.nearestEnemyUnit));
+				} else {
+					((AttackUnitAction) attackUnitAction).setTarget(this.nearestEnemyUnit);
+				}
+				
+				this.changeGoalImmediatly(new GoapState(0, "attackNearestEnemyUnit", true));
+			}
 		}
 	}
 
@@ -261,6 +305,15 @@ public class PlayerUnit extends GoapUnit {
 	}
 
 	/**
+	 * Convenience function.
+	 * 
+	 * @see #changeWorldStateEffect(String effect, Object value)
+	 */
+	private void changeEnemyUnitNear(Object value) {
+		this.changeWorldStateEffect("enemyUnitNear", value);
+	}
+
+	/**
 	 * Change the world state accordingly.
 	 * 
 	 * @param effect
@@ -276,6 +329,30 @@ public class PlayerUnit extends GoapUnit {
 				break;
 			}
 		}
+	}
+	
+	/**
+	 * Function for retrieving a HashSet of all units in weapon range, both on the ground and in the air.
+	 * @return a HashSet of all enemy units in the weapon range of this unit.
+	 */
+	public HashSet<Unit> getAllEnemyUnitsInWeaponRange() {
+		return this.getAllEnemyUnitsInRange(Math.max(this.unit.getType().groundWeapon().maxRange(), this.unit.getType().airWeapon().maxRange()));
+	}
+	
+	/**
+	 * Function for retrieving a HashSet of all enemy units in a specific range around the Unit.
+	 * @param pixelRange the range of the search in pixels.
+	 * @return a HashSet of all enemy units in the given range of this unit.
+	 */
+	public HashSet<Unit> getAllEnemyUnitsInRange(int pixelRange) {
+		HashSet<Unit> enemyUnits = new HashSet<Unit>();
+		
+		for (Unit unit : this.unit.getUnitsInRadius(pixelRange)) {
+			if(unit.getPlayer() == Core.getInstance().getGame().enemy()) {
+				enemyUnits.add(unit);
+			}
+		}
+		return enemyUnits;
 	}
 
 	// ------------------------------ Getter / Setter

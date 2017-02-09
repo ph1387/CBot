@@ -9,12 +9,12 @@ import unitControlModule.goapActionTaking.GoapUnit;
 
 /**
  * ScoutBaseLocationsAction.java --- A scouting action for searching a base
- * location
+ * location.
  * 
  * @author P H - 29.01.2017
  *
  */
-public class ScoutBaseLocationAction extends GoapAction {
+public class ScoutBaseLocationAction extends BaseAction {
 
 	protected static Integer RANGE_TO_TARGET = null;
 
@@ -30,11 +30,6 @@ public class ScoutBaseLocationAction extends GoapAction {
 	}
 
 	// -------------------- Functions
-
-	@Override
-	protected void reset() {
-
-	}
 
 	@Override
 	protected boolean isDone(GoapUnit goapUnit) {
@@ -69,16 +64,5 @@ public class ScoutBaseLocationAction extends GoapAction {
 	@Override
 	protected boolean isInRange(GoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).isNear(((Position) this.target).toTilePosition(), RANGE_TO_TARGET);
-	}
-
-	// ------------------------------ Getter / Setter
-
-	/**
-	 *
-	 * @param target
-	 *            type: Position
-	 */
-	public void setTarget(Object target) {
-		this.target = target;
 	}
 }

@@ -85,7 +85,7 @@ public class UnitControlModule implements CBotBWEventListener {
 					System.out.println("CHOSEN: " + unit);
 
 					this.dispatchNewSperateUnitEvent(unit);
-					// TODO: References are not equal
+					// TODO: Problem: References are not equal
 					// this.newCombatUnits.add(unit);
 					this.workerOnceAssigned = true;
 				}
@@ -112,7 +112,7 @@ public class UnitControlModule implements CBotBWEventListener {
 			}
 		}
 		
-		// TODO: Unit references do not match!
+		// TODO: Problem: Unit references do not match!
 		// Also Nullpointer at units target! this.action == null in actions
 		// -> Be careful!
 

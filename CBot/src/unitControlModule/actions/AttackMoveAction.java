@@ -1,9 +1,7 @@
 package unitControlModule.actions;
 
-import bwapi.Position;
 import bwapi.TilePosition;
 import unitControlModule.PlayerUnit;
-import unitControlModule.goapActionTaking.GoapAction;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.goapActionTaking.GoapUnit;
 
@@ -14,13 +12,13 @@ import unitControlModule.goapActionTaking.GoapUnit;
  * @author P H - 07.02.2017
  *
  */
-public class AttackMoveUnitAction extends GoapAction {
+public class AttackMoveAction extends BaseAction {
 
 	/**
 	 * @param target
 	 *            type: TilePosition
 	 */
-	public AttackMoveUnitAction(Object target) {
+	public AttackMoveAction(Object target) {
 		super(target);
 
 		this.addEffect(new GoapState(0, "destroyUnit", true));
@@ -28,11 +26,6 @@ public class AttackMoveUnitAction extends GoapAction {
 	}
 
 	// -------------------- Functions
-
-	@Override
-	protected void reset() {
-
-	}
 
 	@Override
 	protected boolean isDone(GoapUnit goapUnit) {
@@ -67,16 +60,5 @@ public class AttackMoveUnitAction extends GoapAction {
 	@Override
 	protected boolean isInRange(GoapUnit goapUnit) {
 		return false;
-	}
-
-	// ------------------------------ Getter / Setter
-
-	/**
-	 *
-	 * @param target
-	 *            type: TilePosition
-	 */
-	public void setTarget(Object target) {
-		this.target = target;
 	}
 }
