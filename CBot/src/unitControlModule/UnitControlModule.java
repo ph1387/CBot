@@ -23,9 +23,12 @@ public class UnitControlModule implements CBotBWEventListener {
 
 	private static UnitControlModule instance;
 	private static int WORKER_SCOUTING_TRIGGER = 9;
+	private static int AITHREAD_NOTIFY_WAIT = 1;
 
 	private boolean workerOnceAssigned = false;
-	boolean aiThreadRunning = true;
+	private final Object monitor = new Object();
+	private GoapAIThread aiThread = new GoapAIThread(this.monitor);
+	private int notifyTimeStamp = 0;
 
 	// Units the AIThread is going to assign to GoapAgents / removes from them.
 	ConcurrentLinkedQueue<Unit> newCombatUnits = new ConcurrentLinkedQueue<Unit>();
@@ -34,9 +37,7 @@ public class UnitControlModule implements CBotBWEventListener {
 	private List<Object> seperateUnitListeners = new ArrayList<Object>();
 
 	private UnitControlModule() {
-		GoapAIThread aiThread = new GoapAIThread();
-
-		aiThread.start();
+		this.aiThread.start();
 
 		CBotBWEventDistributor.getInstance().addListener(this);
 	}
@@ -104,7 +105,13 @@ public class UnitControlModule implements CBotBWEventListener {
 
 	@Override
 	public void onFrame() {
-
+		synchronized (this.monitor) {
+			if(this.notifyTimeStamp == 0 || Core.getInstance().getGame().elapsedTime() - this.notifyTimeStamp >= AITHREAD_NOTIFY_WAIT) {
+				this.notifyTimeStamp = Core.getInstance().getGame().elapsedTime();
+				this.monitor.notifyAll();
+			}
+		}
+		
 		// TODO: Unit references do not match!
 		// Also Nullpointer at units target! this.action == null in actions
 		// -> Be careful!

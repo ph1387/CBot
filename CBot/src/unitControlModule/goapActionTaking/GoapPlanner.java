@@ -70,7 +70,7 @@ class GoapPlanner {
 						endNodes);
 			}
 		} catch (Exception e) {
-			// e.printStackTrace(); // Probably no goal states if Exception.
+			e.printStackTrace();
 		}
 		return createdPlan;
 	}

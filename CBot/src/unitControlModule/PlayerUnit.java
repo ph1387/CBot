@@ -1,6 +1,8 @@
 package unitControlModule;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Queue;
 
 import bwapi.Position;
@@ -10,8 +12,8 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
 import core.Core;
+import unitControlModule.actions.AttackMoveUnitAction;
 import unitControlModule.actions.ScoutBaseLocationAction;
-import unitControlModule.actions.ScoutBuildingLocationAction;
 import unitControlModule.goapActionTaking.GoapAction;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.goapActionTaking.GoapUnit;
@@ -19,7 +21,7 @@ import unitTrackerModule.EnemyUnit;
 import unitTrackerModule.UnitTrackerModule;
 
 /**
- * PlayerUnit.java --- Wrapper for a unit of the player
+ * PlayerUnit.java --- Wrapper for a player unit.
  * 
  * @author P H - 29.01.2017
  *
@@ -32,6 +34,12 @@ public class PlayerUnit extends GoapUnit {
 
 	protected Unit unit;
 
+	protected enum UnitStates {
+		ENEMY_MISSING, ENEMY_KNOWN
+	}
+
+	protected UnitStates currentState = UnitStates.ENEMY_MISSING;
+
 	/**
 	 * @param unit
 	 *            the unit the class wraps around.
@@ -39,11 +47,11 @@ public class PlayerUnit extends GoapUnit {
 	public PlayerUnit(Unit unit) {
 		this.unit = unit;
 
-		this.addWorldState(new GoapState(1, "enemyBuildingsKnown", false));
-		this.addWorldState(new GoapState(1, "informationGathering", false));
+		this.addWorldState(new GoapState(1, "enemyKnown", false));
+		this.addWorldState(new GoapState(1, "destroyUnit", false));
 
-		this.addGoalState(new GoapState(1, "enemyBuildingsKnown", true));
-		this.addGoalState(new GoapState(2, "informationGathering", true));
+		this.addGoalState(new GoapState(1, "enemyKnown", true));
+		this.addGoalState(new GoapState(2, "destroyUnit", true));
 
 		// Set default values in the beginning.
 		if (BASELOCATIONS_SEARCHED.size() == 0) {
@@ -62,29 +70,38 @@ public class PlayerUnit extends GoapUnit {
 
 	@Override
 	protected void goapPlanFailed(Queue<GoapAction> actions) {
-		
+
 	}
 
 	@Override
 	protected void goapPlanFinished() {
-		
+
 	}
 
 	@Override
 	protected void update() {
-		if (UnitTrackerModule.getInstance().enemyBuildings.size() == 0) {
-			this.changeEnemyBuildingsKnown(false);
+		// Changing the worldState with a FSM
+		if (this.currentState == UnitStates.ENEMY_MISSING) {
+			this.changeDestroyUnit(false);
+			this.changeEnemyKnown(false);
 
 			this.actOnBuildingsMissing();
-		} else {
-			this.actOnBuildingsKnown();
+
+			if(UnitTrackerModule.getInstance().enemyUnits.size() != 0 || UnitTrackerModule.getInstance().enemyBuildings.size() != 0) {
+				this.resetActions();
+				this.currentState = UnitStates.ENEMY_KNOWN;
+			}
+		} else if (this.currentState == UnitStates.ENEMY_KNOWN) {
+			if(UnitTrackerModule.getInstance().enemyUnits.size() == 0 && UnitTrackerModule.getInstance().enemyBuildings.size() == 0) {
+				this.changeEnemyKnown(false);
+				this.currentState = UnitStates.ENEMY_MISSING;
+			} else {
+				this.changeEnemyKnown(true);
+				this.actOnUnitsKnown();
+			}
 		}
 
 		this.updateBaseLocationsSearched();
-
-		// Reset the information gathering woldState so that units always try to
-		// scout enemy building locations as a last resort.
-		this.changeInformationgathering(false);
 	}
 
 	@Override
@@ -133,7 +150,7 @@ public class PlayerUnit extends GoapUnit {
 	 * currentTime - timeStamp >= timePassed
 	 * <p>
 	 * Create a new ScoutBaseLocationAction or change the current one to target
-	 * the new BaseLoaction.
+	 * a new location.
 	 */
 	private void actOnBuildingsMissing() {
 		GoapAction scoutBaseLocationAction = this.getActionFromInstance(ScoutBaseLocationAction.class);
@@ -164,27 +181,30 @@ public class PlayerUnit extends GoapUnit {
 	}
 
 	/**
-	 * Scout the enemies buildings since their position is known.
+	 * Create a new AttackMoveUnitAction instance or change the current one to
+	 * target a new TilePosition of another unit.
 	 */
-	private void actOnBuildingsKnown() {
-		GoapAction scoutBuildingLocationAction = this.getActionFromInstance(ScoutBuildingLocationAction.class);
-		TilePosition closestBuildingTilePosition = null;
+	private void actOnUnitsKnown() {
+		GoapAction attackMoveUnitAction = this.getActionFromInstance(AttackMoveUnitAction.class);
+		TilePosition closestUnitTilePosition = null;
+		
+		List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(UnitTrackerModule.getInstance().enemyUnits);
+		enemyUnits.addAll(UnitTrackerModule.getInstance().enemyBuildings);
 
-		// Find the closest building of the known ones
-		for (EnemyUnit building : UnitTrackerModule.getInstance().enemyBuildings) {
-			if (closestBuildingTilePosition == null
-					|| this.unit.getDistance(building.getUnit().getPosition()) < this.unit
-							.getDistance(closestBuildingTilePosition.toPosition())) {
-				closestBuildingTilePosition = building.getLastSeenTilePosition();
+		// Find the closest unit of the known ones
+		for (EnemyUnit unit : enemyUnits) {
+			if (closestUnitTilePosition == null || this.unit.getDistance(unit.getLastSeenTilePosition().toPosition()) < this.unit
+					.getDistance(closestUnitTilePosition.toPosition())) {
+				closestUnitTilePosition = unit.getLastSeenTilePosition();
 			}
 		}
-
+		
 		// Check actions first to prevent an infinite amount of action
 		// generations
-		if (scoutBuildingLocationAction == null) {
-			this.addAvailableAction(new ScoutBuildingLocationAction(closestBuildingTilePosition));
+		if (attackMoveUnitAction == null) {
+			this.addAvailableAction(new AttackMoveUnitAction(closestUnitTilePosition));
 		} else {
-			((ScoutBuildingLocationAction) scoutBuildingLocationAction).setTarget(closestBuildingTilePosition);
+			((AttackMoveUnitAction) attackMoveUnitAction).setTarget(closestUnitTilePosition);
 		}
 	}
 
@@ -197,7 +217,7 @@ public class PlayerUnit extends GoapUnit {
 	 *            availableActions HashSet.
 	 * @return the action that is an instance of the given class.
 	 */
-	private GoapAction getActionFromInstance(Class instanceClass) {
+	private <T> GoapAction getActionFromInstance(Class<T> instanceClass) {
 		GoapAction actionMatch = null;
 
 		for (GoapAction action : this.getAvailableActions()) {
@@ -212,7 +232,7 @@ public class PlayerUnit extends GoapUnit {
 
 	/**
 	 * Update the searched BaseLocations if the unit is in the range of one of
-	 * them
+	 * them.
 	 */
 	private void updateBaseLocationsSearched() {
 		for (BaseLocation location : BWTA.getBaseLocations()) {
@@ -227,8 +247,8 @@ public class PlayerUnit extends GoapUnit {
 	 * 
 	 * @see #changeWorldStateEffect(String effect, Object value)
 	 */
-	private void changeEnemyBuildingsKnown(Object value) {
-		this.changeWorldStateEffect("enemyBuildingsKnown", value);
+	private void changeEnemyKnown(Object value) {
+		this.changeWorldStateEffect("enemyKnown", value);
 	}
 
 	/**
@@ -236,8 +256,8 @@ public class PlayerUnit extends GoapUnit {
 	 * 
 	 * @see #changeWorldStateEffect(String effect, Object value)
 	 */
-	private void changeInformationgathering(Object value) {
-		this.changeWorldStateEffect("informationGathering", value);
+	private void changeDestroyUnit(Object value) {
+		this.changeWorldStateEffect("destroyUnit", value);
 	}
 
 	/**

@@ -17,11 +17,16 @@ import unitControlModule.goapActionTaking.GoapAgent;
  *
  */
 class GoapAIThread extends Thread implements CBotBWEndEventListener {
-
+	
 	private UnitControlModule unitControl;
+	private Object monitor;
 	private boolean running = true;
 
 	private HashSet<GoapAgent> combatUnitAgents = new HashSet<GoapAgent>();
+	
+	public GoapAIThread(Object monitor) {
+		this.monitor = monitor;
+	}
 
 	// -------------------- Functions
 
@@ -37,6 +42,12 @@ class GoapAIThread extends Thread implements CBotBWEndEventListener {
 
 				for (GoapAgent agent : this.combatUnitAgents) {
 					agent.update();
+				}
+				
+				if(this.running) {
+					synchronized (this.monitor) {
+						this.monitor.wait();
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -82,5 +93,6 @@ class GoapAIThread extends Thread implements CBotBWEndEventListener {
 	@Override
 	public void onEnd(boolean value) {
 		this.running = false;
+		this.monitor.notifyAll();
 	}
 }

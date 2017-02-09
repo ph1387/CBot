@@ -2,7 +2,9 @@ package unitTrackerModule;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.text.html.InlineView;
@@ -37,11 +39,10 @@ public class UnitTrackerModule implements CBotBWEventListener {
 
 	private Integer lastUpdateTimestamp = null;
 
-	// TODO: Implementation: Getter and Setter
-	private List<ValueTilePosition> playerAirAttackTilePositions = new ArrayList<ValueTilePosition>();
-	private List<ValueTilePosition> playerGroundAttackTilePositions = new ArrayList<ValueTilePosition>();
-	private List<ValueTilePosition> enemyAirAttackTilePositions = new ArrayList<ValueTilePosition>();
-	private List<ValueTilePosition> enemyGroundAttackTilePositions = new ArrayList<ValueTilePosition>();
+	public ConcurrentHashMap<TilePosition, Integer> playerAirAttackTilePositions = new ConcurrentHashMap<>();
+	public ConcurrentHashMap<TilePosition, Integer> playerGroundAttackTilePositions = new ConcurrentHashMap<>();
+	public ConcurrentHashMap<TilePosition, Integer> enemyAirAttackTilePositions = new ConcurrentHashMap<>();
+	public ConcurrentHashMap<TilePosition, Integer> enemyGroundAttackTilePositions = new ConcurrentHashMap<>();
 	public CopyOnWriteArrayList<EnemyUnit> enemyBuildings = new CopyOnWriteArrayList<EnemyUnit>();
 	public CopyOnWriteArrayList<EnemyUnit> enemyUnits = new CopyOnWriteArrayList<EnemyUnit>();
 
@@ -186,14 +187,14 @@ public class UnitTrackerModule implements CBotBWEventListener {
 
 	// TODO: Possible Change: Add following functions together
 	/**
-	 * Function used to generate the List of value tiles showing the air forces
+	 * Function used to generate the table of value tiles showing the air forces
 	 * strength of the player units.
 	 *
-	 * @return a List containing ValueTilePositions that represent the players
+	 * @return a Hashtable containing ValueTilePositions that represent the players
 	 *         air strength.
 	 */
-	private List<ValueTilePosition> generatePlayerAirAttackTilePositions() {
-		List<ValueTilePosition> valueTiles = new ArrayList<ValueTilePosition>();
+	private ConcurrentHashMap<TilePosition, Integer> generatePlayerAirAttackTilePositions() {
+		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
 
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			if (unit.isCompleted() && unit.getType().airWeapon() != null
@@ -206,14 +207,14 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	}
 
 	/**
-	 * Function used to generate the list of value tiles showing the ground
+	 * Function used to generate the table of value tiles showing the ground
 	 * forces strength of the player units.
 	 * 
-	 * @return a List containing ValueTilePositions that represent the players
+	 * @return a Hashtable containing ValueTilePositions that represent the players
 	 *         air strength.
 	 */
-	private List<ValueTilePosition> generatePlayerGroundAttackTilePositions() {
-		List<ValueTilePosition> valueTiles = new ArrayList<ValueTilePosition>();
+	private ConcurrentHashMap<TilePosition, Integer> generatePlayerGroundAttackTilePositions() {
+		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
 
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			if (unit.isCompleted() && unit.getType().groundWeapon() != null
@@ -226,14 +227,14 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	}
 
 	/**
-	 * Function used to generate the list of value tiles showing the air forces
+	 * Function used to generate the table of value tiles showing the air forces
 	 * strength of the enemy units and buildings.
 	 *
-	 * @return a List containing ValueTilePositions that represent the enemies
+	 * @return a Hashtable containing ValueTilePositions that represent the enemies
 	 *         air strength.
 	 */
-	private List<ValueTilePosition> generateEnemyAirAttackTilePositions() {
-		List<ValueTilePosition> valueTiles = new ArrayList<ValueTilePosition>();
+	private ConcurrentHashMap<TilePosition, Integer> generateEnemyAirAttackTilePositions() {
+		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
 
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
@@ -255,14 +256,14 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	}
 
 	/**
-	 * Function used to generate the list of value tiles showing the ground
-	 * forces strength of the enemy units and buildings.
+	 * Function used to generate the table of value tiles showing the ground forces
+	 * strength of the enemy units and buildings.
 	 *
-	 * @return a List containing ValueTilePositions that represent the enemies
+	 * @return a Hashtable containing ValueTilePositions that represent the enemies
 	 *         ground strength.
 	 */
-	private List<ValueTilePosition> generateEnemyGroundAttackTilePositions() {
-		List<ValueTilePosition> valueTiles = new ArrayList<ValueTilePosition>();
+	private ConcurrentHashMap<TilePosition, Integer> generateEnemyGroundAttackTilePositions() {
+		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
 
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
@@ -287,20 +288,20 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	// TODO: Possible Change: Simplify function call
 	/**
 	 * Function for adding a units attack value to the corresponding
-	 * ValueTilePosition List. The range is determined by the WeaponType the
+	 * ValueTilePosition table. The range is determined by the WeaponType the
 	 * unit is using. Greater range has a larger impact since it reaches tiles
 	 * further away.
 	 *
 	 * @param tilePosition
 	 *            the TilePosition the calculations are being done around.
 	 * @param valueTiles
-	 *            the List of all ValueTiles the function can work with.
+	 *            the table of all ValueTiles the function can work with.
 	 * @param unitType
 	 *            the UnitType of the unit.
 	 * @param weaponType
 	 *            the WeaponType of the Unit.
 	 */
-	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, List<ValueTilePosition> valueTiles,
+	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, ConcurrentHashMap<TilePosition, Integer> valueTiles,
 			UnitType unitType, WeaponType weaponType) {
 		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange()) / Double.valueOf(Display.TILESIZE));
 
@@ -318,54 +319,23 @@ public class UnitTrackerModule implements CBotBWEventListener {
 				if (tilePosition.getX() + i > 0 && tilePosition.getY() + j > 0) {
 					// Try to find the ValueTilePosition inside the list created
 					// before. If it is not found, create a new instance
-					ValueTilePosition foundValueTilePosition = this.tryToFindTilePositionInValueList(valueTiles,
-							tilePosition, i, j);
+					TilePosition mappedTilePosition = new TilePosition(tilePosition.getX() + i, tilePosition.getY() + j);
+					Integer foundIntegerValue = valueTiles.get(mappedTilePosition);
 
-					// If no ValueTilePosition in the list is found, create a
-					// new one and add it to the list for further tests.
-					if (foundValueTilePosition == null) {
-						foundValueTilePosition = new ValueTilePosition(
-								new TilePosition(tilePosition.getX() + i, tilePosition.getY() + j));
-						valueTiles.add(foundValueTilePosition);
+					// If no Integer in the table is found, create a
+					// new one.
+					if (foundIntegerValue == null) {
+						foundIntegerValue = 0;
 					}
 
 					// Add the strength of the unit to the tiles value
 					// proportional to the distance between the units tile and
 					// the current tile.
-					foundValueTilePosition.addToTileValue(
-							(int) (unitType.groundWeapon().damageAmount() / (Math.max(Math.abs(i), Math.abs(j)) + 1)));
+					Integer sum = foundIntegerValue + (int) (unitType.groundWeapon().damageAmount() / (Math.max(Math.abs(i), Math.abs(j)) + 1));
+					valueTiles.put(mappedTilePosition, sum);
 				}
 			}
 		}
-	}
-
-	/**
-	 * Function for finding a specific TilePosition in the ValueTilePosition
-	 * List.
-	 *
-	 * @param valueTiles
-	 *            the List of ValueTilePositions that is going to be searched.
-	 * @param tilePosition
-	 *            the TilePosition that is going to be searched for.
-	 * @param x
-	 *            the x-offset of the TilePosition.
-	 * @param y
-	 *            the y-offset of the TilePosition.
-	 * @return the found TilePosition or null.
-	 */
-	private ValueTilePosition tryToFindTilePositionInValueList(List<ValueTilePosition> valueTiles,
-			TilePosition tilePosition, int x, int y) {
-		ValueTilePosition foundValueTilePosition = null;
-
-		for (int i = 0; i < valueTiles.size() && foundValueTilePosition == null; i++) {
-			ValueTilePosition valueTilePosition = valueTiles.get(i);
-
-			if (valueTilePosition.getTilePosition().getX() == tilePosition.getX() + x
-					&& valueTilePosition.getTilePosition().getY() == tilePosition.getY() + y) {
-				foundValueTilePosition = valueTilePosition;
-			}
-		}
-		return foundValueTilePosition;
 	}
 
 	// ------------------------------ Getter / Setter
@@ -388,7 +358,7 @@ public class UnitTrackerModule implements CBotBWEventListener {
 
 	@Override
 	public void onFrame() {
-		// Wait a certain amount before updating the lists to prevent CPU
+		// Wait a certain amount before updating the tables to prevent CPU
 		// spikes.
 		if (this.lastUpdateTimestamp == null
 				|| Core.getInstance().getGame().elapsedTime() - this.lastUpdateTimestamp >= MAX_TIME_UPDATE_WAIT) {

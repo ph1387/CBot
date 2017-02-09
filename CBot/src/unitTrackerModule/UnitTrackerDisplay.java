@@ -1,6 +1,10 @@
 package unitTrackerModule;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 
 import bwapi.Color;
 import bwapi.Game;
@@ -10,8 +14,8 @@ import core.Core;
 import core.Display;
 
 /**
- * UnitTrackerDisplay.java --- Used for displaying various things regarding
- * the tracking of units.
+ * UnitTrackerDisplay.java --- Used for displaying various things regarding the
+ * tracking of units.
  * 
  * @author P H - 31.01.2017
  *
@@ -55,21 +59,23 @@ class UnitTrackerDisplay {
 	 * Displays the tileStrength of the enemy units.
 	 *
 	 * @param valueTiles
-	 *            the List of all ValueTilePositions the enemy units apply to.
+	 *            the table of all ValueTilePositions the enemy units apply to.
 	 */
-	protected static void showEnemyUnitTileStrength(List<ValueTilePosition> valueTiles) {
-		Integer highestValue = findHighestValueOFTilePosition(valueTiles);
+	protected static void showEnemyUnitTileStrength(ConcurrentHashMap<TilePosition, Integer> valueTiles) {
+		final Integer highestValue = findHighestValueOFTilePosition(valueTiles);
 
 		if (highestValue != null) {
-			for (ValueTilePosition valueTilePosition : valueTiles) {
-				// Linear interpolate the color of the border
-				Color displayColor = new Color(
-						(int) ((Double.valueOf(valueTilePosition.getTileValue()) / Double.valueOf(highestValue)) * 255),
-						0, 0);
+			valueTiles.forEach(new BiConsumer<TilePosition, Integer>() {
 
-				showUnitTileStrength(valueTilePosition.getTilePosition().getX(),
-						valueTilePosition.getTilePosition().getY(), valueTilePosition, displayColor);
-			}
+				@Override
+				public void accept(TilePosition t, Integer i) {
+					// Linear interpolate the color of the border
+					Color displayColor = new Color((int) ((Double.valueOf(i) / Double.valueOf(highestValue)) * 255), 0,
+							0);
+
+					showUnitTileStrength(t, i, displayColor);
+				}
+			});
 		}
 	}
 
@@ -77,57 +83,66 @@ class UnitTrackerDisplay {
 	 * Displays the tileStrength of the player units.
 	 *
 	 * @param valueTiles
-	 *            the List of all ValueTilePositions the player units apply to.
+	 *            the table of all ValueTilePositions the player units apply to.
 	 */
-	protected static void showPlayerUnitTileStrength(List<ValueTilePosition> valueTiles) {
-		Integer highestValue = findHighestValueOFTilePosition(valueTiles);
+	protected static void showPlayerUnitTileStrength(ConcurrentHashMap<TilePosition, Integer> valueTiles) {
+		final Integer highestValue = findHighestValueOFTilePosition(valueTiles);
 
 		if (highestValue != null) {
-			for (ValueTilePosition valueTilePosition : valueTiles) {
-				// Linear interpolate the color of the border
-				Color displayColor = new Color(0,
-						(int) ((Double.valueOf(valueTilePosition.getTileValue()) / Double.valueOf(highestValue)) * 255),
-						0);
+			valueTiles.forEach(new BiConsumer<TilePosition, Integer>() {
 
-				showUnitTileStrength(valueTilePosition.getTilePosition().getX(),
-						valueTilePosition.getTilePosition().getY(), valueTilePosition, displayColor);
-			}
+				@Override
+				public void accept(TilePosition t, Integer i) {
+					// Linear interpolate the color of the border
+					Color displayColor = new Color(0, (int) ((Double.valueOf(i) / Double.valueOf(highestValue)) * 255),
+							0);
+
+					showUnitTileStrength(t, i, displayColor);
+				}
+			});
 		}
 	}
 
 	/**
 	 * Displays a single ValueTilePositions tileValue.
-	 *
-	 * @param tileposX
-	 *            TilePosition x coordinate.
-	 * @param tileposY
-	 *            TilePosition y coordinate.
-	 * @param valueTilePosition
+	 * 
+	 * @param tilePosition
+	 *            the TilePosition whose strength is being shown.
+	 * @param value
 	 *            the value of the TilePosition.
 	 * @param displayColor
-	 *            the color which the Position is going to be marked with.
+	 *            the color which the position is going to be marked with.
 	 */
-	private static void showUnitTileStrength(int tileposX, int tileposY, ValueTilePosition valueTilePosition,
-			Color displayColor) {
-		Display.drawTile(Core.getInstance().getGame(), tileposX, tileposY, 1, 1, displayColor);
-		GAME.drawTextMap(valueTilePosition.getTilePosition().toPosition(),
-				String.valueOf(valueTilePosition.getTileValue()));
+	private static void showUnitTileStrength(TilePosition tilePosition, Integer value, Color displayColor) {
+		Display.drawTile(Core.getInstance().getGame(), tilePosition.getX(), tilePosition.getY(), 1, 1, displayColor);
+		GAME.drawTextMap(tilePosition.toPosition(), String.valueOf(value));
 	}
 
 	/**
-	 * Function used to find the highest value in a given list of
-	 * ValuTilePositions. Value needed for a linear interpolation of the color.
+	 * Function used to find the highest value in a given table of TilePositions
+	 * mapped to Integers. Value needed for a linear interpolation of the color.
 	 *
-	 * @param valueList
+	 * @param valueTable
 	 *            List of all ValueTilePositions taken in consideration.
-	 * @return the highest Integer value of the list or null if none is found.
+	 * @return the highest Integer value of the table or null if none is found.
 	 */
-	private static Integer findHighestValueOFTilePosition(List<ValueTilePosition> valueList) {
+	private static Integer findHighestValueOFTilePosition(ConcurrentHashMap<TilePosition, Integer> valueTable) {
+		final List<Integer> valueList = new ArrayList<Integer>();
 		Integer highestValue = null;
 
-		for (ValueTilePosition valueTilePosition : valueList) {
-			if (highestValue == null || valueTilePosition.getTileValue() > highestValue) {
-				highestValue = valueTilePosition.getTileValue();
+		// Extract all values from the Hashtable. Necessary since comparing them
+		// directly needs the comparator to be final, which causes errors.
+		valueTable.forEach(new BiConsumer<TilePosition, Integer>() {
+
+			@Override
+			public void accept(TilePosition t, Integer i) {
+				valueList.add(i);
+			}
+		});
+
+		for (Integer value : valueList) {
+			if (highestValue == null || value > highestValue) {
+				highestValue = value;
 			}
 		}
 		return highestValue;

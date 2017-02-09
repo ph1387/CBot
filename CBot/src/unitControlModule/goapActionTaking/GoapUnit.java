@@ -57,7 +57,7 @@ public abstract class GoapUnit {
 	/**
 	 * Gets called when a plan failed to execute.
 	 *
-	 * @param goal
+	 * @param actions
 	 *            the remaining actions in the action Queue that failed.
 	 */
 	protected abstract void goapPlanFailed(Queue<GoapAction> actions);
