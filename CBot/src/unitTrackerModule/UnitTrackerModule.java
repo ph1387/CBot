@@ -25,8 +25,8 @@ import unitControlModule.UnitControlModule;
 
 /**
  * UnitTrackerModule.java --- Module for tracking enemy units and storing
- * information regarding their position and strength. Also stores
- * information regarding the players unit strength.
+ * information regarding their position and strength. Also stores information
+ * regarding the players unit strength.
  * 
  * @author P H - 31.01.2017
  *
@@ -34,10 +34,7 @@ import unitControlModule.UnitControlModule;
 public class UnitTrackerModule implements CBotBWEventListener {
 
 	private static UnitTrackerModule instance;
-	private static final int MAX_TIME_UPDATE_WAIT = 1;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
-
-	private Integer lastUpdateTimestamp = null;
 
 	public ConcurrentHashMap<TilePosition, Integer> playerAirAttackTilePositions = new ConcurrentHashMap<>();
 	public ConcurrentHashMap<TilePosition, Integer> playerGroundAttackTilePositions = new ConcurrentHashMap<>();
@@ -190,8 +187,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 * Function used to generate the table of value tiles showing the air forces
 	 * strength of the player units.
 	 *
-	 * @return a Hashtable containing ValueTilePositions that represent the players
-	 *         air strength.
+	 * @return a HashTable containing ValueTilePositions that represent the
+	 *         players air strength.
 	 */
 	private ConcurrentHashMap<TilePosition, Integer> generatePlayerAirAttackTilePositions() {
 		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
@@ -210,8 +207,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 * Function used to generate the table of value tiles showing the ground
 	 * forces strength of the player units.
 	 * 
-	 * @return a Hashtable containing ValueTilePositions that represent the players
-	 *         air strength.
+	 * @return a HashTable containing ValueTilePositions that represent the
+	 *         players air strength.
 	 */
 	private ConcurrentHashMap<TilePosition, Integer> generatePlayerGroundAttackTilePositions() {
 		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
@@ -230,8 +227,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 * Function used to generate the table of value tiles showing the air forces
 	 * strength of the enemy units and buildings.
 	 *
-	 * @return a Hashtable containing ValueTilePositions that represent the enemies
-	 *         air strength.
+	 * @return a HashTable containing ValueTilePositions that represent the
+	 *         enemies air strength.
 	 */
 	private ConcurrentHashMap<TilePosition, Integer> generateEnemyAirAttackTilePositions() {
 		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
@@ -256,11 +253,11 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	}
 
 	/**
-	 * Function used to generate the table of value tiles showing the ground forces
-	 * strength of the enemy units and buildings.
+	 * Function used to generate the table of value tiles showing the ground
+	 * forces strength of the enemy units and buildings.
 	 *
-	 * @return a Hashtable containing ValueTilePositions that represent the enemies
-	 *         ground strength.
+	 * @return a HashTable containing ValueTilePositions that represent the
+	 *         enemies ground strength.
 	 */
 	private ConcurrentHashMap<TilePosition, Integer> generateEnemyGroundAttackTilePositions() {
 		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
@@ -289,8 +286,7 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	/**
 	 * Function for adding a units attack value to the corresponding
 	 * ValueTilePosition table. The range is determined by the WeaponType the
-	 * unit is using. Greater range has a larger impact since it reaches tiles
-	 * further away.
+	 * unit is using and its range.
 	 *
 	 * @param tilePosition
 	 *            the TilePosition the calculations are being done around.
@@ -301,8 +297,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 * @param weaponType
 	 *            the WeaponType of the Unit.
 	 */
-	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, ConcurrentHashMap<TilePosition, Integer> valueTiles,
-			UnitType unitType, WeaponType weaponType) {
+	private void addValueInAreaToTilePositionValue(TilePosition tilePosition,
+			ConcurrentHashMap<TilePosition, Integer> valueTiles, UnitType unitType, WeaponType weaponType) {
 		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange()) / Double.valueOf(Display.TILESIZE));
 
 		// If the unit is a meele unit, the attack range is 0 and there will be
@@ -312,26 +308,41 @@ public class UnitTrackerModule implements CBotBWEventListener {
 			maxAttackTileRange = 1;
 		}
 
-		// In an area around the last seen TilePosition add the attack value
-		// proportional to the distance to the tiles.
-		for (int i = -maxAttackTileRange; i < maxAttackTileRange; i++) {
-			for (int j = -maxAttackTileRange; j < maxAttackTileRange; j++) {
+		int generalMultiplier = 41; // Needed for increasing the multiplier in
+									// the following calculations. Any positive
+									// number can be inserted here. The bigger
+									// the number, the stronger the effect of a
+									// shorter range is.
+
+		double multiplier = new Double(generalMultiplier * weaponType.damageAmount() * weaponType.damageFactor())
+				/ new Double(8 * Math.pow(maxAttackTileRange, 2) * Math.sin(1.));
+
+		for (int i = -maxAttackTileRange; i <= maxAttackTileRange; i++) {
+			for (int j = -maxAttackTileRange; j <= maxAttackTileRange; j++) {
 				if (tilePosition.getX() + i > 0 && tilePosition.getY() + j > 0) {
-					// Try to find the ValueTilePosition inside the list created
-					// before. If it is not found, create a new instance
-					TilePosition mappedTilePosition = new TilePosition(tilePosition.getX() + i, tilePosition.getY() + j);
+					TilePosition mappedTilePosition = new TilePosition(tilePosition.getX() + i,
+							tilePosition.getY() + j);
 					Integer foundIntegerValue = valueTiles.get(mappedTilePosition);
 
-					// If no Integer in the table is found, create a
-					// new one.
 					if (foundIntegerValue == null) {
 						foundIntegerValue = 0;
 					}
 
 					// Add the strength of the unit to the tiles value
 					// proportional to the distance between the units tile and
-					// the current tile.
-					Integer sum = foundIntegerValue + (int) (unitType.groundWeapon().damageAmount() / (Math.max(Math.abs(i), Math.abs(j)) + 1));
+					// the current tile. The function used here creates together
+					// with the multiplier used a 3d cone shaped object whose
+					// integral is the damage of the unit multiplied by the
+					// general multiplier. Therefore the units strength is
+					// accurately displayed in a circle around itself based on
+					// the strength of the unit and the range of its attack.
+					// Using this method ranged units do not get inaccurate
+					// strength values regarding their superior range as their
+					// strength is proportionally mapped to it using a general
+					// multiplier.
+					Integer sum = foundIntegerValue
+							+ (int) ((Math.cos(i / maxAttackTileRange) + Math.cos(j / maxAttackTileRange))
+									* multiplier);
 					valueTiles.put(mappedTilePosition, sum);
 				}
 			}
@@ -358,14 +369,7 @@ public class UnitTrackerModule implements CBotBWEventListener {
 
 	@Override
 	public void onFrame() {
-		// Wait a certain amount before updating the tables to prevent CPU
-		// spikes.
-		if (this.lastUpdateTimestamp == null
-				|| Core.getInstance().getGame().elapsedTime() - this.lastUpdateTimestamp >= MAX_TIME_UPDATE_WAIT) {
-			this.lastUpdateTimestamp = Core.getInstance().getGame().elapsedTime();
-
-			this.updateEnemyUnitLists();
-		}
+		this.updateEnemyUnitLists();
 
 		UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
 		UnitTrackerDisplay.showUnitsLastPosition(this.enemyUnits);

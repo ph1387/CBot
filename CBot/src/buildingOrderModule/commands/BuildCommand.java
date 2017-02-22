@@ -2,7 +2,7 @@ package buildingOrderModule.commands;
 
 import bwapi.UnitType;
 
-public abstract class BuildCommand {
+public abstract class BuildCommand implements Command, Requirement {
 	// Which building gets constructed and what value does a subclass assign the condition
 	protected UnitType assignedUnit;
 	protected int assignedValue = 0;

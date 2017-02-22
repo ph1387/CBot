@@ -9,34 +9,21 @@ import java.util.HashSet;
  */
 public abstract class GoapAction {
 
-	protected Object target;
+	protected Object target = null;
 
 	private HashSet<GoapState> preconditions = new HashSet<GoapState>();
 	private HashSet<GoapState> effects = new HashSet<GoapState>();
 
 	/**
-	 * @param target the target of the action. Since "Object" is being used this is NOT type safe!
+	 * @param target
+	 *            the target of the action. Since "Object" is being used this is
+	 *            NOT type safe!
 	 */
 	public GoapAction(Object target) {
 		this.target = target;
 	}
 
 	// -------------------- Functions
-
-	// TODO: Possible Change: Remove doReset() and reset()
-	/**
-	 * Set the target after a reset or the FSM will dispose of the Queue of this
-	 * GoapAction!
-	 */
-	void doReset() {
-		reset();
-
-		this.target = null;
-		this.preconditions = new HashSet<GoapState>();
-		this.effects = new HashSet<GoapState>();
-	}
-
-	protected abstract void reset();
 
 	/**
 	 * Checks if the current action of the GoapAction Queue is finished. Gets
@@ -49,6 +36,13 @@ public abstract class GoapAction {
 	 */
 	protected abstract boolean isDone(GoapUnit goapUnit);
 
+	/**
+	 * Gets called when the action is going to be executed by the Unit.
+	 * 
+	 * @param goapUnit
+	 *            the GoapUnit that is trying to execute the action.
+	 * @return true or false depending if the action was successful.
+	 */
 	protected abstract boolean performAction(GoapUnit goapUnit);
 
 	/**
@@ -84,7 +78,7 @@ public abstract class GoapAction {
 	 * @param goapUnit
 	 *            the unit the action is being executed from.
 	 * @return the relative cost of the action in relation to the current
-	 *         target, which is added to the bast cost.
+	 *         target, which is added to the base cost.
 	 */
 	protected abstract float generateCostRelativeToTarget(GoapUnit goapUnit);
 

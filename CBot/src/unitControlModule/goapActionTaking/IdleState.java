@@ -12,6 +12,8 @@ import java.util.Queue;
  */
 class IdleState implements IFSMState {
 
+	// TODO: Possible Change: Change this system (2)
+	// TODO: Following: UML Remove
 	private List<GoapState> previousGoalState;
 	private HashSet<GoapState> previousWorldState;
 	private HashSet<GoapAction> previousAvailableActions;

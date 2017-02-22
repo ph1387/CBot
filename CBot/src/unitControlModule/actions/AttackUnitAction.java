@@ -1,10 +1,9 @@
 package unitControlModule.actions;
 
-import bwapi.TilePosition;
 import bwapi.Unit;
-import unitControlModule.PlayerUnit;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.goapActionTaking.GoapUnit;
+import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * AttackUnitAction.java --- An attack action for attacking a single unit.
@@ -20,8 +19,9 @@ public class AttackUnitAction extends BaseAction {
 		super(target);
 		
 		this.addEffect(new GoapState(0, "destroyUnit", true));
-		this.addEffect(new GoapState(0, "attackNearestEnemyUnit", true));
 		this.addPrecondition(new GoapState(0, "enemyKnown", true));
+		this.addPrecondition(new GoapState(0, "unitsInRange", true));
+		this.addPrecondition(new GoapState(0, "unitsInSight", true));
 	}
 
 	// -------------------- Functions
@@ -33,8 +33,6 @@ public class AttackUnitAction extends BaseAction {
 
 	@Override
 	protected boolean performAction(GoapUnit goapUnit) {
-		// TODO: Implementation: performAction
-		
 		return  ((PlayerUnit) goapUnit).getUnit().attack(((Unit) this.target));
 	}
 
@@ -45,12 +43,12 @@ public class AttackUnitAction extends BaseAction {
 
 	@Override
 	protected float generateCostRelativeToTarget(GoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).getUnit().getDistance(((Unit) this.target).getPosition());
+		return 0;
 	}
 
 	@Override
 	protected boolean checkProceduralPrecondition(GoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).getUnit().canAttack((Unit) this.target);
+		return (this.target != null && ((PlayerUnit) goapUnit).getUnit().canAttack((Unit) this.target));
 	}
 
 	@Override

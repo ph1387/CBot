@@ -1,10 +1,9 @@
 package buildingOrderModule.commands;
 
-import buildingModule.BuildingModule;
 import buildingOrderModule.BuildingOrderModule;
 import bwapi.UnitType;
 
-public class BuildBuildingCommand extends BuildCommand implements Command, Requirement {
+public class BuildBuildingCommand extends BuildCommand {
 	
 	public BuildBuildingCommand(UnitType assignedUnit) {
 		super(assignedUnit);

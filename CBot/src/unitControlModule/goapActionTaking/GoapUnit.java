@@ -29,6 +29,16 @@ public abstract class GoapUnit {
 	 * trying to archive a specific goal should be paused to fulfill a more
 	 * urgent goal. The GoapState is added to the main goal HashSet and changed
 	 * by the GoapAgent.
+	 * <p>
+	 * IMPORTANT:
+	 * <p>
+	 * The function must only be called once per two update cycles. The reason
+	 * for this is that the function pushes an IdleState on the FSM Stack which
+	 * is transformed into an GoapAction Queue in the current cycle. Calling the
+	 * function again in the next one pushes a new IdleState on top of this
+	 * generated action Queue, which renders the Queue obsolete and causes the
+	 * Unit to not perform any action since the RunActionState is now beneath
+	 * the newly pushed IdleState.
 	 *
 	 * @param newGoapState
 	 *            the new goal the unit tries to archive.
@@ -89,11 +99,11 @@ public abstract class GoapUnit {
 		this.worldState = worldState;
 	}
 
-	protected void addWorldState(GoapState effect) {
+	protected void addWorldState(GoapState newWorldState) {
 		boolean missing = true;
 
 		for (GoapState state : this.worldState) {
-			if (effect.equals(state.effect)) {
+			if (newWorldState.effect.equals(state.effect)) {
 				missing = false;
 
 				break;
@@ -101,7 +111,7 @@ public abstract class GoapUnit {
 		}
 
 		if (missing) {
-			this.worldState.add(effect);
+			this.worldState.add(newWorldState);
 		}
 	}
 
@@ -121,8 +131,8 @@ public abstract class GoapUnit {
 		}
 	}
 
-	protected void removeWorldState(GoapState effect) {
-		this.worldState.remove(effect);
+	protected void removeWorldState(GoapState goapState) {
+		this.worldState.remove(goapState);
 	}
 
 	protected HashSet<GoapState> getWorldState() {
@@ -134,11 +144,11 @@ public abstract class GoapUnit {
 		this.goalState = goalState;
 	}
 
-	protected void addGoalState(GoapState effect) {
+	protected void addGoalState(GoapState newGoalState) {
 		boolean missing = true;
 
 		for (GoapState state : this.goalState) {
-			if (effect.equals(state.effect)) {
+			if (newGoalState.equals(state.effect)) {
 				missing = false;
 
 				break;
@@ -146,7 +156,7 @@ public abstract class GoapUnit {
 		}
 
 		if (missing) {
-			this.goalState.add(effect);
+			this.goalState.add(newGoalState);
 		}
 	}
 
@@ -166,8 +176,8 @@ public abstract class GoapUnit {
 		}
 	}
 
-	protected void removeGoalStat(GoapState effect) {
-		this.goalState.remove(effect);
+	protected void removeGoalStat(GoapState goapState) {
+		this.goalState.remove(goapState);
 	}
 
 	protected List<GoapState> getGoalState() {

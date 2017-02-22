@@ -54,6 +54,8 @@ public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedE
 	 */
 	@Override
 	public void onPlanCreated(Queue<GoapAction> plan) {
+		this.assignedGoapUnit.goapPlanFound(plan);
+		
 		this.fsm.popStack();
 		this.fsm.pushStack(new RunActionState(this.fsm, plan));
 	}

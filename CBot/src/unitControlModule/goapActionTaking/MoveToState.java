@@ -5,7 +5,7 @@ package unitControlModule.goapActionTaking;
  * 
  * @author P H - 28.01.2017
  */
-final class MoveToState implements IFSMState {
+class MoveToState implements IFSMState {
 
 	GoapAction currentAction;
 

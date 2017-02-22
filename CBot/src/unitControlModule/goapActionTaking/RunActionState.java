@@ -7,7 +7,7 @@ import java.util.Queue;
  * 
  * @author P H - 28.01.2017
  */
-final class RunActionState implements IFSMState {
+class RunActionState implements IFSMState {
 
 	private Queue<GoapAction> currentActions;
 	private FSM fsm;
@@ -37,8 +37,14 @@ final class RunActionState implements IFSMState {
 		boolean workingOnQueue = false;
 
 		try {
-			if (this.currentActions.peek().isDone(goapUnit)) {
-				this.currentActions.poll();
+			boolean missingAction = true;
+			
+			while (missingAction) {
+				if (!this.currentActions.isEmpty() && this.currentActions.peek().isDone(goapUnit)) {
+					this.currentActions.poll();
+				} else {
+					missingAction = false;
+				}
 			}
 
 			if (!this.currentActions.isEmpty()) {
@@ -49,13 +55,14 @@ final class RunActionState implements IFSMState {
 				} else if (currentAction.requiresInRange(goapUnit) && !currentAction.isInRange(goapUnit)) {
 					this.fsm.pushStack(new MoveToState(currentAction));
 				} else if (currentAction.checkProceduralPrecondition(goapUnit) && !currentAction.performAction(goapUnit)) {
-					throw new Exception("Action not possible (ProceduralPrecondition)!");
+					throw new Exception("Action could not be performed! (proceduralPrecondition=True, performAction=false)");
 				}
 
 				workingOnQueue = true;
 			}
 		} catch(Exception e) {
-			
+			System.out.println(this.currentActions.peek().getClass().getSimpleName());
+			e.printStackTrace();
 		}
 		return workingOnQueue;
 	}

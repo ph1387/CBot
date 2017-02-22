@@ -11,6 +11,7 @@ import bwapi.*;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
+import core.Display;
 import unitControlModule.goapActionTaking.GoapAgent;
 
 /**
@@ -23,18 +24,17 @@ public class UnitControlModule implements CBotBWEventListener {
 
 	private static UnitControlModule instance;
 	private static int WORKER_SCOUTING_TRIGGER = 9;
-	private static int AITHREAD_NOTIFY_WAIT = 1;
 
 	private boolean workerOnceAssigned = false;
 	private final Object monitor = new Object();
 	private GoapAIThread aiThread = new GoapAIThread(this.monitor);
-	private int notifyTimeStamp = 0;
 
 	// Units the AIThread is going to assign to GoapAgents / removes from them.
 	ConcurrentLinkedQueue<Unit> newCombatUnits = new ConcurrentLinkedQueue<Unit>();
 	ConcurrentLinkedQueue<Unit> unitsDead = new ConcurrentLinkedQueue<Unit>();
 
 	private List<Object> seperateUnitListeners = new ArrayList<Object>();
+	private HashSet<Unit> combatUnits = new HashSet<Unit>();
 
 	private UnitControlModule() {
 		this.aiThread.start();
@@ -106,10 +106,11 @@ public class UnitControlModule implements CBotBWEventListener {
 	@Override
 	public void onFrame() {
 		synchronized (this.monitor) {
-			if(this.notifyTimeStamp == 0 || Core.getInstance().getGame().elapsedTime() - this.notifyTimeStamp >= AITHREAD_NOTIFY_WAIT) {
-				this.notifyTimeStamp = Core.getInstance().getGame().elapsedTime();
-				this.monitor.notifyAll();
-			}
+			this.monitor.notifyAll();
+		}
+		
+		for (Unit unit : this.combatUnits) {
+			Display.showUnitTarget(Core.getInstance().getGame(), unit, new Color(0, 0, 255));
 		}
 		
 		// TODO: Problem: Unit references do not match!
@@ -137,6 +138,7 @@ public class UnitControlModule implements CBotBWEventListener {
 		if (unit.getPlayer() == Core.getInstance().getPlayer() && !unit.getType().isBuilding()
 				&& !unit.getType().isWorker()) {
 			this.newCombatUnits.add(unit);
+			this.combatUnits.add(unit);
 		}
 	}
 
@@ -144,6 +146,7 @@ public class UnitControlModule implements CBotBWEventListener {
 	public void onUnitDestroy(Unit unit) {
 		if (!unit.getType().isBuilding() && !unit.getType().isWorker()) {
 			this.unitsDead.add(unit);
+			this.combatUnits.remove(unit);
 		}
 	}
 

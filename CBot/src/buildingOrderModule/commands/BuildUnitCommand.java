@@ -1,11 +1,10 @@
 package buildingOrderModule.commands;
 
-import buildingModule.BuildingModule;
 import buildingOrderModule.BuildingOrderModule;
 import bwapi.UnitType;
 import core.Core;
 
-public class BuildUnitCommand extends BuildCommand implements Command, Requirement {
+public class BuildUnitCommand extends BuildCommand {
 	
 	private Integer pointTimerStart;
 	

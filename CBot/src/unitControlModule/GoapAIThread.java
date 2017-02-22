@@ -7,6 +7,7 @@ import bwapi.Unit;
 import cBotBWEventDistributor.CBotBWEndEventListener;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import unitControlModule.goapActionTaking.GoapAgent;
+import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * GoapAIThread.java --- Thread on which all GOAP actions run on. This can be

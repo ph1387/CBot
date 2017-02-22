@@ -1,9 +1,9 @@
 package unitControlModule.actions;
 
 import bwapi.TilePosition;
-import unitControlModule.PlayerUnit;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.goapActionTaking.GoapUnit;
+import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * DestroyUnitAction.java --- An attacking action with which the unit can
@@ -49,7 +49,7 @@ public class AttackMoveAction extends BaseAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(GoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).getUnit().canAttack(((TilePosition) this.target).toPosition());
+		return (this.target != null && ((PlayerUnit) goapUnit).getUnit().canAttack(((TilePosition) this.target).toPosition()));
 	}
 
 	@Override

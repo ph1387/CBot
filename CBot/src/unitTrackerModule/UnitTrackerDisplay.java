@@ -51,7 +51,9 @@ class UnitTrackerDisplay {
 	 */
 	protected static void showUnitsLastPosition(List<EnemyUnit> unitList) {
 		for (EnemyUnit enemyUnit : unitList) {
-			GAME.drawTextMap(enemyUnit.getLastSeenTilePosition().toPosition(), enemyUnit.getUnitType().toString());
+			GAME.drawTextMap(enemyUnit.getLastSeenTilePosition().toPosition().getX(),
+					enemyUnit.getLastSeenTilePosition().toPosition().getY() + Display.LINEHEIGHT,
+					enemyUnit.getUnitType().toString());
 		}
 	}
 

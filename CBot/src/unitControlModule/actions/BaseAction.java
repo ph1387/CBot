@@ -14,11 +14,6 @@ public abstract class BaseAction extends GoapAction {
 	}
 
 	// -------------------- Functions
-	
-	@Override
-	protected void reset() {
-		
-	}
 
 	// ------------------------------ Getter / Setter
 

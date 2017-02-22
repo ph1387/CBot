@@ -1,11 +1,9 @@
 package unitControlModule.actions;
 
 import bwapi.Position;
-import bwta.BaseLocation;
-import unitControlModule.PlayerUnit;
-import unitControlModule.goapActionTaking.GoapAction;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.goapActionTaking.GoapUnit;
+import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * ScoutBaseLocationsAction.java --- A scouting action for searching a base
