@@ -69,7 +69,7 @@ public class RetreatFromNearestUnitAction extends BaseAction {
 			double maxDistance = PlayerUnit.CONFIDENCE_TILE_RADIUS * Display.TILESIZE;
 			double alphaMax = 120.;
 			double alphaAdd = 10.;
-			double minMultiplier = 0.3;
+			double minMultiplier = 0.1;		// TODO: Possible Change: Increment it
 			
 			// uPos -> Unit Position, ePos -> Enemy Position
 			int uPosX = ((PlayerUnit) goapUnit).getUnit().getPosition().getX();

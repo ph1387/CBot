@@ -20,9 +20,26 @@ public class SimpleWorldStateUpdater extends GeneralWorldStateUpdater {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-
-		// TODO: Implementation: update()
-
+		if(this.playerUnit.nearestEnemyUnitInSight == null) {
+			this.changeUnitsInSight(false);
+		} else {
+			this.changeUnitsInSight(true);
+		}
+		
+		if(this.playerUnit.getAllEnemyUnitsInWeaponRange().isEmpty()) {
+			this.changeUnitsInRange(false);
+		} else {
+			this.changeUnitsInRange(true);
+		}
+		
+		if(this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_MISSING) {
+			this.changeEnemyKnown(false);
+		} else {
+			this.changeEnemyKnown(true);
+		}
+		
+		// Never set true, since the general intent of the unit is to destroy the enemy.
+		this.changeDestroyUnit(false);
 	}
 
 	/**

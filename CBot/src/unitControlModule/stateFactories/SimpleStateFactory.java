@@ -3,6 +3,7 @@ package unitControlModule.stateFactories;
 import java.util.HashSet;
 import java.util.List;
 
+import unitControlModule.goapActionTaking.GoapAction;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.stateFactories.actions.SimpleUnitAvailableActions;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
@@ -34,7 +35,7 @@ public class SimpleStateFactory extends GeneralWorldStateFactory {
 	}
 
 	@Override
-	public HashSet<BaseAction> generateAvailableActions() {
+	public HashSet<GoapAction> generateAvailableActions() {
 		return new SimpleUnitAvailableActions();
 	}
 

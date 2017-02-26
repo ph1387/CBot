@@ -10,7 +10,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 26.02.2017
  *
  */
-public class SimpleGoalStateUpdater extends GeneralWorldStateUpdater {
+public class SimpleGoalStateUpdater extends GeneralGoalStateUpdater {
 
 	public SimpleGoalStateUpdater(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -20,8 +20,10 @@ public class SimpleGoalStateUpdater extends GeneralWorldStateUpdater {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-
-		// TODO: Implementation: update()
-
+		if(this.playerUnit.confidence >= PlayerUnit.CONFIDENCE_THRESHHOLD) {
+			this.changeGoalStateImportance("retreatFromUnit", 1);
+		} else {
+			this.changeGoalStateImportance("retreatFromUnit", 3);
+		}
 	}
 }

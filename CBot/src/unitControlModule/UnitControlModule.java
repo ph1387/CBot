@@ -130,7 +130,11 @@ public class UnitControlModule implements CBotBWEventListener {
 	public void onUnitComplete(Unit unit) {
 		if (unit.getPlayer() == Core.getInstance().getPlayer() && !unit.getType().isBuilding()
 				&& !unit.getType().isWorker()) {
-			this.agents.add(new GoapAgent(new PlayerUnit(unit)));
+			try {
+				this.agents.add(GoapAgentFactory.createAgent(unit));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

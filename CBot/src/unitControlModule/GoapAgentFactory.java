@@ -1,5 +1,6 @@
 package unitControlModule;
 
+import bwapi.Unit;
 import bwapi.UnitType;
 import unitControlModule.goapActionTaking.GoapAgent;
 
@@ -14,10 +15,19 @@ public class GoapAgentFactory {
 
 	// -------------------- Functions
 
-	public static GoapAgent createAgent(UnitType type) {
+	public static GoapAgent createAgent(Unit unit) throws Exception {
+		GoapAgent agent = null;
+		
+		// TODO: Add more Classes
+		// TODO: Possible Change: Implementation change!
+		if(unit.getType() == UnitType.Terran_Marine) {
+			agent = new GoapAgent(PlayerUnitFactory.createMarine(unit));
+		}
 
-		// TODO: Implementation: createAgent(UnitType type)
-
-		return null;
+		if(agent == null) {
+			throw new Exception("Unknown / Undefined UnitType.");
+		} else {
+			return agent;
+		}
 	}
 }

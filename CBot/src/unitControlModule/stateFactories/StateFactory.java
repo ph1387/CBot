@@ -3,6 +3,7 @@ package unitControlModule.stateFactories;
 import java.util.HashSet;
 import java.util.List;
 
+import unitControlModule.goapActionTaking.GoapAction;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.updater.Updater;
@@ -22,7 +23,7 @@ public interface StateFactory {
 	/**
 	 * @return a Object which represents the currently available Actions.
 	 */
-	public HashSet<BaseAction> generateAvailableActions();
+	public HashSet<GoapAction> generateAvailableActions();
 	
 	/**
 	 * @param playerUnit the PlayerUnit which the factory is assigned to.

@@ -140,8 +140,8 @@ public abstract class GoapUnit {
 	}
 
 	// ---------------------------------------- GoalState
-	protected void setGoalState(ArrayList<GoapState> goalState) {
-		this.goalState = goalState;
+	protected void setGoalState(List<GoapState> list) {
+		this.goalState = list;
 	}
 
 	protected void addGoalState(GoapState newGoalState) {
