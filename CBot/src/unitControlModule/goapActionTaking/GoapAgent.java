@@ -83,6 +83,7 @@ public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedE
 	@Override
 	public void onImportantUnitStackResetChange() {
 		this.fsm.clearStack();
+		this.fsm.pushStack(this.idleState);
 	}
 
 	// ------------------------------ FSM

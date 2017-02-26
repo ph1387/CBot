@@ -9,6 +9,7 @@ import bwapi.Unit;
 import bwta.BWTA;
 import core.Core;
 import core.Display;
+import unitControlModule.Vector;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.goapActionTaking.GoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -22,10 +23,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class RetreatFromNearestUnitAction extends BaseAction {
 
-	// TODO: REMOVE TEST
-	private static int ITERATION_MAX = 10;
-
-	private Unit retreatTarget = null;
+	private Position retreatPosition = null;
 
 	/**
 	 * @param target
@@ -42,27 +40,17 @@ public class RetreatFromNearestUnitAction extends BaseAction {
 
 	@Override
 	protected boolean isDone(GoapUnit goapUnit) {
-//		return this.retreatTarget == null || (this.retreatTarget != null && ((PlayerUnit) goapUnit).isNear(this.retreatTarget.getTilePosition(), 2));
-		
-		// TODO: REMOVE TEST
 		return this.target == null || !((PlayerUnit) goapUnit).getAllEnemyUnitsInRange((PlayerUnit.CONFIDENCE_TILE_RADIUS + 1) * Display.TILESIZE).contains(this.target);
 	}
 
 	@Override
 	protected boolean performAction(GoapUnit goapUnit) {
-//		int posX = this.retreatTarget.getPosition().getX();
-//		int posY = this.retreatTarget.getPosition().getY();
 		
-		// TODO: REMOVE TEST
-		int pPosX = ((PlayerUnit) goapUnit).getUnit().getPosition().getX();
-		int pPosY = ((PlayerUnit) goapUnit).getUnit().getPosition().getY();
-		int ePosX = ((Unit) this.target).getPosition().getX();
-		int ePosY = ((Unit) this.target).getPosition().getY();
+		// TODO: DEBUG INFO
+		// Executing action.
+		Display.drawTileFilled(Core.getInstance().getGame(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getX(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getY(), 1, 1, new Color(255, 255, 0));
 		
-		// TODO: REMOVE TEST ADDON
-		Display.drawTileFilled(Core.getInstance().getGame(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getX(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getY(), 1, 1, new Color(255, 0, 0));
-		
-		return ((PlayerUnit) goapUnit).getUnit().move(new Position(pPosX + pPosX - ePosX, pPosY + pPosY - ePosY));
+		return ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
 	}
 
 	@Override
@@ -77,56 +65,97 @@ public class RetreatFromNearestUnitAction extends BaseAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(GoapUnit goapUnit) {
-//		HashSet<Unit> unitsAlreadyChecked = new HashSet<Unit>();
-//		int iterationCounter = 1;
-//		int baseSearchRange = PlayerUnit.CONFIDENCE_TILE_RADIUS * Display.TILESIZE;
-//		Integer posX = null;
-//		Integer posY = null;
-//
-//		// Not excluding the unit itself causes exceptions.
-//		unitsAlreadyChecked.add(((PlayerUnit) goapUnit).getUnit());
-//
-//		if (this.target != null) {
-//			while (this.retreatTarget == null && iterationCounter <= ITERATION_MAX) {
-//				for (Unit unit : ((PlayerUnit) goapUnit).getAllPlayerUnitsInRange(baseSearchRange * iterationCounter)) {
-//					if (!unitsAlreadyChecked.contains(unit)) {
-//						int unitDistanceTarget = unit.getDistance(((Unit) this.target).getPosition());
-//						int goapUnitDistanceTarget = ((PlayerUnit) goapUnit).getUnit()
-//								.getDistance(((Unit) this.target).getPosition());
-//
-//						// Since the unit tries to retreat the distance between
-//						// it and the target has to increase.
-//						// -> The unit this one is retreating to has to be
-//						// further away from the target than either the unit
-//						// itself or the possible found retreat target.
-//						if ((this.retreatTarget == null && unitDistanceTarget > goapUnitDistanceTarget)
-//								|| (this.retreatTarget != null && unitDistanceTarget > this.retreatTarget
-//										.getDistance(((Unit) this.target).getPosition()))) {
-//							this.retreatTarget = unit;
-//						}
-//					}
-//					unitsAlreadyChecked.add(unit);
-//				}
-//
-//				iterationCounter++;
-//			}
-//
-//			if (this.retreatTarget != null) {
-//				posX = this.retreatTarget.getPosition().getX();
-//				posY = this.retreatTarget.getPosition().getY();
-//			}
-//		}
-//
-//		return (this.target != null && this.retreatTarget != null
-//				&& ((PlayerUnit) goapUnit).getUnit().hasPath(new Position(posX, posY)));
-		
-		// TODO: REMOVE TEST
 		if(this.target != null) {
-			int pPosX = ((PlayerUnit) goapUnit).getUnit().getPosition().getX();
-			int pPosY = ((PlayerUnit) goapUnit).getUnit().getPosition().getY();
+			double maxDistance = PlayerUnit.CONFIDENCE_TILE_RADIUS * Display.TILESIZE;
+			double alphaMax = 120.;
+			double alphaAdd = 10.;
+			double minMultiplier = 0.3;
+			
+			// uPos -> Unit Position, ePos -> Enemy Position
+			int uPosX = ((PlayerUnit) goapUnit).getUnit().getPosition().getX();
+			int uPosY = ((PlayerUnit) goapUnit).getUnit().getPosition().getY();
 			int ePosX = ((Unit) this.target).getPosition().getX();
 			int ePosY = ((Unit) this.target).getPosition().getY();
-			return this.target != null && ((PlayerUnit) goapUnit).getUnit().hasPath(new Position(pPosX + pPosX - ePosX, pPosY + pPosY - ePosY));
+			
+			// vecEU -> Vector(enemyUnit, playerUnit)
+			Vector vecEU = new Vector(ePosX, ePosY, uPosX - ePosX, uPosY - ePosY);
+			double vecMultiplier = (maxDistance - vecEU.length()) / vecEU.length();
+			double alphaActual = (alphaMax * vecEU.length() / maxDistance) + alphaAdd;
+			
+			// vecUTP -> Vector(playerUnit, targetPosition)
+			Vector vecUTP = new Vector(uPosX, uPosY, (int) (vecMultiplier * vecEU.dirX), (int) (vecMultiplier * vecEU.dirY));
+			
+			// Create two vectors that are left and right rotated representations of the vector(playerUnit, targetPosition) by the actual alpha value.
+			// vecRotatedL -> Rotated Vector left
+			// vecRotatedR -> Rotated Vector right
+			Vector vecRotatedL = new Vector(vecUTP.x, vecUTP.y, vecUTP.dirX, vecUTP.dirY);
+			Vector vecRotatedR = new Vector(vecUTP.x, vecUTP.y, vecUTP.dirX, vecUTP.dirY);
+			vecRotatedL.rotateLeftDEG(alphaActual);
+			vecRotatedR.rotateRightDEG(alphaActual);
+			
+			// Get a possible Unit to which this unit can retreat to. If none is found, move to the previously calculated target Position.
+			Unit possibleRetreatUnit = null;
+			
+			try {
+				for (Unit possibleUnit : ((PlayerUnit) goapUnit).getAllPlayerUnitsInRange((int) (maxDistance))) {
+					// ruPos -> Retreat Unit Position 
+					int ruPosX = possibleUnit.getPosition().getX();
+					int ruPosY = possibleUnit.getPosition().getY();
+					
+					// vecETU -> vector(enemyUnit, targetUnit)
+					Vector vecETU = new Vector(ePosX, ePosY, ruPosX - ePosX, ruPosY - ePosY);
+					
+					// Determine if the targetUnit is at a valid Position. The Unit has to be inside the cone created by the left and right rotated Vectors, which results in the checking of the needed multipliers for the intersection point. The multiplier has to be in a certain range to enable the selection of a retreat Unit.
+					Vector intersecL = vecRotatedL.getIntersection(vecETU);
+					Vector intersecR = vecRotatedR.getIntersection(vecETU);
+					Double intersectionMultiplierL = null, intersectionMultiplierR = null;
+					
+					if(intersecL != null) {
+						intersectionMultiplierL = vecRotatedL.getNeededMultiplier(intersecR);
+					}
+					if(intersecR != null) {
+						intersectionMultiplierR = vecRotatedR.getNeededMultiplier(intersecR);
+					}
+					
+					if((intersectionMultiplierL != null && intersectionMultiplierL > minMultiplier && intersectionMultiplierL < vecMultiplier) || (intersectionMultiplierR != null && intersectionMultiplierR > minMultiplier && intersectionMultiplierR < vecMultiplier)) {
+						if(possibleRetreatUnit == null || ((PlayerUnit) goapUnit).getUnit().getDistance(possibleRetreatUnit) < ((PlayerUnit) goapUnit).getUnit().getDistance(possibleUnit)) {
+							possibleRetreatUnit = possibleUnit;
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if(possibleRetreatUnit == null) {
+				this.retreatPosition = new Position(vecUTP.x + vecUTP.dirX, vecUTP.y + vecUTP.dirY);
+			} else {
+				this.retreatPosition = possibleRetreatUnit.getPosition();
+			}
+			
+			
+			
+			
+			// TODO: DEBUG INFO
+			// Cone of possible retreat Positions
+			Position targetEndPosition = new Position(vecUTP.x + vecUTP.dirX, vecUTP.y + vecUTP.dirY);
+			Position rotatedLVecEndPos = new Position(vecRotatedL.x + vecRotatedL.dirX, vecRotatedL.y + vecRotatedL.dirY);
+			Position rotatedRVecEndPos = new Position(vecRotatedR.x + vecRotatedR.dirX, vecRotatedR.y + vecRotatedR.dirY);
+			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(), targetEndPosition, new Color(255, 128, 255));
+			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(), rotatedLVecEndPos, new Color(255, 0, 0));
+			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(), rotatedRVecEndPos, new Color(0, 255, 0));
+			Core.getInstance().getGame().drawTextMap(rotatedLVecEndPos, String.valueOf(alphaActual));
+			Core.getInstance().getGame().drawTextMap(rotatedRVecEndPos, String.valueOf(alphaActual));
+//			// Indication which Unit got updated
+//			Display.drawTileFilled(Core.getInstance().getGame(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getX(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getY(), 1, 1, new Color(255, 0, 0));
+//			// Position to which the Unit retreats to
+//			Display.drawTileFilled(Core.getInstance().getGame(), this.retreatPosition.toTilePosition().getX(), this.retreatPosition.toTilePosition().getY(), 1, 1, new Color(255, 255, 0));
+			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(), this.retreatPosition, new Color(255, 255, 0));
+			
+		
+			
+		
+			return this.retreatPosition != null;
 		} else {
 			return false;
 		}

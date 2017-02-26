@@ -32,13 +32,13 @@ public class Display {
 	}
 
 	// Display a box around (a) tile/-s
-	public static void drawTile(Game game, int posX, int posY, int tileSizeX, int tileSizeY, Color color) {
-		game.drawBoxMap(posX * TILESIZE, posY * TILESIZE, (posX + tileSizeX) * TILESIZE, (posY + tileSizeY) * TILESIZE, color);
+	public static void drawTile(Game game, int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
+		game.drawBoxMap(tileX * TILESIZE, tileY * TILESIZE, (tileX + tileWidth) * TILESIZE, (tileY + tileHeight) * TILESIZE, color);
 	}
 	
 	// Display a filled tile on the map
-	public static void drawTileFilled(Game game, int posX, int posY, int tileSizeX, int tileSizeY, Color color) {
-		game.drawBoxMap(posX * TILESIZE, posY * TILESIZE, (posX + tileSizeX) * TILESIZE, (posY + tileSizeY) * TILESIZE, color, true);
+	public static void drawTileFilled(Game game, int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
+		game.drawBoxMap(tileX * TILESIZE, tileY * TILESIZE, (tileX + tileWidth) * TILESIZE, (tileY + tileHeight) * TILESIZE, color, true);
 	}
 
 	// Display the target position of the unit

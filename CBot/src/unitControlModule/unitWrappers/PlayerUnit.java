@@ -214,22 +214,26 @@ public class PlayerUnit extends GoapUnit {
 		this.updateGoalState();
 		this.attackMoveToNearestKnownUnitConfiguration();
 		
+		((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.nearestEnemyUnitInConfidenceRange);
+		((RetreatFromNearestUnitAction) this.getActionFromInstance(RetreatFromNearestUnitAction.class)).setTarget(this.nearestEnemyUnitInConfidenceRange);
+		
 		// No "else if" to perform change in one cycle if an enemy Unit is in range.
 		if(this.currentRangeState == ConfidenceRangeStates.NO_UNIT_IN_RANGE && this.nearestEnemyUnitInConfidenceRange != null){
 			this.currentRangeState = ConfidenceRangeStates.UNIT_IN_RANGE;
 			this.resetActions();
 		}
 		if(this.currentRangeState == ConfidenceRangeStates.UNIT_IN_RANGE) {
-			
 			if(this.nearestEnemyUnitInConfidenceRange == null) {
 				this.currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
 				this.resetActions();
 			} else {
-				((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.nearestEnemyUnitInConfidenceRange);
-				((RetreatFromNearestUnitAction) this.getActionFromInstance(RetreatFromNearestUnitAction.class)).setTarget(this.nearestEnemyUnitInConfidenceRange);
 				
-				// TODO: REMOVE TEST
+				
+				// TODO: DEBUG INFO
+				// Nearest enemy Unit display.
 				Display.drawTileFilled(Core.getInstance().getGame(), this.nearestEnemyUnitInConfidenceRange.getTilePosition().getX(), this.nearestEnemyUnitInConfidenceRange.getTilePosition().getY(), 1, 1, new Color(0, 0, 255));
+				
+				
 			}
 		}
 	}
@@ -306,11 +310,11 @@ public class PlayerUnit extends GoapUnit {
 	 * Function for updating all goalState references.
 	 */
 	protected void updateGoalState() {
-//		if(this.confidence >= CONFIDENCE_THRESHHOLD) {
-//			this.changeGoalStateImportance("retreatFromUnit", 1);
-//		} else {
+		if(this.confidence >= CONFIDENCE_THRESHHOLD) {
+			this.changeGoalStateImportance("retreatFromUnit", 1);
+		} else {
 			this.changeGoalStateImportance("retreatFromUnit", 3);
-//		}
+		}
 	}
 	
 	/**

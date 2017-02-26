@@ -1,6 +1,9 @@
 package unitControlModule.actions;
 
+import bwapi.Color;
 import bwapi.TilePosition;
+import core.Core;
+import core.Display;
 import unitControlModule.goapActionTaking.GoapState;
 import unitControlModule.goapActionTaking.GoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -34,6 +37,11 @@ public class AttackMoveAction extends BaseAction {
 
 	@Override
 	protected boolean performAction(GoapUnit goapUnit) {
+		
+		// TODO: DEBUG INFO
+		// Executing action.
+		Display.drawTileFilled(Core.getInstance().getGame(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getX(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getY(), 1, 1, new Color(255, 128, 0));
+
 		return ((PlayerUnit) goapUnit).getUnit().attack(((TilePosition) this.target).toPosition());
 	}
 

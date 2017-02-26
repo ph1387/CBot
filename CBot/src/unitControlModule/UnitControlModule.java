@@ -13,6 +13,7 @@ import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
 import core.Display;
 import unitControlModule.goapActionTaking.GoapAgent;
+import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * UnitControlModule.java --- Module for controlling the player units
@@ -26,19 +27,11 @@ public class UnitControlModule implements CBotBWEventListener {
 	private static int WORKER_SCOUTING_TRIGGER = 9;
 
 	private boolean workerOnceAssigned = false;
-	private final Object monitor = new Object();
-	private GoapAIThread aiThread = new GoapAIThread(this.monitor);
-
-	// Units the AIThread is going to assign to GoapAgents / removes from them.
-	ConcurrentLinkedQueue<Unit> newCombatUnits = new ConcurrentLinkedQueue<Unit>();
-	ConcurrentLinkedQueue<Unit> unitsDead = new ConcurrentLinkedQueue<Unit>();
 
 	private List<Object> seperateUnitListeners = new ArrayList<Object>();
-	private HashSet<Unit> combatUnits = new HashSet<Unit>();
-
+	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
+	
 	private UnitControlModule() {
-		this.aiThread.start();
-
 		CBotBWEventDistributor.getInstance().addListener(this);
 	}
 
@@ -105,14 +98,6 @@ public class UnitControlModule implements CBotBWEventListener {
 
 	@Override
 	public void onFrame() {
-		synchronized (this.monitor) {
-			this.monitor.notifyAll();
-		}
-		
-		for (Unit unit : this.combatUnits) {
-			Display.showUnitTarget(Core.getInstance().getGame(), unit, new Color(0, 0, 255));
-		}
-		
 		// TODO: Problem: Unit references do not match!
 		// Also Nullpointer at units target! this.action == null in actions
 		// -> Be careful!
@@ -121,6 +106,14 @@ public class UnitControlModule implements CBotBWEventListener {
 		// if (!this.workerOnceAssigned) {
 		// this.tryTransferringWorkerToCombatUnits();
 		// }
+		
+		for (GoapAgent goapAgent : this.agents) {
+			
+			// TODO: DEBUG INFO
+			Display.showUnitTarget(Core.getInstance().getGame(), ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
+			
+			goapAgent.update();
+		}
 	}
 
 	@Override
@@ -137,16 +130,26 @@ public class UnitControlModule implements CBotBWEventListener {
 	public void onUnitComplete(Unit unit) {
 		if (unit.getPlayer() == Core.getInstance().getPlayer() && !unit.getType().isBuilding()
 				&& !unit.getType().isWorker()) {
-			this.newCombatUnits.add(unit);
-			this.combatUnits.add(unit);
+			this.agents.add(new GoapAgent(new PlayerUnit(unit)));
 		}
 	}
 
 	@Override
 	public void onUnitDestroy(Unit unit) {
 		if (!unit.getType().isBuilding() && !unit.getType().isWorker()) {
-			this.unitsDead.add(unit);
-			this.combatUnits.remove(unit);
+			GoapAgent matchingAgent = null;
+
+			for (GoapAgent agent : this.agents) {
+				if (((PlayerUnit) agent.getAssignedGoapUnit()).getUnit() == unit) {
+					matchingAgent = agent;
+
+					break;
+				}
+			}
+
+			if (matchingAgent != null) {
+				this.agents.remove(matchingAgent);
+			}
 		}
 	}
 
