@@ -135,7 +135,7 @@ public abstract class GoapUnit {
 		this.worldState.remove(goapState);
 	}
 
-	protected HashSet<GoapState> getWorldState() {
+	public HashSet<GoapState> getWorldState() {
 		return this.worldState;
 	}
 
@@ -180,7 +180,7 @@ public abstract class GoapUnit {
 		this.goalState.remove(goapState);
 	}
 
-	protected List<GoapState> getGoalState() {
+	public List<GoapState> getGoalState() {
 		return this.goalState;
 	}
 
@@ -199,7 +199,7 @@ public abstract class GoapUnit {
 		this.availableActions.remove(action);
 	}
 
-	protected HashSet<GoapAction> getAvailableActions() {
+	public HashSet<GoapAction> getAvailableActions() {
 		return this.availableActions;
 	}
 
