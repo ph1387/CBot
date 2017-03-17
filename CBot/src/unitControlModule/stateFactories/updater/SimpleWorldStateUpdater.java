@@ -20,7 +20,7 @@ public class SimpleWorldStateUpdater extends GeneralWorldStateUpdater {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		if(this.playerUnit.nearestEnemyUnitInSight == null) {
+		if(this.playerUnit.getNearestEnemyUnitInSight() == null) {
 			this.changeUnitsInSight(false);
 		} else {
 			this.changeUnitsInSight(true);

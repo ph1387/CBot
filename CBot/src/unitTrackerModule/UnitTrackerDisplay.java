@@ -63,7 +63,7 @@ class UnitTrackerDisplay {
 	 * @param valueTiles
 	 *            the table of all ValueTilePositions the enemy units apply to.
 	 */
-	protected static void showEnemyUnitTileStrength(ConcurrentHashMap<TilePosition, Integer> valueTiles) {
+	protected static void showEnemyUnitTileStrength(Hashtable<TilePosition, Integer> valueTiles) {
 		final Integer highestValue = findHighestValueOFTilePosition(valueTiles);
 
 		if (highestValue != null) {
@@ -87,7 +87,7 @@ class UnitTrackerDisplay {
 	 * @param valueTiles
 	 *            the table of all ValueTilePositions the player units apply to.
 	 */
-	protected static void showPlayerUnitTileStrength(ConcurrentHashMap<TilePosition, Integer> valueTiles) {
+	protected static void showPlayerUnitTileStrength(Hashtable<TilePosition, Integer> valueTiles) {
 		final Integer highestValue = findHighestValueOFTilePosition(valueTiles);
 
 		if (highestValue != null) {
@@ -128,7 +128,7 @@ class UnitTrackerDisplay {
 	 *            List of all ValueTilePositions taken in consideration.
 	 * @return the highest Integer value of the table or null if none is found.
 	 */
-	private static Integer findHighestValueOFTilePosition(ConcurrentHashMap<TilePosition, Integer> valueTable) {
+	private static Integer findHighestValueOFTilePosition(Hashtable<TilePosition, Integer> valueTable) {
 		final List<Integer> valueList = new ArrayList<Integer>();
 		Integer highestValue = null;
 

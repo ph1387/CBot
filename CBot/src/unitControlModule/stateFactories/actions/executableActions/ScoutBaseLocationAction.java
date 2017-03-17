@@ -35,7 +35,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 	}
 
 	@Override
-	protected boolean performAction(GoapUnit goapUnit) {
+	protected boolean performSpecificAction(GoapUnit goapUnit) {
 		return true;
 	}
 
@@ -61,6 +61,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected boolean isInRange(GoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).isNear(((Position) this.target).toTilePosition(), RANGE_TO_TARGET);
+		return ((PlayerUnit) goapUnit).isNearTilePosition(((Position) this.target).toTilePosition(), RANGE_TO_TARGET);
 	}
 }

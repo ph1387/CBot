@@ -1,7 +1,7 @@
 package unitControlModule;
 
 /**
- * Vector.java --- Class used for Vector operations in certain Actions.
+ * Vector.java --- Class used for Vector operations.
  * 
  * @author P H - 25.02.2017
  *
@@ -108,5 +108,27 @@ public class Vector {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Function for generating the cross product between this vector and another
+	 * given one.
+	 * 
+	 * @param vectorB
+	 *            another Vector with which the cross product is calculated.
+	 * @return the cross product between this and the given Vector.
+	 */
+	public double getCrossProduct(Vector vectorB) {
+		return this.dirX * vectorB.dirY - vectorB.dirX * this.dirY;
+	}
+	
+	/**
+	 * Normalizes the Vector.
+	 */
+	public void normalize() {
+		int newDirX = (int)((1. / this.length()) * this.dirX);
+		int newDirY = (int)((1. / this.length()) * this.dirY);
+		this.dirX = newDirX;
+		this.dirY = newDirY;
 	}
 }

@@ -20,7 +20,7 @@ public class SimpleGoalStateUpdater extends GeneralGoalStateUpdater {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		if(this.playerUnit.confidence >= PlayerUnit.CONFIDENCE_THRESHHOLD) {
+		if(this.playerUnit.getConfidence() >= PlayerUnit.CONFIDENCE_THRESHHOLD) {
 			this.changeGoalStateImportance("retreatFromUnit", 1);
 		} else {
 			this.changeGoalStateImportance("retreatFromUnit", 3);

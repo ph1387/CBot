@@ -36,12 +36,12 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	private static UnitTrackerModule instance;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
-	public ConcurrentHashMap<TilePosition, Integer> playerAirAttackTilePositions = new ConcurrentHashMap<>();
-	public ConcurrentHashMap<TilePosition, Integer> playerGroundAttackTilePositions = new ConcurrentHashMap<>();
-	public ConcurrentHashMap<TilePosition, Integer> enemyAirAttackTilePositions = new ConcurrentHashMap<>();
-	public ConcurrentHashMap<TilePosition, Integer> enemyGroundAttackTilePositions = new ConcurrentHashMap<>();
-	public CopyOnWriteArrayList<EnemyUnit> enemyBuildings = new CopyOnWriteArrayList<EnemyUnit>();
-	public CopyOnWriteArrayList<EnemyUnit> enemyUnits = new CopyOnWriteArrayList<EnemyUnit>();
+	public Hashtable<TilePosition, Integer> playerAirAttackTilePositions = new Hashtable<>();
+	public Hashtable<TilePosition, Integer> playerGroundAttackTilePositions = new Hashtable<>();
+	public Hashtable<TilePosition, Integer> enemyAirAttackTilePositions = new Hashtable<>();
+	public Hashtable<TilePosition, Integer> enemyGroundAttackTilePositions = new Hashtable<>();
+	public List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
+	public List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
 	private UnitTrackerModule() {
 		CBotBWEventDistributor.getInstance().addListener(this);
@@ -190,8 +190,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 * @return a HashTable containing ValueTilePositions that represent the
 	 *         players air strength.
 	 */
-	private ConcurrentHashMap<TilePosition, Integer> generatePlayerAirAttackTilePositions() {
-		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
+	private Hashtable<TilePosition, Integer> generatePlayerAirAttackTilePositions() {
+		Hashtable<TilePosition, Integer> valueTiles = new Hashtable<>();
 
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			if (unit.isCompleted() && unit.getType().airWeapon() != null
@@ -210,8 +210,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 * @return a HashTable containing ValueTilePositions that represent the
 	 *         players air strength.
 	 */
-	private ConcurrentHashMap<TilePosition, Integer> generatePlayerGroundAttackTilePositions() {
-		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
+	private Hashtable<TilePosition, Integer> generatePlayerGroundAttackTilePositions() {
+		Hashtable<TilePosition, Integer> valueTiles = new Hashtable<>();
 
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			if (unit.isCompleted() && unit.getType().groundWeapon() != null
@@ -230,8 +230,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 * @return a HashTable containing ValueTilePositions that represent the
 	 *         enemies air strength.
 	 */
-	private ConcurrentHashMap<TilePosition, Integer> generateEnemyAirAttackTilePositions() {
-		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
+	private Hashtable<TilePosition, Integer> generateEnemyAirAttackTilePositions() {
+		Hashtable<TilePosition, Integer> valueTiles = new Hashtable<>();
 
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
@@ -259,8 +259,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 * @return a HashTable containing ValueTilePositions that represent the
 	 *         enemies ground strength.
 	 */
-	private ConcurrentHashMap<TilePosition, Integer> generateEnemyGroundAttackTilePositions() {
-		ConcurrentHashMap<TilePosition, Integer> valueTiles = new ConcurrentHashMap<>();
+	private Hashtable<TilePosition, Integer> generateEnemyGroundAttackTilePositions() {
+		Hashtable<TilePosition, Integer> valueTiles = new Hashtable<>();
 
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
@@ -298,7 +298,7 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 *            the WeaponType of the Unit.
 	 */
 	private void addValueInAreaToTilePositionValue(TilePosition tilePosition,
-			ConcurrentHashMap<TilePosition, Integer> valueTiles, UnitType unitType, WeaponType weaponType) {
+			Hashtable<TilePosition, Integer> valueTiles, UnitType unitType, WeaponType weaponType) {
 		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange()) / Double.valueOf(Display.TILESIZE));
 
 		// If the unit is a meele unit, the attack range is 0 and there will be

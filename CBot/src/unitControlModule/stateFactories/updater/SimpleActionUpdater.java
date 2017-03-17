@@ -12,7 +12,6 @@ import core.Core;
 import unitControlModule.stateFactories.actions.SimpleUnitAvailableActions;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatFromNearestUnitAction;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitTrackerModule.EnemyUnit;
@@ -40,8 +39,7 @@ public class SimpleActionUpdater extends GeneralActionUpdater {
 		} else {
 			this.attackMoveToNearestKnownUnitConfiguration();
 			
-			((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.playerUnit.nearestEnemyUnitInConfidenceRange);
-			((RetreatFromNearestUnitAction) this.getActionFromInstance(RetreatFromNearestUnitAction.class)).setTarget(this.playerUnit.nearestEnemyUnitInConfidenceRange);
+			((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.playerUnit.getNearestEnemyUnitInConfidenceRange());
 		}
 		
 	}
@@ -80,11 +78,11 @@ public class SimpleActionUpdater extends GeneralActionUpdater {
 		for (BaseLocation location : BWTA.getBaseLocations()) {
 			Region baseRegion = ((BaseLocation) location).getRegion();
 
-			if (PlayerUnit.BASELOCATIONS_SEARCHED.get(location) != null && this.playerUnit.getUnit().hasPath(baseRegion.getCenter())) {
+			if (PlayerUnit.getBaselocationsSearched().get(location) != null && this.playerUnit.getUnit().hasPath(baseRegion.getCenter())) {
 				if ((closestReachableBasePosition == null && Core.getInstance().getGame().elapsedTime()
-						- PlayerUnit.BASELOCATIONS_SEARCHED.get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED)
+						- PlayerUnit.getBaselocationsSearched().get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED)
 						|| (Core.getInstance().getGame().elapsedTime()
-								- PlayerUnit.BASELOCATIONS_SEARCHED.get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED
+								- PlayerUnit.getBaselocationsSearched().get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED
 								&& this.playerUnit.getUnit().getDistance(location) < this.playerUnit.getUnit()
 										.getDistance(closestReachableBasePosition))) {
 					closestReachableBasePosition = baseRegion.getCenter();

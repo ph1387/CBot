@@ -32,16 +32,11 @@ public class AttackMoveAction extends BaseAction {
 
 	@Override
 	protected boolean isDone(GoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).isNear((TilePosition) this.target, 1);
+		return ((PlayerUnit) goapUnit).isNearTilePosition((TilePosition) this.target, 2) || !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().isEmpty();
 	}
 
 	@Override
-	protected boolean performAction(GoapUnit goapUnit) {
-		
-		// TODO: DEBUG INFO
-		// Executing action.
-		Display.drawTileFilled(Core.getInstance().getGame(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getX(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getY(), 1, 1, new Color(255, 128, 0));
-
+	protected boolean performSpecificAction(GoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().attack(((TilePosition) this.target).toPosition());
 	}
 
