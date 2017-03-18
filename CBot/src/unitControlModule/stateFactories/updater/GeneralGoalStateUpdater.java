@@ -1,6 +1,6 @@
 package unitControlModule.stateFactories.updater;
 
-import unitControlModule.goapActionTaking.GoapState;
+import javaGOAP.GoapState;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**

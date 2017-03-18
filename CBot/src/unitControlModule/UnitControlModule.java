@@ -12,7 +12,7 @@ import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
 import core.Display;
-import unitControlModule.goapActionTaking.GoapAgent;
+import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**

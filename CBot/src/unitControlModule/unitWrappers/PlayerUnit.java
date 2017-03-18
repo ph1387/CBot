@@ -12,9 +12,9 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
 import core.Display;
+import javaGOAP.GoapUnit;
+import javaGOAP.GoapAction;
 import unitControlModule.Vector;
-import unitControlModule.goapActionTaking.GoapAction;
-import unitControlModule.goapActionTaking.GoapUnit;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.updater.Updater;
 import unitTrackerModule.UnitTrackerModule;
@@ -97,22 +97,22 @@ public abstract class PlayerUnit extends GoapUnit {
 	// -------------------- Functions
 
 	@Override
-	protected void goapPlanFound(Queue<GoapAction> actions) {
+	public void goapPlanFound(Queue<GoapAction> actions) {
 
 	}
 
 	@Override
-	protected void goapPlanFailed(Queue<GoapAction> actions) {
+	public void goapPlanFailed(Queue<GoapAction> actions) {
 
 	}
 
 	@Override
-	protected void goapPlanFinished() {
+	public void goapPlanFinished() {
 
 	}
 
 	@Override
-	protected void update() {
+	public void update() {
 		// FSM worldState changes in one cycle.
 		if (this.currentState == UnitStates.ENEMY_MISSING && (UnitTrackerModule.getInstance().enemyUnits.size() != 0
 				|| UnitTrackerModule.getInstance().enemyBuildings.size() != 0)) {
@@ -326,7 +326,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	}
 
 	@Override
-	protected boolean moveTo(Object target) {
+	public boolean moveTo(Object target) {
 		boolean moved = false;
 
 		if (target instanceof TilePosition) {

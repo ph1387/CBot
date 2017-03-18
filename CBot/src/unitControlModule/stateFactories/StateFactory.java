@@ -3,8 +3,8 @@ package unitControlModule.stateFactories;
 import java.util.HashSet;
 import java.util.List;
 
-import unitControlModule.goapActionTaking.GoapAction;
-import unitControlModule.goapActionTaking.GoapState;
+import javaGOAP.GoapAction;
+import javaGOAP.GoapState;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.unitWrappers.PlayerUnit;

@@ -2,8 +2,8 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import java.util.HashMap;
 
-import unitControlModule.goapActionTaking.GoapAction;
-import unitControlModule.goapActionTaking.GoapUnit;
+import javaGOAP.GoapAction;
+import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 // TODO: UML
@@ -26,7 +26,7 @@ public abstract class BaseAction extends GoapAction {
 	// -------------------- Functions
 
 	@Override
-	protected boolean performAction(GoapUnit goapUnit) {
+	protected boolean performAction(IGoapUnit goapUnit) {
 		BaseAction storedAction = BaseAction.currentlyExecutingActions.get((PlayerUnit) goapUnit);
 		
 		// Check if the executing GoapAction has changed and if it did, enable a
@@ -42,7 +42,7 @@ public abstract class BaseAction extends GoapAction {
 		return this.performSpecificAction(goapUnit);
 	}
 
-	protected abstract boolean performSpecificAction(GoapUnit goapUnit);
+	protected abstract boolean performSpecificAction(IGoapUnit goapUnit);
 
 	// ------------------------------ Getter / Setter
 

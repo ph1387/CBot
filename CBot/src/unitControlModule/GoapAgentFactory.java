@@ -2,7 +2,8 @@ package unitControlModule;
 
 import bwapi.Unit;
 import bwapi.UnitType;
-import unitControlModule.goapActionTaking.GoapAgent;
+import javaGOAP.DefaultGoapAgent;
+import javaGOAP.GoapAgent;
 
 /**
  * GoapAgentFactory.java --- Factory used to create GoapAgents based on the
@@ -21,7 +22,7 @@ public class GoapAgentFactory {
 		// TODO: Add more Classes
 		// TODO: Possible Change: Implementation change!
 		if(unit.getType() == UnitType.Terran_Marine) {
-			agent = new GoapAgent(PlayerUnitFactory.createMarine(unit));
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createMarine(unit));
 		}
 
 		if(agent == null) {

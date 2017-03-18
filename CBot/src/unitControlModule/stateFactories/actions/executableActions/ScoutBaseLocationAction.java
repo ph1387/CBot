@@ -1,8 +1,8 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
 import bwapi.Position;
-import unitControlModule.goapActionTaking.GoapState;
-import unitControlModule.goapActionTaking.GoapUnit;
+import javaGOAP.GoapState;
+import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -30,37 +30,43 @@ public class ScoutBaseLocationAction extends BaseAction {
 	// -------------------- Functions
 
 	@Override
-	protected boolean isDone(GoapUnit goapUnit) {
+	protected boolean isDone(IGoapUnit goapUnit) {
 		return this.isInRange(goapUnit);
 	}
 
 	@Override
-	protected boolean performSpecificAction(GoapUnit goapUnit) {
+	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		return true;
 	}
 
 	@Override
-	protected float generateBaseCost(GoapUnit goapUnit) {
+	protected float generateBaseCost(IGoapUnit goapUnit) {
 		return 0;
 	}
 
 	@Override
-	protected boolean checkProceduralPrecondition(GoapUnit goapUnit) {
+	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		return this.target != null;
 	}
 
 	@Override
-	protected boolean requiresInRange(GoapUnit goapUnit) {
+	protected boolean requiresInRange(IGoapUnit goapUnit) {
 		return true;
 	}
 
 	@Override
-	protected float generateCostRelativeToTarget(GoapUnit goapUnit) {
+	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().getDistance((Position) this.target);
 	}
 
 	@Override
-	protected boolean isInRange(GoapUnit goapUnit) {
+	protected boolean isInRange(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).isNearTilePosition(((Position) this.target).toTilePosition(), RANGE_TO_TARGET);
+	}
+
+	@Override
+	protected void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 }

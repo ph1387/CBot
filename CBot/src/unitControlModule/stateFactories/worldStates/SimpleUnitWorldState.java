@@ -2,7 +2,7 @@ package unitControlModule.stateFactories.worldStates;
 
 import java.util.HashSet;
 
-import unitControlModule.goapActionTaking.GoapState;
+import javaGOAP.GoapState;
 
 /**
  * SimpleUnitWorldState.java --- A simple WorldState for a Unit containing all

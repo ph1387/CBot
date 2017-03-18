@@ -2,7 +2,7 @@ package unitControlModule.stateFactories.actions;
 
 import java.util.HashSet;
 
-import unitControlModule.goapActionTaking.GoapAction;
+import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;

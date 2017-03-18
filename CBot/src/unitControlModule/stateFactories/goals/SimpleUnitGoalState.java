@@ -2,7 +2,7 @@ package unitControlModule.stateFactories.goals;
 
 import java.util.ArrayList;
 
-import unitControlModule.goapActionTaking.GoapState;
+import javaGOAP.GoapState;
 
 /**
  * SimpleUnitGoalState.java --- A simple GoalState for a Unit containing all

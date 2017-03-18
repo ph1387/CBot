@@ -4,8 +4,8 @@ import bwapi.Color;
 import bwapi.TilePosition;
 import core.Core;
 import core.Display;
-import unitControlModule.goapActionTaking.GoapState;
-import unitControlModule.goapActionTaking.GoapUnit;
+import javaGOAP.GoapState;
+import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -31,37 +31,43 @@ public class AttackMoveAction extends BaseAction {
 	// -------------------- Functions
 
 	@Override
-	protected boolean isDone(GoapUnit goapUnit) {
+	protected boolean isDone(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).isNearTilePosition((TilePosition) this.target, 2) || !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().isEmpty();
 	}
 
 	@Override
-	protected boolean performSpecificAction(GoapUnit goapUnit) {
+	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().attack(((TilePosition) this.target).toPosition());
 	}
 
 	@Override
-	protected float generateBaseCost(GoapUnit goapUnit) {
+	protected float generateBaseCost(IGoapUnit goapUnit) {
 		return 0;
 	}
 
 	@Override
-	protected float generateCostRelativeToTarget(GoapUnit goapUnit) {
+	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().getDistance(((TilePosition) this.target).toPosition());
 	}
 
 	@Override
-	protected boolean checkProceduralPrecondition(GoapUnit goapUnit) {
+	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		return (this.target != null && ((PlayerUnit) goapUnit).getUnit().canAttack(((TilePosition) this.target).toPosition()));
 	}
 
 	@Override
-	protected boolean requiresInRange(GoapUnit goapUnit) {
+	protected boolean requiresInRange(IGoapUnit goapUnit) {
 		return false;
 	}
 
 	@Override
-	protected boolean isInRange(GoapUnit goapUnit) {
+	protected boolean isInRange(IGoapUnit goapUnit) {
 		return false;
+	}
+
+	@Override
+	protected void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 }
