@@ -1,5 +1,6 @@
 package core;
 
+import bwapi.AIModule;
 import bwapi.BWEventListener;
 import bwapi.Game;
 import bwapi.Mirror;
@@ -16,10 +17,10 @@ import unitControlModule.UnitControlModule;
  *
  */
 class CBot implements BWEventListener {
+	private static CBot instance;
+	
 	private Mirror mirror = new Mirror();
 	private Game game;
-
-	private static CBot instance;
 
 	private CBot() {
 
@@ -45,6 +46,7 @@ class CBot implements BWEventListener {
 	public void run() {
 		try {
 			this.mirror.startGame();
+			mirror.getModule().setEventListener(this);
 
 			System.out.println("---RUN: success---");
 		} catch (Exception e) {
@@ -64,6 +66,11 @@ class CBot implements BWEventListener {
 			}
 
 			this.game = Core.getInstance().getGame();
+			
+			// Add all known Units to the UnitControl
+			for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+				UnitControlModule.getInstance().addToUnitControl(unit);
+			}
 
 			System.out.println("---STARTUP: success---");
 		} catch (Exception e) {
