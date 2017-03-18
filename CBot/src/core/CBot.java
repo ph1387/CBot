@@ -8,6 +8,7 @@ import bwapi.Player;
 import bwapi.Position;
 import bwapi.Unit;
 import unitControlModule.UnitControlModule;
+import unitTrackerModule.UnitTrackerModule;
 
 /**
  * CBot.java --- The bot-class itself of which an instance gets created. This
@@ -21,6 +22,8 @@ class CBot implements BWEventListener {
 	
 	private Mirror mirror = new Mirror();
 	private Game game;
+	private boolean started = false;
+	private boolean addedUnits = false;
 
 	private CBot() {
 
@@ -45,8 +48,8 @@ class CBot implements BWEventListener {
 	 */
 	public void run() {
 		try {
+			this.mirror.getModule().setEventListener(this);
 			this.mirror.startGame();
-			mirror.getModule().setEventListener(this);
 
 			System.out.println("---RUN: success---");
 		} catch (Exception e) {
@@ -66,12 +69,8 @@ class CBot implements BWEventListener {
 			}
 
 			this.game = Core.getInstance().getGame();
+			this.started = true;
 			
-			// Add all known Units to the UnitControl
-			for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-				UnitControlModule.getInstance().addToUnitControl(unit);
-			}
-
 			System.out.println("---STARTUP: success---");
 		} catch (Exception e) {
 			System.out.println("---STARTUP: failed---");
@@ -81,10 +80,23 @@ class CBot implements BWEventListener {
 
 	@Override
 	public void onFrame() {
-		Display.showGameInformation(this.game);
-		Display.showUnits(game, this.game.self().getUnits());
+		if(!this.addedUnits && this.started) {
+			// Add all known Units to the UnitControl
+			for (Unit unit : this.game.self().getUnits()) {
+				UnitControlModule.getInstance().addToUnitControl(unit);
+				System.out.println(unit.getType());
+			}
+			
+			this.addedUnits = true;
+		}
+		
+		if(this.started) {
+			Display.showGameInformation(this.game);
+			Display.showUnits(game, this.game.self().getUnits());
 
-		UnitControlModule.getInstance().update();
+			UnitTrackerModule.getInstance().update();
+			UnitControlModule.getInstance().update();
+		}
 	}
 
 	@Override

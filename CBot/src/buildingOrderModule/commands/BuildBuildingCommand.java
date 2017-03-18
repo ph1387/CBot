@@ -14,7 +14,7 @@ public class BuildBuildingCommand extends BuildCommand {
 	@Override
 	public void execute() {
 		// Dispatch a event with the assigned building
-		BuildingOrderModule.getInstance().dispatchNewBuildingOrdersEvent(this.assignedUnit);
+//		BuildingOrderModule.getInstance().dispatchNewBuildingOrdersEvent(this.assignedUnit);
 	}
 
 	@Override

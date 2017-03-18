@@ -6,8 +6,6 @@ import java.util.List;
 import buildingOrderModule.commands.Command;
 import buildingOrderModule.commands.Requirement;
 import bwapi.Unit;
-import cBotBWEventDistributor.CBotBWEventDistributor;
-import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
 
 class BuildingCommandManager {

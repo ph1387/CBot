@@ -17,7 +17,7 @@ import unitTrackerModule.UnitTrackerModule;
  */
 public class Init {
 	private static final int UNIT_FLAG = 1;
-	private static final int GAME_SPEED = 0;
+	private static final int GAME_SPEED = 60;
 
 	/**
 	 * Function for initializing all important Functions in the beginning.
@@ -33,8 +33,6 @@ public class Init {
 			Game game = mirror.getGame();
 
 			Core.getInstance().setMirror(mirror);
-			UnitControlModule.getInstance();
-			UnitTrackerModule.getInstance();
 
 			// Use BWTA to analyze map
 			BWTA.readMap();

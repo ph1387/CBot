@@ -80,7 +80,9 @@ public class UnitControlModule {
 	 * Function for adding new agents to the HashSet.
 	 */
 	private void addNewAgents() {
-		for (Unit unit : this.unitsToAdd) {
+		while(!this.unitsToAdd.isEmpty()) {
+			Unit unit = this.unitsToAdd.poll();
+			
 			try {
 				this.agents.add(GoapAgentFactory.createAgent(unit));
 			} catch (Exception e) {
@@ -94,7 +96,8 @@ public class UnitControlModule {
 	 * HashSet.
 	 */
 	private void removeAgents() {
-		for (Unit unit : this.unitsToRemove) {
+		while(!this.unitsToRemove.isEmpty()) {
+			Unit unit = this.unitsToRemove.poll();
 			GoapAgent matchingAgent = null;
 
 			for (GoapAgent agent : this.agents) {

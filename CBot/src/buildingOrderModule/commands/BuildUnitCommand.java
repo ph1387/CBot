@@ -20,7 +20,7 @@ public class BuildUnitCommand extends BuildCommand {
 	
 	@Override
 	public void execute() {
-		BuildingOrderModule.getInstance().dispatchNewUnitBuildingOrdersEvent(this.assignedUnit);
+//		BuildingOrderModule.getInstance().dispatchNewUnitBuildingOrdersEvent(this.assignedUnit);
 	}
 
 	@Override
