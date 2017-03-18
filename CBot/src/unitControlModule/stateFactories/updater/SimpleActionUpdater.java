@@ -42,7 +42,7 @@ public class SimpleActionUpdater extends GeneralActionUpdater {
 			this.attackMoveToNearestKnownUnitConfiguration();
 			
 			((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.playerUnit.getNearestEnemyUnitInConfidenceRange());
-			((RetreatAction_ToFurthestUnitInCone) this.getActionFromInstance(RetreatAction_ToFurthestUnitInCone.class)).setTarget(this.playerUnit.getNearestEnemyUnitInConfidenceRange());
+//			((RetreatAction_ToFurthestUnitInCone) this.getActionFromInstance(RetreatAction_ToFurthestUnitInCone.class)).setTarget(this.playerUnit.getNearestEnemyUnitInConfidenceRange());
 			((RetreatAction_ToOwnGatheringPoint) this.getActionFromInstance(RetreatAction_ToOwnGatheringPoint.class)).setTarget(this.playerUnit.getNearestEnemyUnitInConfidenceRange());
 		}
 	}

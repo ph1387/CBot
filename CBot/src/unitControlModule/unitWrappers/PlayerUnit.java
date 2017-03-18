@@ -115,8 +115,9 @@ public abstract class PlayerUnit extends GoapUnit {
 	@Override
 	public void update() {
 		// FSM worldState changes in one cycle.
-		if (this.currentState == UnitStates.ENEMY_MISSING && (UnitControlModule.getInstance().getEnemyUnits().size() != 0
-				|| UnitControlModule.getInstance().getEnemyBuildings().size() != 0)) {
+		if (this.currentState == UnitStates.ENEMY_MISSING
+				&& (UnitControlModule.getInstance().getEnemyUnits().size() != 0
+						|| UnitControlModule.getInstance().getEnemyBuildings().size() != 0)) {
 			this.resetActions();
 			this.currentState = UnitStates.ENEMY_KNOWN;
 		}
@@ -241,19 +242,15 @@ public abstract class PlayerUnit extends GoapUnit {
 
 			// TODO: DEBUG INFO
 			// Cone of possible retreat Positions
-			Position targetEndPosition = new Position(vecUTP.x + vecUTP.dirX, vecUTP.y + vecUTP.dirY);
-			// Position rotatedLVecEndPos = new Position(vecUTPRotatedL.x +
-			// vecUTPRotatedL.dirX,
-			// vecUTPRotatedL.y + vecUTPRotatedL.dirY);
-			// Position rotatedRVecEndPos = new Position(vecUTPRotatedR.x +
-			// vecUTPRotatedR.dirX,
-			// vecUTPRotatedR.y + vecUTPRotatedR.dirY);
+			Position targetEndPosition = new Position(vecUTP.x + (int) (vecUTP.dirX), vecUTP.y + (int) (vecUTP.dirY));
+			Position rotatedLVecEndPos = new Position(vecUTPRotatedL.x + (int) (vecUTPRotatedL.dirX),
+					vecUTPRotatedL.y + (int) (vecUTPRotatedL.dirY));
+			Position rotatedRVecEndPos = new Position(vecUTPRotatedR.x + (int) (vecUTPRotatedR.dirX),
+					vecUTPRotatedR.y + (int) (vecUTPRotatedR.dirY));
 			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), targetEndPosition,
 					new Color(255, 128, 255));
-			// Core.getInstance().getGame().drawLineMap(this.unit.getPosition(),
-			// rotatedLVecEndPos, new Color(255, 0, 0));
-			// Core.getInstance().getGame().drawLineMap(this.unit.getPosition(),
-			// rotatedRVecEndPos, new Color(0, 255, 0));
+			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedLVecEndPos, new Color(255, 0, 0));
+			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedRVecEndPos, new Color(0, 255, 0));
 			// Core.getInstance().getGame().drawTextMap(rotatedLVecEndPos,
 			// String.valueOf(alphaActual));
 			// Core.getInstance().getGame().drawTextMap(rotatedRVecEndPos,

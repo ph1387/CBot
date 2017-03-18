@@ -5,6 +5,7 @@ import java.util.HashSet;
 import bwapi.Color;
 import bwapi.Position;
 import core.Core;
+import core.Display;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -17,10 +18,16 @@ import unitControlModule.unitWrappers.PlayerUnit;
  *
  */
 public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
+	private static final int DIST_TO_GATHERING_POINT = Core.getInstance().getTileSize();
 	protected static final int TILE_RADIUS_NEAR = 1;
-	protected static final int MIN_PIXEL_DIST_TO_TARGETPOS = Core.getInstance().getTileSize() * (TILE_RADIUS_NEAR + 1);
+	// Has to be larger than DIST_TO_GATHERING_POINT
+	// -> isDone() condition!			v
+	protected static final int MIN_PIXELDISTANCE_TO_UNIT = 100;
+	protected static final int MAX_PIXELDISTANCE_TO_UNIT = 10 * Core.getInstance().getTileSize();
+
 	protected static HashSet<Position> gatheringPoints = new HashSet<Position>();
 
+	protected Position generatedTempRetreatPosition = null;
 	protected Position retreatPosition = null;
 
 	/**
@@ -38,24 +45,58 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return this.retreatPosition == null
-				|| ((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, MIN_PIXEL_DIST_TO_TARGETPOS);
+		if (((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT)) {
+			RetreatAction_GeneralSuperclass.gatheringPoints.remove(this.retreatPosition);
+		}
+
+		return !RetreatAction_GeneralSuperclass.gatheringPoints.contains(this.retreatPosition);
 	}
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
+		boolean success = true;
 
 		// TODO: DEBUG INFO
 		// // Position to which the Unit retreats to
 		Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(), this.retreatPosition,
 				new Color(255, 255, 0));
 
-		return this.retreatPosition != null && ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
+		// Only override the current retreatPosition if the action trigger is
+		// set and move towards it. This enables the ability of storing the
+		// Positions inside a HashSet and moving other Units towards them
+		// instead of constantly updating them, which would result in a Unit
+		// only following them in one general direction. Once a Position is set,
+		// stick with it.
+		if (this.actionChangeTrigger && this.generatedTempRetreatPosition != null) {
+			this.retreatPosition = this.generatedTempRetreatPosition;
+			RetreatAction_GeneralSuperclass.gatheringPoints.add(this.retreatPosition);
+			success &= this.retreatPosition != null && ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
+		} else if (this.actionChangeTrigger && this.generatedTempRetreatPosition == null) {
+			success = false;
+		}
+
+		if (this.retreatPosition != null) {
+
+			// TODO: DEBUG INFO
+			// // Position to which the Unit retreats to
+			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(),
+					this.retreatPosition, new Color(255, 255, 0));
+
+		}
+		return this.retreatPosition != null && success;
 	}
 
 	@Override
 	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).getUnit().getDistance(this.retreatPosition);
+		float returnValue = 0.f;
+
+		try {
+			returnValue = ((PlayerUnit) goapUnit).getUnit().getDistance(this.generatedTempRetreatPosition);
+		} catch (Exception e) {
+			returnValue = Float.MAX_VALUE;
+		}
+
+		return returnValue;
 	}
 
 	@Override
@@ -64,8 +105,17 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 
 		if (this.target != null && ((PlayerUnit) goapUnit).getNearestEnemyUnitInConfidenceRange() != null) {
 			success = this.checkProceduralSpecificPrecondition(goapUnit);
-		}
 
+			// The first ever found Position has to be added as temp retreat
+			// Position. This ensures, that isDone() returns false and the
+			// action
+			// gets actually executed. The actual retreatPosition gets set when
+			// performAction() gets called.
+			if (this.retreatPosition == null) {
+				this.retreatPosition = this.generatedTempRetreatPosition;
+				RetreatAction_GeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
+			}
+		}
 		return success;
 	}
 
@@ -87,7 +137,7 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 	protected boolean isInRange(IGoapUnit goapUnit) {
 		return false;
 	}
-	
+
 	@Override
 	protected void reset() {
 		this.retreatPosition = null;

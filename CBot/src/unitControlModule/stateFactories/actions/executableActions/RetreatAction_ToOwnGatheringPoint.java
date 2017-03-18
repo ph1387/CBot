@@ -23,14 +23,8 @@ import unitTrackerModule.UnitTrackerModule;
  *
  */
 public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSuperclass {
-
-	private static final int DIST_TO_GATHERING_POINT = Core.getInstance().getTileSize();
 	private static final int EXPAND_MULTIPLIER_MAX = 5;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
-	private static final int MIN_PIXELDISTANCE_TO_UNIT = 100;
-	private static final int MAX_PIXELDISTANCE_TO_UNIT = 10 * Core.getInstance().getTileSize();
-
-	private Position generatedTempRetreatPosition = null;
 
 	/**
 	 * @param target
@@ -41,93 +35,71 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 	}
 
 	@Override
-	protected boolean isDone(IGoapUnit goapUnit) {
-
-		// TODO: DEBUG INFO
-		// Executing action.
-		Display.drawTileFilled(Core.getInstance().getGame(), ((PlayerUnit) goapUnit).getUnit().getTilePosition().getX(),
-				((PlayerUnit) goapUnit).getUnit().getTilePosition().getY(), 1, 1, new Color(255, 255, 0));
-
-		if (this.retreatPosition == null
-				|| ((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT)) {
-			RetreatAction_GeneralSuperclass.gatheringPoints.remove(this.retreatPosition);
-		}
-
-		return !RetreatAction_GeneralSuperclass.gatheringPoints.contains(this.retreatPosition);
-	}
-
-	@Override
-	protected boolean performSpecificAction(IGoapUnit goapUnit) {
-		boolean success = true;
-
-		// Only override the current retreatPosition if the action trigger is
-		// set and move towards it. This enables the ability of storing the
-		// Positions inside a HashSet and moving other Units towards them
-		// instead of constantly updating them, which would result in a Unit
-		// only following them in one general direction. Once a Position is set,
-		// stick with it.
-		if (this.actionChangeTrigger && this.generatedTempRetreatPosition != null) {
-			this.retreatPosition = this.generatedTempRetreatPosition;
-			RetreatAction_GeneralSuperclass.gatheringPoints.add(this.retreatPosition);
-			success &= this.retreatPosition != null && ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
-		} else if (this.actionChangeTrigger && this.generatedTempRetreatPosition == null) {
-			success = false;
-		}
-
-		if (this.retreatPosition != null) {
-			// TODO: DEBUG INFO
-			// // Position to which the Unit retreats to
-			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(),
-					this.retreatPosition, new Color(255, 255, 0));
-		}
-
-		return success;
-	}
-
-	@Override
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
 		Vector vecUTP = ((PlayerUnit) goapUnit).getVecUTP();
 		boolean precondtionsMet = true;
-		boolean noRetreatUnitFound = false;
 
-		Unit retreatableUnit = this
-				.getUnitWithGreatestTileStrengths(this.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit));
+		// Position missing -> action not performed yet
+		if (this.retreatPosition == null) {
+			Unit retreatableUnit = this
+					.getUnitWithGreatestTileStrengths(this.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit));
 
-		if (retreatableUnit == null) {
-			noRetreatUnitFound = true;
-		} else {
-			// Generate a Vector to found Unit that has a fixed length to the
-			// Units Position.
-			Vector vecToUnit = new Vector(vecUTP.x, vecUTP.y, retreatableUnit.getPosition().getX() - vecUTP.x,
-					retreatableUnit.getPosition().getY() - vecUTP.y);
-			vecToUnit.normalize();
-
-			Position retreatPosition = new Position(vecUTP.x + (vecToUnit.dirX * EXPAND_MULTIPLIER_MAX),
-					vecUTP.y + (vecToUnit.dirY * EXPAND_MULTIPLIER_MAX));
-			this.generatedTempRetreatPosition = retreatPosition;
-		}
-
-		// Retreat to the Vector Position.
-		if (noRetreatUnitFound) {
-			Position targetVecPosition = new Position(vecUTP.x + vecUTP.dirX, vecUTP.y + vecUTP.dirY);
-
-			if (this.isInsideMap(targetVecPosition)) {
-				this.generatedTempRetreatPosition = targetVecPosition;
+			if (retreatableUnit == null) {
+				precondtionsMet = this.retreatToVectorEndPosition(vecUTP);
 			} else {
-				precondtionsMet = false;
+				this.retreatToUnitPosition(vecUTP, retreatableUnit);
 			}
 		}
+		// Position known -> action performed once
+		else {
+			precondtionsMet = ((PlayerUnit) goapUnit).getUnit().hasPath(this.retreatPosition);
+		}
+		return precondtionsMet;
+	}
 
-		// The first ever found Position has to be added as main retreat
-		// Position. This ensures, that isDone() returns false and the action
-		// gets actually executed. The actual retreatPosition gets set when
-		// performAction() gets called.
-		if (this.retreatPosition == null) {
-			this.retreatPosition = this.generatedTempRetreatPosition;
-			RetreatAction_GeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
+	// TODO: UML
+	/**
+	 * Function with which the temporary retreat Position gets set to the
+	 * Vectors end Position.
+	 * 
+	 * @param vecUTP
+	 *            the Vector to the target Position.
+	 * @return true or false, depending if the Position is inside the map or
+	 *         not.
+	 */
+	private boolean retreatToVectorEndPosition(Vector vecUTP) {
+		Position targetVecPosition = new Position(vecUTP.x + (int)(vecUTP.dirX), vecUTP.y + (int)(vecUTP.dirY));
+		boolean returnValue = true;
+
+		if (this.isInsideMap(targetVecPosition)) {
+			this.generatedTempRetreatPosition = targetVecPosition;
+		} else {
+			returnValue = false;
 		}
 
-		return precondtionsMet;
+		return returnValue;
+	}
+
+	// TODO: UML
+	/**
+	 * Function with which the temporary retreat Position gets set towards a
+	 * Unit. The Vector has a specific length and the direction towards the
+	 * Unit.
+	 * 
+	 * @param vecUTP
+	 *            used to determine the starting Position of the Vector towards
+	 *            the Unit.
+	 * @param retreatableUnit
+	 *            the Unit in which direction the Units retreat path will lead.
+	 */
+	private void retreatToUnitPosition(Vector vecUTP, Unit retreatableUnit) {
+		Vector vecToUnit = new Vector(vecUTP.x, vecUTP.y, retreatableUnit.getPosition().getX() - vecUTP.x,
+				retreatableUnit.getPosition().getY() - vecUTP.y);
+		vecToUnit.normalize();
+
+		Position retreatPosition = new Position(vecToUnit.x + (int)(vecToUnit.dirX * MIN_PIXELDISTANCE_TO_UNIT),
+				vecToUnit.y + (int)(vecToUnit.dirY * MIN_PIXELDISTANCE_TO_UNIT));
+		this.generatedTempRetreatPosition = retreatPosition;
 	}
 
 	@Override
@@ -136,34 +108,6 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 		// in consideration, if no gathering point from another PlayerUnit is
 		// found inside the cone (is another Action).
 		return 100;
-	}
-
-	// TODO: UML
-	/**
-	 * Function for testing if a Position is inside the map.
-	 * 
-	 * @param p
-	 *            the Position that is going to be checked.
-	 * @return true or false depending if the Position is inside the map or not.
-	 */
-	private boolean isInsideMap(Position p) {
-		Game game = Core.getInstance().getGame();
-
-		return (p.getX() < (game.mapWidth() * Core.getInstance().getTileSize()) || p.getX() >= 0
-				|| p.getY() < (game.mapHeight() * Core.getInstance().getTileSize()) || p.getY() >= 0);
-	}
-
-	@Override
-	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
-		float returnValue = 0.f;
-
-		try {
-			returnValue = ((PlayerUnit) goapUnit).getUnit().getDistance(this.generatedTempRetreatPosition);
-		} catch (Exception e) {
-			returnValue = Float.MAX_VALUE;
-		}
-
-		return returnValue;
 	}
 
 	// TODO: UML

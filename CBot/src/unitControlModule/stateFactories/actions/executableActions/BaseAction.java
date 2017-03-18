@@ -2,6 +2,9 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import java.util.HashMap;
 
+import bwapi.Game;
+import bwapi.Position;
+import core.Core;
 import javaGOAP.GoapAction;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -56,6 +59,21 @@ public abstract class BaseAction extends GoapAction {
 	 */
 	protected void resetStoredAction() {
 		BaseAction.currentlyExecutingActions.put((PlayerUnit) this.currentlyExecutingUnit, null);
+	}
+	
+	// TODO: UML
+	/**
+	 * Function for testing if a Position is inside the map.
+	 * 
+	 * @param p
+	 *            the Position that is going to be checked.
+	 * @return true or false depending if the Position is inside the map or not.
+	 */
+	protected boolean isInsideMap(Position p) {
+		Game game = Core.getInstance().getGame();
+	
+		return (p.getX() < (game.mapWidth() * Core.getInstance().getTileSize()) || p.getX() >= 0
+				|| p.getY() < (game.mapHeight() * Core.getInstance().getTileSize()) || p.getY() >= 0);
 	}
 
 	// ------------------------------ Getter / Setter

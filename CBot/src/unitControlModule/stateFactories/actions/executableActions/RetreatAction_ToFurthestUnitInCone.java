@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
 import bwapi.Unit;
+import core.Core;
 import javaGOAP.IGoapUnit;
 import unitControlModule.Vector;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -35,14 +36,15 @@ public class RetreatAction_ToFurthestUnitInCone extends RetreatAction_GeneralSup
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
 		// Get a possible Unit to which this unit can retreat to.
 		Unit possibleRetreatUnit = this.tryFindingRetreatUnitInCone((PlayerUnit) goapUnit);
+		boolean success = false;
 
-		if (possibleRetreatUnit != null) {
-			this.retreatPosition = possibleRetreatUnit.getPosition();
-
-			return true;
+		if(this.retreatPosition != null) {
+			success = ((PlayerUnit) goapUnit).getUnit().hasPath(this.retreatPosition);
+		} else if (possibleRetreatUnit != null) {
+			this.generatedTempRetreatPosition = possibleRetreatUnit.getPosition();
+			success = true;
 		}
-
-		return false;
+		return success;
 	}
 
 	/**
@@ -75,8 +77,8 @@ public class RetreatAction_ToFurthestUnitInCone extends RetreatAction_GeneralSup
 				// inside the created cone.
 				if (vecRotatedL.getCrossProduct(vecToUnit) * vecRotatedL.getCrossProduct(vecRotatedR) >= 0
 						&& vecRotatedR.getCrossProduct(vecToUnit) * vecRotatedR.getCrossProduct(vecRotatedL) >= 0) {
-					if ((goapUnit.getUnit().getDistance(unit) > MIN_PIXEL_DIST_TO_TARGETPOS && retreatUnit == null)
-							|| (goapUnit.getUnit().getDistance(unit) > MIN_PIXEL_DIST_TO_TARGETPOS && goapUnit.getUnit()
+					if ((goapUnit.getUnit().getDistance(unit) > MIN_PIXELDISTANCE_TO_UNIT && retreatUnit == null)
+							|| (goapUnit.getUnit().getDistance(unit) > MIN_PIXELDISTANCE_TO_UNIT && goapUnit.getUnit()
 									.getDistance(retreatUnit) < goapUnit.getUnit().getDistance(unit))) {
 						retreatUnit = unit;
 					}

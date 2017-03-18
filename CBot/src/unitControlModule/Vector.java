@@ -10,14 +10,15 @@ public class Vector {
 
 	private final double intersecMaxDiff = Math.pow(10, -6);
 	private final double neededMPMaxDiff = Math.pow(10, -1);
-	public int x, y, dirX = 0, dirY = 0;
+	public int x, y;
+	public double dirX = 0., dirY = 0.;
 
 	public Vector(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public Vector(int x, int y, int dirX, int dirY) {
+	public Vector(int x, int y, double dirX, double dirY) {
 		this(x, y);
 
 		this.dirX = dirX;
@@ -31,8 +32,8 @@ public class Vector {
 	}
 
 	public void rotateLeftRAD(double alpha) {
-		int newDirX = (int) (this.dirX * Math.cos(alpha) + this.dirY * Math.sin(alpha));
-		int newDirY = (int) (-1. * this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha));
+		double newDirX = this.dirX * Math.cos(alpha) + this.dirY * Math.sin(alpha);
+		double newDirY = -1. * this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha);
 		this.dirX = newDirX;
 		this.dirY = newDirY;
 	}
@@ -42,8 +43,8 @@ public class Vector {
 	}
 
 	public void rotateRightRAD(double alpha) {
-		int newDirX = (int) (this.dirX * Math.cos(alpha) - this.dirY * Math.sin(alpha));
-		int newDirY = (int) (this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha));
+		double newDirX = this.dirX * Math.cos(alpha) - this.dirY * Math.sin(alpha);
+		double newDirY = this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha);
 		this.dirX = newDirX;
 		this.dirY = newDirY;
 	}
@@ -126,8 +127,8 @@ public class Vector {
 	 * Normalizes the Vector.
 	 */
 	public void normalize() {
-		int newDirX = (int)((1. / this.length()) * this.dirX);
-		int newDirY = (int)((1. / this.length()) * this.dirY);
+		double newDirX = (1. / this.length()) * this.dirX;
+		double newDirY = (1. / this.length()) * this.dirY;
 		this.dirX = newDirX;
 		this.dirY = newDirY;
 	}

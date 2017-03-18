@@ -22,7 +22,7 @@ public class SimpleUnitAvailableActions extends HashSet<GoapAction> {
 		this.add(new ScoutBaseLocationAction(null));
 		this.add(new AttackMoveAction(null));
 		this.add(new AttackUnitAction(null));
-		this.add(new RetreatAction_ToFurthestUnitInCone(null));
+//		this.add(new RetreatAction_ToFurthestUnitInCone(null));
 		this.add(new RetreatAction_ToOwnGatheringPoint(null));
 	}
 }
