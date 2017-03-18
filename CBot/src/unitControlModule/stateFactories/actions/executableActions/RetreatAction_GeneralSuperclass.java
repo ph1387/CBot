@@ -87,4 +87,10 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 	protected boolean isInRange(IGoapUnit goapUnit) {
 		return false;
 	}
+	
+	@Override
+	protected void reset() {
+		this.retreatPosition = null;
+		this.resetStoredAction();
+	}
 }

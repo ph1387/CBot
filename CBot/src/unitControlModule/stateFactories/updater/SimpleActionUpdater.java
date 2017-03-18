@@ -13,6 +13,8 @@ import unitControlModule.UnitControlModule;
 import unitControlModule.stateFactories.actions.SimpleUnitAvailableActions;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
+import unitControlModule.stateFactories.actions.executableActions.RetreatAction_ToFurthestUnitInCone;
+import unitControlModule.stateFactories.actions.executableActions.RetreatAction_ToOwnGatheringPoint;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitTrackerModule.EnemyUnit;
@@ -40,8 +42,9 @@ public class SimpleActionUpdater extends GeneralActionUpdater {
 			this.attackMoveToNearestKnownUnitConfiguration();
 			
 			((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.playerUnit.getNearestEnemyUnitInConfidenceRange());
+			((RetreatAction_ToFurthestUnitInCone) this.getActionFromInstance(RetreatAction_ToFurthestUnitInCone.class)).setTarget(this.playerUnit.getNearestEnemyUnitInConfidenceRange());
+			((RetreatAction_ToOwnGatheringPoint) this.getActionFromInstance(RetreatAction_ToOwnGatheringPoint.class)).setTarget(this.playerUnit.getNearestEnemyUnitInConfidenceRange());
 		}
-		
 	}
 
 	/**

@@ -87,9 +87,4 @@ public class RetreatAction_ToFurthestUnitInCone extends RetreatAction_GeneralSup
 		}
 		return retreatUnit;
 	}
-
-	@Override
-	protected void reset() {
-		
-	}
 }

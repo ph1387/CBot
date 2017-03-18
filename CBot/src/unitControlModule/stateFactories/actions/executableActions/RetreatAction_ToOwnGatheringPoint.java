@@ -73,14 +73,14 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 		} else if (this.actionChangeTrigger && this.generatedTempRetreatPosition == null) {
 			success = false;
 		}
-		
-		if(this.retreatPosition != null) {
+
+		if (this.retreatPosition != null) {
 			// TODO: DEBUG INFO
 			// // Position to which the Unit retreats to
-			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(), this.retreatPosition,
-					new Color(255, 255, 0));
+			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(),
+					this.retreatPosition, new Color(255, 255, 0));
 		}
-		
+
 		return success;
 	}
 
@@ -112,10 +112,19 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 			Position targetVecPosition = new Position(vecUTP.x + vecUTP.dirX, vecUTP.y + vecUTP.dirY);
 
 			if (this.isInsideMap(targetVecPosition)) {
-				this.retreatPosition = targetVecPosition;
+				this.generatedTempRetreatPosition = targetVecPosition;
 			} else {
 				precondtionsMet = false;
 			}
+		}
+
+		// The first ever found Position has to be added as main retreat
+		// Position. This ensures, that isDone() returns false and the action
+		// gets actually executed. The actual retreatPosition gets set when
+		// performAction() gets called.
+		if (this.retreatPosition == null) {
+			this.retreatPosition = this.generatedTempRetreatPosition;
+			RetreatAction_GeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
 		}
 
 		return precondtionsMet;
@@ -143,23 +152,18 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 		return (p.getX() < (game.mapWidth() * Core.getInstance().getTileSize()) || p.getX() >= 0
 				|| p.getY() < (game.mapHeight() * Core.getInstance().getTileSize()) || p.getY() >= 0);
 	}
-	
+
 	@Override
 	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
 		float returnValue = 0.f;
-		
+
 		try {
 			returnValue = ((PlayerUnit) goapUnit).getUnit().getDistance(this.generatedTempRetreatPosition);
 		} catch (Exception e) {
 			returnValue = Float.MAX_VALUE;
 		}
-		
+
 		return returnValue;
-	}
-	
-	@Override
-	protected void reset() {
-		
 	}
 
 	// TODO: UML

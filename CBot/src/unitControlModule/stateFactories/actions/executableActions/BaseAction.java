@@ -18,6 +18,7 @@ public abstract class BaseAction extends GoapAction {
 	protected static HashMap<PlayerUnit, BaseAction> currentlyExecutingActions = new HashMap<>();
 
 	protected boolean actionChangeTrigger = false;
+	private IGoapUnit currentlyExecutingUnit;
 
 	public BaseAction(Object target) {
 		super(target);
@@ -28,7 +29,7 @@ public abstract class BaseAction extends GoapAction {
 	@Override
 	protected boolean performAction(IGoapUnit goapUnit) {
 		BaseAction storedAction = BaseAction.currentlyExecutingActions.get((PlayerUnit) goapUnit);
-		
+
 		// Check if the executing GoapAction has changed and if it did, enable a
 		// trigger on which the subclass can react to.
 		if (storedAction != null && storedAction.equals(this)) {
@@ -37,12 +38,25 @@ public abstract class BaseAction extends GoapAction {
 			this.actionChangeTrigger = true;
 		}
 
+		// Store the executed action in the HashMap as well as the executing
+		// Unit separately for having access to the Action and reset it when it
+		// finishes.
 		BaseAction.currentlyExecutingActions.put((PlayerUnit) goapUnit, this);
+		this.currentlyExecutingUnit = goapUnit;
 
 		return this.performSpecificAction(goapUnit);
 	}
 
 	protected abstract boolean performSpecificAction(IGoapUnit goapUnit);
+
+	/**
+	 * Function used for resetting the GoapAction which was executed. This
+	 * function gets called when the GoapAction finishes so that the
+	 * actionTrigger is going to be enabled in the next iteration.
+	 */
+	protected void resetStoredAction() {
+		BaseAction.currentlyExecutingActions.put((PlayerUnit) this.currentlyExecutingUnit, null);
+	}
 
 	// ------------------------------ Getter / Setter
 
