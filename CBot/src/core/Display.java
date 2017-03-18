@@ -11,9 +11,9 @@ import bwapi.Unit;
 import bwapi.UnitType;
 
 public class Display {
-	public static final int TILESIZE = 32;
-	public static final int LINEHEIGHT = 10;
-	public static final int OFFSET_LEFT = 10;
+	private static int lineHeight = Core.getInstance().getLineheight();
+	private static int offsetLeft = Core.getInstance().getOffsetLeft();
+	private static int tileSize = Core.getInstance().getTileSize();
 	
 	// Displays the unit tile ingame
 	public static void showUnitTile(Game game, Unit unit, Color color) {
@@ -33,12 +33,12 @@ public class Display {
 
 	// Display a box around (a) tile/-s
 	public static void drawTile(Game game, int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
-		game.drawBoxMap(tileX * TILESIZE, tileY * TILESIZE, (tileX + tileWidth) * TILESIZE, (tileY + tileHeight) * TILESIZE, color);
+		game.drawBoxMap(tileX * tileSize, tileY * tileSize, (tileX + tileWidth) * tileSize, (tileY + tileHeight) * tileSize, color);
 	}
 	
 	// Display a filled tile on the map
 	public static void drawTileFilled(Game game, int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
-		game.drawBoxMap(tileX * TILESIZE, tileY * TILESIZE, (tileX + tileWidth) * TILESIZE, (tileY + tileHeight) * TILESIZE, color, true);
+		game.drawBoxMap(tileX * tileSize, tileY * tileSize, (tileX + tileWidth) * tileSize, (tileY + tileHeight) * tileSize, color, true);
 	}
 
 	// Display the target position of the unit
@@ -77,21 +77,21 @@ public class Display {
 			}
 		}
 		
-		showList(game, outputList, OFFSET_LEFT, LINEHEIGHT * 5);
+		showList(game, outputList, offsetLeft, lineHeight * 5);
 	}
 
 	// Display a list of strings
 	public static void showList(Game game, List<String> list, int offsetX, int offsetY) {
 		for (int i = 1; i <= list.size(); i++) {
-			game.drawTextScreen(offsetX, offsetY + (LINEHEIGHT * i), list.get(i - 1));
+			game.drawTextScreen(offsetX, offsetY + (lineHeight * i), list.get(i - 1));
 		}
 	}
 
 	// Wrapper for showing game information
 	public static void showGameInformation(Game game) {
-		showTime(game, OFFSET_LEFT, LINEHEIGHT);
-		showAPM(game, OFFSET_LEFT, LINEHEIGHT * 2);
-		showFPS(game, OFFSET_LEFT, LINEHEIGHT * 3);
+		showTime(game, offsetLeft, lineHeight);
+		showAPM(game, offsetLeft, lineHeight * 2);
+		showFPS(game, offsetLeft, lineHeight * 3);
 	}
 
 	// Display the current time

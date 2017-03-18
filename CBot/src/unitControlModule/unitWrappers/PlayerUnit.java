@@ -43,7 +43,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	// Vector related stuff
 	protected static final int ALPHA_MAX = 90;
 
-	protected double maxDistance = CONFIDENCE_TILE_RADIUS * Display.TILESIZE;
+	protected double maxDistance = CONFIDENCE_TILE_RADIUS * Core.getInstance().getTileSize();
 	protected double alphaMod = 75.;
 	protected double alphaAdd = 10.; // AlphaMod + AlphaAdd < AlphaMax
 	// vecEU -> Vector(enemyUnit, playerUnit)
@@ -377,7 +377,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	 */
 	public boolean isNearPosition(Position targetPosition, Integer radius) {
 		if (radius == null) {
-			radius = DEFAULT_SEARCH_RADIUS * Display.TILESIZE;
+			radius = DEFAULT_SEARCH_RADIUS * Core.getInstance().getTileSize();
 		}
 
 		return this.unit.getDistance(targetPosition) <= radius;
@@ -438,7 +438,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	 * @return a HashSet of all enemy Units in the confidence range.
 	 */
 	public HashSet<Unit> getAllEnemyUnitsInConfidenceRange() {
-		return this.getAllEnemyUnitsInRange(CONFIDENCE_TILE_RADIUS * Display.TILESIZE);
+		return this.getAllEnemyUnitsInRange(CONFIDENCE_TILE_RADIUS * Core.getInstance().getTileSize());
 	}
 
 	/**
@@ -448,7 +448,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	 * @return a HashSet of all player Units in the confidence range.
 	 */
 	public HashSet<Unit> getAllPlayerUnitsInConfidenceRange() {
-		return this.getAllPlayerUnitsInRange(CONFIDENCE_TILE_RADIUS * Display.TILESIZE);
+		return this.getAllPlayerUnitsInRange(CONFIDENCE_TILE_RADIUS * Core.getInstance().getTileSize());
 	}
 
 	/**

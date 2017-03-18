@@ -11,8 +11,8 @@ import core.Display;
 
 class BuildingOrderModuleDisplay {
 	
-	private static final int POSITION_LEFT = Display.OFFSET_LEFT * 15;
-	private static final int POSITION_TOP = Display.LINEHEIGHT;
+	private static final int POSITION_LEFT = Core.getInstance().getOffsetLeft() * 15;
+	private static final int POSITION_TOP = Core.getInstance().getLineheight();
 	private static final int MAX_DISPLAY_AMOUNT = 10;
 
 	public static void showCurrentBuildingCommandSender(BuildingCommandManager sender) {
@@ -31,9 +31,9 @@ class BuildingOrderModuleDisplay {
 			// Elements already sent are marked with a line after them
 			try {
 				if(i == 0) {
-					Core.getInstance().getGame().drawTextScreen(POSITION_LEFT, POSITION_TOP + Display.LINEHEIGHT * i, unitsToBuildList.get(i + stateCounter) + " <--");
+					Core.getInstance().getGame().drawTextScreen(POSITION_LEFT, POSITION_TOP + Core.getInstance().getLineheight() * i, unitsToBuildList.get(i + stateCounter) + " <--");
 				} else {
-					Core.getInstance().getGame().drawTextScreen(POSITION_LEFT, POSITION_TOP + Display.LINEHEIGHT * i, unitsToBuildList.get(i + stateCounter));
+					Core.getInstance().getGame().drawTextScreen(POSITION_LEFT, POSITION_TOP + Core.getInstance().getLineheight() * i, unitsToBuildList.get(i + stateCounter));
 				}
 			} catch(Exception e) {
 				

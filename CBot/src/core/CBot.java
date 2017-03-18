@@ -1,11 +1,8 @@
 package core;
 
-import buildingModule.BuildingModule;
-import bwapi.Color;
 import bwapi.Game;
 import bwapi.Mirror;
 import bwapi.Unit;
-import bwta.BWTA;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import init.Init;

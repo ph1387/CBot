@@ -1,7 +1,7 @@
 package buildingModule;
 
 import bwapi.Game;
-import core.Display;
+import core.Core;
 
 class BuildingModuleDisplay {
 	// Display the job of a worker
@@ -14,7 +14,7 @@ class BuildingModuleDisplay {
 
 		// If the unit has a assigned construction job show the building type
 		if (constructionJob != null) {
-			game.drawTextMap(posX, posY + Display.LINEHEIGHT,
+			game.drawTextMap(posX, posY + Core.getInstance().getLineheight(),
 					constructionJob.getBuilding().toString() + " : " + constructionJob.getTilePosition());
 		}
 	}

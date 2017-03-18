@@ -3,7 +3,6 @@ package unitTrackerModule;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 import bwapi.Color;
@@ -36,8 +35,10 @@ class UnitTrackerDisplay {
 		for (EnemyUnit enemyBuilding : buildingList) {
 			TilePosition lastTilePosition = enemyBuilding.getLastSeenTilePosition();
 			Position endPosition = new Position(
-					(lastTilePosition.getX() + enemyBuilding.getUnitType().tileWidth()) * Display.TILESIZE,
-					(lastTilePosition.getY() + enemyBuilding.getUnitType().tileHeight()) * Display.TILESIZE);
+					(lastTilePosition.getX() + enemyBuilding.getUnitType().tileWidth())
+							* Core.getInstance().getTileSize(),
+					(lastTilePosition.getY() + enemyBuilding.getUnitType().tileHeight())
+							* Core.getInstance().getTileSize());
 
 			GAME.drawBoxMap(lastTilePosition.toPosition(), endPosition, BUILDING_COLOR);
 		}
@@ -52,7 +53,7 @@ class UnitTrackerDisplay {
 	protected static void showUnitsLastPosition(List<EnemyUnit> unitList) {
 		for (EnemyUnit enemyUnit : unitList) {
 			GAME.drawTextMap(enemyUnit.getLastSeenTilePosition().toPosition().getX(),
-					enemyUnit.getLastSeenTilePosition().toPosition().getY() + Display.LINEHEIGHT,
+					enemyUnit.getLastSeenTilePosition().toPosition().getY() + Core.getInstance().getLineheight(),
 					enemyUnit.getUnitType().toString());
 		}
 	}

@@ -1,18 +1,10 @@
 package unitTrackerModule;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.swing.text.html.InlineView;
-import javax.xml.bind.ValidationEvent;
-
-import bwapi.Color;
 import bwapi.Game;
-import bwapi.Player;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -20,8 +12,6 @@ import bwapi.WeaponType;
 import cBotBWEventDistributor.CBotBWEventDistributor;
 import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
-import core.Display;
-import unitControlModule.UnitControlModule;
 
 /**
  * UnitTrackerModule.java --- Module for tracking enemy units and storing
@@ -299,7 +289,8 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	 */
 	private void addValueInAreaToTilePositionValue(TilePosition tilePosition,
 			Hashtable<TilePosition, Integer> valueTiles, UnitType unitType, WeaponType weaponType) {
-		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange()) / Double.valueOf(Display.TILESIZE));
+		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange())
+				/ Double.valueOf(Core.getInstance().getTileSize()));
 
 		// If the unit is a meele unit, the attack range is 0 and there will be
 		// no calculations regarding the ValueTile lists. So the range has to be
