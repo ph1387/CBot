@@ -11,7 +11,7 @@ import unitControlModule.unitWrappers.PlayerUnit_Marine;
  * @author P H - 26.02.2017
  *
  */
-public class PlayerUnitFactory {
+class PlayerUnitFactory {
 
 	// -------------------- Functions
 

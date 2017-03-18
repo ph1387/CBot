@@ -12,7 +12,7 @@ import javaGOAP.GoapAgent;
  * @author P H - 26.02.2017
  *
  */
-public class GoapAgentFactory {
+class GoapAgentFactory {
 
 	// -------------------- Functions
 
