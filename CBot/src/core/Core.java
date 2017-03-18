@@ -2,13 +2,20 @@ package core;
 
 import bwapi.*;
 
+/**
+ * Core.java --- A class that holds the most important game information on which
+ * other classes rely on.
+ * 
+ * @author P H - 18.03.2017
+ *
+ */
 public class Core {
 	private static Core instance;
 
 	private Mirror mirror;
 	private Game game;
 	private Player player;
-	
+
 	private int tileSize = 32;
 	private int lineheight = 10;
 	private int offsetLeft = 10;
@@ -54,7 +61,7 @@ public class Core {
 	public int getTileSize() {
 		return this.tileSize;
 	}
-	
+
 	public int getLineheight() {
 		return lineheight;
 	}

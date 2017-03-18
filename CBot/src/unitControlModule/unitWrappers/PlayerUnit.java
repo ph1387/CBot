@@ -14,6 +14,7 @@ import core.Core;
 import core.Display;
 import javaGOAP.GoapUnit;
 import javaGOAP.GoapAction;
+import unitControlModule.UnitControlModule;
 import unitControlModule.Vector;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.updater.Updater;
@@ -114,14 +115,14 @@ public abstract class PlayerUnit extends GoapUnit {
 	@Override
 	public void update() {
 		// FSM worldState changes in one cycle.
-		if (this.currentState == UnitStates.ENEMY_MISSING && (UnitTrackerModule.getInstance().enemyUnits.size() != 0
-				|| UnitTrackerModule.getInstance().enemyBuildings.size() != 0)) {
+		if (this.currentState == UnitStates.ENEMY_MISSING && (UnitControlModule.getInstance().getEnemyUnits().size() != 0
+				|| UnitControlModule.getInstance().getEnemyBuildings().size() != 0)) {
 			this.resetActions();
 			this.currentState = UnitStates.ENEMY_KNOWN;
 		}
 		if (this.currentState == UnitStates.ENEMY_KNOWN) {
-			if (UnitTrackerModule.getInstance().enemyUnits.size() == 0
-					&& UnitTrackerModule.getInstance().enemyBuildings.size() == 0) {
+			if (UnitControlModule.getInstance().getEnemyUnits().size() == 0
+					&& UnitControlModule.getInstance().getEnemyBuildings().size() == 0) {
 				this.resetActions();
 				this.currentState = UnitStates.ENEMY_MISSING;
 			} else {
@@ -177,8 +178,8 @@ public abstract class PlayerUnit extends GoapUnit {
 				TilePosition key = new TilePosition(this.unit.getTilePosition().getX() + i,
 						this.unit.getTilePosition().getY() + j);
 
-				Integer eStrength = UnitTrackerModule.getInstance().enemyGroundAttackTilePositions.get(key);
-				Integer pStrength = UnitTrackerModule.getInstance().playerGroundAttackTilePositions.get(key);
+				Integer eStrength = UnitControlModule.getInstance().getEnemyGroundAttackTilePositions().get(key);
+				Integer pStrength = UnitControlModule.getInstance().getPlayerGroundAttackTilePositions().get(key);
 
 				if (eStrength != null) {
 					enemyStrengths.add(eStrength);

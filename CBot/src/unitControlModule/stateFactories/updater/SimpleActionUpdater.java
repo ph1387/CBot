@@ -9,13 +9,13 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
 import core.Core;
+import unitControlModule.UnitControlModule;
 import unitControlModule.stateFactories.actions.SimpleUnitAvailableActions;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitTrackerModule.EnemyUnit;
-import unitTrackerModule.UnitTrackerModule;
 
 /**
  * SimpleActionUpdater.java --- Updater for updating a
@@ -51,8 +51,8 @@ public class SimpleActionUpdater extends GeneralActionUpdater {
 	protected void attackMoveToNearestKnownUnitConfiguration() {
 		TilePosition closestUnitTilePosition = null;
 
-		List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(UnitTrackerModule.getInstance().enemyUnits);
-		enemyUnits.addAll(UnitTrackerModule.getInstance().enemyBuildings);
+		List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(UnitControlModule.getInstance().getEnemyUnits());
+		enemyUnits.addAll(UnitControlModule.getInstance().getEnemyBuildings());
 
 		// Find the closest unit of the known ones
 		for (EnemyUnit unit : enemyUnits) {

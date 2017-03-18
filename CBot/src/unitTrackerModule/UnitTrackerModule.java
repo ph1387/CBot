@@ -9,8 +9,6 @@ import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.WeaponType;
-import cBotBWEventDistributor.CBotBWEventDistributor;
-import cBotBWEventDistributor.CBotBWEventListener;
 import core.Core;
 
 /**
@@ -21,20 +19,20 @@ import core.Core;
  * @author P H - 31.01.2017
  *
  */
-public class UnitTrackerModule implements CBotBWEventListener {
+public class UnitTrackerModule {
 
 	private static UnitTrackerModule instance;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
-	public Hashtable<TilePosition, Integer> playerAirAttackTilePositions = new Hashtable<>();
-	public Hashtable<TilePosition, Integer> playerGroundAttackTilePositions = new Hashtable<>();
-	public Hashtable<TilePosition, Integer> enemyAirAttackTilePositions = new Hashtable<>();
-	public Hashtable<TilePosition, Integer> enemyGroundAttackTilePositions = new Hashtable<>();
-	public List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
-	public List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
+	private Hashtable<TilePosition, Integer> playerAirAttackTilePositions = new Hashtable<>();
+	private Hashtable<TilePosition, Integer> playerGroundAttackTilePositions = new Hashtable<>();
+	private Hashtable<TilePosition, Integer> enemyAirAttackTilePositions = new Hashtable<>();
+	private Hashtable<TilePosition, Integer> enemyGroundAttackTilePositions = new Hashtable<>();
+	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
+	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
 	private UnitTrackerModule() {
-		CBotBWEventDistributor.getInstance().addListener(this);
+
 	}
 
 	// -------------------- Functions
@@ -49,6 +47,23 @@ public class UnitTrackerModule implements CBotBWEventListener {
 			instance = new UnitTrackerModule();
 		}
 		return instance;
+	}
+
+	/**
+	 * Used for updating all information regarding enemy Units in the game.
+	 */
+	public void update() {
+		this.updateEnemyUnitLists();
+
+		UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
+		UnitTrackerDisplay.showUnitsLastPosition(this.enemyUnits);
+
+		// Update the display of the calculated combat values of the ground and
+		// air forces of the enemy and the player. Player has to the shown
+		// first, since the enemy list might be empty which would result in none
+		// of them being shown.
+		UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
+		UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
 	}
 
 	/**
@@ -343,48 +358,26 @@ public class UnitTrackerModule implements CBotBWEventListener {
 	// ------------------------------ Getter / Setter
 
 	public List<EnemyUnit> getEnemyBuildings() {
-		return enemyBuildings;
+		return this.enemyBuildings;
 	}
 
 	public List<EnemyUnit> getEnemyUnits() {
-		return enemyUnits;
+		return this.enemyUnits;
+	}
+	
+	public Hashtable<TilePosition, Integer> getPlayerAirAttackTilePositions() {
+		return this.playerAirAttackTilePositions;
 	}
 
-	// -------------------- Eventlisteners
-
-	// ------------------------------ Own CBotBWEventListener
-	@Override
-	public void onStart() {
-
+	public Hashtable<TilePosition, Integer> getPlayerGroundAttackTilePositions() {
+		return this.playerGroundAttackTilePositions;
 	}
 
-	@Override
-	public void onFrame() {
-		this.updateEnemyUnitLists();
-
-		UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
-		UnitTrackerDisplay.showUnitsLastPosition(this.enemyUnits);
-
-		// Update the display of the calculated combat values of the ground and
-		// air forces of the enemy and the player. Player has to the shown
-		// first, since the enemy list might be empty which would result in none
-		// of them being shown.
-		UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
-		UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
+	public Hashtable<TilePosition, Integer> getEnemyAirAttackTilePositions() {
+		return this.enemyAirAttackTilePositions;
 	}
 
-	@Override
-	public void onUnitCreate(Unit unit) {
-
-	}
-
-	@Override
-	public void onUnitComplete(Unit unit) {
-
-	}
-
-	@Override
-	public void onUnitDestroy(Unit unit) {
-
+	public Hashtable<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
+		return this.enemyGroundAttackTilePositions;
 	}
 }

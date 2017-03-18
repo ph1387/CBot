@@ -1,31 +1,38 @@
-package init;
+package core;
 
 import buildingModule.BuildingModule;
 import buildingOrderModule.BuildingOrderModule;
 import bwapi.Game;
 import bwapi.Mirror;
 import bwta.BWTA;
-import core.Core;
 import unitControlModule.UnitControlModule;
 import unitTrackerModule.UnitTrackerModule;
 
+/**
+ * Init.java --- Class used for the initialization of the most important
+ * instances.
+ * 
+ * @author P H - 18.03.2017
+ *
+ */
 public class Init {
 	private static final int UNIT_FLAG = 1;
 	private static final int GAME_SPEED = 0;
 
-	// Function for initializing all important Functions in the beginning. Has
-	// to be called once!
+	/**
+	 * Function for initializing all important Functions in the beginning.
+	 * 
+	 * @param mirror
+	 *            the mirror of the game.
+	 * @return true or false depending if the action as successful or not.
+	 */
 	public static boolean init(Mirror mirror) {
 		boolean successful = true;
 
 		try {
-			// Get most important references to the current game and player
 			Game game = mirror.getGame();
 
-			// Instantiate the core and module(s)
 			Core.getInstance().setMirror(mirror);
-			BuildingModule.getInstance();
-			BuildingOrderModule.getInstance();
 			UnitControlModule.getInstance();
 			UnitTrackerModule.getInstance();
 

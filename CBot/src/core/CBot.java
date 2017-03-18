@@ -1,13 +1,21 @@
 package core;
 
+import bwapi.BWEventListener;
 import bwapi.Game;
 import bwapi.Mirror;
+import bwapi.Player;
+import bwapi.Position;
 import bwapi.Unit;
-import cBotBWEventDistributor.CBotBWEventDistributor;
-import cBotBWEventDistributor.CBotBWEventListener;
-import init.Init;
+import unitControlModule.UnitControlModule;
 
-class CBot implements CBotBWEventListener {
+/**
+ * CBot.java --- The bot-class itself of which an instance gets created. This
+ * class receives all events from the BWAPI-Eventlistener.
+ * 
+ * @author P H - 18.03.2017
+ *
+ */
+class CBot implements BWEventListener {
 	private Mirror mirror = new Mirror();
 	private Game game;
 
@@ -31,20 +39,15 @@ class CBot implements CBotBWEventListener {
 		return instance;
 	}
 
-	// Set the global eventlistener and start the bot
+	/**
+	 * Run the bot.
+	 */
 	public void run() {
 		try {
-			// Initialize the global event distributor as the receiver off all game
-			// events
-			this.mirror.getModule().setEventListener(CBotBWEventDistributor.getInstance());
-
-			CBotBWEventDistributor.getInstance().addListener(this);
-
-			// Start the bot
 			this.mirror.startGame();
-			
+
 			System.out.println("---RUN: success---");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("---RUN: failed---");
 			e.printStackTrace();
 		}
@@ -52,13 +55,13 @@ class CBot implements CBotBWEventListener {
 
 	// -------------------- Eventlisteners
 
-	// ------------------------------ Own CBotBWEventListener
-
+	// ------------------------------ BWEventlistener
 	@Override
 	public void onStart() {
 		try {
-			// Initialize all necessary things
-			Init.init(this.mirror);
+			if (!Init.init(this.mirror)) {
+				throw new Exception();
+			}
 
 			this.game = Core.getInstance().getGame();
 
@@ -71,11 +74,10 @@ class CBot implements CBotBWEventListener {
 
 	@Override
 	public void onFrame() {
-		// Show Information regarding the game
 		Display.showGameInformation(this.game);
-		
-		// Show all units
 		Display.showUnits(game, this.game.self().getUnits());
+
+		UnitControlModule.getInstance().update();
 	}
 
 	@Override
@@ -85,11 +87,93 @@ class CBot implements CBotBWEventListener {
 
 	@Override
 	public void onUnitComplete(Unit unit) {
-		
+		if(!unit.getType().isBuilding()) {
+			UnitControlModule.getInstance().addToUnitControl(unit);
+		}
 	}
 
 	@Override
 	public void onUnitDestroy(Unit unit) {
+		if(!unit.getType().isBuilding()) {
+			UnitControlModule.getInstance().removeUnitFromUnitControl(unit);
+		}
+	}
+
+	@Override
+	public void onEnd(boolean arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onNukeDetect(Position arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPlayerDropped(Player arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPlayerLeft(Player arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onReceiveText(Player arg0, String arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onSaveGame(String arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onSendText(String arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onUnitDiscover(Unit arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onUnitEvade(Unit arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onUnitHide(Unit arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onUnitMorph(Unit arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onUnitRenegade(Unit arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onUnitShow(Unit arg0) {
+		// TODO Auto-generated method stub
 
 	}
 }
