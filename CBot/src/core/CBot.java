@@ -1,6 +1,5 @@
 package core;
 
-import bwapi.AIModule;
 import bwapi.BWEventListener;
 import bwapi.Game;
 import bwapi.Mirror;

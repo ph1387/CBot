@@ -1,12 +1,8 @@
 package core;
 
-import buildingModule.BuildingModule;
-import buildingOrderModule.BuildingOrderModule;
 import bwapi.Game;
 import bwapi.Mirror;
 import bwta.BWTA;
-import unitControlModule.UnitControlModule;
-import unitTrackerModule.UnitTrackerModule;
 
 /**
  * Init.java --- Class used for the initialization of the most important

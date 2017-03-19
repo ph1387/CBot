@@ -18,7 +18,6 @@ import unitControlModule.UnitControlModule;
 import unitControlModule.Vector;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.updater.Updater;
-import unitTrackerModule.UnitTrackerModule;
 
 /**
  * PlayerUnit.java --- Wrapper for a player unit. All Player Units derive from

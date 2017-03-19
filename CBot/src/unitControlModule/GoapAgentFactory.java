@@ -13,7 +13,7 @@ import unitControlModule.unitWrappers.PlayerUnitFactory;
  * @author P H - 26.02.2017
  *
  */
-class GoapAgentFactory {
+public class GoapAgentFactory {
 
 	// -------------------- Functions
 
