@@ -1,8 +1,6 @@
-package unitControlModule;
+package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
-import unitControlModule.unitWrappers.PlayerUnit;
-import unitControlModule.unitWrappers.PlayerUnit_Marine;
 
 /**
  * PlayerUnitFactory.java --- Factory used to create different kinds of
@@ -11,7 +9,7 @@ import unitControlModule.unitWrappers.PlayerUnit_Marine;
  * @author P H - 26.02.2017
  *
  */
-class PlayerUnitFactory {
+public class PlayerUnitFactory {
 
 	// -------------------- Functions
 

@@ -4,6 +4,7 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import javaGOAP.DefaultGoapAgent;
 import javaGOAP.GoapAgent;
+import unitControlModule.unitWrappers.PlayerUnitFactory;
 
 /**
  * GoapAgentFactory.java --- Factory used to create GoapAgents based on the

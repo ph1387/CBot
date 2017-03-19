@@ -5,12 +5,10 @@ import java.util.HashSet;
 import bwapi.Color;
 import bwapi.Position;
 import core.Core;
-import core.Display;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-//TODO: UML
 /**
  * RetreatAction_GeneralSuperclass.java --- Superclass for RetreatActions.
  * 
@@ -21,9 +19,9 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 	private static final int DIST_TO_GATHERING_POINT = Core.getInstance().getTileSize();
 	protected static final int TILE_RADIUS_NEAR = 1;
 	// Has to be larger than DIST_TO_GATHERING_POINT
-	// -> isDone() condition!			v
-	protected static final int MIN_PIXELDISTANCE_TO_UNIT = 100;
-	protected static final int MAX_PIXELDISTANCE_TO_UNIT = 10 * Core.getInstance().getTileSize();
+	// -> isDone() condition! v
+	protected static final int MIN_PIXELDISTANCE_TO_UNIT = 320; // 240
+	protected static final int MAX_PIXELDISTANCE_TO_UNIT = 20 * Core.getInstance().getTileSize(); // 15
 
 	protected static HashSet<Position> gatheringPoints = new HashSet<Position>();
 

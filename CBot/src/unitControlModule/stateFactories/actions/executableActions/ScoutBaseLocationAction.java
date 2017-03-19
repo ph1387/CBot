@@ -66,7 +66,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected void reset() {
-		// TODO Auto-generated method stub
 		
 	}
 }

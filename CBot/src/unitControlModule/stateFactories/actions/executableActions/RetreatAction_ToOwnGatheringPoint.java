@@ -2,19 +2,14 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import java.util.HashSet;
 
-import bwapi.Color;
-import bwapi.Game;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
-import core.Core;
-import core.Display;
 import javaGOAP.IGoapUnit;
 import unitControlModule.Vector;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitTrackerModule.UnitTrackerModule;
 
-// TODO: UML
 /**
  * RetreatAction_ToOwnGatheringPoint.java --- An action with which a PlayerUnit
  * (!) retreats to a self created gathering point.
@@ -45,6 +40,7 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 					.getUnitWithGreatestTileStrengths(this.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit));
 
 			if (retreatableUnit == null) {
+				// Walk a minimal distance in the target direction
 				precondtionsMet = this.retreatToVectorEndPosition(vecUTP);
 			} else {
 				this.retreatToUnitPosition(vecUTP, retreatableUnit);
@@ -57,7 +53,6 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 		return precondtionsMet;
 	}
 
-	// TODO: UML
 	/**
 	 * Function with which the temporary retreat Position gets set to the
 	 * Vectors end Position.
@@ -68,7 +63,7 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 	 *         not.
 	 */
 	private boolean retreatToVectorEndPosition(Vector vecUTP) {
-		Position targetVecPosition = new Position(vecUTP.x + (int)(vecUTP.dirX), vecUTP.y + (int)(vecUTP.dirY));
+		Position targetVecPosition = new Position(vecUTP.x + (int) (vecUTP.dirX), vecUTP.y + (int) (vecUTP.dirY));
 		boolean returnValue = true;
 
 		if (this.isInsideMap(targetVecPosition)) {
@@ -80,7 +75,6 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 		return returnValue;
 	}
 
-	// TODO: UML
 	/**
 	 * Function with which the temporary retreat Position gets set towards a
 	 * Unit. The Vector has a specific length and the direction towards the
@@ -97,8 +91,8 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 				retreatableUnit.getPosition().getY() - vecUTP.y);
 		vecToUnit.normalize();
 
-		Position retreatPosition = new Position(vecToUnit.x + (int)(vecToUnit.dirX * MIN_PIXELDISTANCE_TO_UNIT),
-				vecToUnit.y + (int)(vecToUnit.dirY * MIN_PIXELDISTANCE_TO_UNIT));
+		Position retreatPosition = new Position(vecToUnit.x + (int) (vecToUnit.dirX * MIN_PIXELDISTANCE_TO_UNIT),
+				vecToUnit.y + (int) (vecToUnit.dirY * MIN_PIXELDISTANCE_TO_UNIT));
 		this.generatedTempRetreatPosition = retreatPosition;
 	}
 
@@ -110,7 +104,6 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 		return 100;
 	}
 
-	// TODO: UML
 	/**
 	 * Function for retrieving all Units in an increasing range around the given
 	 * PlayerUnit. The range at which the Units are searched for increases
@@ -152,7 +145,6 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 		return unitsInRange;
 	}
 
-	// TODO: UML
 	/**
 	 * Function for retrieving the Unit with the greatest sum of strengths
 	 * around the units TilePosition.

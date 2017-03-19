@@ -1,9 +1,6 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
-import bwapi.Color;
 import bwapi.Unit;
-import core.Core;
-import core.Display;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -36,8 +33,13 @@ public class AttackUnitAction extends BaseAction {
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
-		// TODO: CHANGE TO USE THIS.ACTIONTRIGGER
-		return ((PlayerUnit) goapUnit).getUnit().attack(((Unit) this.target));
+		boolean success = true;
+		
+		if(this.actionChangeTrigger) {
+			success = ((PlayerUnit) goapUnit).getUnit().attack(((Unit) this.target));
+		}
+
+		return success;
 	}
 
 	@Override
@@ -67,7 +69,6 @@ public class AttackUnitAction extends BaseAction {
 
 	@Override
 	protected void reset() {
-		// TODO Auto-generated method stub
-		
+		this.resetStoredAction();
 	}
 }

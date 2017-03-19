@@ -9,7 +9,6 @@ import javaGOAP.GoapAction;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML
 /**
  * BaseAction.java --- Superclass for all PlayerUnit actions.
  * 
@@ -60,8 +59,7 @@ public abstract class BaseAction extends GoapAction {
 	protected void resetStoredAction() {
 		BaseAction.currentlyExecutingActions.put((PlayerUnit) this.currentlyExecutingUnit, null);
 	}
-	
-	// TODO: UML
+
 	/**
 	 * Function for testing if a Position is inside the map.
 	 * 
@@ -71,7 +69,7 @@ public abstract class BaseAction extends GoapAction {
 	 */
 	protected boolean isInsideMap(Position p) {
 		Game game = Core.getInstance().getGame();
-	
+
 		return (p.getX() < (game.mapWidth() * Core.getInstance().getTileSize()) || p.getX() >= 0
 				|| p.getY() < (game.mapHeight() * Core.getInstance().getTileSize()) || p.getY() >= 0);
 	}
