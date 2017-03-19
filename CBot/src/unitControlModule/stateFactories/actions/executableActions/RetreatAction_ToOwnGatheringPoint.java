@@ -6,9 +6,9 @@ import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import javaGOAP.IGoapUnit;
+import unitControlModule.UnitControlModule;
 import unitControlModule.Vector;
 import unitControlModule.unitWrappers.PlayerUnit;
-import unitTrackerModule.UnitTrackerModule;
 
 /**
  * RetreatAction_ToOwnGatheringPoint.java --- An action with which a PlayerUnit
@@ -167,7 +167,7 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 				for (int j = -TILE_RADIUS_AROUND_UNITS_SEARCH; j <= TILE_RADIUS_AROUND_UNITS_SEARCH; j++) {
 
 					// TODO: Possible Change: AirStrength Implementation
-					Integer value = UnitTrackerModule.getInstance().getPlayerGroundAttackTilePositions().get(
+					Integer value = UnitControlModule.getInstance().getPlayerGroundAttackTilePositions().get(
 							new TilePosition(unit.getTilePosition().getX() + i, unit.getTilePosition().getY() + j));
 
 					if (value != null) {

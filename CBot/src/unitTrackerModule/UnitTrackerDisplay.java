@@ -1,7 +1,7 @@
 package unitTrackerModule;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -64,7 +64,7 @@ class UnitTrackerDisplay {
 	 * @param valueTiles
 	 *            the table of all ValueTilePositions the enemy units apply to.
 	 */
-	protected static void showEnemyUnitTileStrength(Hashtable<TilePosition, Integer> valueTiles) {
+	protected static void showEnemyUnitTileStrength(HashMap<TilePosition, Integer> valueTiles) {
 		final Integer highestValue = findHighestValueOFTilePosition(valueTiles);
 
 		if (highestValue != null) {
@@ -88,7 +88,7 @@ class UnitTrackerDisplay {
 	 * @param valueTiles
 	 *            the table of all ValueTilePositions the player units apply to.
 	 */
-	protected static void showPlayerUnitTileStrength(Hashtable<TilePosition, Integer> valueTiles) {
+	protected static void showPlayerUnitTileStrength(HashMap<TilePosition, Integer> valueTiles) {
 		final Integer highestValue = findHighestValueOFTilePosition(valueTiles);
 
 		if (highestValue != null) {
@@ -129,11 +129,11 @@ class UnitTrackerDisplay {
 	 *            List of all ValueTilePositions taken in consideration.
 	 * @return the highest Integer value of the table or null if none is found.
 	 */
-	private static Integer findHighestValueOFTilePosition(Hashtable<TilePosition, Integer> valueTable) {
+	private static Integer findHighestValueOFTilePosition(HashMap<TilePosition, Integer> valueTable) {
 		final List<Integer> valueList = new ArrayList<Integer>();
 		Integer highestValue = null;
 
-		// Extract all values from the Hashtable. Necessary since comparing them
+		// Extract all values from the HashMap. Necessary since comparing them
 		// directly needs the comparator to be final, which causes errors.
 		valueTable.forEach(new BiConsumer<TilePosition, Integer>() {
 

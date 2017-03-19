@@ -1,7 +1,7 @@
 package unitControlModule;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -32,10 +32,10 @@ public class UnitControlModule {
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 	private Queue<Unit> buildingsToBuild = new LinkedList<Unit>();
 
-	private Hashtable<TilePosition, Integer> playerAirAttackTilePositions;
-	private Hashtable<TilePosition, Integer> playerGroundAttackTilePositions;
-	private Hashtable<TilePosition, Integer> enemyAirAttackTilePositions;
-	private Hashtable<TilePosition, Integer> enemyGroundAttackTilePositions;
+	private HashMap<TilePosition, Integer> playerAirAttackTilePositions;
+	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions;
+	private HashMap<TilePosition, Integer> enemyAirAttackTilePositions;
+	private HashMap<TilePosition, Integer> enemyGroundAttackTilePositions;
 	private List<EnemyUnit> enemyBuildings;
 	private List<EnemyUnit> enemyUnits;
 
@@ -164,70 +164,29 @@ public class UnitControlModule {
 		}
 	}
 
-	// TODO: Implementation: tryTransferringWorkerToCombatUnits
-	// /**
-	// * Function for transferring a single worker to the combat units, so that
-	// it
-	// * is used to scout the enemy base at a certain worker amount.
-	// */
-	// private void tryTransferringWorkerToCombatUnits() {
-	// int workerCount = 0;
-	//
-	// for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-	// if (unit.getType().isWorker()) {
-	// workerCount++;
-	// }
-	// }
-	//
-	// if (workerCount >= WORKER_SCOUTING_TRIGGER) {
-	// for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-	//
-	// // TODO: REMOVE
-	// System.out.println("UNIT: " + unit + " " + unit.getType() + " " +
-	// unit.getType().isWorker() + " "
-	// + unit.isGatheringMinerals() + " " + unit.isCompleted() + " " +
-	// this.workerOnceAssigned);
-	// // Unit references are still not the same
-	//
-	// if (unit.getType().isWorker() && unit.isGatheringMinerals() &&
-	// unit.isCompleted()
-	// && !this.workerOnceAssigned) {
-	//
-	// // TODO: REMOVE
-	// System.out.println("CHOSEN: " + unit);
-	//
-	// this.dispatchNewSperateUnitEvent(unit);
-	// // TODO: Problem: References are not equal
-	// // this.newCombatUnits.add(unit);
-	// this.workerOnceAssigned = true;
-	// }
-	// }
-	// }
-	// }
-
 	// ------------------------------ Getter / Setter
 
-	public Hashtable<TilePosition, Integer> getPlayerAirAttackTilePositions() {
-		return playerAirAttackTilePositions;
+	public HashMap<TilePosition, Integer> getPlayerAirAttackTilePositions() {
+		return this.playerAirAttackTilePositions;
 	}
 
-	public Hashtable<TilePosition, Integer> getPlayerGroundAttackTilePositions() {
-		return playerGroundAttackTilePositions;
+	public HashMap<TilePosition, Integer> getPlayerGroundAttackTilePositions() {
+		return this.playerGroundAttackTilePositions;
 	}
 
-	public Hashtable<TilePosition, Integer> getEnemyAirAttackTilePositions() {
-		return enemyAirAttackTilePositions;
+	public HashMap<TilePosition, Integer> getEnemyAirAttackTilePositions() {
+		return this.enemyAirAttackTilePositions;
 	}
 
-	public Hashtable<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
-		return enemyGroundAttackTilePositions;
+	public HashMap<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
+		return this.enemyGroundAttackTilePositions;
 	}
 
 	public List<EnemyUnit> getEnemyBuildings() {
-		return enemyBuildings;
+		return this.enemyBuildings;
 	}
 
 	public List<EnemyUnit> getEnemyUnits() {
-		return enemyUnits;
+		return this.enemyUnits;
 	}
 }

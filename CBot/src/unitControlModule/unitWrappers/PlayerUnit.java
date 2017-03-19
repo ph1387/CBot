@@ -1,7 +1,7 @@
 package unitControlModule.unitWrappers;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Queue;
 
 import bwapi.Color;
@@ -33,7 +33,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected static final Integer DEFAULT_SEARCH_RADIUS = 5;
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
 
-	protected static Hashtable<BaseLocation, Integer> BaselocationsSearched = new Hashtable<>();
+	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
 
 	protected Unit unit;
 	protected Unit nearestEnemyUnitInSight;
@@ -494,32 +494,32 @@ public abstract class PlayerUnit extends GoapUnit {
 		return this.unit;
 	}
 
-	public static Hashtable<BaseLocation, Integer> getBaselocationsSearched() {
+	public static HashMap<BaseLocation, Integer> getBaselocationsSearched() {
 		return BaselocationsSearched;
 	}
 
 	public Unit getNearestEnemyUnitInSight() {
-		return nearestEnemyUnitInSight;
+		return this.nearestEnemyUnitInSight;
 	}
 
 	public Unit getNearestEnemyUnitInConfidenceRange() {
-		return nearestEnemyUnitInConfidenceRange;
+		return this.nearestEnemyUnitInConfidenceRange;
 	}
 
 	public double getConfidence() {
-		return confidence;
+		return this.confidence;
 	}
 
 	public Vector getVecUTP() {
-		return vecUTP;
+		return this.vecUTP;
 	}
 
 	public Vector getVecUTPRotatedL() {
-		return vecUTPRotatedL;
+		return this.vecUTPRotatedL;
 	}
 
 	public Vector getVecUTPRotatedR() {
-		return vecUTPRotatedR;
+		return this.vecUTPRotatedR;
 	}
 
 }

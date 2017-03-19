@@ -1,7 +1,7 @@
 package unitTrackerModule;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 
 import bwapi.Game;
@@ -24,10 +24,10 @@ public class UnitTrackerModule {
 	private static UnitTrackerModule instance;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
-	private Hashtable<TilePosition, Integer> playerAirAttackTilePositions = new Hashtable<>();
-	private Hashtable<TilePosition, Integer> playerGroundAttackTilePositions = new Hashtable<>();
-	private Hashtable<TilePosition, Integer> enemyAirAttackTilePositions = new Hashtable<>();
-	private Hashtable<TilePosition, Integer> enemyGroundAttackTilePositions = new Hashtable<>();
+	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
+	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
+	private HashMap<TilePosition, Integer> enemyAirAttackTilePositions = new HashMap<>();
+	private HashMap<TilePosition, Integer> enemyGroundAttackTilePositions = new HashMap<>();
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
@@ -192,11 +192,11 @@ public class UnitTrackerModule {
 	 * Function used to generate the table of value tiles showing the air forces
 	 * strength of the player units.
 	 *
-	 * @return a HashTable containing ValueTilePositions that represent the
+	 * @return a HashMap containing ValueTilePositions that represent the
 	 *         players air strength.
 	 */
-	private Hashtable<TilePosition, Integer> generatePlayerAirAttackTilePositions() {
-		Hashtable<TilePosition, Integer> valueTiles = new Hashtable<>();
+	private HashMap<TilePosition, Integer> generatePlayerAirAttackTilePositions() {
+		HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
 
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			if (unit.isCompleted() && unit.getType().airWeapon() != null
@@ -212,11 +212,11 @@ public class UnitTrackerModule {
 	 * Function used to generate the table of value tiles showing the ground
 	 * forces strength of the player units.
 	 * 
-	 * @return a HashTable containing ValueTilePositions that represent the
+	 * @return a HashMap containing ValueTilePositions that represent the
 	 *         players air strength.
 	 */
-	private Hashtable<TilePosition, Integer> generatePlayerGroundAttackTilePositions() {
-		Hashtable<TilePosition, Integer> valueTiles = new Hashtable<>();
+	private HashMap<TilePosition, Integer> generatePlayerGroundAttackTilePositions() {
+		HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
 
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			if (unit.isCompleted() && unit.getType().groundWeapon() != null
@@ -232,11 +232,11 @@ public class UnitTrackerModule {
 	 * Function used to generate the table of value tiles showing the air forces
 	 * strength of the enemy units and buildings.
 	 *
-	 * @return a HashTable containing ValueTilePositions that represent the
+	 * @return a HashMap containing ValueTilePositions that represent the
 	 *         enemies air strength.
 	 */
-	private Hashtable<TilePosition, Integer> generateEnemyAirAttackTilePositions() {
-		Hashtable<TilePosition, Integer> valueTiles = new Hashtable<>();
+	private HashMap<TilePosition, Integer> generateEnemyAirAttackTilePositions() {
+		HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
 
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
@@ -261,11 +261,11 @@ public class UnitTrackerModule {
 	 * Function used to generate the table of value tiles showing the ground
 	 * forces strength of the enemy units and buildings.
 	 *
-	 * @return a HashTable containing ValueTilePositions that represent the
+	 * @return a HashMap containing ValueTilePositions that represent the
 	 *         enemies ground strength.
 	 */
-	private Hashtable<TilePosition, Integer> generateEnemyGroundAttackTilePositions() {
-		Hashtable<TilePosition, Integer> valueTiles = new Hashtable<>();
+	private HashMap<TilePosition, Integer> generateEnemyGroundAttackTilePositions() {
+		HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
 
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
@@ -303,7 +303,7 @@ public class UnitTrackerModule {
 	 *            the WeaponType of the Unit.
 	 */
 	private void addValueInAreaToTilePositionValue(TilePosition tilePosition,
-			Hashtable<TilePosition, Integer> valueTiles, UnitType unitType, WeaponType weaponType) {
+			HashMap<TilePosition, Integer> valueTiles, UnitType unitType, WeaponType weaponType) {
 		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange())
 				/ Double.valueOf(Core.getInstance().getTileSize()));
 
@@ -365,19 +365,19 @@ public class UnitTrackerModule {
 		return this.enemyUnits;
 	}
 	
-	public Hashtable<TilePosition, Integer> getPlayerAirAttackTilePositions() {
+	public HashMap<TilePosition, Integer> getPlayerAirAttackTilePositions() {
 		return this.playerAirAttackTilePositions;
 	}
 
-	public Hashtable<TilePosition, Integer> getPlayerGroundAttackTilePositions() {
+	public HashMap<TilePosition, Integer> getPlayerGroundAttackTilePositions() {
 		return this.playerGroundAttackTilePositions;
 	}
 
-	public Hashtable<TilePosition, Integer> getEnemyAirAttackTilePositions() {
+	public HashMap<TilePosition, Integer> getEnemyAirAttackTilePositions() {
 		return this.enemyAirAttackTilePositions;
 	}
 
-	public Hashtable<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
+	public HashMap<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
 		return this.enemyGroundAttackTilePositions;
 	}
 }
