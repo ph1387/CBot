@@ -1,9 +1,7 @@
 package unitControlModule;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import bwapi.*;
@@ -11,7 +9,6 @@ import core.Core;
 import core.Display;
 import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerUnit;
-import unitTrackerModule.EnemyUnit;
 import unitTrackerModule.UnitTrackerModule;
 
 /**
@@ -31,13 +28,6 @@ public class UnitControlModule {
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 	private Queue<Unit> buildingsToBuild = new LinkedList<Unit>();
-
-	private HashMap<TilePosition, Integer> playerAirAttackTilePositions;
-	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions;
-	private HashMap<TilePosition, Integer> enemyAirAttackTilePositions;
-	private HashMap<TilePosition, Integer> enemyGroundAttackTilePositions;
-	private List<EnemyUnit> enemyBuildings;
-	private List<EnemyUnit> enemyUnits;
 
 	private UnitControlModule() {
 
@@ -65,7 +55,6 @@ public class UnitControlModule {
 		this.removeAgents();
 		this.updateInformation();
 
-		// Update all agents
 		for (GoapAgent goapAgent : this.agents) {
 
 			// TODO: DEBUG INFO
@@ -80,9 +69,9 @@ public class UnitControlModule {
 	 * Function for adding new agents to the HashSet.
 	 */
 	private void addNewAgents() {
-		while(!this.unitsToAdd.isEmpty()) {
+		while (!this.unitsToAdd.isEmpty()) {
 			Unit unit = this.unitsToAdd.poll();
-			
+
 			try {
 				this.agents.add(GoapAgentFactory.createAgent(unit));
 			} catch (Exception e) {
@@ -96,7 +85,7 @@ public class UnitControlModule {
 	 * HashSet.
 	 */
 	private void removeAgents() {
-		while(!this.unitsToRemove.isEmpty()) {
+		while (!this.unitsToRemove.isEmpty()) {
 			Unit unit = this.unitsToRemove.poll();
 			GoapAgent matchingAgent = null;
 
@@ -115,19 +104,19 @@ public class UnitControlModule {
 	}
 
 	/**
-	 * Get all necessary information from a UnitTracker. Providing one centered
-	 * pool for information is better than trying to gather information from all
-	 * over the place.
+	 * Get all necessary information from a UnitTracker and transfer them into
+	 * the PlayerUnit class. This removes the dependency of the Actions and
+	 * updaters from this class as well as the UnitTrackerModule.
 	 */
 	private void updateInformation() {
 		UnitTrackerModule utm = UnitTrackerModule.getInstance();
 
-		this.playerAirAttackTilePositions = utm.getPlayerAirAttackTilePositions();
-		this.playerGroundAttackTilePositions = utm.getPlayerGroundAttackTilePositions();
-		this.enemyAirAttackTilePositions = utm.getEnemyAirAttackTilePositions();
-		this.enemyGroundAttackTilePositions = utm.getEnemyGroundAttackTilePositions();
-		this.enemyBuildings = utm.getEnemyBuildings();
-		this.enemyUnits = utm.getEnemyUnits();
+		PlayerUnit.setPlayerAirAttackTilePositions(utm.getPlayerAirAttackTilePositions());
+		PlayerUnit.setPlayerGroundAttackTilePositions(utm.getPlayerGroundAttackTilePositions());
+		PlayerUnit.setEnemyAirAttackTilePositions(utm.getEnemyAirAttackTilePositions());
+		PlayerUnit.setEnemyGroundAttackTilePositions(utm.getEnemyGroundAttackTilePositions());
+		PlayerUnit.setEnemyBuildings(utm.getEnemyBuildings());
+		PlayerUnit.setEnemyUnits(utm.getEnemyUnits());
 	}
 
 	/**
@@ -162,31 +151,5 @@ public class UnitControlModule {
 		if (unit.getType().isBuilding()) {
 			this.buildingsToBuild.add(unit);
 		}
-	}
-
-	// ------------------------------ Getter / Setter
-
-	public HashMap<TilePosition, Integer> getPlayerAirAttackTilePositions() {
-		return this.playerAirAttackTilePositions;
-	}
-
-	public HashMap<TilePosition, Integer> getPlayerGroundAttackTilePositions() {
-		return this.playerGroundAttackTilePositions;
-	}
-
-	public HashMap<TilePosition, Integer> getEnemyAirAttackTilePositions() {
-		return this.enemyAirAttackTilePositions;
-	}
-
-	public HashMap<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
-		return this.enemyGroundAttackTilePositions;
-	}
-
-	public List<EnemyUnit> getEnemyBuildings() {
-		return this.enemyBuildings;
-	}
-
-	public List<EnemyUnit> getEnemyUnits() {
-		return this.enemyUnits;
 	}
 }

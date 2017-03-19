@@ -2,6 +2,7 @@ package unitControlModule.unitWrappers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Queue;
 
 import bwapi.Color;
@@ -14,10 +15,10 @@ import core.Core;
 import core.Display;
 import javaGOAP.GoapUnit;
 import javaGOAP.GoapAction;
-import unitControlModule.UnitControlModule;
 import unitControlModule.Vector;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.updater.Updater;
+import unitTrackerModule.EnemyUnit;
 
 /**
  * PlayerUnit.java --- Wrapper for a player unit. All Player Units derive from
@@ -34,6 +35,14 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
+
+	// Information regarding the enemy Units.
+	protected static HashMap<TilePosition, Integer> playerAirAttackTilePositions;
+	protected static HashMap<TilePosition, Integer> playerGroundAttackTilePositions;
+	protected static HashMap<TilePosition, Integer> enemyAirAttackTilePositions;
+	protected static HashMap<TilePosition, Integer> enemyGroundAttackTilePositions;
+	protected static List<EnemyUnit> enemyBuildings;
+	protected static List<EnemyUnit> enemyUnits;
 
 	protected Unit unit;
 	protected Unit nearestEnemyUnitInSight;
@@ -114,15 +123,12 @@ public abstract class PlayerUnit extends GoapUnit {
 	@Override
 	public void update() {
 		// FSM worldState changes in one cycle.
-		if (this.currentState == UnitStates.ENEMY_MISSING
-				&& (UnitControlModule.getInstance().getEnemyUnits().size() != 0
-						|| UnitControlModule.getInstance().getEnemyBuildings().size() != 0)) {
+		if (this.currentState == UnitStates.ENEMY_MISSING && (enemyUnits.size() != 0 || enemyBuildings.size() != 0)) {
 			this.resetActions();
 			this.currentState = UnitStates.ENEMY_KNOWN;
 		}
 		if (this.currentState == UnitStates.ENEMY_KNOWN) {
-			if (UnitControlModule.getInstance().getEnemyUnits().size() == 0
-					&& UnitControlModule.getInstance().getEnemyBuildings().size() == 0) {
+			if (enemyUnits.size() == 0 && enemyBuildings.size() == 0) {
 				this.resetActions();
 				this.currentState = UnitStates.ENEMY_MISSING;
 			} else {
@@ -178,8 +184,8 @@ public abstract class PlayerUnit extends GoapUnit {
 				TilePosition key = new TilePosition(this.unit.getTilePosition().getX() + i,
 						this.unit.getTilePosition().getY() + j);
 
-				Integer eStrength = UnitControlModule.getInstance().getEnemyGroundAttackTilePositions().get(key);
-				Integer pStrength = UnitControlModule.getInstance().getPlayerGroundAttackTilePositions().get(key);
+				Integer eStrength = enemyGroundAttackTilePositions.get(key);
+				Integer pStrength = playerGroundAttackTilePositions.get(key);
 
 				if (eStrength != null) {
 					enemyStrengths.add(eStrength);
@@ -520,6 +526,56 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public Vector getVecUTPRotatedR() {
 		return this.vecUTPRotatedR;
+	}
+
+	public static HashMap<TilePosition, Integer> getPlayerAirAttackTilePositions() {
+		return playerAirAttackTilePositions;
+	}
+
+	public static void setPlayerAirAttackTilePositions(HashMap<TilePosition, Integer> playerAirAttackTilePositions) {
+		PlayerUnit.playerAirAttackTilePositions = playerAirAttackTilePositions;
+	}
+
+	public static HashMap<TilePosition, Integer> getPlayerGroundAttackTilePositions() {
+		return playerGroundAttackTilePositions;
+	}
+
+	public static void setPlayerGroundAttackTilePositions(
+			HashMap<TilePosition, Integer> playerGroundAttackTilePositions) {
+		PlayerUnit.playerGroundAttackTilePositions = playerGroundAttackTilePositions;
+	}
+
+	public static HashMap<TilePosition, Integer> getEnemyAirAttackTilePositions() {
+		return enemyAirAttackTilePositions;
+	}
+
+	public static void setEnemyAirAttackTilePositions(HashMap<TilePosition, Integer> enemyAirAttackTilePositions) {
+		PlayerUnit.enemyAirAttackTilePositions = enemyAirAttackTilePositions;
+	}
+
+	public static HashMap<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
+		return enemyGroundAttackTilePositions;
+	}
+
+	public static void setEnemyGroundAttackTilePositions(
+			HashMap<TilePosition, Integer> enemyGroundAttackTilePositions) {
+		PlayerUnit.enemyGroundAttackTilePositions = enemyGroundAttackTilePositions;
+	}
+
+	public static List<EnemyUnit> getEnemyBuildings() {
+		return enemyBuildings;
+	}
+
+	public static void setEnemyBuildings(List<EnemyUnit> enemyBuildings) {
+		PlayerUnit.enemyBuildings = enemyBuildings;
+	}
+
+	public static List<EnemyUnit> getEnemyUnits() {
+		return enemyUnits;
+	}
+
+	public static void setEnemyUnits(List<EnemyUnit> enemyUnits) {
+		PlayerUnit.enemyUnits = enemyUnits;
 	}
 
 }
