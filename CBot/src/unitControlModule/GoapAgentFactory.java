@@ -1,7 +1,6 @@
 package unitControlModule;
 
 import bwapi.Unit;
-import bwapi.UnitType;
 import javaGOAP.DefaultGoapAgent;
 import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerUnitFactory;
@@ -21,9 +20,14 @@ public class GoapAgentFactory {
 		GoapAgent agent = null;
 		
 		// TODO: Add more Classes
-		// TODO: Possible Change: Implementation change!
-		if(unit.getType() == UnitType.Terran_Marine) {
+		switch (unit.getType().toString()) {
+		case "Terran_Marine":
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createMarine(unit));
+			break;
+		case "Terran_Vulture":
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createVulture(unit));
+		default:
+			break;
 		}
 
 		if(agent == null) {

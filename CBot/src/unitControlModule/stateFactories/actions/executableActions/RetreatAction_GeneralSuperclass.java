@@ -101,7 +101,7 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		boolean success = false;
 
-		if (this.target != null && ((PlayerUnit) goapUnit).getNearestEnemyUnitInConfidenceRange() != null) {
+		if (this.target != null && ((PlayerUnit) goapUnit).getClosestEnemyUnitInConfidenceRange() != null) {
 			success = this.checkProceduralSpecificPrecondition(goapUnit);
 
 			// The first ever found Position has to be added as temp retreat

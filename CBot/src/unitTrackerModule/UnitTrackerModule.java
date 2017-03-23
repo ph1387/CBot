@@ -289,9 +289,9 @@ public class UnitTrackerModule {
 
 	// TODO: Possible Change: Simplify function call
 	/**
-	 * Function for adding a units attack value to the corresponding
-	 * ValueTilePosition table. The range is determined by the WeaponType the
-	 * unit is using and its range.
+	 * Function for adding a units strength to the corresponding
+	 * ValueTilePosition table. The added strength and the range at which these
+	 * are being added are determined by different factors.
 	 *
 	 * @param tilePosition
 	 *            the TilePosition the calculations are being done around.
@@ -302,8 +302,8 @@ public class UnitTrackerModule {
 	 * @param weaponType
 	 *            the WeaponType of the Unit.
 	 */
-	private void addValueInAreaToTilePositionValue(TilePosition tilePosition,
-			HashMap<TilePosition, Integer> valueTiles, UnitType unitType, WeaponType weaponType) {
+	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, HashMap<TilePosition, Integer> valueTiles,
+			UnitType unitType, WeaponType weaponType) {
 		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange())
 				/ Double.valueOf(Core.getInstance().getTileSize()));
 
@@ -364,7 +364,7 @@ public class UnitTrackerModule {
 	public List<EnemyUnit> getEnemyUnits() {
 		return this.enemyUnits;
 	}
-	
+
 	public HashMap<TilePosition, Integer> getPlayerAirAttackTilePositions() {
 		return this.playerAirAttackTilePositions;
 	}

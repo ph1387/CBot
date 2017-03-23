@@ -1,5 +1,6 @@
 package unitControlModule.unitWrappers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +32,9 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public static final int BASELOCATIONS_TIME_PASSED = 180;
 	public static final double CONFIDENCE_THRESHHOLD = 0.7;
-	protected static final Integer DEFAULT_SEARCH_RADIUS = 5;
+	// TODO: UML
+	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 5;
+	// TODO: UML
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
@@ -45,13 +48,16 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected static List<EnemyUnit> enemyUnits;
 
 	protected Unit unit;
-	protected Unit nearestEnemyUnitInSight;
-	protected Unit nearestEnemyUnitInConfidenceRange;
+	// TODO: UML
+	protected Unit closestEnemyUnitInSight;
+	// TODO: UML
+	protected Unit closestEnemyUnitInConfidenceRange;
 	protected double confidence = 1.;
+	// TODO: UML
+	protected int extraConfidencePixelRangeToClosestUnits = 16;
 
 	// Vector related stuff
 	protected static final int ALPHA_MAX = 90;
-
 	protected double maxDistance = CONFIDENCE_TILE_RADIUS * Core.getInstance().getTileSize();
 	protected double alphaMod = 75.;
 	protected double alphaAdd = 10.; // AlphaMod + AlphaAdd < AlphaMax
@@ -77,8 +83,13 @@ public abstract class PlayerUnit extends GoapUnit {
 		NO_UNIT_IN_RANGE, UNIT_IN_RANGE
 	}
 
+	public enum ConfidenceState {
+		UNDER_THRESHOLD, ABOVE_THRESHOLD
+	}
+
 	public UnitStates currentState = UnitStates.ENEMY_MISSING;
 	public ConfidenceRangeStates currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
+	public ConfidenceState currentConfidenceState = ConfidenceState.UNDER_THRESHOLD;
 
 	/**
 	 * @param unit
@@ -157,23 +168,30 @@ public abstract class PlayerUnit extends GoapUnit {
 	 * are known of.
 	 */
 	protected void actOnUnitsKnown() {
-		this.nearestEnemyUnitInSight = this
+		this.closestEnemyUnitInSight = this
 				.getClosestUnit(this.getAllEnemyUnitsInRange(this.unit.getType().sightRange()));
-		this.nearestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
+		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
 
 		this.updateConfidence();
+		this.updateConfidenceState();
 		this.updateCurrentRangeState();
 	}
 
 	/**
-	 * Function for updating the confidence of the Unit which determines it
-	 * attacks an enemy Unit / building or retreats to another player Unit.
+	 * Function for updating the confidence of the Unit which determines if it
+	 * attacks an enemy Unit / building, retreats to another player Unit or
+	 * takes a completely different action.
 	 */
 	protected void updateConfidence() {
-		HashSet<Integer> enemyStrengths = new HashSet<Integer>();
-		HashSet<Integer> playerStrengths = new HashSet<Integer>();
+		List<Integer> enemyStrengths = new ArrayList<Integer>();
+		List<Integer> playerStrengths = new ArrayList<Integer>();
 		double enemyStrengthTotal = 0.;
 		double playerStrengthTotal = 0.;
+		// TODO: Possible Change: Change the way the life offset is calculated.
+		// Calculate the offset of the confidence based on the current Units
+		// health.
+		double lifeConfidenceMultiplicator = (double) (this.unit.getHitPoints())
+				/ (double) (this.unit.getInitialHitPoints());
 
 		// TODO: Possible Change: AirStrength Implementation
 
@@ -183,28 +201,56 @@ public abstract class PlayerUnit extends GoapUnit {
 			for (int j = -CONFIDENCE_TILE_RADIUS; j <= CONFIDENCE_TILE_RADIUS; j++) {
 				TilePosition key = new TilePosition(this.unit.getTilePosition().getX() + i,
 						this.unit.getTilePosition().getY() + j);
+				int eStrength = enemyGroundAttackTilePositions.getOrDefault(key, 0);
+				int pStrength = playerGroundAttackTilePositions.getOrDefault(key, 0);
 
-				Integer eStrength = enemyGroundAttackTilePositions.get(key);
-				Integer pStrength = playerGroundAttackTilePositions.get(key);
-
-				if (eStrength != null) {
+				if (eStrength != 0) {
 					enemyStrengths.add(eStrength);
 				}
-				if (pStrength != null) {
+				if (pStrength != 0) {
 					playerStrengths.add(pStrength);
 				}
 			}
 		}
 
-		enemyStrengthTotal = sumHashSet(enemyStrengths);
-		playerStrengthTotal = sumHashSet(playerStrengths);
+		enemyStrengthTotal = getSum(enemyStrengths);
+		playerStrengthTotal = getSum(playerStrengths);
 
 		// Has to be set for following equation
 		if (enemyStrengthTotal == 0.) {
 			enemyStrengthTotal = 1.;
 		}
 
-		this.confidence = playerStrengthTotal / enemyStrengthTotal;
+		// TODO: Possible Change: AirWeapon Implementation
+
+		// Allow kiting if the PlayerUnit is outside of the other Unit's attack
+		// range. Also this allows Units to further attack and not running
+		// around aimlessly when they are on low health.
+		if (this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
+				+ this.extraConfidencePixelRangeToClosestUnits < this.getUnit()
+						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
+			this.confidence = playerStrengthTotal / enemyStrengthTotal;
+		} else {
+			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator;
+		}
+	}
+
+	// TODO: UML
+	/**
+	 * Mostly used to reset the action Stack if the current confidence of the
+	 * PlayerUnit decreases too much.This ensures, that the Unit is retreating
+	 * when the tides of the battle turn in a unfavorable position.
+	 */
+	protected void updateConfidenceState() {
+		if (this.currentConfidenceState == ConfidenceState.UNDER_THRESHOLD
+				&& this.confidence >= CONFIDENCE_THRESHHOLD) {
+			this.currentConfidenceState = ConfidenceState.ABOVE_THRESHOLD;
+			this.resetActions();
+		} else if (this.currentConfidenceState == ConfidenceState.ABOVE_THRESHOLD
+				&& this.confidence < CONFIDENCE_THRESHHOLD) {
+			this.currentConfidenceState = ConfidenceState.UNDER_THRESHOLD;
+			this.resetActions();
+		}
 	}
 
 	/**
@@ -216,12 +262,12 @@ public abstract class PlayerUnit extends GoapUnit {
 		// No "else if" to perform change in one cycle if an enemy Unit is in
 		// range.
 		if (this.currentRangeState == ConfidenceRangeStates.NO_UNIT_IN_RANGE
-				&& this.nearestEnemyUnitInConfidenceRange != null) {
+				&& this.closestEnemyUnitInConfidenceRange != null) {
 			this.currentRangeState = ConfidenceRangeStates.UNIT_IN_RANGE;
 			this.resetActions();
 		}
 		if (this.currentRangeState == ConfidenceRangeStates.UNIT_IN_RANGE) {
-			if (this.nearestEnemyUnitInConfidenceRange == null) {
+			if (this.closestEnemyUnitInConfidenceRange == null) {
 				this.currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
 				this.resetActions();
 			} else {
@@ -229,8 +275,8 @@ public abstract class PlayerUnit extends GoapUnit {
 				// TODO: DEBUG INFO
 				// Nearest enemy Unit display.
 				Display.drawTileFilled(Core.getInstance().getGame(),
-						this.nearestEnemyUnitInConfidenceRange.getTilePosition().getX(),
-						this.nearestEnemyUnitInConfidenceRange.getTilePosition().getY(), 1, 1, new Color(0, 0, 255));
+						this.closestEnemyUnitInConfidenceRange.getTilePosition().getX(),
+						this.closestEnemyUnitInConfidenceRange.getTilePosition().getY(), 1, 1, new Color(0, 0, 255));
 
 			}
 		}
@@ -240,7 +286,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	 * Function for updating all vectors of the PlayerUnit.
 	 */
 	private void updateVectors() {
-		if (this.nearestEnemyUnitInConfidenceRange != null) {
+		if (this.closestEnemyUnitInConfidenceRange != null) {
 			this.updateVecEU();
 			this.updateVecUTP();
 			this.updateVecRotated();
@@ -248,14 +294,18 @@ public abstract class PlayerUnit extends GoapUnit {
 			// TODO: DEBUG INFO
 			// Cone of possible retreat Positions
 			Position targetEndPosition = new Position(vecUTP.x + (int) (vecUTP.dirX), vecUTP.y + (int) (vecUTP.dirY));
-			Position rotatedLVecEndPos = new Position(vecUTPRotatedL.x + (int) (vecUTPRotatedL.dirX),
-					vecUTPRotatedL.y + (int) (vecUTPRotatedL.dirY));
-			Position rotatedRVecEndPos = new Position(vecUTPRotatedR.x + (int) (vecUTPRotatedR.dirX),
-					vecUTPRotatedR.y + (int) (vecUTPRotatedR.dirY));
+			// Position rotatedLVecEndPos = new Position(vecUTPRotatedL.x +
+			// (int) (vecUTPRotatedL.dirX),
+			// vecUTPRotatedL.y + (int) (vecUTPRotatedL.dirY));
+			// Position rotatedRVecEndPos = new Position(vecUTPRotatedR.x +
+			// (int) (vecUTPRotatedR.dirX),
+			// vecUTPRotatedR.y + (int) (vecUTPRotatedR.dirY));
 			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), targetEndPosition,
 					new Color(255, 128, 255));
-			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedLVecEndPos, new Color(255, 0, 0));
-			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedRVecEndPos, new Color(0, 255, 0));
+			// Core.getInstance().getGame().drawLineMap(this.unit.getPosition(),
+			// rotatedLVecEndPos, new Color(255, 0, 0));
+			// Core.getInstance().getGame().drawLineMap(this.unit.getPosition(),
+			// rotatedRVecEndPos, new Color(0, 255, 0));
 			// Core.getInstance().getGame().drawTextMap(rotatedLVecEndPos,
 			// String.valueOf(alphaActual));
 			// Core.getInstance().getGame().drawTextMap(rotatedRVecEndPos,
@@ -271,8 +321,8 @@ public abstract class PlayerUnit extends GoapUnit {
 		// uPos -> Unit Position, ePos -> Enemy Position
 		int uPosX = this.unit.getPosition().getX();
 		int uPosY = this.unit.getPosition().getY();
-		int ePosX = this.nearestEnemyUnitInConfidenceRange.getPosition().getX();
-		int ePosY = this.nearestEnemyUnitInConfidenceRange.getPosition().getY();
+		int ePosX = this.closestEnemyUnitInConfidenceRange.getPosition().getX();
+		int ePosY = this.closestEnemyUnitInConfidenceRange.getPosition().getY();
 
 		this.vecEU = new Vector(ePosX, ePosY, uPosX - ePosX, uPosY - ePosY);
 	}
@@ -360,7 +410,7 @@ public abstract class PlayerUnit extends GoapUnit {
 		int unitY = this.unit.getTilePosition().getY();
 
 		if (tileRadius == null) {
-			tileRadius = DEFAULT_SEARCH_RADIUS;
+			tileRadius = DEFAULT_TILE_SEARCH_RADIUS;
 		}
 
 		return (unitX >= targetX - tileRadius && unitX <= targetX + tileRadius && unitY >= targetY - tileRadius
@@ -380,23 +430,23 @@ public abstract class PlayerUnit extends GoapUnit {
 	 */
 	public boolean isNearPosition(Position targetPosition, Integer radius) {
 		if (radius == null) {
-			radius = DEFAULT_SEARCH_RADIUS * Core.getInstance().getTileSize();
+			radius = DEFAULT_TILE_SEARCH_RADIUS * Core.getInstance().getTileSize();
 		}
 
 		return this.unit.getDistance(targetPosition) <= radius;
 	}
 
 	/**
-	 * Used for getting the sum of all elements inside a HashSet of Integers.
+	 * Used for getting the sum of all elements inside an iterable collection.
 	 * 
 	 * @param set
-	 *            the set the sum is calculated of.
-	 * @return the sum of all elements inside the given Integer HashSet.
+	 *            the iterable collection the sum is calculated of.
+	 * @return the sum of all elements inside the given iterable collection.
 	 */
-	public static int sumHashSet(HashSet<Integer> set) {
+	public static int getSum(Iterable<Integer> list) {
 		int sum = 0;
 
-		for (Integer integer : set) {
+		for (Integer integer : list) {
 			sum += integer;
 		}
 		return sum;
@@ -504,12 +554,14 @@ public abstract class PlayerUnit extends GoapUnit {
 		return BaselocationsSearched;
 	}
 
-	public Unit getNearestEnemyUnitInSight() {
-		return this.nearestEnemyUnitInSight;
+	// TODO: UML
+	public Unit getClosestEnemyUnitInSight() {
+		return this.closestEnemyUnitInSight;
 	}
 
-	public Unit getNearestEnemyUnitInConfidenceRange() {
-		return this.nearestEnemyUnitInConfidenceRange;
+	// TODO: UML
+	public Unit getClosestEnemyUnitInConfidenceRange() {
+		return this.closestEnemyUnitInConfidenceRange;
 	}
 
 	public double getConfidence() {

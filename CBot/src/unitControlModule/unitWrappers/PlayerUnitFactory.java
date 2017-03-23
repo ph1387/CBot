@@ -16,4 +16,8 @@ public class PlayerUnitFactory {
 	public static PlayerUnit createMarine(Unit unit) {
 		return new PlayerUnit_Marine(unit);
 	}
+	
+	public static PlayerUnit createVulture(Unit unit) {
+		return new PlayerUnit_Vulture(unit);
+	}
 }
