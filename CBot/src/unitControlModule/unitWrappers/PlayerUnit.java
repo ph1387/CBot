@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Queue;
 
 import bwapi.Color;
+import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
@@ -36,6 +38,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
+	protected static Queue<UnitType> buildingQueue;
 
 	// Information regarding the enemy Units.
 	protected static HashMap<TilePosition, Integer> playerAirAttackTilePositions;
@@ -179,18 +182,49 @@ public abstract class PlayerUnit extends GoapUnit {
 	 * takes a completely different action.
 	 */
 	protected void updateConfidence() {
-		List<Integer> enemyStrengths = new ArrayList<Integer>();
-		List<Integer> playerStrengths = new ArrayList<Integer>();
-		double enemyStrengthTotal = 0.;
-		double playerStrengthTotal = 0.;
+		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyStrengths();
+		double playerStrengthTotal = playerEnemyStrengths.first;
+		double enemyStrengthTotal = playerEnemyStrengths.second;
 		// TODO: Possible Change: Change the way the life offset is calculated.
 		// Calculate the offset of the confidence based on the current Units
 		// health.
 		double lifeConfidenceMultiplicator = (double) (this.unit.getHitPoints())
 				/ (double) (this.unit.getInitialHitPoints());
 
-		// TODO: Possible Change: AirStrength Implementation
+		// Has to be set for following equation
+		if (enemyStrengthTotal == 0.) {
+			enemyStrengthTotal = 1.;
+		}
 
+		// TODO: Possible Change: AirWeapon Implementation
+		// Allow kiting if the PlayerUnit is outside of the other Unit's attack
+		// range. Also this allows Units to further attack and not running
+		// around aimlessly when they are on low health.
+		// -> PlayerUnit in range of enemy Unit + extra
+		if (this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
+				+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
+						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
+			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator
+					* this.confidenceDefault;
+		}
+		// -> PlayerUnit out of range of the enemy Unit
+		else {
+			this.confidence = (playerStrengthTotal / enemyStrengthTotal);
+		}
+	}
+
+	/**
+	 * Used to determine the strength of the PlayerUnits and the enemies by
+	 * summing up their representative TileValues.
+	 * 
+	 * @return the strength of the Player and the enemy in the PlayerUnit's
+	 *         confidence range.
+	 */
+	protected Pair<Double, Double> generatePlayerAndEnemyStrengths() {
+		List<Integer> enemyStrengths = new ArrayList<Integer>();
+		List<Integer> playerStrengths = new ArrayList<Integer>();
+
+		// TODO: Possible Change: AirStrength Implementation
 		// Sum the total strength of the player and the enemy in a given radius
 		// around the unit.
 		for (int i = -CONFIDENCE_TILE_RADIUS; i <= CONFIDENCE_TILE_RADIUS; i++) {
@@ -209,29 +243,7 @@ public abstract class PlayerUnit extends GoapUnit {
 			}
 		}
 
-		enemyStrengthTotal = getSum(enemyStrengths);
-		playerStrengthTotal = getSum(playerStrengths);
-
-		// Has to be set for following equation
-		if (enemyStrengthTotal == 0.) {
-			enemyStrengthTotal = 1.;
-		}
-
-		// TODO: Possible Change: AirWeapon Implementation
-
-		// Allow kiting if the PlayerUnit is outside of the other Unit's attack
-		// range. Also this allows Units to further attack and not running
-		// around aimlessly when they are on low health.
-		// -> PlayerUnit in range of enemy Unit + extra
-		if (this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
-				+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
-						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
-			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator * this.confidenceDefault;
-		}
-		// -> PlayerUnit out of range of the enemy Unit
-		else {
-			this.confidence = (playerStrengthTotal / enemyStrengthTotal);
-		}
+		return new Pair<Double, Double>((double) getSum(playerStrengths), (double) getSum(enemyStrengths));
 	}
 
 	/**
@@ -624,6 +636,14 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public static void setEnemyUnits(List<EnemyUnit> enemyUnits) {
 		PlayerUnit.enemyUnits = enemyUnits;
+	}
+	
+	public static Queue<UnitType> getBuildingQueue() {
+		return buildingQueue;
+	}
+
+	public static void setBuildingQueue(Queue<UnitType> buildingQueue) {
+		PlayerUnit.buildingQueue = buildingQueue;
 	}
 
 }

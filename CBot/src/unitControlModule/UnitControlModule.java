@@ -27,7 +27,7 @@ public class UnitControlModule {
 	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
-	private Queue<Unit> buildingsToBuild = new LinkedList<Unit>();
+	private Queue<UnitType> buildingQueue = new LinkedList<UnitType>();
 
 	private UnitControlModule() {
 
@@ -117,6 +117,7 @@ public class UnitControlModule {
 		PlayerUnit.setEnemyGroundAttackTilePositions(utm.getEnemyGroundAttackTilePositions());
 		PlayerUnit.setEnemyBuildings(utm.getEnemyBuildings());
 		PlayerUnit.setEnemyUnits(utm.getEnemyUnits());
+		PlayerUnit.setBuildingQueue(this.buildingQueue);
 	}
 
 	/**
@@ -147,9 +148,9 @@ public class UnitControlModule {
 	 * @param unit
 	 *            the building that is going to be build.
 	 */
-	public void addToBuildingQueue(Unit unit) {
-		if (unit.getType().isBuilding()) {
-			this.buildingsToBuild.add(unit);
+	public void addToBuildingQueue(UnitType unit) {
+		if (unit.isBuilding()) {
+			this.buildingQueue.add(unit);
 		}
 	}
 }
