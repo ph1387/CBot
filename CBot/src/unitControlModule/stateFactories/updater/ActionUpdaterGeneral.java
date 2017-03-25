@@ -9,11 +9,11 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 26.02.2017
  *
  */
-public abstract class GeneralActionUpdater implements Updater {
+public abstract class ActionUpdaterGeneral implements Updater {
 
 	protected PlayerUnit playerUnit;
 
-	public GeneralActionUpdater(PlayerUnit playerUnit) {
+	public ActionUpdaterGeneral(PlayerUnit playerUnit) {
 		this.playerUnit = playerUnit;
 	}
 

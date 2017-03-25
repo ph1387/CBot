@@ -5,11 +5,10 @@ import java.util.List;
 
 import javaGOAP.GoapAction;
 import javaGOAP.GoapState;
-import unitControlModule.stateFactories.actions.SimpleUnitAvailableActions;
-import unitControlModule.stateFactories.goals.SimpleUnitGoalState;
-import unitControlModule.stateFactories.updater.SimpleActionUpdater;
-import unitControlModule.stateFactories.updater.SimpleGoalStateUpdater;
-import unitControlModule.stateFactories.updater.SimpleWorldStateUpdater;
+import unitControlModule.stateFactories.actions.AvailableActionsDefault;
+import unitControlModule.stateFactories.goals.UnitGoalStateDefault;
+import unitControlModule.stateFactories.updater.ActionUpdaterDefault;
+import unitControlModule.stateFactories.updater.GoalStateUpdaterDefault;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -20,9 +19,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 26.02.2017
  *
  */
-public class SimpleStateFactory extends GeneralWorldStateFactory {
+public class StateFactoryDefault extends WorldStateFactoryDefault {
 
-	public SimpleStateFactory() {
+	public StateFactoryDefault() {
 
 	}
 
@@ -30,26 +29,21 @@ public class SimpleStateFactory extends GeneralWorldStateFactory {
 
 	@Override
 	public List<GoapState> generateGoalState() {
-		return new SimpleUnitGoalState();
+		return new UnitGoalStateDefault();
 	}
 
 	@Override
 	public HashSet<GoapAction> generateAvailableActions() {
-		return new SimpleUnitAvailableActions();
-	}
-
-	@Override
-	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
-		return new SimpleWorldStateUpdater(playerUnit);
+		return new AvailableActionsDefault();
 	}
 
 	@Override
 	public Updater getMatchingGoalStateUpdater(PlayerUnit playerUnit) {
-		return new SimpleGoalStateUpdater(playerUnit);
+		return new GoalStateUpdaterDefault(playerUnit);
 	}
 
 	@Override
 	public Updater getMatchingActionUpdater(PlayerUnit playerUnit) {
-		return new SimpleActionUpdater(playerUnit);
+		return new ActionUpdaterDefault(playerUnit);
 	}
 }

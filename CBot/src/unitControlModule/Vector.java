@@ -8,8 +8,8 @@ package unitControlModule;
  */
 public class Vector {
 
-	private final double intersecMaxDiff = Math.pow(10, -6);
-	private final double neededMPMaxDiff = Math.pow(10, -1);
+	private final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
+	private final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
 	public int x, y;
 	public double dirX = 0., dirY = 0.;
 
@@ -74,7 +74,7 @@ public class Vector {
 			rY = rX;
 		}
 
-		if (Math.abs(Math.abs(rX) - Math.abs(rY)) < this.neededMPMaxDiff) {
+		if (Math.abs(Math.abs(rX) - Math.abs(rY)) < this.NEEDED_MP_MAX_DIFF) {
 			return rX; // Could also be rY
 		} else {
 			return null;
@@ -102,9 +102,9 @@ public class Vector {
 			r = (new Double(vectorB.x - this.x + s * vectorB.dirX)) / new Double(this.dirX);
 		}
 
-		if (Math.abs(Math.abs(this.x + r * this.dirX) - Math.abs(vectorB.x + s * vectorB.dirX)) < this.intersecMaxDiff
+		if (Math.abs(Math.abs(this.x + r * this.dirX) - Math.abs(vectorB.x + s * vectorB.dirX)) < this.INTERSEC_MAX_DIFF
 				&& Math.abs(Math.abs(this.y + r * this.dirY)
-						- Math.abs(vectorB.y + s * vectorB.dirY)) < this.intersecMaxDiff) {
+						- Math.abs(vectorB.y + s * vectorB.dirY)) < this.INTERSEC_MAX_DIFF) {
 			return new Vector((int) (this.x + r * this.dirX), (int) (this.y + r * this.dirY));
 		} else {
 			return null;

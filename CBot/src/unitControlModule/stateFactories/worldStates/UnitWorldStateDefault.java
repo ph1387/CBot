@@ -10,9 +10,9 @@ import javaGOAP.GoapState;
  * 
  * @author P H - 26.02.2017
  */
-public class SimpleUnitWorldState extends HashSet<GoapState> {
+public class UnitWorldStateDefault extends HashSet<GoapState> {
 
-	public SimpleUnitWorldState() {
+	public UnitWorldStateDefault() {
 		this.add(new GoapState(1, "enemyKnown", false));
 		this.add(new GoapState(1, "destroyUnit", false));
 		this.add(new GoapState(1, "retreatFromUnit", false));

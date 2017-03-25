@@ -26,6 +26,9 @@ public class GoapAgentFactory {
 			break;
 		case "Terran_Vulture":
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createVulture(unit));
+			break;
+		case "Terran_Siege_Tank_Tank_Mode":
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createSiegeTank(unit));
 		default:
 			break;
 		}

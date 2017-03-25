@@ -14,13 +14,13 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 03.03.2017
  *
  */
-public class RetreatAction_ToFurthestUnitInCone extends RetreatAction_GeneralSuperclass {
+public class RetreatActionToFurthestUnitInCone extends RetreatActionGeneralSuperclass {
 
 	/**
 	 * @param target
 	 *            type: Unit
 	 */
-	public RetreatAction_ToFurthestUnitInCone(Object target) {
+	public RetreatActionToFurthestUnitInCone(Object target) {
 		super(target);
 	}
 

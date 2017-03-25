@@ -16,7 +16,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 10.03.2017
  *
  */
-public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSuperclass {
+public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperclass {
 	private static final int EXPAND_MULTIPLIER_MAX = 5;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 
@@ -24,7 +24,7 @@ public class RetreatAction_ToOwnGatheringPoint extends RetreatAction_GeneralSupe
 	 * @param target
 	 *            type: Unit
 	 */
-	public RetreatAction_ToOwnGatheringPoint(Object target) {
+	public RetreatActionToOwnGatheringPoint(Object target) {
 		super(target);
 	}
 

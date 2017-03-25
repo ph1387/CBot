@@ -1,7 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
-import unitControlModule.stateFactories.SimpleStateFactory;
+import unitControlModule.stateFactories.StateFactoryDefault;
 import unitControlModule.stateFactories.StateFactory;
 
 /**
@@ -9,9 +9,9 @@ import unitControlModule.stateFactories.StateFactory;
  * @author P H - 26.02.2017
  *
  */
-public class PlayerUnit_Marine extends PlayerUnit {
+public class PlayerUnitTerran_Marine extends PlayerUnit {
 
-	public PlayerUnit_Marine(Unit unit) {
+	public PlayerUnitTerran_Marine(Unit unit) {
 		super(unit);
 	}
 
@@ -19,6 +19,6 @@ public class PlayerUnit_Marine extends PlayerUnit {
 
 	@Override
 	protected StateFactory createFactory() {
-		return new SimpleStateFactory();
+		return new StateFactoryDefault();
 	}
 }

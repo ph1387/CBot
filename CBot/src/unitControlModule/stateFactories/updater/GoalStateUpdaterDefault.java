@@ -1,18 +1,18 @@
 package unitControlModule.stateFactories.updater;
 
-import unitControlModule.stateFactories.goals.SimpleUnitGoalState;
+import unitControlModule.stateFactories.goals.UnitGoalStateDefault;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * SimpleGoalStateUpdater.java --- Updater for updating a
- * {@link SimpleUnitGoalState} instance.
+ * {@link UnitGoalStateDefault} instance.
  * 
  * @author P H - 26.02.2017
  *
  */
-public class SimpleGoalStateUpdater extends GeneralGoalStateUpdater {
+public class GoalStateUpdaterDefault extends GoalStateUpdaterGeneral {
 
-	public SimpleGoalStateUpdater(PlayerUnit playerUnit) {
+	public GoalStateUpdaterDefault(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
 

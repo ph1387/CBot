@@ -9,25 +9,25 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
 import core.Core;
-import unitControlModule.stateFactories.actions.SimpleUnitAvailableActions;
+import unitControlModule.stateFactories.actions.AvailableActionsDefault;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatAction_ToFurthestUnitInCone;
-import unitControlModule.stateFactories.actions.executableActions.RetreatAction_ToOwnGatheringPoint;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionToFurthestUnitInCone;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionToOwnGatheringPoint;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitTrackerModule.EnemyUnit;
 
 /**
  * SimpleActionUpdater.java --- Updater for updating a
- * {@link SimpleUnitAvailableActions} instance.
+ * {@link AvailableActionsDefault} instance.
  * 
  * @author P H - 26.02.2017
  *
  */
-public class SimpleActionUpdater extends GeneralActionUpdater {
+public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
-	public SimpleActionUpdater(PlayerUnit playerUnit) {
+	public ActionUpdaterDefault(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
 
@@ -41,8 +41,8 @@ public class SimpleActionUpdater extends GeneralActionUpdater {
 			this.attackMoveToNearestKnownUnitConfiguration();
 			
 			((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
-			((RetreatAction_ToFurthestUnitInCone) this.getActionFromInstance(RetreatAction_ToFurthestUnitInCone.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
-			((RetreatAction_ToOwnGatheringPoint) this.getActionFromInstance(RetreatAction_ToOwnGatheringPoint.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+			((RetreatActionToFurthestUnitInCone) this.getActionFromInstance(RetreatActionToFurthestUnitInCone.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+			((RetreatActionToOwnGatheringPoint) this.getActionFromInstance(RetreatActionToOwnGatheringPoint.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 		}
 	}
 

@@ -5,8 +5,8 @@ import java.util.HashSet;
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatAction_ToFurthestUnitInCone;
-import unitControlModule.stateFactories.actions.executableActions.RetreatAction_ToOwnGatheringPoint;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionToFurthestUnitInCone;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionToOwnGatheringPoint;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 
 /**
@@ -16,13 +16,13 @@ import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocat
  * @author P H - 26.02.2017
  *
  */
-public class SimpleUnitAvailableActions extends HashSet<GoapAction> {
+public class AvailableActionsDefault extends HashSet<GoapAction> {
 
-	public SimpleUnitAvailableActions() {
+	public AvailableActionsDefault() {
 		this.add(new ScoutBaseLocationAction(null));
 		this.add(new AttackMoveAction(null));
 		this.add(new AttackUnitAction(null));
-		this.add(new RetreatAction_ToFurthestUnitInCone(null));
-		this.add(new RetreatAction_ToOwnGatheringPoint(null));
+		this.add(new RetreatActionToFurthestUnitInCone(null));
+		this.add(new RetreatActionToOwnGatheringPoint(null));
 	}
 }

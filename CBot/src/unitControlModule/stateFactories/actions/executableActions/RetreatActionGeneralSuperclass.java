@@ -15,7 +15,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 10.03.2017
  *
  */
-public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
+public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	private static final int DIST_TO_GATHERING_POINT = Core.getInstance().getTileSize();
 	protected static final int TILE_RADIUS_NEAR = 1;
 	// Has to be larger than DIST_TO_GATHERING_POINT
@@ -32,7 +32,7 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 	 * @param target
 	 *            type: Unit
 	 */
-	public RetreatAction_GeneralSuperclass(Object target) {
+	public RetreatActionGeneralSuperclass(Object target) {
 		super(target);
 
 		this.addEffect(new GoapState(0, "retreatFromUnit", true));
@@ -44,10 +44,10 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
 		if (((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT)) {
-			RetreatAction_GeneralSuperclass.gatheringPoints.remove(this.retreatPosition);
+			RetreatActionGeneralSuperclass.gatheringPoints.remove(this.retreatPosition);
 		}
 
-		return !RetreatAction_GeneralSuperclass.gatheringPoints.contains(this.retreatPosition);
+		return !RetreatActionGeneralSuperclass.gatheringPoints.contains(this.retreatPosition);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 		// stick with it.
 		if (this.actionChangeTrigger && this.generatedTempRetreatPosition != null) {
 			this.retreatPosition = this.generatedTempRetreatPosition;
-			RetreatAction_GeneralSuperclass.gatheringPoints.add(this.retreatPosition);
+			RetreatActionGeneralSuperclass.gatheringPoints.add(this.retreatPosition);
 			success &= this.retreatPosition != null && ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
 		} else if (this.actionChangeTrigger && this.generatedTempRetreatPosition == null) {
 			success = false;
@@ -111,7 +111,7 @@ public abstract class RetreatAction_GeneralSuperclass extends BaseAction {
 			// performAction() gets called.
 			if (this.retreatPosition == null) {
 				this.retreatPosition = this.generatedTempRetreatPosition;
-				RetreatAction_GeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
+				RetreatActionGeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
 			}
 		}
 		return success;

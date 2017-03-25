@@ -12,12 +12,16 @@ import bwapi.Unit;
 public class PlayerUnitFactory {
 
 	// -------------------- Functions
-
+	
+	public static PlayerUnit createSiegeTank(Unit unit) {
+		return new PlayerUnitTerran_SiegeTank(unit);
+	}
+	
 	public static PlayerUnit createMarine(Unit unit) {
-		return new PlayerUnit_Marine(unit);
+		return new PlayerUnitTerran_Marine(unit);
 	}
 	
 	public static PlayerUnit createVulture(Unit unit) {
-		return new PlayerUnit_Vulture(unit);
+		return new PlayerUnitTerran_Vulture(unit);
 	}
 }

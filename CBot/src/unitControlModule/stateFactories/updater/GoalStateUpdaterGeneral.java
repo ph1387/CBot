@@ -9,11 +9,11 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 26.02.2017
  *
  */
-public abstract class GeneralGoalStateUpdater implements Updater {
+public abstract class GoalStateUpdaterGeneral implements Updater {
 
 	protected PlayerUnit playerUnit;
 
-	public GeneralGoalStateUpdater(PlayerUnit playerUnit) {
+	public GoalStateUpdaterGeneral(PlayerUnit playerUnit) {
 		this.playerUnit = playerUnit;
 	}
 

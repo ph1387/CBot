@@ -32,9 +32,7 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public static final int BASELOCATIONS_TIME_PASSED = 180;
 	public static final double CONFIDENCE_THRESHHOLD = 0.7;
-	// TODO: UML
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 5;
-	// TODO: UML
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
@@ -48,13 +46,11 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected static List<EnemyUnit> enemyUnits;
 
 	protected Unit unit;
-	// TODO: UML
 	protected Unit closestEnemyUnitInSight;
-	// TODO: UML
 	protected Unit closestEnemyUnitInConfidenceRange;
 	protected double confidence = 1.;
-	// TODO: UML
 	protected int extraConfidencePixelRangeToClosestUnits = 16;
+	protected double confidenceDefault = 0.75;
 
 	// Vector related stuff
 	protected static final int ALPHA_MAX = 90;
@@ -63,8 +59,8 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected double alphaAdd = 10.; // AlphaMod + AlphaAdd < AlphaMax
 	// vecEU -> Vector(enemyUnit, playerUnit)
 	// vecUTP -> Vector(playerUnit, targetPosition)
-	// vecRotatedL -> Rotated Vector left
-	// vecRotatedR -> Rotated Vector right
+	// vecUTPRotatedL -> Rotated Vector left
+	// vecUTPRotatedR -> Rotated Vector right
 	protected Vector vecEU, vecUTP, vecUTPRotatedL, vecUTPRotatedR;
 
 	// Factories and Objects needed for an accurate representation of the Units
@@ -226,16 +222,18 @@ public abstract class PlayerUnit extends GoapUnit {
 		// Allow kiting if the PlayerUnit is outside of the other Unit's attack
 		// range. Also this allows Units to further attack and not running
 		// around aimlessly when they are on low health.
+		// -> PlayerUnit in range of enemy Unit + extra
 		if (this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
-				+ this.extraConfidencePixelRangeToClosestUnits < this.getUnit()
+				+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
 						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
-			this.confidence = playerStrengthTotal / enemyStrengthTotal;
-		} else {
-			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator;
+			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator * this.confidenceDefault;
+		}
+		// -> PlayerUnit out of range of the enemy Unit
+		else {
+			this.confidence = (playerStrengthTotal / enemyStrengthTotal);
 		}
 	}
 
-	// TODO: UML
 	/**
 	 * Mostly used to reset the action Stack if the current confidence of the
 	 * PlayerUnit decreases too much.This ensures, that the Unit is retreating
@@ -554,12 +552,10 @@ public abstract class PlayerUnit extends GoapUnit {
 		return BaselocationsSearched;
 	}
 
-	// TODO: UML
 	public Unit getClosestEnemyUnitInSight() {
 		return this.closestEnemyUnitInSight;
 	}
 
-	// TODO: UML
 	public Unit getClosestEnemyUnitInConfidenceRange() {
 		return this.closestEnemyUnitInConfidenceRange;
 	}

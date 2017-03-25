@@ -1,18 +1,18 @@
 package unitControlModule.stateFactories.updater;
 
-import unitControlModule.stateFactories.worldStates.SimpleUnitWorldState;
+import unitControlModule.stateFactories.worldStates.UnitWorldStateDefault;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * SimpleWorldStateUpdater.java --- Updater for updating a
- * {@link SimpleUnitWorldState} instance.
+ * {@link UnitWorldStateDefault} instance.
  * 
  * @author P H - 26.02.2017
  *
  */
-public class SimpleWorldStateUpdater extends GeneralWorldStateUpdater {
+public class WorldStateUpdaterDefault extends WorldStateUpdaterGeneral {
 
-	public SimpleWorldStateUpdater(PlayerUnit playerUnit) {
+	public WorldStateUpdaterDefault(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
 
@@ -45,7 +45,7 @@ public class SimpleWorldStateUpdater extends GeneralWorldStateUpdater {
 	/**
 	 * Convenience function.
 	 * 
-	 * @see SimpleWorldStateUpdater#changeWorldStateEffect(String, Object)
+	 * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
 	 */
 	protected void changeEnemyKnown(Object value) {
 		this.changeWorldStateEffect("enemyKnown", value);
@@ -54,7 +54,7 @@ public class SimpleWorldStateUpdater extends GeneralWorldStateUpdater {
 	/**
 	 * Convenience function.
 	 * 
-	 * @see SimpleWorldStateUpdater#changeWorldStateEffect(String, Object)
+	 * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
 	 */
 	protected void changeDestroyUnit(Object value) {
 		this.changeWorldStateEffect("destroyUnit", value);
@@ -63,7 +63,7 @@ public class SimpleWorldStateUpdater extends GeneralWorldStateUpdater {
 	/**
 	 * Convenience function.
 	 * 
-	 * @see SimpleWorldStateUpdater#changeWorldStateEffect(String, Object)
+	 * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
 	 */
 	protected void changeUnitsInRange(Object value) {
 		this.changeWorldStateEffect("unitsInRange", value);
@@ -72,7 +72,7 @@ public class SimpleWorldStateUpdater extends GeneralWorldStateUpdater {
 	/**
 	 * Convenience function.
 	 * 
-	 * @see SimpleWorldStateUpdater#changeWorldStateEffect(String, Object)
+	 * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
 	 */
 	protected void changeUnitsInSight(Object value) {
 		this.changeWorldStateEffect("unitsInSight", value);
