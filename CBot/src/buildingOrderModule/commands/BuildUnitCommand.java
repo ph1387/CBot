@@ -4,6 +4,13 @@ import buildingOrderModule.BuildingOrderModule;
 import bwapi.UnitType;
 import core.Core;
 
+/**
+ * BuildBuildingCommand.java --- Superclass for all Commands that base
+ * themselves on constructing a unit.
+ * 
+ * @author P H - 25.03.2017
+ *
+ */
 public class BuildUnitCommand extends BuildCommand {
 	
 	private Integer pointTimerStart;
@@ -20,7 +27,7 @@ public class BuildUnitCommand extends BuildCommand {
 	
 	@Override
 	public void execute() {
-//		BuildingOrderModule.getInstance().dispatchNewUnitBuildingOrdersEvent(this.assignedUnit);
+		BuildingOrderModule.getInstance().buildUnit(this.assignedUnit);
 	}
 
 	@Override

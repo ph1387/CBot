@@ -24,4 +24,8 @@ public class PlayerUnitFactory {
 	public static PlayerUnit createVulture(Unit unit) {
 		return new PlayerUnitTerran_Vulture(unit);
 	}
+	
+	public static PlayerUnit createSCV(Unit unit) {
+		return new PlayerUnitTerran_SCV(unit);
+	}
 }

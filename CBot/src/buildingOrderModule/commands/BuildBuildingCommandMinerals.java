@@ -3,7 +3,14 @@ package buildingOrderModule.commands;
 import bwapi.UnitType;
 import core.Core;
 
-public class BuildBuildingCommandMinerals extends BuildBuildingCommand implements Requirement {
+/**
+ * BuildBuildingCommandMinerals.java --- Command for constructing a building based on
+ * the current mineral count.
+ * 
+ * @author P H - 25.03.2017
+ *
+ */
+public class BuildBuildingCommandMinerals extends BuildBuildingCommand implements Command {
 
 	public BuildBuildingCommandMinerals(UnitType building, int minerals) {
 		super(building);

@@ -1,7 +1,6 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
-import unitControlModule.stateFactories.StateFactoryDefault;
 import unitControlModule.stateFactories.StateFactoryTerran_SiegeTank;
 import unitControlModule.stateFactories.StateFactory;
 

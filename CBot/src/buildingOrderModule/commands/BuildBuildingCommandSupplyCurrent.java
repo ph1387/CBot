@@ -3,7 +3,14 @@ package buildingOrderModule.commands;
 import bwapi.UnitType;
 import core.Core;
 
-public class BuildBuildingCommandSupplyCurrent extends BuildBuildingCommand implements Requirement {
+/**
+ * BuildBuildingCommandSupplyCurrent.java --- Command for constructing a building based on
+ * the current supply count.
+ * 
+ * @author P H - 25.03.2017
+ *
+ */
+public class BuildBuildingCommandSupplyCurrent extends BuildBuildingCommand implements Command {
 
 	public BuildBuildingCommandSupplyCurrent(UnitType building, int supply) {
 		super(building);

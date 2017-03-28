@@ -1,5 +1,6 @@
 package core;
 
+import buildingOrderModule.BuildingOrderModule;
 import bwapi.BWEventListener;
 import bwapi.Game;
 import bwapi.Mirror;
@@ -84,8 +85,10 @@ class CBot implements BWEventListener {
 			
 			// Add all known Units to the UnitControl
 			for (Unit unit : this.game.self().getUnits()) {
-				UnitControlModule.getInstance().addToUnitControl(unit);
-				System.out.println("  - " + unit.getType());
+				if(!unit.getType().isBuilding()) {
+					UnitControlModule.getInstance().addToUnitControl(unit);
+					System.out.println("  - " + unit.getType());
+				}
 			}
 			
 			this.addedUnits = true;
@@ -96,6 +99,7 @@ class CBot implements BWEventListener {
 			Display.showUnits(game, this.game.self().getUnits());
 
 			UnitTrackerModule.getInstance().update();
+			BuildingOrderModule.getInstance().update();
 			UnitControlModule.getInstance().update();
 		}
 	}

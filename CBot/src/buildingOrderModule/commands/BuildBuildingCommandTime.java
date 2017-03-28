@@ -3,7 +3,14 @@ package buildingOrderModule.commands;
 import bwapi.UnitType;
 import core.Core;
 
-public class BuildBuildingCommandTime extends BuildBuildingCommand implements Requirement {
+/**
+ * BuildBuildingCommandTime.java --- Command for constructing a building based on
+ * the current time.
+ * 
+ * @author P H - 25.03.2017
+ *
+ */
+public class BuildBuildingCommandTime extends BuildBuildingCommand implements Command {
 
 	public BuildBuildingCommandTime(UnitType building, int time) {
 		super(building);

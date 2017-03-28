@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Queue;
 
 import buildingOrderModule.BuildingOrderModule;
-import buildingOrderModule.DistributeBuildingOrdersEventListener;
 import bwapi.*;
 import bwta.BWTA;
 import bwta.BaseLocation;

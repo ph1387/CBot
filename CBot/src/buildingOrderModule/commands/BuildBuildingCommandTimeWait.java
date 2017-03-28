@@ -3,7 +3,14 @@ package buildingOrderModule.commands;
 import bwapi.UnitType;
 import core.Core;
 
-public class BuildBuildingCommandTimeWait extends BuildBuildingCommand implements Requirement {
+/**
+ * BuildBuildingCommandTimeWait.java --- Command for constructing a building
+ * based on a time difference.
+ * 
+ * @author P H - 25.03.2017
+ *
+ */
+public class BuildBuildingCommandTimeWait extends BuildBuildingCommand implements Command {
 
 	// Gets set once the requirement was checked once
 	private Integer pointTimerStart;
