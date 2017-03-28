@@ -63,7 +63,7 @@ public class AttackMoveAction extends BaseAction {
 	}
 
 	@Override
-	protected void reset() {
+	protected void resetSpecific() {
 		
 	}
 }

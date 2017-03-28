@@ -52,9 +52,9 @@ public abstract class BaseAction extends GoapAction {
 	protected abstract boolean performSpecificAction(IGoapUnit goapUnit);
 
 	/**
-	 * Function used for resetting the GoapAction which was executed. This
-	 * function gets called when the GoapAction finishes so that the
-	 * actionTrigger is going to be enabled in the next iteration.
+	 * Function used for resetting the entry in the currentlyExecutingActions
+	 * HashMap. This function has to be called when the GoapAction finishes so
+	 * that the actionTrigger is going to be enabled in the next iteration.
 	 */
 	protected void resetStoredAction() {
 		BaseAction.currentlyExecutingActions.put((PlayerUnit) this.currentlyExecutingUnit, null);
@@ -73,6 +73,21 @@ public abstract class BaseAction extends GoapAction {
 		return (p.getX() < (game.mapWidth() * Core.getInstance().getTileSize()) || p.getX() >= 0
 				|| p.getY() < (game.mapHeight() * Core.getInstance().getTileSize()) || p.getY() >= 0);
 	}
+
+	// TODO: UML
+	@Override
+	protected void reset() {
+		this.resetStoredAction();
+		this.resetSpecific();
+	}
+
+	// TODO: UML
+	/**
+	 * Gets called when the Action is finished or removed from the FSM Stack
+	 * after resetting the currentlyExecutingActions entry in the corresponding
+	 * HashMap.
+	 */
+	protected abstract void resetSpecific();
 
 	// ------------------------------ Getter / Setter
 

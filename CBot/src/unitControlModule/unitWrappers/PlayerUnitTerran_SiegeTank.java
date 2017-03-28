@@ -26,4 +26,9 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnit {
 	protected StateFactory createFactory() {
 		return new StateFactoryTerran_SiegeTank();
 	}
+
+	@Override
+	protected void customUpdate() {
+		
+	}
 }

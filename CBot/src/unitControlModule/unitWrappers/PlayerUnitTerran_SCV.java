@@ -21,4 +21,9 @@ public class PlayerUnitTerran_SCV extends PlayerUnit {
 	protected StateFactory createFactory() {
 		return new StateFactoryTerran_SCV();
 	}
+
+	@Override
+	protected void customUpdate() {
+		
+	}
 }

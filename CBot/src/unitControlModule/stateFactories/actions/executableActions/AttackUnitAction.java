@@ -68,7 +68,7 @@ public class AttackUnitAction extends BaseAction {
 	}
 
 	@Override
-	protected void reset() {
-		this.resetStoredAction();
+	protected void resetSpecific() {
+		
 	}
 }

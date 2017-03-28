@@ -9,6 +9,6 @@ package unitControlModule.stateFactories.actions;
 public class AvailableActionsWorker extends AvailableActionsDefault {
 
 	public AvailableActionsWorker() {
-		// TODO: Add building Action
+		// TODO: Add actions
 	}
 }

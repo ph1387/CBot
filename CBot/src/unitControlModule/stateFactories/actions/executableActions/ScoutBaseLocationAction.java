@@ -65,7 +65,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 	}
 
 	@Override
-	protected void reset() {
+	protected void resetSpecific() {
 		
 	}
 }

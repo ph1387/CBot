@@ -21,4 +21,9 @@ public class PlayerUnitTerran_Marine extends PlayerUnit {
 	protected StateFactory createFactory() {
 		return new StateFactoryDefault();
 	}
+
+	@Override
+	protected void customUpdate() {
+		
+	}
 }

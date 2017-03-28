@@ -132,6 +132,9 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	@Override
 	public void update() {
+		// Call the subclass specific update function.
+		this.customUpdate();
+		
 		// FSM worldState changes in one cycle.
 		if (this.currentState == UnitStates.ENEMY_MISSING && (enemyUnits.size() != 0 || enemyBuildings.size() != 0)) {
 			this.resetActions();
@@ -161,6 +164,13 @@ public abstract class PlayerUnit extends GoapUnit {
 
 		this.updateBaseLocationsSearched();
 	}
+
+	// TODO: UML
+	/**
+	 * A update function for all subclasses of the PlayerUnit, which gets called
+	 * in the beginning of the {@link #update()} function.
+	 */
+	protected abstract void customUpdate();
 
 	/**
 	 * Function for acting on the fact that enemy units (units and buildings)
@@ -637,7 +647,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	public static void setEnemyUnits(List<EnemyUnit> enemyUnits) {
 		PlayerUnit.enemyUnits = enemyUnits;
 	}
-	
+
 	public static Queue<UnitType> getBuildingQueue() {
 		return buildingQueue;
 	}

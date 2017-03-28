@@ -1,11 +1,11 @@
 package unitControlModule.stateFactories.updater;
 
-import unitControlModule.stateFactories.goals.UnitGoalStateWorker;
+import unitControlModule.stateFactories.actions.AvailableActionsWorker;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * ActionUpdaterWorker.java --- Updater for updating a
- * {@link UnitGoalStateWorker} instance.
+ * {@link AvailableActionsWorker} instance.
  * 
  * @author P H - 25.03.2017
  *

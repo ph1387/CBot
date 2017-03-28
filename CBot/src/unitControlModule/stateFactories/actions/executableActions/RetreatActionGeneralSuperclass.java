@@ -137,8 +137,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	}
 
 	@Override
-	protected void reset() {
+	protected void resetSpecific() {
 		this.retreatPosition = null;
-		this.resetStoredAction();
 	}
 }
