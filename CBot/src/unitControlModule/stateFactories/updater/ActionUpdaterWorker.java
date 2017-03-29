@@ -1,8 +1,11 @@
 package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsWorker;
+import unitControlModule.stateFactories.actions.executableActions.worker.GatherGasAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
 import unitControlModule.unitWrappers.PlayerUnit;
-
+import unitControlModule.unitWrappers.PlayerUnitWorker;
+// TODO: UML
 /**
  * ActionUpdaterWorker.java --- Updater for updating a
  * {@link AvailableActionsWorker} instance.
@@ -18,4 +21,11 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 
 	// -------------------- Functions
 
+	@Override
+	public void update(PlayerUnit playerUnit) {
+		super.update(playerUnit);
+		
+		((GatherMineralsAction) this.getActionFromInstance(GatherMineralsAction.class)).setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeMineralField());
+		((GatherGasAction) this.getActionFromInstance(GatherGasAction.class)).setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeGasSource());
+	}
 }

@@ -1,11 +1,8 @@
 package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_SCV;
-import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionToFurthestUnitInCone;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionToOwnGatheringPoint;
 import unitControlModule.unitWrappers.PlayerUnit;
-
+//TODO: UML
 /**
  * ActionUpdaterTerran_SCV.java --- Updater for updating an
  * {@link AvailableActionsTerran_SCV} instance.

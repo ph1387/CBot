@@ -74,14 +74,12 @@ public abstract class BaseAction extends GoapAction {
 				|| p.getY() < (game.mapHeight() * Core.getInstance().getTileSize()) || p.getY() >= 0);
 	}
 
-	// TODO: UML
 	@Override
 	protected void reset() {
 		this.resetStoredAction();
 		this.resetSpecific();
 	}
 
-	// TODO: UML
 	/**
 	 * Gets called when the Action is finished or removed from the FSM Stack
 	 * after resetting the currentlyExecutingActions entry in the corresponding

@@ -165,7 +165,6 @@ public abstract class PlayerUnit extends GoapUnit {
 		this.updateBaseLocationsSearched();
 	}
 
-	// TODO: UML
 	/**
 	 * A update function for all subclasses of the PlayerUnit, which gets called
 	 * in the beginning of the {@link #update()} function.

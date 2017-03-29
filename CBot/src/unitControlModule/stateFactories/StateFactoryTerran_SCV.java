@@ -1,17 +1,13 @@
 package unitControlModule.stateFactories;
 
 import java.util.HashSet;
-import java.util.List;
 
 import javaGOAP.GoapAction;
-import javaGOAP.GoapState;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_SCV;
-import unitControlModule.stateFactories.goals.UnitGoalStateWorker;
 import unitControlModule.stateFactories.updater.ActionUpdaterTerran_SCV;
-import unitControlModule.stateFactories.updater.GoalStateUpdaterWorker;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.unitWrappers.PlayerUnit;
-
+// TODO: UML
 /**
  * StateFactoryTerran_SCV.java --- A StateFactory used for generating all
  * necessary Objects for the Terran_SCV.
@@ -19,23 +15,13 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 25.03.2017
  *
  */
-public class StateFactoryTerran_SCV extends WorldStateFactoryDefault {
+public class StateFactoryTerran_SCV extends StateFactoryWorker {
 
 	// -------------------- Functions
-	
-	@Override
-	public List<GoapState> generateGoalState() {
-		return new UnitGoalStateWorker();
-	}
 
 	@Override
 	public HashSet<GoapAction> generateAvailableActions() {
 		return new AvailableActionsTerran_SCV();
-	}
-
-	@Override
-	public Updater getMatchingGoalStateUpdater(PlayerUnit playerUnit) {
-		return new GoalStateUpdaterWorker(playerUnit);
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package unitControlModule.stateFactories.actions;
 
+import unitControlModule.stateFactories.actions.executableActions.worker.GatherGasAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
+// TODO: UML
 /**
  * AvailableActionsWorker.java --- HashSet containing all worker Unit Actions.
  * 
@@ -9,6 +12,9 @@ package unitControlModule.stateFactories.actions;
 public class AvailableActionsWorker extends AvailableActionsDefault {
 
 	public AvailableActionsWorker() {
-		// TODO: Add actions
+		this.add(new GatherMineralsAction(null));
+		this.add(new GatherGasAction(null));
+		
+		// TODO: Add constructing action
 	}
 }
