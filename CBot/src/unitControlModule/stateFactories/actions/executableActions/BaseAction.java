@@ -20,7 +20,8 @@ public abstract class BaseAction extends GoapAction {
 	protected static HashMap<PlayerUnit, BaseAction> currentlyExecutingActions = new HashMap<>();
 
 	protected boolean actionChangeTrigger = false;
-	private IGoapUnit currentlyExecutingUnit;
+	// TODO: UML
+	protected IGoapUnit currentlyExecutingUnit;
 
 	public BaseAction(Object target) {
 		super(target);
