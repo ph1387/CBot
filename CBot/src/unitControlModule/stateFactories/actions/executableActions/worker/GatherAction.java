@@ -6,7 +6,6 @@ import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
-// TODO: UML
 /**
  * GatherAction.java --- Gather action for a PlayerUnitWorker. Both minerals and
  * gas can be gathered.
@@ -39,8 +38,8 @@ public class GatherAction extends BaseAction {
 					&& ((PlayerUnit) goapUnit).getUnit().gather(this.gatheringSource, true);
 
 			// Add executing Unit to the mapped HashMap, so that other Units can
-			// see that one place at this specific mineral batch is reserved.
-			PlayerUnitWorker.mappedAccesbileGatheringSources.get(this.gatheringSource)
+			// see that one place at this specific gathering source is reserved.
+			PlayerUnitWorker.mappedAccessibleGatheringSources.get(this.gatheringSource)
 					.add(((PlayerUnit) this.currentlyExecutingUnit).getUnit());
 		} else if (this.actionChangeTrigger && this.gatheringSourceTemp == null) {
 			success = false;
@@ -53,7 +52,11 @@ public class GatherAction extends BaseAction {
 	protected void resetSpecific() {
 		// Make the blocked space at the mapped gathering source available again
 		// if the Action stops.
-		PlayerUnitWorker.mappedAccesbileGatheringSources.get(this.gatheringSource).remove(this.currentlyExecutingUnit);
+		try {
+			PlayerUnitWorker.mappedAccessibleGatheringSources.get(this.gatheringSource)
+					.remove(((PlayerUnit) this.currentlyExecutingUnit).getUnit());
+		} catch (Exception e) {
+		}
 
 		this.gatheringSource = null;
 		this.gatheringSourceTemp = null;
@@ -79,15 +82,7 @@ public class GatherAction extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		boolean success = true;
-
-		if (this.gatheringSource != null) {
-			success = !((PlayerUnit) goapUnit).getUnit().canGather(this.gatheringSource);
-		} else if (this.gatheringSourceTemp != null) {
-			success = !((PlayerUnit) goapUnit).getUnit().canGather(this.gatheringSourceTemp);
-		}
-
-		return success;
+		return this.target == null || !((Unit) this.target).exists();
 	}
 
 	@Override
@@ -105,12 +100,20 @@ public class GatherAction extends BaseAction {
 		boolean success = false;
 
 		if (this.gatheringSource != null) {
-			success = ((PlayerUnit) goapUnit).getUnit().canGather(this.gatheringSource);
+			success = true;
 		} else if (this.target != null) {
-			this.gatheringSourceTemp = (Unit) this.target;
-			success = ((PlayerUnit) goapUnit).getUnit().canGather(this.gatheringSourceTemp);
-		}
+			// Check if the Unit is a contender for the source
+			try {
+				success = PlayerUnitWorker.mappedSourceContenders.get((Unit) this.target)
+						.contains(((PlayerUnit) goapUnit).getUnit());
 
+				if (success) {
+					this.gatheringSourceTemp = (Unit) this.target;
+				}
+			} catch (Exception e) {
+				success = false;
+			}
+		}
 		return success;
 	}
 }

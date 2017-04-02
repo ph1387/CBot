@@ -10,6 +10,8 @@ import unitControlModule.stateFactories.goals.UnitGoalStateDefault;
 import unitControlModule.stateFactories.updater.ActionUpdaterDefault;
 import unitControlModule.stateFactories.updater.GoalStateUpdaterDefault;
 import unitControlModule.stateFactories.updater.Updater;
+import unitControlModule.stateFactories.updater.WorldStateUpdaterDefault;
+import unitControlModule.stateFactories.worldStates.UnitWorldStateDefault;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -19,7 +21,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 26.02.2017
  *
  */
-public class StateFactoryDefault extends WorldStateFactoryDefault {
+public class StateFactoryDefault implements StateFactory {
 
 	public StateFactoryDefault() {
 
@@ -38,6 +40,11 @@ public class StateFactoryDefault extends WorldStateFactoryDefault {
 	}
 
 	@Override
+	public HashSet<GoapState> generateWorldState() {
+		return new UnitWorldStateDefault();
+	}
+
+	@Override
 	public Updater getMatchingGoalStateUpdater(PlayerUnit playerUnit) {
 		return new GoalStateUpdaterDefault(playerUnit);
 	}
@@ -45,5 +52,10 @@ public class StateFactoryDefault extends WorldStateFactoryDefault {
 	@Override
 	public Updater getMatchingActionUpdater(PlayerUnit playerUnit) {
 		return new ActionUpdaterDefault(playerUnit);
+	}
+
+	@Override
+	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
+		return new WorldStateUpdaterDefault(playerUnit);
 	}
 }

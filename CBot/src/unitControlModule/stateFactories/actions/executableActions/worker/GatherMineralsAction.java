@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import javaGOAP.GoapState;
 
-//TODO: UML
 /**
  * GatherMineralsAction.java --- Action for gathering minerals.
  * 

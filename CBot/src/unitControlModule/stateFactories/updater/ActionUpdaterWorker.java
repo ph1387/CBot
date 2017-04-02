@@ -5,7 +5,7 @@ import unitControlModule.stateFactories.actions.executableActions.worker.GatherG
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
-// TODO: UML
+
 /**
  * ActionUpdaterWorker.java --- Updater for updating a
  * {@link AvailableActionsWorker} instance.

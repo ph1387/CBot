@@ -1,7 +1,7 @@
 package unitControlModule.stateFactories.worldStates;
 
 import javaGOAP.GoapState;
-//TODO: UML
+
 /**
  * UnitWorldStateWorker.java --- WorldState for a worker Unit.
  * 

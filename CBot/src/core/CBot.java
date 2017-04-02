@@ -19,10 +19,11 @@ import unitTrackerModule.UnitTrackerModule;
  */
 class CBot implements BWEventListener {
 	private static CBot instance;
-	
+
 	private Mirror mirror = new Mirror();
 	private Game game;
 	private boolean started = false;
+	private boolean firstFrameOver = false;
 	private boolean addedUnits = false;
 
 	private CBot() {
@@ -70,7 +71,7 @@ class CBot implements BWEventListener {
 
 			this.game = Core.getInstance().getGame();
 			this.started = true;
-			
+
 			System.out.println("---STARTUP: success---");
 		} catch (Exception e) {
 			System.out.println("---STARTUP: failed---");
@@ -80,27 +81,34 @@ class CBot implements BWEventListener {
 
 	@Override
 	public void onFrame() {
-		if(!this.addedUnits && this.started) {
+		if (!this.addedUnits && this.started) {
 			System.out.println("Assigned Units:");
-			
+
 			// Add all known Units to the UnitControl
 			for (Unit unit : this.game.self().getUnits()) {
-				if(!unit.getType().isBuilding()) {
+				if (!unit.getType().isBuilding()) {
 					UnitControlModule.getInstance().addToUnitControl(unit);
 					System.out.println("  - " + unit.getType());
 				}
 			}
-			
+
 			this.addedUnits = true;
 		}
-		
-		if(this.started) {
+
+		if (this.started) {
 			Display.showGameInformation(this.game);
 			Display.showUnits(game, this.game.self().getUnits());
 
 			UnitTrackerModule.getInstance().update();
 			BuildingOrderModule.getInstance().update();
 			UnitControlModule.getInstance().update();
+		}
+
+		// Needed to prevent the API from adding the Units at the beginning of
+		// the game via the onUnitComplete event, which causes it to add one
+		// single Unit two times.
+		if (!firstFrameOver) {
+			firstFrameOver = true;
 		}
 	}
 
@@ -111,14 +119,14 @@ class CBot implements BWEventListener {
 
 	@Override
 	public void onUnitComplete(Unit unit) {
-		if(!unit.getType().isBuilding()) {
+		if (this.firstFrameOver && !unit.getType().isBuilding()) {
 			UnitControlModule.getInstance().addToUnitControl(unit);
 		}
 	}
 
 	@Override
 	public void onUnitDestroy(Unit unit) {
-		if(!unit.getType().isBuilding()) {
+		if (!unit.getType().isBuilding()) {
 			UnitControlModule.getInstance().removeUnitFromUnitControl(unit);
 		}
 	}

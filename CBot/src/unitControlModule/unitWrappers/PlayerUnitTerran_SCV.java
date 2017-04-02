@@ -3,9 +3,10 @@ package unitControlModule.unitWrappers;
 import bwapi.Unit;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_SCV;
-//TODO: UML
+
 /**
  * PlayerUnitTerran_SCV.java --- Terran SCV Class.
+ * 
  * @author P H - 25.03.2017
  *
  */

@@ -2,7 +2,7 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.worldStates.UnitWorldStateWorker;
 import unitControlModule.unitWrappers.PlayerUnit;
-//TODO: UML
+
 /**
  * WorldStateUpdaterWorker.java --- Updater for updating a
  * {@link UnitWorldStateWorker} instance.

@@ -7,7 +7,7 @@ import unitControlModule.stateFactories.actions.AvailableActionsTerran_SCV;
 import unitControlModule.stateFactories.updater.ActionUpdaterTerran_SCV;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.unitWrappers.PlayerUnit;
-// TODO: UML
+
 /**
  * StateFactoryTerran_SCV.java --- A StateFactory used for generating all
  * necessary Objects for the Terran_SCV.

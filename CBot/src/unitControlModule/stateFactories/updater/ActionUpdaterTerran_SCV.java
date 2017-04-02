@@ -2,7 +2,7 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_SCV;
 import unitControlModule.unitWrappers.PlayerUnit;
-//TODO: UML
+
 /**
  * ActionUpdaterTerran_SCV.java --- Updater for updating an
  * {@link AvailableActionsTerran_SCV} instance.
