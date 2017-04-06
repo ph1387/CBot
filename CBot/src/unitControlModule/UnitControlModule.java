@@ -24,16 +24,28 @@ import unitTrackerModule.UnitTrackerModule;
 public class UnitControlModule {
 
 	private static UnitControlModule instance;
-	private static int WORKER_SCOUTING_TRIGGER = 9;
+	private static int WORKER_SCOUTING_TRIGGER = 9; // TODO: Implement
 
-	private boolean workerOnceAssigned = false;
+	private boolean workerOnceAssigned = false; // TODO: Implement
 
 	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 	private Queue<UnitType> buildingQueue = new LinkedList<UnitType>();
+	private HashSet<Unit> buildingsBeingCreated = new HashSet<Unit>();
 
 	private UnitControlModule() {
+
+		// TODO: REMOVE
+		for (int i = 0; i < 3; i++) {
+			this.buildingQueue.add(UnitType.Terran_Supply_Depot);
+		}
+//		for (int i = 0; i < 2; i++) {
+//			this.buildingQueue.add(UnitType.Terran_Factory);
+//		}
+		for (int i = 0; i < 3; i++) {
+			this.buildingQueue.add(UnitType.Terran_Barracks);
+		}
 
 	}
 
@@ -148,13 +160,25 @@ public class UnitControlModule {
 	private void updateInformation() {
 		UnitTrackerModule utm = UnitTrackerModule.getInstance();
 
+		// Forward the UnitTrackerModule information
 		PlayerUnit.setPlayerAirAttackTilePositions(utm.getPlayerAirAttackTilePositions());
 		PlayerUnit.setPlayerGroundAttackTilePositions(utm.getPlayerGroundAttackTilePositions());
 		PlayerUnit.setEnemyAirAttackTilePositions(utm.getEnemyAirAttackTilePositions());
 		PlayerUnit.setEnemyGroundAttackTilePositions(utm.getEnemyGroundAttackTilePositions());
 		PlayerUnit.setEnemyBuildings(utm.getEnemyBuildings());
 		PlayerUnit.setEnemyUnits(utm.getEnemyUnits());
-		PlayerUnit.setBuildingQueue(this.buildingQueue);
+
+		// Forward the building Queue
+		for (UnitType unitType : this.buildingQueue) {
+			PlayerUnitWorker.buildingQueue.add(unitType);
+		}
+		this.buildingQueue.clear();
+		
+		// Forward the currently built buildings
+		for (Unit unit : this.buildingsBeingCreated) {
+			PlayerUnitWorker.buildingsBeingCreated.add(unit);
+		}
+		this.buildingsBeingCreated.clear();
 	}
 
 	/**
@@ -189,5 +213,15 @@ public class UnitControlModule {
 		if (unit.isBuilding()) {
 			this.buildingQueue.add(unit);
 		}
+	}
+
+	/**
+	 * Adds a Unit to the HashSet of Units being built.
+	 * 
+	 * @param unit
+	 *            the building that is being built.
+	 */
+	public void addToBuildingsBeingCreated(Unit unit) {
+		this.buildingsBeingCreated.add(unit);
 	}
 }

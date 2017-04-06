@@ -13,7 +13,7 @@ import bwta.BWTA;
  */
 public class Init {
 	private static final int UNIT_FLAG = 1;
-	private static final int GAME_SPEED = 60;
+	private static final int GAME_SPEED = 0;
 
 	/**
 	 * Function for initializing all important Functions in the beginning.

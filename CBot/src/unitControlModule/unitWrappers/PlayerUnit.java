@@ -11,7 +11,6 @@ import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
-import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
@@ -38,7 +37,6 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
-	protected static Queue<UnitType> buildingQueue;
 
 	// Information regarding the enemy Units.
 	protected static HashMap<TilePosition, Integer> playerAirAttackTilePositions;
@@ -646,13 +644,4 @@ public abstract class PlayerUnit extends GoapUnit {
 	public static void setEnemyUnits(List<EnemyUnit> enemyUnits) {
 		PlayerUnit.enemyUnits = enemyUnits;
 	}
-
-	public static Queue<UnitType> getBuildingQueue() {
-		return buildingQueue;
-	}
-
-	public static void setBuildingQueue(Queue<UnitType> buildingQueue) {
-		PlayerUnit.buildingQueue = buildingQueue;
-	}
-
 }

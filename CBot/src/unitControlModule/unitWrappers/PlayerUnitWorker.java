@@ -3,9 +3,14 @@ package unitControlModule.unitWrappers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.BiConsumer;
 
+import bwapi.Player;
 import bwapi.Unit;
+import bwapi.UnitType;
+import core.Core;
 
 /**
  * PlayerUnitWorker.java --- Wrapper for a general worker Unit.
@@ -24,9 +29,15 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	public static HashMap<Unit, ArrayList<Unit>> mappedAccessibleGatheringSources = new HashMap<Unit, ArrayList<Unit>>();
 	// Used to prevent double mapping of the same gathering source in one cycle.
 	public static HashMap<Unit, ArrayList<Unit>> mappedSourceContenders = new HashMap<Unit, ArrayList<Unit>>();
+	public static Queue<UnitType> buildingQueue = new LinkedList<>();
+	public static HashMap<Unit, UnitType> mappedBuildActions = new HashMap<>();
+	public static int reservedBuildingMinerals = 0;
+	public static int reservedBuildingGas = 0;
+	public static HashSet<Unit> buildingsBeingCreated = new HashSet<Unit>();
 
 	protected Unit closestFreeMineralField;
 	protected Unit closestFreeGasSource;
+	protected UnitType assignedBuildingType;
 
 	public PlayerUnitWorker(Unit unit) {
 		super(unit);
@@ -41,18 +52,6 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 */
 	@Override
 	protected void customUpdate() {
-		final Unit mappedUnit = this.unit;
-		final HashSet<Unit> mappedSource = new HashSet<>();
-
-		// Get all assigned gathering source(s) for this Unit.
-		mappedAccessibleGatheringSources.forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
-			@Override
-			public void accept(Unit unit, ArrayList<Unit> set) {
-				if (set.contains(mappedUnit)) {
-					mappedSource.add(unit);
-				}
-			}
-		});
 
 		// Remove any previously contended spots.
 		if (mappedSourceContenders.containsKey(this.closestFreeMineralField)) {
@@ -62,9 +61,64 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 			mappedSourceContenders.get(this.closestFreeGasSource).remove(this.unit);
 		}
 
-		if (mappedSource.isEmpty()) {
-			this.markContenders();
+		// Remove failed construction jobs. No iteration counter here, since
+		// this functionality would be overridden by the ActionUpdaterWorker.
+		// -> Safety feature, so that no Unit holds a order and does not execute
+		// it.
+		if (this.assignedBuildingType != null && mappedBuildActions.getOrDefault(this.unit, null) == null) {
+			buildingQueue.add(this.assignedBuildingType);
+			this.assignedBuildingType = null;
 		}
+
+		// Get a building from the building Queue and reset actions if possible
+		if (!this.unit.isGatheringGas() && !PlayerUnitWorker.buildingQueue.isEmpty()
+				&& this.canAffordConstruction(PlayerUnitWorker.buildingQueue.peek())
+				&& this.assignedBuildingType == null && mappedBuildActions.getOrDefault(this.unit, null) == null) {
+			// Reset first or the assigned building type will be removed!
+			this.resetActions();
+			this.assignedBuildingType = PlayerUnitWorker.buildingQueue.poll();
+
+			// Reserve the resources for the construction.
+			PlayerUnitWorker.reservedBuildingMinerals += this.assignedBuildingType.mineralPrice();
+			PlayerUnitWorker.reservedBuildingGas += this.assignedBuildingType.gasPrice();
+		}
+		// Find a gathering source.
+		else {
+			final Unit mappedUnit = this.unit;
+			final HashSet<Unit> mappedSource = new HashSet<>();
+
+			// Get all assigned gathering source(s) for this Unit.
+			mappedAccessibleGatheringSources.forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
+				@Override
+				public void accept(Unit unit, ArrayList<Unit> set) {
+					if (set.contains(mappedUnit)) {
+						mappedSource.add(unit);
+					}
+				}
+			});
+
+			if (mappedSource.isEmpty()) {
+				this.markContenders();
+			}
+		}
+	}
+
+	/**
+	 * Function to determined if the Player can afford the construction of the
+	 * building
+	 * 
+	 * @param building
+	 *            the building that is going to be build.
+	 * @return true or false depending if the building can be build.
+	 */
+	protected boolean canAffordConstruction(UnitType building) {
+		Player player = Core.getInstance().getPlayer();
+		boolean canAffordCost = player.minerals() >= building.mineralPrice() && player.gas() >= building.gasPrice();
+		boolean mineralsNotReserved = player.minerals() - PlayerUnitWorker.reservedBuildingMinerals >= building
+				.mineralPrice();
+		boolean gasNotReserved = player.gas() - PlayerUnitWorker.reservedBuildingGas >= building.gasPrice();
+
+		return canAffordCost && mineralsNotReserved && gasNotReserved;
 	}
 
 	/**
@@ -189,5 +243,13 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 	public Unit getClosestFreeGasSource() {
 		return closestFreeGasSource;
+	}
+
+	public UnitType getAssignedBuildingType() {
+		return assignedBuildingType;
+	}
+
+	public void resetAssignedBuildingType() {
+		this.assignedBuildingType = null;
 	}
 }

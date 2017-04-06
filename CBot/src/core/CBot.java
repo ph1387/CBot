@@ -114,7 +114,9 @@ class CBot implements BWEventListener {
 
 	@Override
 	public void onUnitCreate(Unit unit) {
-
+		if(this.firstFrameOver && unit.getType().isBuilding()) {
+			UnitControlModule.getInstance().addToBuildingsBeingCreated(unit);
+		}
 	}
 
 	@Override

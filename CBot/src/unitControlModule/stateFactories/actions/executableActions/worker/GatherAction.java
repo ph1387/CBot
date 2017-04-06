@@ -44,7 +44,7 @@ public class GatherAction extends BaseAction {
 		} else if (this.actionChangeTrigger && this.gatheringSourceTemp == null) {
 			success = false;
 		}
-
+		
 		return this.gatheringSource != null && success;
 	}
 
@@ -111,7 +111,6 @@ public class GatherAction extends BaseAction {
 					this.gatheringSourceTemp = (Unit) this.target;
 				}
 			} catch (Exception e) {
-				success = false;
 			}
 		}
 		return success;

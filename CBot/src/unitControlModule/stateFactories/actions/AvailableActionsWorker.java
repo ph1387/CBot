@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.actions;
 
+import unitControlModule.stateFactories.actions.executableActions.worker.ConstructBuildingAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherGasAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
 
@@ -14,7 +15,6 @@ public class AvailableActionsWorker extends AvailableActionsDefault {
 	public AvailableActionsWorker() {
 		this.add(new GatherMineralsAction(null));
 		this.add(new GatherGasAction(null));
-
-		// TODO: Add constructing action
+		this.add(new ConstructBuildingAction(null));
 	}
 }
