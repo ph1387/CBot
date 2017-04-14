@@ -32,6 +32,7 @@ import unitTrackerModule.EnemyUnit;
 public abstract class PlayerUnit extends GoapUnit {
 
 	public static final int BASELOCATIONS_TIME_PASSED = 180;
+	// TODO: Possible Change: Reevaluate the importance of Units choosing their own parameters
 	public static final double CONFIDENCE_THRESHHOLD = 0.7;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 5;
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;

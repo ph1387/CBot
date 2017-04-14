@@ -24,15 +24,19 @@ public class ConstructionJob {
 
 	// ------------------------------ Getter / Setter
 
-	protected TilePosition getTilePosition() {
+	public TilePosition getTilePosition() {
 		return tilePosition;
 	}
 
-	protected void setTilePosition(TilePosition tilePosition) {
+	public void setTilePosition(TilePosition tilePosition) {
 		this.tilePosition = tilePosition;
 	}
 
-	protected UnitType getBuilding() {
+	public UnitType getBuilding() {
 		return building;
+	}
+	
+	public void setBuilding(UnitType unitType) {
+		this.building = unitType;
 	}
 }

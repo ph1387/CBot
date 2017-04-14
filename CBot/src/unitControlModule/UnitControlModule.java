@@ -11,12 +11,13 @@ import bwapi.*;
 import core.Core;
 import core.Display;
 import javaGOAP.GoapAgent;
+import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 import unitTrackerModule.UnitTrackerModule;
 
 /**
- * UnitControlModule.java --- Module for controlling the player units
+ * UnitControlModule.java --- Module for controlling the Player's units.
  * 
  * @author P H - 29.01.2017
  *
@@ -29,22 +30,36 @@ public class UnitControlModule {
 	private boolean workerOnceAssigned = false; // TODO: Implement
 
 	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
+	private HashSet<PlayerBuilding> buildings = new HashSet<PlayerBuilding>();
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
+
+	// Construction related collections
 	private Queue<UnitType> buildingQueue = new LinkedList<UnitType>();
 	private HashSet<Unit> buildingsBeingCreated = new HashSet<Unit>();
+
+	// Training / Building related collections
+	private Queue<UnitType> trainingQueue = new LinkedList<UnitType>();
+	private Queue<UnitType> addonQueue = new LinkedList<UnitType>();
+	private Queue<UpgradeType> upgradeQueue = new LinkedList<UpgradeType>();
+	private Queue<TechType> researchQueue = new LinkedList<TechType>();
 
 	private UnitControlModule() {
 
 		// TODO: REMOVE
-		for (int i = 0; i < 3; i++) {
+		// Buildings
+		for (int i = 0; i < 5; i++) {
 			this.buildingQueue.add(UnitType.Terran_Supply_Depot);
 		}
-//		for (int i = 0; i < 2; i++) {
-//			this.buildingQueue.add(UnitType.Terran_Factory);
-//		}
+		// for (int i = 0; i < 2; i++) {
+		// this.buildingQueue.add(UnitType.Terran_Factory);
+		// }
 		for (int i = 0; i < 3; i++) {
 			this.buildingQueue.add(UnitType.Terran_Barracks);
+		}
+		// Units
+		for (int i = 0; i < 5; i++) {
+			this.trainingQueue.add(UnitType.Terran_SCV);
 		}
 
 	}
@@ -64,13 +79,15 @@ public class UnitControlModule {
 	}
 
 	/**
-	 * Used for updating all Units and their actions in game.
+	 * Used for updating all Player Units and buildings (and their actions) in
+	 * the game.
 	 */
 	public void update() {
-		this.addNewAgents();
-		this.removeAgents();
+		this.addTrackedUnits();
+		this.removeTrackedUnits();
 		this.updateInformation();
 
+		// Update Units
 		for (GoapAgent goapAgent : this.agents) {
 
 			// TODO: DEBUG INFO
@@ -79,17 +96,27 @@ public class UnitControlModule {
 
 			goapAgent.update();
 		}
+
+		// Update buildings
+		for (PlayerBuilding building : this.buildings) {
+			building.update();
+		}
 	}
 
 	/**
-	 * Function for adding new agents to the HashSet.
+	 * Function for adding new Units to the corresponding collections.
 	 */
-	private void addNewAgents() {
+	private void addTrackedUnits() {
 		while (!this.unitsToAdd.isEmpty()) {
 			Unit unit = this.unitsToAdd.poll();
 
 			try {
-				this.agents.add(GoapAgentFactory.createAgent(unit));
+				// Differentiate between buildings and normal Units
+				if (unit.getType().isBuilding()) {
+					this.buildings.add(new PlayerBuilding(unit));
+				} else {
+					this.agents.add(GoapAgentFactory.createAgent(unit));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -97,28 +124,66 @@ public class UnitControlModule {
 	}
 
 	/**
-	 * Function used for removing all agents whose Units got queued from the
-	 * HashSet.
+	 * Function used for removing all queued Units from the corresponding
+	 * collections.
 	 */
-	private void removeAgents() {
+	private void removeTrackedUnits() {
 		while (!this.unitsToRemove.isEmpty()) {
 			Unit unit = this.unitsToRemove.poll();
-			GoapAgent matchingAgent = null;
 
-			for (GoapAgent agent : this.agents) {
-				if (((PlayerUnit) agent.getAssignedGoapUnit()).getUnit() == unit) {
-					matchingAgent = agent;
-
-					break;
-				}
+			// Differentiate between buildings and normal Units
+			if (unit.getType().isBuilding()) {
+				this.removeBuilding(unit);
+			} else {
+				this.removeUnit(unit);
 			}
+		}
+	}
 
-			if (matchingAgent != null) {
-				this.agents.remove(matchingAgent);
+	/**
+	 * Function for removing a building from the collection of tracked Units.
+	 * 
+	 * @param unit
+	 *            the building (Unit) that is going to be removed.
+	 */
+	private void removeBuilding(Unit unit) {
+		PlayerBuilding matchingObject = null;
 
-				if (unit.getType().isWorker()) {
-					this.removeAssignedWorkerEntries(unit);
-				}
+		for (PlayerBuilding building : this.buildings) {
+			if (building.getUnit() == unit) {
+				matchingObject = building;
+
+				break;
+			}
+		}
+
+		if (matchingObject != null) {
+			this.buildings.remove(matchingObject);
+		}
+	}
+
+	/**
+	 * Function for removing a Unit from the collection of tracked Units.
+	 * 
+	 * @param unit
+	 *            the Unit that is going to be removed.
+	 */
+	private void removeUnit(Unit unit) {
+		GoapAgent matchingAgent = null;
+
+		for (GoapAgent agent : this.agents) {
+			if (((PlayerUnit) agent.getAssignedGoapUnit()).getUnit() == unit) {
+				matchingAgent = agent;
+
+				break;
+			}
+		}
+
+		if (matchingAgent != null) {
+			this.agents.remove(matchingAgent);
+
+			if (unit.getType().isWorker()) {
+				this.removeAssignedWorkerEntries(unit);
 			}
 		}
 	}
@@ -168,17 +233,30 @@ public class UnitControlModule {
 		PlayerUnit.setEnemyBuildings(utm.getEnemyBuildings());
 		PlayerUnit.setEnemyUnits(utm.getEnemyUnits());
 
-		// Forward the building Queue
-		for (UnitType unitType : this.buildingQueue) {
-			PlayerUnitWorker.buildingQueue.add(unitType);
+		// Forward the construction Queue
+		while (!this.buildingQueue.isEmpty()) {
+			PlayerUnitWorker.buildingQueue.add(this.buildingQueue.poll());
 		}
-		this.buildingQueue.clear();
-		
-		// Forward the currently built buildings
+
+		// Forward the currently constructed buildings
 		for (Unit unit : this.buildingsBeingCreated) {
 			PlayerUnitWorker.buildingsBeingCreated.add(unit);
 		}
 		this.buildingsBeingCreated.clear();
+
+		// Forward all relevant building information
+		while (!this.trainingQueue.isEmpty()) {
+			PlayerBuilding.trainingQueue.add(this.trainingQueue.poll());
+		}
+		while (!this.addonQueue.isEmpty()) {
+			PlayerBuilding.addonQueue.add(this.addonQueue.poll());
+		}
+		while (!this.upgradeQueue.isEmpty()) {
+			PlayerBuilding.upgradeQueue.add(this.upgradeQueue.poll());
+		}
+		while (!this.researchQueue.isEmpty()) {
+			PlayerBuilding.researchQueue.add(this.researchQueue.poll());
+		}
 	}
 
 	/**
@@ -188,7 +266,7 @@ public class UnitControlModule {
 	 *            the Unit that is going to be controlled.
 	 */
 	public void addToUnitControl(Unit unit) {
-		if (!unit.getType().isBuilding() && unit.getPlayer() == Core.getInstance().getPlayer()) {
+		if (unit.getPlayer() == Core.getInstance().getPlayer()) {
 			this.unitsToAdd.add(unit);
 		}
 	}
@@ -209,9 +287,9 @@ public class UnitControlModule {
 	 * @param unit
 	 *            the building that is going to be build.
 	 */
-	public void addToBuildingQueue(UnitType unit) {
-		if (unit.isBuilding()) {
-			this.buildingQueue.add(unit);
+	public void addToBuildingQueue(UnitType unitType) {
+		if (unitType.isBuilding()) {
+			this.buildingQueue.add(unitType);
 		}
 	}
 
@@ -222,6 +300,57 @@ public class UnitControlModule {
 	 *            the building that is being built.
 	 */
 	public void addToBuildingsBeingCreated(Unit unit) {
-		this.buildingsBeingCreated.add(unit);
+		if(unit.getType().isBuilding()) {
+			this.buildingsBeingCreated.add(unit);
+		}
+	}
+
+	/**
+	 * Function for adding a UniType to the training Queue so that a Unit of
+	 * that specific type will be trained at a building.
+	 * 
+	 * @param unitType
+	 *            the type of Unit that is going to be trained.
+	 */
+	public void addToTrainingQueue(UnitType unitType) {
+		if(!unitType.isBuilding() && !unitType.isAddon()) {
+			this.trainingQueue.add(unitType);
+		}
+	}
+
+	/**
+	 * Function for adding a addon to the collection of addons being added to
+	 * certain types of buildings.
+	 * 
+	 * @param unitType
+	 *            the type of addon that is going to be created at one of the
+	 *            buildings.
+	 */
+	public void addToAddonQueue(UnitType unitType) {
+		if(unitType.isAddon()) {
+			this.addonQueue.add(unitType);
+		}
+	}
+
+	/**
+	 * Function for adding a upgrade to the collection of upgrades being built
+	 * at certain buildings.
+	 * 
+	 * @param upgrade
+	 *            the upgrade that is going to be built.
+	 */
+	public void addToUpgradeQueue(UpgradeType upgrade) {
+		this.upgradeQueue.add(upgrade);
+	}
+
+	/**
+	 * Function for adding a technology to the collection of technology being
+	 * researched at certain buildings.
+	 * 
+	 * @param tech
+	 *            the technology that is going to be researched.
+	 */
+	public void addToResearchQueue(TechType tech) {
+		this.researchQueue.add(tech);
 	}
 }

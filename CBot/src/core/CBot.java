@@ -86,7 +86,7 @@ class CBot implements BWEventListener {
 
 			// Add all known Units to the UnitControl
 			for (Unit unit : this.game.self().getUnits()) {
-				if (!unit.getType().isBuilding()) {
+				if (!unit.getType().isNeutral()) {
 					UnitControlModule.getInstance().addToUnitControl(unit);
 					System.out.println("  - " + unit.getType());
 				}
@@ -114,21 +114,21 @@ class CBot implements BWEventListener {
 
 	@Override
 	public void onUnitCreate(Unit unit) {
-		if(this.firstFrameOver && unit.getType().isBuilding()) {
+		if (this.firstFrameOver && unit.getPlayer() == Core.getInstance().getPlayer()) {
 			UnitControlModule.getInstance().addToBuildingsBeingCreated(unit);
 		}
 	}
 
 	@Override
 	public void onUnitComplete(Unit unit) {
-		if (this.firstFrameOver && !unit.getType().isBuilding()) {
+		if (this.firstFrameOver && unit.getPlayer() == Core.getInstance().getPlayer()) {
 			UnitControlModule.getInstance().addToUnitControl(unit);
 		}
 	}
 
 	@Override
 	public void onUnitDestroy(Unit unit) {
-		if (!unit.getType().isBuilding()) {
+		if (unit.getType().isBuilding() && unit.getPlayer() == Core.getInstance().getPlayer()) {
 			UnitControlModule.getInstance().removeUnitFromUnitControl(unit);
 		}
 	}

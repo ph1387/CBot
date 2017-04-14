@@ -92,4 +92,8 @@ public abstract class BaseAction extends GoapAction {
 	public void setTarget(Object target) {
 		this.target = target;
 	}
+
+	public Object getTarget() {
+		return this.target;
+	}
 }

@@ -7,10 +7,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 
-import bwapi.Player;
 import bwapi.Unit;
 import bwapi.UnitType;
-import core.Core;
+import unitControlModule.ResourceReserver;
 
 /**
  * PlayerUnitWorker.java --- Wrapper for a general worker Unit.
@@ -21,8 +20,9 @@ import core.Core;
 public abstract class PlayerUnitWorker extends PlayerUnit {
 
 	protected static final int MAX_NUMBER_MINING = 2;
-	protected static final int MAX_NUMBER_GATHERING_GAS = 3;
+	protected static final int MAX_NUMBER_GATHERING_GAS = 0; // TODO: 3
 	protected static final int PIXEL_GATHER_SEARCH_RADIUS = 350;
+	protected static final int CONSTRUCTION_COUNTER_MAX = 5;
 
 	// Mapped: gathering sources (Units) -> Units (worker)
 	// Each gathering source holds the Units that are currently working on it.
@@ -31,9 +31,19 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	public static HashMap<Unit, ArrayList<Unit>> mappedSourceContenders = new HashMap<Unit, ArrayList<Unit>>();
 	public static Queue<UnitType> buildingQueue = new LinkedList<>();
 	public static HashMap<Unit, UnitType> mappedBuildActions = new HashMap<>();
-	public static int reservedBuildingMinerals = 0;
-	public static int reservedBuildingGas = 0;
 	public static HashSet<Unit> buildingsBeingCreated = new HashSet<Unit>();
+
+	// Building related stuff
+	protected boolean constructingFlag = false;
+	protected int personalReservedMinerals = 0;
+	protected int personalReservedGas = 0;
+
+	public enum ConstructionState {
+		IDLE, AWAIT_CONFIRMATION, CONFIRMED
+	}
+
+	protected ConstructionState currentConstructionState = ConstructionState.IDLE;
+	protected int constructionCounter = 0;
 
 	protected Unit closestFreeMineralField;
 	protected Unit closestFreeGasSource;
@@ -46,41 +56,104 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	// -------------------- Functions
 
 	/**
-	 * Should be called at least one time from the sub class if overwritten.
+	 * Should be called at least one time from the sub class if overwritten. It
+	 * is updating all necessary information regarding various tasks the worker
+	 * can execute as well as shared information between all workers.
 	 * 
 	 * @see unitControlModule.unitWrappers.PlayerUnit#customUpdate()
 	 */
 	@Override
 	protected void customUpdate() {
+		this.updateMappedSourceContenders();
+		this.updateConstructionState();
+		this.updateCurrentActionInformation();
+	}
 
-		// Remove any previously contended spots.
+	/**
+	 * Function for removing any previously contended gathering spots by the
+	 * worker. This is needed since the spots must be reassigned if the Unit for
+	 * example starts constructing a building.
+	 */
+	protected void updateMappedSourceContenders() {
 		if (mappedSourceContenders.containsKey(this.closestFreeMineralField)) {
 			mappedSourceContenders.get(this.closestFreeMineralField).remove(this.unit);
 		}
 		if (mappedSourceContenders.containsKey(this.closestFreeGasSource)) {
 			mappedSourceContenders.get(this.closestFreeGasSource).remove(this.unit);
 		}
+	}
 
-		// Remove failed construction jobs. No iteration counter here, since
-		// this functionality would be overridden by the ActionUpdaterWorker.
-		// -> Safety feature, so that no Unit holds a order and does not execute
-		// it.
-		if (this.assignedBuildingType != null && mappedBuildActions.getOrDefault(this.unit, null) == null) {
-			buildingQueue.add(this.assignedBuildingType);
-			this.assignedBuildingType = null;
+	/**
+	 * Function for updating the construction state of a worker Unit. This is
+	 * needed for every worker that is / was currently constructing a building
+	 * and therefore was assigned a building type and a specific amount of
+	 * resources. These information need to be removed from the worker to
+	 * prevent a clogging of resources and buildings. Also this function acts as
+	 * a safety feature since it queues all construction jobs the Unit is / was
+	 * not able to fulfill in a certain amount of time in the general
+	 * construction queue again. This way all queued buildings actually get
+	 * constructed.
+	 */
+	protected void updateConstructionState() {
+		// Wait for the confirmation until either a limit is reached or the
+		// confirmation was given
+		if (this.currentConstructionState == ConstructionState.AWAIT_CONFIRMATION) {
+			if (this.constructionCounter < CONSTRUCTION_COUNTER_MAX) {
+				this.constructionCounter++;
+			} else {
+				this.constructionCounter = 0;
+				this.currentConstructionState = ConstructionState.IDLE;
+
+				this.resetAwaitedConstruction();
+			}
+
+			if (this.assignedBuildingType != null
+					&& mappedBuildActions.getOrDefault(this.unit, null) == this.assignedBuildingType) {
+				this.constructionCounter = 0;
+				this.currentConstructionState = ConstructionState.CONFIRMED;
+			}
 		}
+		// No "else if" since it will be executed in one cycle this way
+		if (this.currentConstructionState == ConstructionState.CONFIRMED) {
+			// Remove failed / finished construction jobs. No iteration counter
+			// here, since
+			// this functionality would be overridden by the
+			// ActionUpdaterWorker.
+			// -> Safety feature, so that no Unit holds a order and does not
+			// execute
+			// it because as soon as a building location is occupied, the
+			// building gets added back into the building queue.
+			if (this.assignedBuildingType != null && mappedBuildActions.getOrDefault(this.unit, null) == null) {
+				this.currentConstructionState = ConstructionState.IDLE;
 
+				this.resetAwaitedConstruction();
+			}
+		}
+	}
+
+	/**
+	 * Function for updating all information regarding possible work the worker
+	 * can do. This is either the assigning of a building for construction or a
+	 * gathering source for either minerals or gas.
+	 */
+	protected void updateCurrentActionInformation() {
 		// Get a building from the building Queue and reset actions if possible
 		if (!this.unit.isGatheringGas() && !PlayerUnitWorker.buildingQueue.isEmpty()
-				&& this.canAffordConstruction(PlayerUnitWorker.buildingQueue.peek())
-				&& this.assignedBuildingType == null && mappedBuildActions.getOrDefault(this.unit, null) == null) {
+				&& ResourceReserver.canAffordConstruction(PlayerUnitWorker.buildingQueue.peek())
+				&& this.currentConstructionState == ConstructionState.IDLE) {
 			// Reset first or the assigned building type will be removed!
 			this.resetActions();
 			this.assignedBuildingType = PlayerUnitWorker.buildingQueue.poll();
 
 			// Reserve the resources for the construction.
-			PlayerUnitWorker.reservedBuildingMinerals += this.assignedBuildingType.mineralPrice();
-			PlayerUnitWorker.reservedBuildingGas += this.assignedBuildingType.gasPrice();
+			ResourceReserver.reserveMinerals(this.assignedBuildingType.mineralPrice());
+			ResourceReserver.reserveGas(this.assignedBuildingType.gasPrice());
+			this.personalReservedMinerals = this.assignedBuildingType.mineralPrice();
+			this.personalReservedGas = this.assignedBuildingType.gasPrice();
+
+			// Await the confirmation of the construction (by mapping the Unit
+			// to a UnitType)
+			this.currentConstructionState = ConstructionState.AWAIT_CONFIRMATION;
 		}
 		// Find a gathering source.
 		else {
@@ -104,21 +177,31 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	}
 
 	/**
-	 * Function to determined if the Player can afford the construction of the
-	 * building
-	 * 
-	 * @param building
-	 *            the building that is going to be build.
-	 * @return true or false depending if the building can be build.
+	 * Function for resetting everything assigned for a construction of a
+	 * building. If the construction flag was not set, the UnitType is queued
+	 * again since the building was not constructed / did not start being
+	 * constructed.
 	 */
-	protected boolean canAffordConstruction(UnitType building) {
-		Player player = Core.getInstance().getPlayer();
-		boolean canAffordCost = player.minerals() >= building.mineralPrice() && player.gas() >= building.gasPrice();
-		boolean mineralsNotReserved = player.minerals() - PlayerUnitWorker.reservedBuildingMinerals >= building
-				.mineralPrice();
-		boolean gasNotReserved = player.gas() - PlayerUnitWorker.reservedBuildingGas >= building.gasPrice();
+	protected void resetAwaitedConstruction() {
+		// Flag is not set = construction has not started
+		if (!this.constructingFlag) {
+			buildingQueue.add(this.assignedBuildingType);
 
-		return canAffordCost && mineralsNotReserved && gasNotReserved;
+			// TODO: REMOVE extra Information
+			System.out.println("Queued again: " + this.unit + " " + this.assignedBuildingType);
+		} else {
+			this.constructingFlag = false;
+		}
+
+		// TODO: Needed Change: Reset minerals as soon as the construction
+		// starts to prevent a resource lock
+		// Reset any reserved resources
+		ResourceReserver.freeMinerals(this.assignedBuildingType.mineralPrice());
+		ResourceReserver.freeGas(this.assignedBuildingType.gasPrice());
+		this.personalReservedMinerals = 0;
+		this.personalReservedGas = 0;
+
+		this.assignedBuildingType = null;
 	}
 
 	/**
@@ -187,7 +270,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected Unit findClosestFreeGasSource() {
 		Unit closestRefinery = null;
 
-		// Get all mineral fields
+		// Get all vaspene geysers
 		for (Unit gatheringSource : this.getUnit().getUnitsInRadius(PIXEL_GATHER_SEARCH_RADIUS)) {
 			if (gatheringSource.getType().isRefinery()) {
 				closestRefinery = this.checkAgainstMappedAccessibleSources(gatheringSource, closestRefinery,
@@ -249,7 +332,19 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		return assignedBuildingType;
 	}
 
-	public void resetAssignedBuildingType() {
-		this.assignedBuildingType = null;
+	public void setConstructingFlag() {
+		this.constructingFlag = true;
+	}
+
+	public int getPersonalReservedMinerals() {
+		return personalReservedMinerals;
+	}
+
+	public int getPersonalReservedGas() {
+		return personalReservedGas;
+	}
+
+	public ConstructionState getCurrentConstructionState() {
+		return currentConstructionState;
 	}
 }

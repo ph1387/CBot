@@ -23,7 +23,7 @@ public class GoalStateUpdaterDefault extends GoalStateUpdaterGeneral {
 		if(this.playerUnit.getConfidence() >= PlayerUnit.CONFIDENCE_THRESHHOLD) {
 			this.changeGoalStateImportance("retreatFromUnit", 1);
 		} else {
-			this.changeGoalStateImportance("retreatFromUnit", 3);
+			this.changeGoalStateImportance("retreatFromUnit", 10);
 		}
 	}
 }
