@@ -28,6 +28,8 @@ public class PlayerBuilding {
 	protected UnitType constructedAddon;
 	protected UpgradeType builtUpgrade;
 	protected TechType researchedTech;
+	
+	protected boolean commandExecutable = true;
 
 	private enum State {
 		IDLE, TRAINING, CONSTRUCTING, UPGRADING, RESEARCHING
@@ -46,20 +48,20 @@ public class PlayerBuilding {
 	 */
 	public void update() {
 		// Initiate the different kinds of actions the building can take
-		if (this.state == State.TRAINING && !this.unit.isTraining() && this.trainedUnit != null) {
+		if (this.state == State.TRAINING && !this.unit.isTraining() && this.trainedUnit != null && this.commandExecutable) {
 			this.unit.train(this.trainedUnit);
-			this.trainedUnit = null;
+			this.commandExecutable = false;
 		}
 		// TODO: Test all following functionalities
-		else if (this.state == State.CONSTRUCTING && !this.unit.isConstructing() && this.constructedAddon != null) {
+		else if (this.state == State.CONSTRUCTING && !this.unit.isConstructing() && this.constructedAddon != null && this.commandExecutable) {
 			this.unit.buildAddon(this.constructedAddon);
-			this.constructedAddon = null;
-		} else if (this.state == State.UPGRADING && !this.unit.isUpgrading() && this.builtUpgrade != null) {
+			this.commandExecutable = false;
+		} else if (this.state == State.UPGRADING && !this.unit.isUpgrading() && this.builtUpgrade != null && this.commandExecutable) {
 			this.unit.upgrade(this.builtUpgrade);
-			this.builtUpgrade = null;
-		} else if (this.state == State.RESEARCHING && !this.unit.isResearching() && this.researchedTech != null) {
+			this.commandExecutable = false;
+		} else if (this.state == State.RESEARCHING && !this.unit.isResearching() && this.researchedTech != null && this.commandExecutable) {
 			this.unit.research(this.researchedTech);
-			this.researchedTech = null;
+			this.commandExecutable = false;
 		}
 		// Reset all information
 		else if (this.unit.isIdle()) {
@@ -69,6 +71,8 @@ public class PlayerBuilding {
 			this.constructedAddon = null;
 			this.builtUpgrade = null;
 			this.researchedTech = null;
+			
+			this.commandExecutable = true;
 		}
 
 		// Try assigning work to the building.
@@ -126,5 +130,21 @@ public class PlayerBuilding {
 
 	public Unit getUnit() {
 		return unit;
+	}
+	
+	public UnitType getTrainedUnit() {
+		return trainedUnit;
+	}
+
+	public UnitType getConstructedAddon() {
+		return constructedAddon;
+	}
+
+	public UpgradeType getBuiltUpgrade() {
+		return builtUpgrade;
+	}
+
+	public TechType getResearchedTech() {
+		return researchedTech;
 	}
 }

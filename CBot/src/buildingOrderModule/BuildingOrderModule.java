@@ -69,15 +69,16 @@ public class BuildingOrderModule {
 					.insertCommand(new BuildBuildingCommandTimeWait(UnitType.Terran_Supply_Depot, 0));
 		}
 
+		// TODO: Enable
 		// Show the state of the current building list / queue and the elements
 		// in it.
-		BuildingOrderModuleDisplay.showCurrentBuildingCommandSender(this.currentBuildingCommandManager);
+		// BuildingOrderModuleDisplay.showCurrentBuildingCommandSender(this.currentBuildingCommandManager);
 	}
 
 	public void buildUnit(UnitType unit) {
 		// TODO: Add Implementation: buildUnit
 	}
-	
+
 	public void buildBuilding(UnitType unit) {
 		// TODO: Add Implementation: buildBuilding
 	}

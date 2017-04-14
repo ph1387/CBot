@@ -95,7 +95,7 @@ public class ConstructBuildingAction extends BaseAction {
 				
 				if(this.constructingBuilding != null) {
 					PlayerUnitWorker.buildingsBeingCreated.remove(this.constructingBuilding);
-					((PlayerUnitWorker) goapUnit).setConstructingFlag();
+					((PlayerUnitWorker) goapUnit).setConstructingFlag(this.constructingBuilding);
 				}
 			}
 			

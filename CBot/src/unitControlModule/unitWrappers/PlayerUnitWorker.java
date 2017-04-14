@@ -48,6 +48,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected Unit closestFreeMineralField;
 	protected Unit closestFreeGasSource;
 	protected UnitType assignedBuildingType;
+	// TODO: UML
+	protected Unit assignedBuilding;
 
 	public PlayerUnitWorker(Unit unit) {
 		super(unit);
@@ -191,6 +193,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 			System.out.println("Queued again: " + this.unit + " " + this.assignedBuildingType);
 		} else {
 			this.constructingFlag = false;
+			this.assignedBuilding = null;
 		}
 
 		// TODO: Needed Change: Reset minerals as soon as the construction
@@ -332,8 +335,10 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		return assignedBuildingType;
 	}
 
-	public void setConstructingFlag() {
+	// TODO: UML CHANGED
+	public void setConstructingFlag(Unit building) {
 		this.constructingFlag = true;
+		this.assignedBuilding = building;
 	}
 
 	public int getPersonalReservedMinerals() {
@@ -346,5 +351,10 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 	public ConstructionState getCurrentConstructionState() {
 		return currentConstructionState;
+	}
+	
+	// TODO: UML
+	public Unit getAssignedBuilding() {
+		return assignedBuilding;
 	}
 }

@@ -101,6 +101,9 @@ public class UnitControlModule {
 		for (PlayerBuilding building : this.buildings) {
 			building.update();
 		}
+		
+		// Display all important information on the screen
+		UnitControlDisplay.showImportantInformation(this.agents, this.buildings);
 	}
 
 	/**
