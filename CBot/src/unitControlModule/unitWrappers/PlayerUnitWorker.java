@@ -48,8 +48,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected Unit closestFreeMineralField;
 	protected Unit closestFreeGasSource;
 	protected UnitType assignedBuildingType;
-	// TODO: UML
 	protected Unit assignedBuilding;
+	protected boolean resourcesResettable = false;
 
 	public PlayerUnitWorker(Unit unit) {
 		super(unit);
@@ -66,9 +66,29 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 */
 	@Override
 	protected void customUpdate() {
+		this.tryFreeingResources();
 		this.updateMappedSourceContenders();
 		this.updateConstructionState();
 		this.updateCurrentActionInformation();
+	}
+
+	/**
+	 * Function for freeing any reserved resources. This depends on a flag, that
+	 * is going to be set as soon as the building Unit, that this worker is
+	 * constructing, and the resulting building flag is being set. This ensures,
+	 * that any resources are only going to be freed a single and not multiple
+	 * times.
+	 */
+	protected void tryFreeingResources() {
+		if (this.resourcesResettable) {
+			this.resourcesResettable = false;
+
+			// Reset any reserved resources
+			ResourceReserver.freeMinerals(this.assignedBuildingType.mineralPrice());
+			ResourceReserver.freeGas(this.assignedBuildingType.gasPrice());
+			this.personalReservedMinerals = 0;
+			this.personalReservedGas = 0;
+		}
 	}
 
 	/**
@@ -98,7 +118,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 */
 	protected void updateConstructionState() {
 		// Wait for the confirmation until either a limit is reached or the
-		// confirmation was given
+		// confirmation was given.
 		if (this.currentConstructionState == ConstructionState.AWAIT_CONFIRMATION) {
 			if (this.constructionCounter < CONSTRUCTION_COUNTER_MAX) {
 				this.constructionCounter++;
@@ -115,16 +135,14 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 				this.currentConstructionState = ConstructionState.CONFIRMED;
 			}
 		}
-		// No "else if" since it will be executed in one cycle this way
+		// No "else if" since it will be executed in one cycle this way.
 		if (this.currentConstructionState == ConstructionState.CONFIRMED) {
 			// Remove failed / finished construction jobs. No iteration counter
-			// here, since
-			// this functionality would be overridden by the
+			// here, since this functionality would be overridden by the
 			// ActionUpdaterWorker.
 			// -> Safety feature, so that no Unit holds a order and does not
-			// execute
-			// it because as soon as a building location is occupied, the
-			// building gets added back into the building queue.
+			// execute it because as soon as a building location is occupied,
+			// the building gets added back into the building queue.
 			if (this.assignedBuildingType != null && mappedBuildActions.getOrDefault(this.unit, null) == null) {
 				this.currentConstructionState = ConstructionState.IDLE;
 
@@ -139,7 +157,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 * gathering source for either minerals or gas.
 	 */
 	protected void updateCurrentActionInformation() {
-		// Get a building from the building Queue and reset actions if possible
+		// Get a building from the building Queue and reset actions if possible.
 		if (!this.unit.isGatheringGas() && !PlayerUnitWorker.buildingQueue.isEmpty()
 				&& ResourceReserver.canAffordConstruction(PlayerUnitWorker.buildingQueue.peek())
 				&& this.currentConstructionState == ConstructionState.IDLE) {
@@ -154,7 +172,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 			this.personalReservedGas = this.assignedBuildingType.gasPrice();
 
 			// Await the confirmation of the construction (by mapping the Unit
-			// to a UnitType)
+			// to a UnitType).
 			this.currentConstructionState = ConstructionState.AWAIT_CONFIRMATION;
 		}
 		// Find a gathering source.
@@ -195,14 +213,6 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 			this.constructingFlag = false;
 			this.assignedBuilding = null;
 		}
-
-		// TODO: Needed Change: Reset minerals as soon as the construction
-		// starts to prevent a resource lock
-		// Reset any reserved resources
-		ResourceReserver.freeMinerals(this.assignedBuildingType.mineralPrice());
-		ResourceReserver.freeGas(this.assignedBuildingType.gasPrice());
-		this.personalReservedMinerals = 0;
-		this.personalReservedGas = 0;
 
 		this.assignedBuildingType = null;
 	}
@@ -335,10 +345,10 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		return assignedBuildingType;
 	}
 
-	// TODO: UML CHANGED
 	public void setConstructingFlag(Unit building) {
 		this.constructingFlag = true;
 		this.assignedBuilding = building;
+		this.resourcesResettable = true;
 	}
 
 	public int getPersonalReservedMinerals() {
@@ -352,8 +362,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	public ConstructionState getCurrentConstructionState() {
 		return currentConstructionState;
 	}
-	
-	// TODO: UML
+
 	public Unit getAssignedBuilding() {
 		return assignedBuilding;
 	}

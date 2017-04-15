@@ -11,7 +11,6 @@ import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
-// TODO: UML
 /**
  * UnitControlModuleDisplay.java --- Class for displaying all important
  * information regarding Units, resources, queues etc.
@@ -30,8 +29,6 @@ public class UnitControlDisplay {
 	private static final Game GAME = Core.getInstance().getGame();
 
 	// -------------------- Functions
-
-	// TODO: Possible Change: Add a bar to indicate the progress of any action
 
 	/**
 	 * Main function for showing all important information regarding all

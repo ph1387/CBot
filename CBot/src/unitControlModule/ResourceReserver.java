@@ -14,9 +14,7 @@ import core.Core;
  */
 public class ResourceReserver {
 
-	// TODO: UML CHANGE
 	private static int reservedMinerals = 0;
-	// TODO: UML CHANGE
 	private static int reservedGas = 0;
 
 	// -------------------- Functions

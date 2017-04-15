@@ -116,6 +116,7 @@ public class UnitControlModule {
 			try {
 				// Differentiate between buildings and normal Units
 				if (unit.getType().isBuilding()) {
+					// TODO: Possible Change: Move to factory
 					this.buildings.add(new PlayerBuilding(unit));
 				} else {
 					this.agents.add(GoapAgentFactory.createAgent(unit));
