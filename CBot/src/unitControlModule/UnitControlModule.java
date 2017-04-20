@@ -91,10 +91,12 @@ public class UnitControlModule {
 			Display.showUnitTarget(Core.getInstance().getGame(),
 					((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
 
-			// TODO: DEBUG INFO
 			try {
-				// TODO: Needed Change: Check if the Unit exits
-				goapAgent.update();
+				if (((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit().exists()) {
+					goapAgent.update();
+				} else {
+					this.unitsToRemove.add(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
+				}
 			} catch (Exception e) {
 				System.out.println("An Agent failed to update properly: " + goapAgent + " - Unit: "
 						+ ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
@@ -104,10 +106,12 @@ public class UnitControlModule {
 
 		// Update buildings
 		for (PlayerBuilding building : this.buildings) {
-			// TODO: DEBUG INFO
 			try {
-				// TODO: Needed Change: Check if the Unit exits
-				building.update();
+				if (building.getUnit().exists()) {
+					building.update();
+				} else {
+					this.unitsToRemove.add(building.getUnit());
+				}
 			} catch (Exception e) {
 				System.out.println(
 						"A Building failed to update properly: " + building + " - Unit: " + building.getUnit());
@@ -179,6 +183,15 @@ public class UnitControlModule {
 		if (matchingObject != null) {
 			this.buildings.remove(matchingObject);
 		}
+		// TODO: REMOVE Safety feature since it is not clear if the Unit is
+		// found
+		else {
+			try {
+				throw new Exception("No Matching building Unit was found!");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -208,6 +221,15 @@ public class UnitControlModule {
 
 			if (unit.getType().isWorker()) {
 				this.removeAssignedWorkerEntries(unit);
+			}
+		}
+		// TODO: REMOVE Safety feature since it is not clear if the Unit is
+		// found
+		else {
+			try {
+				throw new Exception("No Matching building Unit was found!");
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
