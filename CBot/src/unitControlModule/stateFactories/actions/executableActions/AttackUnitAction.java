@@ -22,6 +22,7 @@ public class AttackUnitAction extends BaseAction {
 		this.addPrecondition(new GoapState(0, "enemyKnown", true));
 		this.addPrecondition(new GoapState(0, "unitsInRange", true));
 		this.addPrecondition(new GoapState(0, "unitsInSight", true));
+		this.addPrecondition(new GoapState(0, "allowFighting", true));
 	}
 
 	// -------------------- Functions

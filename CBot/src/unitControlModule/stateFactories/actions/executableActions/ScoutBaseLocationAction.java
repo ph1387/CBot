@@ -25,6 +25,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 		this.addEffect(new GoapState(1, "enemyKnown", true));
 		this.addPrecondition(new GoapState(1, "enemyKnown", false));
+		this.addPrecondition(new GoapState(1, "isScout", true));
 	}
 
 	// -------------------- Functions

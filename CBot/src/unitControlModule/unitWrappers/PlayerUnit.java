@@ -31,7 +31,7 @@ import unitTrackerModule.EnemyUnit;
  */
 public abstract class PlayerUnit extends GoapUnit {
 
-	public static final int BASELOCATIONS_TIME_PASSED = 180;
+	public static final int BASELOCATIONS_TIME_PASSED = 60;
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their own parameters
 	public static final double CONFIDENCE_THRESHHOLD = 0.7;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 5;
@@ -131,9 +131,6 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	@Override
 	public void update() {
-		// Call the subclass specific update function.
-		this.customUpdate();
-		
 		// FSM worldState changes in one cycle.
 		if (this.currentState == UnitStates.ENEMY_MISSING && (enemyUnits.size() != 0 || enemyBuildings.size() != 0)) {
 			this.resetActions();
@@ -165,12 +162,6 @@ public abstract class PlayerUnit extends GoapUnit {
 	}
 
 	/**
-	 * A update function for all subclasses of the PlayerUnit, which gets called
-	 * in the beginning of the {@link #update()} function.
-	 */
-	protected abstract void customUpdate();
-
-	/**
 	 * Function for acting on the fact that enemy units (units and buildings)
 	 * are known of.
 	 */
@@ -179,9 +170,14 @@ public abstract class PlayerUnit extends GoapUnit {
 				.getClosestUnit(this.getAllEnemyUnitsInRange(this.unit.getType().sightRange()));
 		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
 
-		this.updateConfidence();
-		this.updateConfidenceState();
-		this.updateCurrentRangeState();
+		// TODO: Fixed FPS Drops
+		// Only update the following information if an enemy is in the confidence range. 
+		// -> FPS boost!
+		if(this.closestEnemyUnitInConfidenceRange != null) {
+			this.updateConfidence();
+			this.updateConfidenceState();
+			this.updateCurrentRangeState();
+		}
 	}
 
 	/**

@@ -114,21 +114,21 @@ class CBot implements BWEventListener {
 
 	@Override
 	public void onUnitCreate(Unit unit) {
-		if (this.firstFrameOver && unit.getPlayer() == Core.getInstance().getPlayer()) {
+		if (this.firstFrameOver && unit.getPlayer() == this.game.self()) {
 			UnitControlModule.getInstance().addToBuildingsBeingCreated(unit);
 		}
 	}
 
 	@Override
 	public void onUnitComplete(Unit unit) {
-		if (this.firstFrameOver && unit.getPlayer() == Core.getInstance().getPlayer()) {
+		if (this.firstFrameOver && unit.getPlayer() == this.game.self()) {
 			UnitControlModule.getInstance().addToUnitControl(unit);
 		}
 	}
 
 	@Override
 	public void onUnitDestroy(Unit unit) {
-		if (unit.getType().isBuilding() && unit.getPlayer() == Core.getInstance().getPlayer()) {
+		if (unit.getPlayer() == this.game.self()) {
 			UnitControlModule.getInstance().removeUnitFromUnitControl(unit);
 		}
 	}

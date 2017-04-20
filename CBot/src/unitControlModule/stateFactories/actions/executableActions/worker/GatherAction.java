@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import bwapi.Unit;
+import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -24,6 +25,8 @@ public class GatherAction extends BaseAction {
 	 */
 	public GatherAction(Object target) {
 		super(target);
+		
+		this.addPrecondition(new GoapState(0, "allowGathering", true));
 	}
 
 	// -------------------- Functions
@@ -58,6 +61,7 @@ public class GatherAction extends BaseAction {
 		} catch (Exception e) {
 		}
 
+		this.target = null;
 		this.gatheringSource = null;
 		this.gatheringSourceTemp = null;
 	}

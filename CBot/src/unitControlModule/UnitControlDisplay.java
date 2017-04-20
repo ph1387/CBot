@@ -47,7 +47,6 @@ public class UnitControlDisplay {
 		// Calculate the new y position each time a function gets called. Each
 		// function returns the new y position of the text so that the following
 		// collection can be shown accordingly.
-		// TODO: REMOVE try catch block
 		try {
 			currentPosY = showResourceInformation(OFFSET_LEFT_TOTAL, currentPosY);
 			currentPosY = showWorkerInformation(OFFSET_LEFT_TOTAL, currentPosY, agents);

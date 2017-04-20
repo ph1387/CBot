@@ -25,9 +25,6 @@ import unitTrackerModule.UnitTrackerModule;
 public class UnitControlModule {
 
 	private static UnitControlModule instance;
-	private static int WORKER_SCOUTING_TRIGGER = 9; // TODO: Implement
-
-	private boolean workerOnceAssigned = false; // TODO: Implement
 
 	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
 	private HashSet<PlayerBuilding> buildings = new HashSet<PlayerBuilding>();
@@ -94,14 +91,30 @@ public class UnitControlModule {
 			Display.showUnitTarget(Core.getInstance().getGame(),
 					((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
 
-			goapAgent.update();
+			// TODO: DEBUG INFO
+			try {
+				// TODO: Needed Change: Check if the Unit exits
+				goapAgent.update();
+			} catch (Exception e) {
+				System.out.println("An Agent failed to update properly: " + goapAgent + " - Unit: "
+						+ ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
+				e.printStackTrace();
+			}
 		}
 
 		// Update buildings
 		for (PlayerBuilding building : this.buildings) {
-			building.update();
+			// TODO: DEBUG INFO
+			try {
+				// TODO: Needed Change: Check if the Unit exits
+				building.update();
+			} catch (Exception e) {
+				System.out.println(
+						"A Building failed to update properly: " + building + " - Unit: " + building.getUnit());
+				e.printStackTrace();
+			}
 		}
-		
+
 		// Display all important information on the screen
 		UnitControlDisplay.showImportantInformation(this.agents, this.buildings);
 	}
@@ -154,7 +167,9 @@ public class UnitControlModule {
 		PlayerBuilding matchingObject = null;
 
 		for (PlayerBuilding building : this.buildings) {
-			if (building.getUnit() == unit) {
+			// Reference of the Unit changes!
+			// -> Unit reference here sometimes is not the saved reference
+			if (building.getUnit() == unit || building.getUnit().getPosition().equals(unit.getPosition())) {
 				matchingObject = building;
 
 				break;
@@ -176,7 +191,12 @@ public class UnitControlModule {
 		GoapAgent matchingAgent = null;
 
 		for (GoapAgent agent : this.agents) {
-			if (((PlayerUnit) agent.getAssignedGoapUnit()).getUnit() == unit) {
+			Unit u = ((PlayerUnit) agent.getAssignedGoapUnit()).getUnit();
+
+			// Reference of the Unit changes!
+			// -> Unit reference here sometimes is not the saved reference
+			if (((PlayerUnit) agent.getAssignedGoapUnit()).getUnit() == unit
+					|| u.getPosition().equals(unit.getPosition())) {
 				matchingAgent = agent;
 
 				break;
@@ -304,7 +324,7 @@ public class UnitControlModule {
 	 *            the building that is being built.
 	 */
 	public void addToBuildingsBeingCreated(Unit unit) {
-		if(unit.getType().isBuilding()) {
+		if (unit.getType().isBuilding()) {
 			this.buildingsBeingCreated.add(unit);
 		}
 	}
@@ -317,7 +337,7 @@ public class UnitControlModule {
 	 *            the type of Unit that is going to be trained.
 	 */
 	public void addToTrainingQueue(UnitType unitType) {
-		if(!unitType.isBuilding() && !unitType.isAddon()) {
+		if (!unitType.isBuilding() && !unitType.isAddon()) {
 			this.trainingQueue.add(unitType);
 		}
 	}
@@ -331,7 +351,7 @@ public class UnitControlModule {
 	 *            buildings.
 	 */
 	public void addToAddonQueue(UnitType unitType) {
-		if(unitType.isAddon()) {
+		if (unitType.isAddon()) {
 			this.addonQueue.add(unitType);
 		}
 	}

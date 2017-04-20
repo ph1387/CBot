@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.goals.UnitGoalStateWorker;
 import unitControlModule.unitWrappers.PlayerUnit;
+import unitControlModule.unitWrappers.PlayerUnitWorker;
 
 /**
  * GoalStateUpdaterWorker.java --- Updater for updating a
@@ -12,6 +13,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class GoalStateUpdaterWorker extends GoalStateUpdaterGeneral {
 
+	private boolean goalsOnceChanged = false;
+
 	public GoalStateUpdaterWorker(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
@@ -20,6 +23,33 @@ public class GoalStateUpdaterWorker extends GoalStateUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		// TODO: Implementation: update()
+		if (this.playerUnit.getConfidence() >= PlayerUnit.CONFIDENCE_THRESHHOLD) {
+			this.changeGoalStateImportance("retreatFromUnit", 1);
+		} else {
+			this.changeGoalStateImportance("retreatFromUnit", 10);
+		}
+		
+		// Let workers fight if an enemy is near them
+		if(this.playerUnit.getClosestEnemyUnitInConfidenceRange() != null) {
+			this.changeGoalStateImportance("destroyUnit", 5);
+		} else {
+			this.changeGoalStateImportance("destroyUnit", 1);
+		}
+
+		// Initiate the scouting in the beginning of the match if certain
+		// criteria are matched. This transforms the worker Unit into a basic
+		// combat one.
+		if (((PlayerUnitWorker) this.playerUnit).isAssignedToSout() && !this.goalsOnceChanged) {
+			// Enables the reassigning of other goals to the Unit.
+			this.goalsOnceChanged = true;
+
+			this.changeGoalStateImportance("constructing", 0);
+			this.changeGoalStateImportance("gatheringGas", 0);
+			this.changeGoalStateImportance("gatheringMinerals", 0);
+
+			this.changeGoalStateImportance("enemyKnown", 1);
+			this.changeGoalStateImportance("destroyUnit", 2);
+			// Retreat stays the same
+		}
 	}
 }

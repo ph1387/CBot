@@ -26,8 +26,4 @@ public class PlayerUnitTerran_Vulture extends PlayerUnit {
 		return new StateFactoryDefault();
 	}
 
-	@Override
-	protected void customUpdate() {
-		
-	}
 }

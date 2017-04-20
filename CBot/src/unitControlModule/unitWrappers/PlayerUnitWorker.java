@@ -22,7 +22,13 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected static final int MAX_NUMBER_MINING = 2;
 	protected static final int MAX_NUMBER_GATHERING_GAS = 0; // TODO: 3
 	protected static final int PIXEL_GATHER_SEARCH_RADIUS = 350;
-	protected static final int CONSTRUCTION_COUNTER_MAX = 5;
+	protected static final int CONSTRUCTION_COUNTER_MAX = 20;
+
+	// Initial scouting configuration
+	protected static final int WORKER_SCOUTING_TRIGGER = 9;
+	protected static int totalWorkerCount = 0;
+	protected static boolean workerOnceAssignedScouting = false;
+	protected boolean assignedToSout = false;
 
 	// Mapped: gathering sources (Units) -> Units (worker)
 	// Each gathering source holds the Units that are currently working on it.
@@ -44,32 +50,84 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 	protected ConstructionState currentConstructionState = ConstructionState.IDLE;
 	protected int constructionCounter = 0;
-
-	protected Unit closestFreeMineralField;
-	protected Unit closestFreeGasSource;
 	protected UnitType assignedBuildingType;
 	protected Unit assignedBuilding;
+
+	// Resources
+	protected Unit closestFreeMineralField;
+	protected Unit closestFreeGasSource;
 	protected boolean resourcesResettable = false;
 
 	public PlayerUnitWorker(Unit unit) {
 		super(unit);
+
+		totalWorkerCount++;
 	}
 
 	// -------------------- Functions
 
 	/**
+	 * Function needs to be overwritten due to the workers actions being very
+	 * delicate processes. A simple reset is not possible since multiple actions
+	 * require information that is going to be reseted normally. Therefore the
+	 * order needs to be as follows:
+	 * <ul>
+	 * <li>Reset gets called -> information regarding various worker tasks are
+	 * being reseted
+	 * <li>Information must be restored
+	 * <li>Information can be transferred to the actions at the end of the
+	 * super.update function
+	 * </ul>
+	 * 
+	 * @see javaGOAP.GoapUnit#resetActions()
+	 */
+	@Override
+	public void resetActions() {
+		if(!this.unit.isConstructing()) {
+			super.resetActions();
+
+			// Remove any contended spots
+			this.updateMappedSourceContenders();
+
+			// Assign a new closestFreeMineralField / closestFreeGasSource since
+			// these are being transferred over to the GatherAction at the end of
+			// the main update function (especially after a reset!). Without this
+			// the Units would refrain from gathering for one cycle and possibly end
+			// up attacking the enemy.
+			if (!this.isMappedToGatheringSource()) {
+				this.markContenders();
+			}
+		}
+	}
+
+	@Override
+	public void update() {
+		this.customUpdate();
+
+		super.update();
+	}
+
+	/**
 	 * Should be called at least one time from the sub class if overwritten. It
 	 * is updating all necessary information regarding various tasks the worker
 	 * can execute as well as shared information between all workers.
-	 * 
-	 * @see unitControlModule.unitWrappers.PlayerUnit#customUpdate()
 	 */
-	@Override
 	protected void customUpdate() {
 		this.tryFreeingResources();
 		this.updateMappedSourceContenders();
 		this.updateConstructionState();
-		this.updateCurrentActionInformation();
+
+		// Scout at the beginning of the game if a certain worker count is
+		// reached.
+		if (!workerOnceAssignedScouting && totalWorkerCount >= WORKER_SCOUTING_TRIGGER
+				&& this.currentConstructionState == ConstructionState.IDLE && this.assignedBuildingType == null
+				&& !this.unit.isGatheringGas()) {
+			workerOnceAssignedScouting = true;
+			this.assignedToSout = true;
+			this.resetActions();
+		} else if (!this.assignedToSout) {
+			this.updateCurrentActionInformation();
+		}
 	}
 
 	/**
@@ -84,11 +142,18 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 			this.resourcesResettable = false;
 
 			// Reset any reserved resources
-			ResourceReserver.freeMinerals(this.assignedBuildingType.mineralPrice());
-			ResourceReserver.freeGas(this.assignedBuildingType.gasPrice());
-			this.personalReservedMinerals = 0;
-			this.personalReservedGas = 0;
+			this.freeResources();
 		}
+	}
+
+	/**
+	 * Function for actually freeing the reserved resources of the Unit.
+	 */
+	protected void freeResources() {
+		ResourceReserver.freeMinerals(this.personalReservedMinerals);
+		ResourceReserver.freeGas(this.personalReservedGas);
+		this.personalReservedMinerals = 0;
+		this.personalReservedGas = 0;
 	}
 
 	/**
@@ -161,39 +226,58 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		if (!this.unit.isGatheringGas() && !PlayerUnitWorker.buildingQueue.isEmpty()
 				&& ResourceReserver.canAffordConstruction(PlayerUnitWorker.buildingQueue.peek())
 				&& this.currentConstructionState == ConstructionState.IDLE) {
-			// Reset first or the assigned building type will be removed!
-			this.resetActions();
-			this.assignedBuildingType = PlayerUnitWorker.buildingQueue.poll();
-
-			// Reserve the resources for the construction.
-			ResourceReserver.reserveMinerals(this.assignedBuildingType.mineralPrice());
-			ResourceReserver.reserveGas(this.assignedBuildingType.gasPrice());
-			this.personalReservedMinerals = this.assignedBuildingType.mineralPrice();
-			this.personalReservedGas = this.assignedBuildingType.gasPrice();
-
-			// Await the confirmation of the construction (by mapping the Unit
-			// to a UnitType).
-			this.currentConstructionState = ConstructionState.AWAIT_CONFIRMATION;
+			this.assignConstructionJob();
 		}
 		// Find a gathering source.
 		else {
-			final Unit mappedUnit = this.unit;
-			final HashSet<Unit> mappedSource = new HashSet<>();
-
-			// Get all assigned gathering source(s) for this Unit.
-			mappedAccessibleGatheringSources.forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
-				@Override
-				public void accept(Unit unit, ArrayList<Unit> set) {
-					if (set.contains(mappedUnit)) {
-						mappedSource.add(unit);
-					}
-				}
-			});
-
-			if (mappedSource.isEmpty()) {
+			if (!this.isMappedToGatheringSource()) {
 				this.markContenders();
 			}
 		}
+	}
+
+	/**
+	 * Function for assigning a construction job to a worker Unit and changing
+	 * his current state to AWAIT_CONFIRMATION.
+	 */
+	protected void assignConstructionJob() {
+		// Reset first or the assigned building type will be removed!
+		this.resetActions();
+		this.assignedBuildingType = PlayerUnitWorker.buildingQueue.poll();
+
+		// Reserve the resources for the construction.
+		ResourceReserver.reserveMinerals(this.assignedBuildingType.mineralPrice());
+		ResourceReserver.reserveGas(this.assignedBuildingType.gasPrice());
+		this.personalReservedMinerals = this.assignedBuildingType.mineralPrice();
+		this.personalReservedGas = this.assignedBuildingType.gasPrice();
+
+		// Await the confirmation of the construction (by mapping the Unit
+		// to a UnitType).
+		this.currentConstructionState = ConstructionState.AWAIT_CONFIRMATION;
+	}
+
+	/**
+	 * Function for testing if the Unit is mapped to any particular gathering
+	 * source.
+	 * 
+	 * @return true or false depending if the Unit is mapped to a gathering
+	 *         source.
+	 */
+	protected boolean isMappedToGatheringSource() {
+		final Unit mappedUnit = this.unit;
+		final HashSet<Unit> mappedSource = new HashSet<>();
+
+		// Get all assigned gathering source(s) for this Unit.
+		mappedAccessibleGatheringSources.forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
+			@Override
+			public void accept(Unit unit, ArrayList<Unit> set) {
+				if (set.contains(mappedUnit)) {
+					mappedSource.add(unit);
+				}
+			}
+		});
+
+		return !mappedSource.isEmpty();
 	}
 
 	/**
@@ -206,6 +290,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		// Flag is not set = construction has not started
 		if (!this.constructingFlag) {
 			buildingQueue.add(this.assignedBuildingType);
+			this.freeResources();
 
 			// TODO: REMOVE extra Information
 			System.out.println("Queued again: " + this.unit + " " + this.assignedBuildingType);
@@ -366,4 +451,9 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	public Unit getAssignedBuilding() {
 		return assignedBuilding;
 	}
+
+	public boolean isAssignedToSout() {
+		return assignedToSout;
+	}
+
 }
