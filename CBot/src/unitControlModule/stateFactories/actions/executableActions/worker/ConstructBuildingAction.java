@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import java.util.HashSet;
 
+import bwapi.Game;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -24,11 +25,18 @@ public class ConstructBuildingAction extends BaseAction {
 	// Due to the large tile range there should not be any trouble finding a
 	// suitable building location.
 	private static final int MAX_TILE_RANGE = 50;
-	// Safety feature for the isDone function, since the Unit could take a while to start constructing after executing the command, which gets executed at least the given amount of times. This effectively forces the Unit to build the given building or idle until the isDone function kicks in and the building gets queued again.
+	// Safety feature for the isDone function, since the Unit could take a while
+	// to start constructing after executing the command, which gets executed at
+	// least the given amount of times. This effectively forces the Unit to
+	// build the given building or idle until the isDone function kicks in and
+	// the building gets queued again.
 	private static final int MIN_TRIES = 20;
-	
-	private static HashSet<TilePosition> tilePositionContenders = new HashSet<>();
-	
+	private static final int CONTENDED_TILE_RANGE_BORDER = 1;
+	private static final int CONTENDED_TILE_RANGE_MINERALS = 2;
+	private static final int CONTENDED_TILE_RANGE_GEYSERS = 2;
+
+	private static HashSet<TilePosition> tilePositionContenders = generateDefaultContendedTilePositions();
+
 	private TilePosition tempBuildingLocationPrev;
 	private TilePosition tempBuildingLocation;
 	private HashSet<TilePosition> tempNeededTilePositions = new HashSet<>();
@@ -38,7 +46,7 @@ public class ConstructBuildingAction extends BaseAction {
 
 	/**
 	 * @param target
-	 *            type: UnitType
+	 *            type: ConstructionJob
 	 */
 	public ConstructBuildingAction(Object target) {
 		super(target);
@@ -48,28 +56,146 @@ public class ConstructBuildingAction extends BaseAction {
 
 	// -------------------- Functions
 
+	// ------------------------------ Static definitions
+
+	/**
+	 * Function for generating the Default contended TilePositions in the
+	 * beginning of the game. These include a x wide path at the map border, y
+	 * tiles around all mineral spots and a z wide ring around all gas geysers.
+	 * 
+	 * @return a HashSet containing all default contended TilePositions.
+	 */
+	private static HashSet<TilePosition> generateDefaultContendedTilePositions() {
+		HashSet<TilePosition> defaultContendedTilePositions = new HashSet<TilePosition>();
+
+		// Get all important contended default spots on the map.
+		contendTilePositionsAroundMinerals(defaultContendedTilePositions);
+		contendTilePositionsAroundGeysers(defaultContendedTilePositions);
+		contendTilePositionsAtMapEdges(defaultContendedTilePositions);
+
+		return defaultContendedTilePositions;
+	}
+
+	/**
+	 * Function for contending all TilePositions in a specific area around each
+	 * mineral spot on the map.
+	 * 
+	 * @param designatedHashSet
+	 *            the HashSet in which the TilePositions are going to be stored.
+	 */
+	private static void contendTilePositionsAroundMinerals(HashSet<TilePosition> designatedHashSet) {
+		for (Unit unit : Core.getInstance().getGame().getMinerals()) {
+			for (int i = unit.getTilePosition().getX() - CONTENDED_TILE_RANGE_MINERALS; i <= unit.getTilePosition()
+					.getX() + CONTENDED_TILE_RANGE_MINERALS; i++) {
+				for (int j = unit.getTilePosition().getY() - CONTENDED_TILE_RANGE_MINERALS; j <= unit.getTilePosition()
+						.getY() + CONTENDED_TILE_RANGE_MINERALS; j++) {
+					TilePosition generatedTilePosition = new TilePosition(i, j);
+
+					if (!designatedHashSet.contains(generatedTilePosition)
+							&& Core.getInstance().getGame().getUnitsOnTile(generatedTilePosition).isEmpty()) {
+						designatedHashSet.add(generatedTilePosition);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Function for contending all TilePositions in a specific area around each
+	 * geyser on the map.
+	 * 
+	 * @param designatedHashSet
+	 *            the HashSet in which the TilePositions are going to be stored.
+	 */
+	private static void contendTilePositionsAroundGeysers(HashSet<TilePosition> designatedHashSet) {
+		for (Unit unit : Core.getInstance().getGame().getGeysers()) {
+			for (int i = unit.getTilePosition().getX() - CONTENDED_TILE_RANGE_GEYSERS; i <= unit.getTilePosition()
+					.getX() + CONTENDED_TILE_RANGE_GEYSERS; i++) {
+				for (int j = unit.getTilePosition().getY() - CONTENDED_TILE_RANGE_GEYSERS; j <= unit.getTilePosition()
+						.getY() + CONTENDED_TILE_RANGE_GEYSERS; j++) {
+					TilePosition generatedTilePosition = new TilePosition(i, j);
+
+					if (!designatedHashSet.contains(generatedTilePosition)
+							&& Core.getInstance().getGame().getUnitsOnTile(generatedTilePosition).isEmpty()) {
+						designatedHashSet.add(generatedTilePosition);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Function for contending all TilePositions in a specific area at the map
+	 * edge.
+	 * 
+	 * @param designatedHashSet
+	 *            the HashSet in which the TilePositions are going to be stored.
+	 */
+	private static void contendTilePositionsAtMapEdges(HashSet<TilePosition> designatedHashSet) {
+		Game game = Core.getInstance().getGame();
+
+		// Width and height are both reduced by 1 since the TilePositions
+		// leading to the ends are needed.
+		// -> top and bottom
+		for (int i = 0; i < CONTENDED_TILE_RANGE_BORDER; i++) {
+			for (int j = 0; j < game.mapWidth(); j++) {
+				TilePosition topTilePosition = new TilePosition(j, i);
+				TilePosition bottomTilePosition = new TilePosition(j, game.mapHeight() - 1 - i);
+
+				if (!designatedHashSet.contains(topTilePosition) && game.getUnitsOnTile(topTilePosition).isEmpty()) {
+					designatedHashSet.add(topTilePosition);
+				}
+				if (!designatedHashSet.contains(bottomTilePosition)
+						&& game.getUnitsOnTile(bottomTilePosition).isEmpty()) {
+					designatedHashSet.add(bottomTilePosition);
+				}
+			}
+		}
+		// -> left and right
+		for (int i = 0; i < CONTENDED_TILE_RANGE_BORDER; i++) {
+			for (int j = 0; j < game.mapHeight(); j++) {
+				TilePosition leftTilePosition = new TilePosition(i, j);
+				TilePosition rightTilePosition = new TilePosition(game.mapWidth() - 1 - i, j);
+
+				if (!designatedHashSet.contains(leftTilePosition) && game.getUnitsOnTile(leftTilePosition).isEmpty()) {
+					designatedHashSet.add(leftTilePosition);
+				}
+				if (!designatedHashSet.contains(rightTilePosition)
+						&& game.getUnitsOnTile(rightTilePosition).isEmpty()) {
+					designatedHashSet.add(rightTilePosition);
+				}
+			}
+		}
+	}
+
+	// ------------------------------ Other
+
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
 
-		if(this.tempBuildingLocationPrev != this.tempBuildingLocation) {
+		if (this.tempBuildingLocationPrev != this.tempBuildingLocation) {
 			this.tempBuildingLocationPrev = this.tempBuildingLocation;
 			this.triedConstructingOnce = true;
-			
-			((PlayerUnitWorker) goapUnit).getUnit().build(((ConstructionJob) this.target).getBuilding(), ((ConstructionJob) this.target).getTilePosition());
-			PlayerUnitWorker.mappedBuildActions.put(((PlayerUnitWorker) goapUnit).getUnit(), ((ConstructionJob) this.target).getBuilding());
+
+			((PlayerUnitWorker) goapUnit).getUnit().build(((ConstructionJob) this.target).getBuilding(),
+					((ConstructionJob) this.target).getTilePosition());
+			PlayerUnitWorker.mappedBuildActions.put(((PlayerUnitWorker) goapUnit).getUnit(),
+					((ConstructionJob) this.target).getBuilding());
 		}
-		
+
 		return success;
 	}
-	
+
 	@Override
 	protected void resetSpecific() {
 		try {
 			// Enable reserved TilePositions again.
 			tilePositionContenders.removeAll(this.tempNeededTilePositions);
-			
-			// Remove the mapping from the Unit. If the Unit did not get its build flag set, set UnitType is inserted in the building Queue again.
+
+			// Remove the mapping from the Unit. If the Unit did not get its
+			// build flag set, set UnitType is inserted in the building Queue
+			// again.
 			PlayerUnitWorker.mappedBuildActions.remove(((PlayerUnitWorker) this.currentlyExecutingUnit).getUnit());
 		} catch (Exception e) {
 		}
@@ -85,63 +211,69 @@ public class ConstructBuildingAction extends BaseAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		if(this.target != null) {
+		if (this.target != null) {
 			UnitType building = ((ConstructionJob) this.target).getBuilding();
 			boolean success = true;
-			
+
 			// Find the building that is being constructed.
 			if (this.constructingBuilding == null) {
 				this.constructingBuilding = this.findConstructingBuilding(goapUnit);
-				
-				if(this.constructingBuilding != null) {
+
+				if (this.constructingBuilding != null) {
 					PlayerUnitWorker.buildingsBeingCreated.remove(this.constructingBuilding);
 					((PlayerUnitWorker) goapUnit).setConstructingFlag(this.constructingBuilding);
 				}
 			}
-			
+
 			// Create a tempBuildingLocation if none is assigned.
-			if(this.tempBuildingLocation == null) {
+			if (this.tempBuildingLocation == null) {
 				TilePosition targetTilePosition = ((PlayerUnitWorker) goapUnit).getUnit().getTilePosition();
-				TilePosition generatedBuildLocation = this.generateBuildLocation(building, targetTilePosition, goapUnit);
-				
-				if(generatedBuildLocation != null) {
+				TilePosition generatedBuildLocation = this.generateBuildLocation(building, targetTilePosition,
+						goapUnit);
+
+				if (generatedBuildLocation != null) {
 					this.tempBuildingLocation = generatedBuildLocation;
 					((ConstructionJob) this.target).setTilePosition(this.tempBuildingLocation);
 				}
-			} 
+			}
 			// Test the tempBuildingLocation for its validity
-			else if(this.constructingBuilding == null){
+			else if (this.constructingBuilding == null) {
 				TilePosition targetTilePosition = ((ConstructionJob) this.target).getTilePosition();
 				boolean invalid = true;
-				
+
 				// TODO: Possible Change: Add maximum counter
 				// Try finding a new TilePosition until a valid one is found
-				while(invalid) {
-					HashSet<TilePosition> neededTilePositions = this.generateNeededTilePositions(building, targetTilePosition);
-					invalid = this.arePlayerUnitsBlocking(neededTilePositions, goapUnit) && this.areTilePositionsContended(neededTilePositions);
-					
-					if(invalid) {
+				while (invalid) {
+					HashSet<TilePosition> neededTilePositions = this.generateNeededTilePositions(building,
+							targetTilePosition);
+					invalid = this.arePlayerUnitsBlocking(neededTilePositions, goapUnit)
+							&& this.areTilePositionsContended(neededTilePositions);
+
+					if (invalid) {
 						this.tempBuildingLocationPrev = this.tempBuildingLocation;
 						this.tempBuildingLocation = this.generateBuildLocation(building, targetTilePosition, goapUnit);
 						((ConstructionJob) this.target).setTilePosition(this.tempBuildingLocation);
 					}
 				}
 			}
-			
+
 			return success && this.tempBuildingLocation != null;
 		} else {
-			return false;	// Target = null
+			return false; // Target = null
 		}
 	}
-	
+
 	/**
-	 * Function for finding a building that is constructed at the moment that has the same UnitType as the assigned ConstructionJob one.
-	 * @param goapUnit the unit that 
+	 * Function for finding a building that is constructed at the moment that
+	 * has the same UnitType as the assigned ConstructionJob one.
+	 * 
+	 * @param goapUnit
+	 *            the unit that
 	 * @return
 	 */
 	private Unit findConstructingBuilding(IGoapUnit goapUnit) {
 		Unit constructingBuilding = null;
-		
+
 		for (Unit unit : PlayerUnitWorker.buildingsBeingCreated) {
 			if (unit.getType() == (((ConstructionJob) this.target).getBuilding())) {
 				constructingBuilding = unit;
@@ -175,13 +307,11 @@ public class ConstructBuildingAction extends BaseAction {
 			int minHeight = Math.max(targetTilePosition.getY() - counter, 0);
 			int maxWidth = Math.min(targetTilePosition.getX() + counter, Core.getInstance().getGame().mapWidth());
 			int maxHeight = Math.min(targetTilePosition.getY() + counter, Core.getInstance().getGame().mapHeight());
-			
+
 			// TODO: Possible change: Optimize!
 			// Generate new TilePositions around a specific target.
-			for (int i = minWidth; i <= maxWidth
-					&& buildLocation == null; i++) {
-				for (int j = minHeight; j <= maxHeight
-						&& buildLocation == null; j++) {
+			for (int i = minWidth; i <= maxWidth && buildLocation == null; i++) {
+				for (int j = minHeight; j <= maxHeight && buildLocation == null; j++) {
 					TilePosition testPosition = new TilePosition(i, j);
 					HashSet<TilePosition> neededTilePositions = this.generateNeededTilePositions(building,
 							testPosition);
@@ -189,7 +319,8 @@ public class ConstructBuildingAction extends BaseAction {
 					// If the space is free, try changing the building's
 					// location.
 					if (Core.getInstance().getGame().canBuildHere(testPosition, building)
-							&& !this.arePlayerUnitsBlocking(neededTilePositions, goapUnit) && !this.areTilePositionsContended(neededTilePositions)) {
+							&& !this.arePlayerUnitsBlocking(neededTilePositions, goapUnit)
+							&& !this.areTilePositionsContended(neededTilePositions)) {
 						buildLocation = testPosition;
 
 						// Remove old contended entries and add new ones
@@ -211,8 +342,8 @@ public class ConstructBuildingAction extends BaseAction {
 	 * TilePosition.
 	 * 
 	 * @param desiredTilePositions
-	 *            the TilePositions that are going to be checked against all Player
-	 *            Units.
+	 *            the TilePositions that are going to be checked against all
+	 *            Player Units.
 	 * @param constructor
 	 *            the IGoapUnit that is going to be building at the
 	 *            TilePosition. Needed to exclude the constructor from the
@@ -243,15 +374,20 @@ public class ConstructBuildingAction extends BaseAction {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Function for testing if one of the desired TilePositions is already contended.
-	 * @param desiredTilePositions the TilePositions that are going to be checked against all contended TilePositions.
-	 * @return true or false depending if one of the desired TilePositions is already contended.
+	 * Function for testing if one of the desired TilePositions is already
+	 * contended.
+	 * 
+	 * @param desiredTilePositions
+	 *            the TilePositions that are going to be checked against all
+	 *            contended TilePositions.
+	 * @return true or false depending if one of the desired TilePositions is
+	 *         already contended.
 	 */
 	private boolean areTilePositionsContended(HashSet<TilePosition> desiredTilePositions) {
 		for (TilePosition tilePosition : desiredTilePositions) {
-			if(tilePositionContenders.contains(tilePosition)) {
+			if (tilePositionContenders.contains(tilePosition)) {
 				return true;
 			}
 		}
@@ -303,15 +439,17 @@ public class ConstructBuildingAction extends BaseAction {
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
 		boolean triesFullfilled = false;
-		
+
 		// The operation has to be tried at least for x cycles
-		if(counterTries < MIN_TRIES) {
+		if (counterTries < MIN_TRIES) {
 			counterTries++;
 		} else {
 			triesFullfilled = true;
 		}
-		
-		return triesFullfilled && !((PlayerUnit) goapUnit).getUnit().isConstructing() && this.triedConstructingOnce && ((PlayerUnitWorker) goapUnit).getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.CONFIRMED;
+
+		return triesFullfilled && !((PlayerUnit) goapUnit).getUnit().isConstructing() && this.triedConstructingOnce
+				&& ((PlayerUnitWorker) goapUnit)
+						.getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.CONFIRMED;
 	}
 
 	@Override
