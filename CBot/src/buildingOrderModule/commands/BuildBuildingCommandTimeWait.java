@@ -1,5 +1,6 @@
 package buildingOrderModule.commands;
 
+import buildingOrderModule.CommandSender;
 import bwapi.UnitType;
 import core.Core;
 
@@ -15,8 +16,8 @@ public class BuildBuildingCommandTimeWait extends BuildBuildingCommand implement
 	// Gets set once the requirement was checked once
 	private Integer pointTimerStart;
 
-	public BuildBuildingCommandTimeWait(UnitType building, int wait) {
-		super(building);
+	public BuildBuildingCommandTimeWait(UnitType building, int wait, CommandSender receiver) {
+		super(building, receiver);
 
 		this.assignedValue = wait;
 	}

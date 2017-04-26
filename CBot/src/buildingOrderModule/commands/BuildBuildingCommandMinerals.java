@@ -1,5 +1,6 @@
 package buildingOrderModule.commands;
 
+import buildingOrderModule.CommandSender;
 import bwapi.UnitType;
 import core.Core;
 
@@ -12,8 +13,8 @@ import core.Core;
  */
 public class BuildBuildingCommandMinerals extends BuildBuildingCommand implements Command {
 
-	public BuildBuildingCommandMinerals(UnitType building, int minerals) {
-		super(building);
+	public BuildBuildingCommandMinerals(UnitType building, int minerals, CommandSender receiver) {
+		super(building, receiver);
 		
 		this.assignedValue = minerals;
 	}

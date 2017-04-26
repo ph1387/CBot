@@ -17,7 +17,7 @@ import unitTrackerModule.UnitTrackerModule;
  * @author P H - 18.03.2017
  *
  */
-class CBot implements BWEventListener {
+public class CBot implements BWEventListener {
 	private static CBot instance;
 
 	private Mirror mirror = new Mirror();
@@ -26,6 +26,10 @@ class CBot implements BWEventListener {
 	private boolean firstFrameOver = false;
 	private boolean addedUnits = false;
 
+	private UnitTrackerModule unitTrackerModule;
+	private UnitControlModule unitControlModule;
+	private BuildingOrderModule buildingOrderModule;
+	
 	private CBot() {
 
 	}
@@ -72,6 +76,10 @@ class CBot implements BWEventListener {
 			this.game = Core.getInstance().getGame();
 			this.started = true;
 
+			this.unitTrackerModule = new UnitTrackerModule();
+			this.unitControlModule = new UnitControlModule();
+			this.buildingOrderModule = new BuildingOrderModule();
+
 			System.out.println("---STARTUP: success---");
 		} catch (Exception e) {
 			System.out.println("---STARTUP: failed---");
@@ -81,55 +89,59 @@ class CBot implements BWEventListener {
 
 	@Override
 	public void onFrame() {
-		if (!this.addedUnits && this.started) {
-			System.out.println("Assigned Units:");
+		try {
+			if (!this.addedUnits && this.started) {
+				System.out.println("Assigned Units:");
 
-			// Add all known Units to the UnitControl
-			for (Unit unit : this.game.self().getUnits()) {
-				if (!unit.getType().isNeutral()) {
-					UnitControlModule.getInstance().addToUnitControl(unit);
-					System.out.println("  - " + unit.getType());
+				// Add all known Units to the UnitControl
+				for (Unit unit : this.game.self().getUnits()) {
+					if (!unit.getType().isNeutral()) {
+						this.unitControlModule.addToUnitControl(unit);
+						System.out.println("  - " + unit.getType());
+					}
 				}
+
+				this.addedUnits = true;
 			}
 
-			this.addedUnits = true;
-		}
+			if (this.started) {
+				Display.showGameInformation(this.game);
+				Display.showUnits(game, this.game.self().getUnits());
 
-		if (this.started) {
-			Display.showGameInformation(this.game);
-			Display.showUnits(game, this.game.self().getUnits());
+				this.unitTrackerModule.update();
+				this.buildingOrderModule.update();
+				this.unitControlModule.update();
+			}
 
-			UnitTrackerModule.getInstance().update();
-			BuildingOrderModule.getInstance().update();
-			UnitControlModule.getInstance().update();
-		}
-
-		// Needed to prevent the API from adding the Units at the beginning of
-		// the game via the onUnitComplete event, which causes it to add one
-		// single Unit two times.
-		if (!firstFrameOver) {
-			firstFrameOver = true;
+			// Needed to prevent the API from adding the Units at the beginning
+			// of the game via the onUnitComplete event, which causes it to add
+			// one single Unit two times.
+			if (!firstFrameOver) {
+				firstFrameOver = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void onUnitCreate(Unit unit) {
 		if (this.firstFrameOver && unit.getPlayer() == this.game.self()) {
-			UnitControlModule.getInstance().addToBuildingsBeingCreated(unit);
+			this.unitControlModule.addToBuildingsBeingCreated(unit);
 		}
 	}
 
 	@Override
 	public void onUnitComplete(Unit unit) {
 		if (this.firstFrameOver && unit.getPlayer() == this.game.self()) {
-			UnitControlModule.getInstance().addToUnitControl(unit);
+			this.unitControlModule.addToUnitControl(unit);
 		}
 	}
 
 	@Override
 	public void onUnitDestroy(Unit unit) {
 		if (unit.getPlayer() == this.game.self()) {
-			UnitControlModule.getInstance().removeUnitFromUnitControl(unit);
+			this.unitControlModule.removeUnitFromUnitControl(unit);
 		}
 	}
 
@@ -196,5 +208,19 @@ class CBot implements BWEventListener {
 	@Override
 	public void onUnitShow(Unit arg0) {
 
+	}
+	
+	// -------------------- Getter / Setter
+
+	public UnitTrackerModule getUnitTrackerModule() {
+		return unitTrackerModule;
+	}
+
+	public UnitControlModule getUnitControlModule() {
+		return unitControlModule;
+	}
+
+	public BuildingOrderModule getBuildingOrderModule() {
+		return buildingOrderModule;
 	}
 }

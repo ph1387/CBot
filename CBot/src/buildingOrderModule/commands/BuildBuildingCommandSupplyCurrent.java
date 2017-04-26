@@ -1,5 +1,6 @@
 package buildingOrderModule.commands;
 
+import buildingOrderModule.CommandSender;
 import bwapi.UnitType;
 import core.Core;
 
@@ -12,8 +13,8 @@ import core.Core;
  */
 public class BuildBuildingCommandSupplyCurrent extends BuildBuildingCommand implements Command {
 
-	public BuildBuildingCommandSupplyCurrent(UnitType building, int supply) {
-		super(building);
+	public BuildBuildingCommandSupplyCurrent(UnitType building, int supply, CommandSender receiver) {
+		super(building, receiver);
 		
 		this.assignedValue = supply;
 	}

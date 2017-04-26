@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.function.BiConsumer;
 
 import bwapi.*;
+import core.CBot;
 import core.Core;
 import core.Display;
 import javaGOAP.GoapAgent;
@@ -24,8 +25,6 @@ import unitTrackerModule.UnitTrackerModule;
  */
 public class UnitControlModule {
 
-	private static UnitControlModule instance;
-
 	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
 	private HashSet<PlayerBuilding> buildings = new HashSet<PlayerBuilding>();
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
@@ -41,7 +40,7 @@ public class UnitControlModule {
 	private Queue<UpgradeType> upgradeQueue = new LinkedList<UpgradeType>();
 	private Queue<TechType> researchQueue = new LinkedList<TechType>();
 
-	private UnitControlModule() {
+	public UnitControlModule() {
 
 		// TODO: REMOVE
 		// Buildings
@@ -58,22 +57,9 @@ public class UnitControlModule {
 		for (int i = 0; i < 5; i++) {
 			this.trainingQueue.add(UnitType.Terran_SCV);
 		}
-
 	}
 
 	// -------------------- Functions
-
-	/**
-	 * Singleton function.
-	 * 
-	 * @return instance of the class.
-	 */
-	public static UnitControlModule getInstance() {
-		if (instance == null) {
-			instance = new UnitControlModule();
-		}
-		return instance;
-	}
 
 	/**
 	 * Used for updating all Player Units and buildings (and their actions) in
@@ -269,7 +255,7 @@ public class UnitControlModule {
 	 * updaters from this class as well as the UnitTrackerModule.
 	 */
 	private void updateInformation() {
-		UnitTrackerModule utm = UnitTrackerModule.getInstance();
+		UnitTrackerModule utm = CBot.getInstance().getUnitTrackerModule();
 
 		// Forward the UnitTrackerModule information
 		PlayerUnit.setPlayerAirAttackTilePositions(utm.getPlayerAirAttackTilePositions());

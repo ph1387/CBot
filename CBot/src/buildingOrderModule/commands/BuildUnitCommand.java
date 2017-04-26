@@ -1,6 +1,6 @@
 package buildingOrderModule.commands;
 
-import buildingOrderModule.BuildingOrderModule;
+import buildingOrderModule.CommandSender;
 import bwapi.UnitType;
 import core.Core;
 
@@ -15,19 +15,19 @@ public class BuildUnitCommand extends BuildCommand {
 	
 	private Integer pointTimerStart;
 	
-	public BuildUnitCommand(UnitType assignedUnit) {
-		super(assignedUnit);
+	public BuildUnitCommand(UnitType assignedUnit, CommandSender receiver) {
+		super(assignedUnit, receiver);
 	}
 	
-	public BuildUnitCommand(UnitType assignedUnit, int timeWait) {
-		super(assignedUnit, timeWait);
+	public BuildUnitCommand(UnitType assignedUnit, int timeWait, CommandSender receiver) {
+		super(assignedUnit, timeWait, receiver);
 	}
 	
 	// -------------------- Functions
 	
 	@Override
 	public void execute() {
-		BuildingOrderModule.getInstance().buildUnit(this.assignedUnit);
+		this.receiver.buildUnit(this.assignedUnit);
 	}
 
 	@Override

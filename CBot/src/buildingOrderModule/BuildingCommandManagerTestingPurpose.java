@@ -14,18 +14,18 @@ import bwapi.UnitType;
  */
 public class BuildingCommandManagerTestingPurpose extends BuildingCommandManager {
 
-	public BuildingCommandManagerTestingPurpose() {
-		this.addCommand(new BuildBuildingCommandWorkerCount(UnitType.Terran_Barracks, 11));
+	public BuildingCommandManagerTestingPurpose(CommandSender receiver) {
+		this.addCommand(new BuildBuildingCommandWorkerCount(UnitType.Terran_Barracks, 11, receiver));
 		for (int i = 0; i < 15; i++) {
-			this.addCommand(new BuildUnitCommand(UnitType.Terran_Marine));
+			this.addCommand(new BuildUnitCommand(UnitType.Terran_Marine, receiver));
 		}
-		this.addCommand(new BuildBuildingCommandWorkerCount(UnitType.Terran_Barracks, 13));
-		this.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Refinery, 21));
-		this.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Command_Center, 24));
-		this.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Factory, 26));
-		this.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Factory, 28));
+		this.addCommand(new BuildBuildingCommandWorkerCount(UnitType.Terran_Barracks, 13, receiver));
+		this.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Refinery, 21, receiver));
+		this.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Command_Center, 24, receiver));
+		this.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Factory, 26, receiver));
+		this.addCommand(new BuildBuildingCommandSupplyCurrent(UnitType.Terran_Factory, 28, receiver));
 		for (int i = 0; i < 0; i++) {
-			this.addCommand(new BuildUnitCommand(UnitType.Terran_Vulture));
+			this.addCommand(new BuildUnitCommand(UnitType.Terran_Vulture, receiver));
 		}
 	}
 }

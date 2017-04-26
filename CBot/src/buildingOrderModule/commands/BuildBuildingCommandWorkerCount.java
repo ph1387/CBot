@@ -1,5 +1,6 @@
 package buildingOrderModule.commands;
 
+import buildingOrderModule.CommandSender;
 import bwapi.Player;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -14,8 +15,8 @@ import core.Core;
  */
 public class BuildBuildingCommandWorkerCount extends BuildBuildingCommand implements Command {
 
-	public BuildBuildingCommandWorkerCount(UnitType building, int workerCount) {
-		super(building);
+	public BuildBuildingCommandWorkerCount(UnitType building, int workerCount, CommandSender receiver) {
+		super(building, receiver);
 
 		this.assignedValue = workerCount;
 	}

@@ -21,7 +21,6 @@ import core.Core;
  */
 public class UnitTrackerModule {
 
-	private static UnitTrackerModule instance;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
@@ -31,23 +30,11 @@ public class UnitTrackerModule {
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
-	private UnitTrackerModule() {
+	public UnitTrackerModule() {
 
 	}
 
 	// -------------------- Functions
-
-	/**
-	 * Singleton function.
-	 * 
-	 * @return instance of the class.
-	 */
-	public static UnitTrackerModule getInstance() {
-		if (instance == null) {
-			instance = new UnitTrackerModule();
-		}
-		return instance;
-	}
 
 	/**
 	 * Used for updating all information regarding enemy Units in the game.

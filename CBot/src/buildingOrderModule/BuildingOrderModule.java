@@ -13,35 +13,20 @@ import core.Core;
  */
 public class BuildingOrderModule {
 
-	private static BuildingOrderModule instance;
-
-	private Game game;
-	private Player player;
-	private BuildingCommandManager currentBuildingCommandManager;
+	private Game game = Core.getInstance().getGame();
+	private Player player = this.game.self();
+	private CommandSender sender = new BuildingOrderSender();
+	private BuildingCommandManager currentBuildingCommandManager = new BuildingCommandManagerTestingPurpose(this.sender);
+	
 	private int supplyDepotTimeStamp = 0;
 	private int supplyDepotWaitTime = 60;
 	private int supplyDepotBuildTriggerPoint = 2;
 
-	private BuildingOrderModule() {
-		this.game = Core.getInstance().getGame();
-		this.player = this.game.self();
+	public BuildingOrderModule() {
 
-		this.currentBuildingCommandManager = new BuildingCommandManagerTestingPurpose();
 	}
 
 	// -------------------- Functions
-
-	/**
-	 * Singleton function.
-	 * 
-	 * @return instance of the class.
-	 */
-	public static BuildingOrderModule getInstance() {
-		if (instance == null) {
-			instance = new BuildingOrderModule();
-		}
-		return instance;
-	}
 
 	public void update() {
 		try {
@@ -66,20 +51,12 @@ public class BuildingOrderModule {
 				&& this.game.elapsedTime() - this.supplyDepotTimeStamp >= this.supplyDepotWaitTime) {
 			this.supplyDepotTimeStamp = this.game.elapsedTime();
 			this.currentBuildingCommandManager
-					.insertCommand(new BuildBuildingCommandTimeWait(UnitType.Terran_Supply_Depot, 0));
+					.insertCommand(new BuildBuildingCommandTimeWait(UnitType.Terran_Supply_Depot, 0, this.sender));
 		}
 
 		// TODO: Enable
 		// Show the state of the current building list / queue and the elements
 		// in it.
 		// BuildingOrderModuleDisplay.showCurrentBuildingCommandSender(this.currentBuildingCommandManager);
-	}
-
-	public void buildUnit(UnitType unit) {
-		// TODO: Add Implementation: buildUnit
-	}
-
-	public void buildBuilding(UnitType unit) {
-		// TODO: Add Implementation: buildBuilding
 	}
 }

@@ -1,6 +1,6 @@
 package buildingOrderModule.commands;
 
-import buildingOrderModule.BuildingOrderModule;
+import buildingOrderModule.CommandSender;
 import bwapi.UnitType;
 
 /**
@@ -12,15 +12,15 @@ import bwapi.UnitType;
  */
 public class BuildBuildingCommand extends BuildCommand {
 
-	public BuildBuildingCommand(UnitType assignedUnit) {
-		super(assignedUnit);
+	public BuildBuildingCommand(UnitType assignedUnit, CommandSender receiver) {
+		super(assignedUnit, receiver);
 	}
 
 	// -------------------- Functions
 
 	@Override
 	public void execute() {
-		BuildingOrderModule.getInstance().buildBuilding(this.assignedUnit);
+		this.receiver.buildBuilding(this.assignedUnit);
 	}
 
 	@Override
