@@ -83,16 +83,19 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 */
 	@Override
 	public void resetActions() {
-		if(!this.unit.isConstructing()) {
+		if (!this.unit.isConstructing()) {
 			super.resetActions();
 
 			// Remove any contended spots
 			this.updateMappedSourceContenders();
 
 			// Assign a new closestFreeMineralField / closestFreeGasSource since
-			// these are being transferred over to the GatherAction at the end of
-			// the main update function (especially after a reset!). Without this
-			// the Units would refrain from gathering for one cycle and possibly end
+			// these are being transferred over to the GatherAction at the end
+			// of
+			// the main update function (especially after a reset!). Without
+			// this
+			// the Units would refrain from gathering for one cycle and possibly
+			// end
 			// up attacking the enemy.
 			if (!this.isMappedToGatheringSource()) {
 				this.markContenders();
@@ -150,8 +153,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 * Function for actually freeing the reserved resources of the Unit.
 	 */
 	protected void freeResources() {
-		ResourceReserver.freeMinerals(this.personalReservedMinerals);
-		ResourceReserver.freeGas(this.personalReservedGas);
+		ResourceReserver.getInstance().freeMinerals(this.personalReservedMinerals);
+		ResourceReserver.getInstance().freeGas(this.personalReservedGas);
 		this.personalReservedMinerals = 0;
 		this.personalReservedGas = 0;
 	}
@@ -224,7 +227,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected void updateCurrentActionInformation() {
 		// Get a building from the building Queue and reset actions if possible.
 		if (!this.unit.isGatheringGas() && !PlayerUnitWorker.buildingQueue.isEmpty()
-				&& ResourceReserver.canAffordConstruction(PlayerUnitWorker.buildingQueue.peek())
+				&& ResourceReserver.getInstance().canAffordConstruction(PlayerUnitWorker.buildingQueue.peek())
 				&& this.currentConstructionState == ConstructionState.IDLE) {
 			this.assignConstructionJob();
 		}
@@ -246,8 +249,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		this.assignedBuildingType = PlayerUnitWorker.buildingQueue.poll();
 
 		// Reserve the resources for the construction.
-		ResourceReserver.reserveMinerals(this.assignedBuildingType.mineralPrice());
-		ResourceReserver.reserveGas(this.assignedBuildingType.gasPrice());
+		ResourceReserver.getInstance().reserveMinerals(this.assignedBuildingType.mineralPrice());
+		ResourceReserver.getInstance().reserveGas(this.assignedBuildingType.gasPrice());
 		this.personalReservedMinerals = this.assignedBuildingType.mineralPrice();
 		this.personalReservedGas = this.assignedBuildingType.gasPrice();
 

@@ -1,8 +1,8 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
 import bwapi.Unit;
+import bwapiMath.Vector;
 import javaGOAP.IGoapUnit;
-import unitControlModule.Vector;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**

@@ -9,12 +9,12 @@ import bwapi.Pair;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
+import bwapiMath.Point;
+import bwapiMath.Polygon;
+import bwapiMath.Point.Direction;
+import bwapiMath.Point.Type;
 import bwta.BWTA;
 import core.Core;
-import unitControlModule.Point;
-import unitControlModule.Point.Direction;
-import unitControlModule.Point.Type;
-import unitControlModule.Polygon;
 
 /**
  * TilePositionContenderGenerator.java --- Class for generating the default
@@ -252,7 +252,6 @@ public class TilePositionContenderFactory {
 		}
 	}
 
-	// TODO: Needed Change: Extract
 	/**
 	 * Function for getting a center Unit (CommandCenter, Nexus, ...) from a
 	 * List of given Units
@@ -273,7 +272,6 @@ public class TilePositionContenderFactory {
 		return null;
 	}
 
-	// TODO: Needed Change: Extract
 	/**
 	 * Function for finding the closest Unit in an iterable collection.
 	 * 
@@ -295,7 +293,6 @@ public class TilePositionContenderFactory {
 		return closestUnit;
 	}
 
-	// TODO: Needed Change: Extract
 	/**
 	 * Function for finding the two Units that together produce the largest area
 	 * possible. These two Units are chosen from two Lists: the minerals and the
@@ -357,7 +354,6 @@ public class TilePositionContenderFactory {
 		return p;
 	}
 
-	// TODO: Needed Change: Extract
 	/**
 	 * Function for finding the Unit with the highest x coordinate.
 	 * 
@@ -378,7 +374,6 @@ public class TilePositionContenderFactory {
 		return currentlyBestSuitedUnit;
 	}
 
-	// TODO: Needed Change: Extract
 	/**
 	 * Function for finding the Unit with the lowest x coordinate.
 	 * 
@@ -399,7 +394,6 @@ public class TilePositionContenderFactory {
 		return currentlyBestSuitedUnit;
 	}
 
-	// TODO: Needed Change: Extract
 	/**
 	 * Function for finding the Unit with the highest y coordinate.
 	 * 
@@ -420,7 +414,6 @@ public class TilePositionContenderFactory {
 		return currentlyBestSuitedUnit;
 	}
 
-	// TODO: Needed Change: Extract
 	/**
 	 * Function for finding the Unit with the lowest y coordinate.
 	 * 

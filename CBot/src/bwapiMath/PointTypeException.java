@@ -1,6 +1,6 @@
-package unitControlModule;
+package bwapiMath;
 
-import unitControlModule.Point.Type;
+import bwapiMath.Point.Type;
 
 /**
  * PointTypeException.java --- Exception for displaying a Point type error.

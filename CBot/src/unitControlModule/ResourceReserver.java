@@ -6,6 +6,7 @@ import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
 
+// TODO: UML NOT STATIC ANYMORE
 /**
  * ResourceReserver.java --- Class that holds any reserved minerals or gases.
  * 
@@ -14,10 +15,28 @@ import core.Core;
  */
 public class ResourceReserver {
 
-	private static int reservedMinerals = 0;
-	private static int reservedGas = 0;
+	private static ResourceReserver instance;
+
+	private int reservedMinerals = 0;
+	private int reservedGas = 0;
+
+	private ResourceReserver() {
+
+	}
 
 	// -------------------- Functions
+
+	/**
+	 * Singleton function.
+	 * 
+	 * @return instance of the class.
+	 */
+	public static ResourceReserver getInstance() {
+		if (instance == null) {
+			instance = new ResourceReserver();
+		}
+		return instance;
+	}
 
 	/**
 	 * Function to determined if the Player can afford the construction of the
@@ -27,8 +46,8 @@ public class ResourceReserver {
 	 *            the UnitType that is going to be build.
 	 * @return true or false depending if the UnitType can be afforded.
 	 */
-	public static boolean canAffordConstruction(UnitType desiredUnitType) {
-		return canAffortResources(desiredUnitType.mineralPrice(), desiredUnitType.gasPrice());
+	public boolean canAffordConstruction(UnitType desiredUnitType) {
+		return this.canAffortResources(desiredUnitType.mineralPrice(), desiredUnitType.gasPrice());
 	}
 
 	/**
@@ -39,8 +58,8 @@ public class ResourceReserver {
 	 *            the UpgradeType that is going to be build.
 	 * @return true or false depending if the UpgradeType can be afforded.
 	 */
-	public static boolean canAffordConstruction(UpgradeType desiredUpgradeType) {
-		return canAffortResources(desiredUpgradeType.mineralPrice(), desiredUpgradeType.gasPrice());
+	public boolean canAffordConstruction(UpgradeType desiredUpgradeType) {
+		return this.canAffortResources(desiredUpgradeType.mineralPrice(), desiredUpgradeType.gasPrice());
 	}
 
 	/**
@@ -51,8 +70,8 @@ public class ResourceReserver {
 	 *            the TechType that is going to be build.
 	 * @return true or false depending if the TechType can be afforded.
 	 */
-	public static boolean canAffordConstruction(TechType desiredTechType) {
-		return canAffortResources(desiredTechType.mineralPrice(), desiredTechType.gasPrice());
+	public boolean canAffordConstruction(TechType desiredTechType) {
+		return this.canAffortResources(desiredTechType.mineralPrice(), desiredTechType.gasPrice());
 	}
 
 	/**
@@ -65,11 +84,11 @@ public class ResourceReserver {
 	 *            the gas that is going to be needed.
 	 * @return true or false depending if the Player can afford both prices.
 	 */
-	public static boolean canAffortResources(int mineralPrice, int gasPrice) {
+	public boolean canAffortResources(int mineralPrice, int gasPrice) {
 		Player player = Core.getInstance().getPlayer();
 		boolean canAffordCost = player.minerals() >= mineralPrice && player.gas() >= gasPrice;
-		boolean mineralsNotReserved = player.minerals() - ResourceReserver.reservedMinerals >= mineralPrice;
-		boolean gasNotReserved = player.gas() - ResourceReserver.reservedGas >= gasPrice;
+		boolean mineralsNotReserved = player.minerals() - this.reservedMinerals >= mineralPrice;
+		boolean gasNotReserved = player.gas() - this.reservedGas >= gasPrice;
 
 		return canAffordCost && mineralsNotReserved && gasNotReserved;
 	}
@@ -80,9 +99,9 @@ public class ResourceReserver {
 	 * @param amount
 	 *            the amount of minerals that is going to be reserved.
 	 */
-	public static void reserveMinerals(int amount) {
+	public void reserveMinerals(int amount) {
 		if (amount >= 0) {
-			reservedMinerals += amount;
+			this.reservedMinerals += amount;
 		}
 	}
 
@@ -92,9 +111,9 @@ public class ResourceReserver {
 	 * @param amount
 	 *            the amount of gas that is going to be reserved.
 	 */
-	public static void reserveGas(int amount) {
+	public void reserveGas(int amount) {
 		if (amount >= 0) {
-			reservedMinerals += amount;
+			this.reservedMinerals += amount;
 		}
 	}
 
@@ -104,9 +123,9 @@ public class ResourceReserver {
 	 * @param amount
 	 *            the amount of minerals that is going to be enabled again.
 	 */
-	public static void freeMinerals(int amount) {
+	public void freeMinerals(int amount) {
 		if (amount >= 0) {
-			reservedMinerals -= amount;
+			this.reservedMinerals -= amount;
 		}
 	}
 
@@ -116,19 +135,19 @@ public class ResourceReserver {
 	 * @param amount
 	 *            the amount of gas that is going to be enabled again.
 	 */
-	public static void freeGas(int amount) {
+	public void freeGas(int amount) {
 		if (amount >= 0) {
-			reservedGas -= amount;
+			this.reservedGas -= amount;
 		}
 	}
 
 	// ------------------------------ Getter / Setter
 
-	public static int getReservedMinerals() {
-		return reservedMinerals;
+	public int getReservedMinerals() {
+		return this.reservedMinerals;
 	}
 
-	public static int getReservedGas() {
-		return reservedGas;
+	public int getReservedGas() {
+		return this.reservedGas;
 	}
 }

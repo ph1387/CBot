@@ -86,8 +86,8 @@ public class UnitControlDisplay {
 	 *         interfering with the currently display ones.
 	 */
 	public static int showResourceInformation(int posX, int posY) {
-		String text = "Minerals: " + ResourceReserver.getReservedMinerals() + " - Gas: "
-				+ ResourceReserver.getReservedGas();
+		String text = "Minerals: " + ResourceReserver.getInstance().getReservedMinerals() + " - Gas: "
+				+ ResourceReserver.getInstance().getReservedGas();
 
 		GAME.drawTextScreen(posX, posY, "Reserved Resources:");
 		GAME.drawTextScreen(posX, posY + LINEHEIGHT, text);

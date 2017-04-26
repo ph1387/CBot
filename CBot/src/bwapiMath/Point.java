@@ -1,4 +1,4 @@
-package unitControlModule;
+package bwapiMath;
 
 import bwapi.Position;
 import bwapi.TilePosition;

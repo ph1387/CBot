@@ -93,7 +93,7 @@ public class PlayerBuilding {
 
 		// Train an Unit
 		if (resultMissing && unitToTrain != null && this.unit.canTrain(unitToTrain)
-				&& ResourceReserver.canAffordConstruction(unitToTrain)) {
+				&& ResourceReserver.getInstance().canAffordConstruction(unitToTrain)) {
 			this.state = State.TRAINING;
 			this.trainedUnit = PlayerBuilding.trainingQueue.poll();
 			resultMissing = false;
@@ -101,7 +101,7 @@ public class PlayerBuilding {
 
 		// Construct an addon
 		if (resultMissing && addonToBuild != null && this.unit.canBuildAddon(addonToBuild)
-				&& ResourceReserver.canAffordConstruction(addonToBuild)) {
+				&& ResourceReserver.getInstance().canAffordConstruction(addonToBuild)) {
 			this.state = State.CONSTRUCTING;
 			this.constructedAddon = PlayerBuilding.addonQueue.poll();
 			resultMissing = false;
@@ -109,7 +109,7 @@ public class PlayerBuilding {
 
 		// Build an upgrade
 		if (resultMissing && upgradeToBuild != null && this.unit.canUpgrade(upgradeToBuild)
-				&& ResourceReserver.canAffordConstruction(upgradeToBuild)) {
+				&& ResourceReserver.getInstance().canAffordConstruction(upgradeToBuild)) {
 			this.state = State.UPGRADING;
 			this.builtUpgrade = PlayerBuilding.upgradeQueue.poll();
 			resultMissing = false;
@@ -117,7 +117,7 @@ public class PlayerBuilding {
 
 		// Research a technology
 		if (resultMissing && techToResearch != null && this.unit.canResearch(techToResearch)
-				&& ResourceReserver.canAffordConstruction(techToResearch)) {
+				&& ResourceReserver.getInstance().canAffordConstruction(techToResearch)) {
 			this.state = State.RESEARCHING;
 			this.researchedTech = PlayerBuilding.researchQueue.poll();
 			resultMissing = false;

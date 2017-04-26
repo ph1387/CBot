@@ -1,4 +1,4 @@
-package unitControlModule;
+package bwapiMath;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,8 +7,8 @@ import java.util.List;
 import bwapi.Color;
 import bwapi.Game;
 import bwapi.TilePosition;
+import bwapiMath.Point.Type;
 import core.Core;
-import unitControlModule.Point.Type;
 
 /**
  * Polygon.java --- Class used for displaying and calculating an area.

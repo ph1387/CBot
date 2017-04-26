@@ -1,4 +1,4 @@
-package unitControlModule;
+package bwapiMath;
 
 /**
  * Vector.java --- Class used for Vector operations.
