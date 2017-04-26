@@ -62,7 +62,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 *         not.
 	 */
 	private boolean retreatToVectorEndPosition(Vector vecUTP) {
-		Position targetVecPosition = new Position(vecUTP.x + (int) (vecUTP.dirX), vecUTP.y + (int) (vecUTP.dirY));
+		Position targetVecPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX), vecUTP.getY() + (int) (vecUTP.dirY));
 		boolean returnValue = true;
 
 		if (this.isInsideMap(targetVecPosition)) {
@@ -86,12 +86,12 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 *            the Unit in which direction the Units retreat path will lead.
 	 */
 	private void retreatToUnitPosition(Vector vecUTP, Unit retreatableUnit) {
-		Vector vecToUnit = new Vector(vecUTP.x, vecUTP.y, retreatableUnit.getPosition().getX() - vecUTP.x,
-				retreatableUnit.getPosition().getY() - vecUTP.y);
+		Vector vecToUnit = new Vector(vecUTP.getX(), vecUTP.getY(), retreatableUnit.getPosition().getX() - vecUTP.getX(),
+				retreatableUnit.getPosition().getY() - vecUTP.getY());
 		vecToUnit.normalize();
 
-		Position retreatPosition = new Position(vecToUnit.x + (int) (vecToUnit.dirX * MIN_PIXELDISTANCE_TO_UNIT),
-				vecToUnit.y + (int) (vecToUnit.dirY * MIN_PIXELDISTANCE_TO_UNIT));
+		Position retreatPosition = new Position(vecToUnit.getX() + (int) (vecToUnit.dirX * MIN_PIXELDISTANCE_TO_UNIT),
+				vecToUnit.getY() + (int) (vecToUnit.dirY * MIN_PIXELDISTANCE_TO_UNIT));
 		this.generatedTempRetreatPosition = retreatPosition;
 	}
 

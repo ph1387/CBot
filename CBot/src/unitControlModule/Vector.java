@@ -6,16 +6,14 @@ package unitControlModule;
  * @author P H - 25.02.2017
  *
  */
-public class Vector {
+public class Vector extends Point {
 
 	private final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
 	private final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
-	public int x, y;
 	public double dirX = 0., dirY = 0.;
 
 	public Vector(int x, int y) {
-		this.x = x;
-		this.y = y;
+		super(x, y, Type.NONE);
 	}
 
 	public Vector(int x, int y, double dirX, double dirY) {
@@ -27,10 +25,21 @@ public class Vector {
 
 	// -------------------- Functions
 
+	/**
+	 * @see #rotateLeftRAD(double)
+	 * @param alpha
+	 *            the degree at which the Vector is rotated.
+	 */
 	public void rotateLeftDEG(double alpha) {
 		this.rotateLeftRAD(Math.toRadians(alpha));
 	}
 
+	/**
+	 * Function for rotating a Vector left.
+	 * 
+	 * @param alpha
+	 *            the radiant at which the Vector is rotated.
+	 */
 	public void rotateLeftRAD(double alpha) {
 		double newDirX = this.dirX * Math.cos(alpha) + this.dirY * Math.sin(alpha);
 		double newDirY = -1. * this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha);
@@ -38,10 +47,21 @@ public class Vector {
 		this.dirY = newDirY;
 	}
 
+	/**
+	 * @see #rotateRightRAD(double)
+	 * @param alpha
+	 *            the degree at which the Vector is rotated.
+	 */
 	public void rotateRightDEG(double alpha) {
 		this.rotateRightRAD(Math.toRadians(alpha));
 	}
 
+	/**
+	 * Function for rotating a Vector right.
+	 * 
+	 * @param alpha
+	 *            the radiant at which the Vector is rotated.
+	 */
 	public void rotateRightRAD(double alpha) {
 		double newDirX = this.dirX * Math.cos(alpha) - this.dirY * Math.sin(alpha);
 		double newDirY = this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha);
@@ -55,30 +75,53 @@ public class Vector {
 
 	/**
 	 * Function for determining the multiplier (r) with which the current Vector
-	 * calculates the X and Y values of the given Vector (-> Point).
+	 * calculates the X and Y values of the given Point.
 	 * 
 	 * @param point
-	 *            the Vector (-> Point) the current Vector has to end at.
+	 *            the Point the current Vector has to end at.
 	 * @return either the multiplier with which the targeted Vector (-> Point)
 	 *         is being reached or null, if the Point can not be reached.
 	 */
-	public Double getNeededMultiplier(Vector point) {
-		// r = Vector length / direction multiplier
-		double rX = new Double(new Double(-1 * this.x + point.x) / new Double(this.dirX));
-		double rY = new Double(new Double(-1 * this.y + point.y) / new Double(this.dirY));
+	public Double getNeededMultiplier(Point point) {
+		// r = Vector length or direction multiplier
+		Double rX = null;
+		Double rY = null;
+		Double returnValue = null;
 
-		if (this.dirX == 0 && this.x == point.x) {
-			rX = rY;
-		}
-		if (this.dirY == 0 && this.y == point.y) {
-			rY = rX;
+		// If the value of the direction vector in one side is zero, there only
+		// needs to be one check for the end point.
+		if (this.dirX == 0.) {
+			rY = new Double(new Double(-1 * this.y + point.y) / new Double(this.dirY));
+
+			if (Math.abs(Math.abs(this.x) - Math.abs(point.x)) < this.NEEDED_MP_MAX_DIFF) {
+				returnValue = rY;
+			}
+		} else if (this.dirY == 0.) {
+			rX = new Double(new Double(-1 * this.x + point.x) / new Double(this.dirX));
+
+			if (Math.abs(Math.abs(this.y) - Math.abs(point.y)) < this.NEEDED_MP_MAX_DIFF) {
+				returnValue = rX;
+			}
 		}
 
-		if (Math.abs(Math.abs(rX) - Math.abs(rY)) < this.NEEDED_MP_MAX_DIFF) {
-			return rX; // Could also be rY
-		} else {
-			return null;
+		// Is only true if the check above was not successful
+		if (returnValue == null && (rX == null || rY == null)) {
+			// Could be split
+			rX = new Double(new Double(-1 * this.x + point.x) / new Double(this.dirX));
+			rY = new Double(new Double(-1 * this.y + point.y) / new Double(this.dirY));
+
+			if (this.dirX == 0 && this.x == point.x) {
+				rX = rY;
+			}
+			if (this.dirY == 0 && this.y == point.y) {
+				rY = rX;
+			}
+
+			if (Math.abs(Math.abs(rX) - Math.abs(rY)) < this.NEEDED_MP_MAX_DIFF) {
+				returnValue = rX; // Could also be rY
+			}
 		}
+		return returnValue;
 	}
 
 	/**
@@ -87,10 +130,10 @@ public class Vector {
 	 * 
 	 * @param vectorB
 	 *            the Vector the check is done against.
-	 * @return the Point (-> Vector with a length of 0) at which both Vectors
-	 *         intersect each other or null if they do not intersect each other.
+	 * @return the Point at which both Vectors intersect each other or null if
+	 *         they do not intersect each other.
 	 */
-	public Vector getIntersection(Vector vectorB) {
+	public Point getIntersection(Vector vectorB) {
 		// Vector-length / -direction multipliers
 		Double r = null;
 		Double s = (new Double(this.dirX * (this.y - vectorB.y) - this.dirY * (this.x - vectorB.x)))
@@ -105,7 +148,7 @@ public class Vector {
 		if (Math.abs(Math.abs(this.x + r * this.dirX) - Math.abs(vectorB.x + s * vectorB.dirX)) < this.INTERSEC_MAX_DIFF
 				&& Math.abs(Math.abs(this.y + r * this.dirY)
 						- Math.abs(vectorB.y + s * vectorB.dirY)) < this.INTERSEC_MAX_DIFF) {
-			return new Vector((int) (this.x + r * this.dirX), (int) (this.y + r * this.dirY));
+			return new Point((int) (this.x + r * this.dirX), (int) (this.y + r * this.dirY), this.type);
 		} else {
 			return null;
 		}
@@ -122,7 +165,7 @@ public class Vector {
 	public double getCrossProduct(Vector vectorB) {
 		return this.dirX * vectorB.dirY - vectorB.dirX * this.dirY;
 	}
-	
+
 	/**
 	 * Normalizes the Vector.
 	 */

@@ -2,11 +2,12 @@ package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import java.util.HashSet;
 
-import bwapi.Game;
+import bwapi.Color;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import core.Core;
+import core.Display;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
@@ -31,11 +32,9 @@ public class ConstructBuildingAction extends BaseAction {
 	// build the given building or idle until the isDone function kicks in and
 	// the building gets queued again.
 	private static final int MIN_TRIES = 20;
-	private static final int CONTENDED_TILE_RANGE_BORDER = 1;
-	private static final int CONTENDED_TILE_RANGE_MINERALS = 2;
-	private static final int CONTENDED_TILE_RANGE_GEYSERS = 2;
 
-	private static HashSet<TilePosition> tilePositionContenders = generateDefaultContendedTilePositions();
+	private static HashSet<TilePosition> tilePositionContenders = TilePositionContenderFactory
+			.generateDefaultContendedTilePositions();
 
 	private TilePosition tempBuildingLocationPrev;
 	private TilePosition tempBuildingLocation;
@@ -56,123 +55,20 @@ public class ConstructBuildingAction extends BaseAction {
 
 	// -------------------- Functions
 
-	// ------------------------------ Static definitions
-
-	/**
-	 * Function for generating the Default contended TilePositions in the
-	 * beginning of the game. These include a x wide path at the map border, y
-	 * tiles around all mineral spots and a z wide ring around all gas geysers.
-	 * 
-	 * @return a HashSet containing all default contended TilePositions.
-	 */
-	private static HashSet<TilePosition> generateDefaultContendedTilePositions() {
-		HashSet<TilePosition> defaultContendedTilePositions = new HashSet<TilePosition>();
-
-		// Get all important contended default spots on the map.
-		contendTilePositionsAroundMinerals(defaultContendedTilePositions);
-		contendTilePositionsAroundGeysers(defaultContendedTilePositions);
-		contendTilePositionsAtMapEdges(defaultContendedTilePositions);
-
-		return defaultContendedTilePositions;
-	}
-
-	/**
-	 * Function for contending all TilePositions in a specific area around each
-	 * mineral spot on the map.
-	 * 
-	 * @param designatedHashSet
-	 *            the HashSet in which the TilePositions are going to be stored.
-	 */
-	private static void contendTilePositionsAroundMinerals(HashSet<TilePosition> designatedHashSet) {
-		for (Unit unit : Core.getInstance().getGame().getMinerals()) {
-			for (int i = unit.getTilePosition().getX() - CONTENDED_TILE_RANGE_MINERALS; i <= unit.getTilePosition()
-					.getX() + CONTENDED_TILE_RANGE_MINERALS; i++) {
-				for (int j = unit.getTilePosition().getY() - CONTENDED_TILE_RANGE_MINERALS; j <= unit.getTilePosition()
-						.getY() + CONTENDED_TILE_RANGE_MINERALS; j++) {
-					TilePosition generatedTilePosition = new TilePosition(i, j);
-
-					if (!designatedHashSet.contains(generatedTilePosition)
-							&& Core.getInstance().getGame().getUnitsOnTile(generatedTilePosition).isEmpty()) {
-						designatedHashSet.add(generatedTilePosition);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Function for contending all TilePositions in a specific area around each
-	 * geyser on the map.
-	 * 
-	 * @param designatedHashSet
-	 *            the HashSet in which the TilePositions are going to be stored.
-	 */
-	private static void contendTilePositionsAroundGeysers(HashSet<TilePosition> designatedHashSet) {
-		for (Unit unit : Core.getInstance().getGame().getGeysers()) {
-			for (int i = unit.getTilePosition().getX() - CONTENDED_TILE_RANGE_GEYSERS; i <= unit.getTilePosition()
-					.getX() + CONTENDED_TILE_RANGE_GEYSERS; i++) {
-				for (int j = unit.getTilePosition().getY() - CONTENDED_TILE_RANGE_GEYSERS; j <= unit.getTilePosition()
-						.getY() + CONTENDED_TILE_RANGE_GEYSERS; j++) {
-					TilePosition generatedTilePosition = new TilePosition(i, j);
-
-					if (!designatedHashSet.contains(generatedTilePosition)
-							&& Core.getInstance().getGame().getUnitsOnTile(generatedTilePosition).isEmpty()) {
-						designatedHashSet.add(generatedTilePosition);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Function for contending all TilePositions in a specific area at the map
-	 * edge.
-	 * 
-	 * @param designatedHashSet
-	 *            the HashSet in which the TilePositions are going to be stored.
-	 */
-	private static void contendTilePositionsAtMapEdges(HashSet<TilePosition> designatedHashSet) {
-		Game game = Core.getInstance().getGame();
-
-		// Width and height are both reduced by 1 since the TilePositions
-		// leading to the ends are needed.
-		// -> top and bottom
-		for (int i = 0; i < CONTENDED_TILE_RANGE_BORDER; i++) {
-			for (int j = 0; j < game.mapWidth(); j++) {
-				TilePosition topTilePosition = new TilePosition(j, i);
-				TilePosition bottomTilePosition = new TilePosition(j, game.mapHeight() - 1 - i);
-
-				if (!designatedHashSet.contains(topTilePosition) && game.getUnitsOnTile(topTilePosition).isEmpty()) {
-					designatedHashSet.add(topTilePosition);
-				}
-				if (!designatedHashSet.contains(bottomTilePosition)
-						&& game.getUnitsOnTile(bottomTilePosition).isEmpty()) {
-					designatedHashSet.add(bottomTilePosition);
-				}
-			}
-		}
-		// -> left and right
-		for (int i = 0; i < CONTENDED_TILE_RANGE_BORDER; i++) {
-			for (int j = 0; j < game.mapHeight(); j++) {
-				TilePosition leftTilePosition = new TilePosition(i, j);
-				TilePosition rightTilePosition = new TilePosition(game.mapWidth() - 1 - i, j);
-
-				if (!designatedHashSet.contains(leftTilePosition) && game.getUnitsOnTile(leftTilePosition).isEmpty()) {
-					designatedHashSet.add(leftTilePosition);
-				}
-				if (!designatedHashSet.contains(rightTilePosition)
-						&& game.getUnitsOnTile(rightTilePosition).isEmpty()) {
-					designatedHashSet.add(rightTilePosition);
-				}
-			}
-		}
-	}
-
-	// ------------------------------ Other
-
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
+
+		// TODO: REMOVE DEBUG
+		try {
+			TilePositionContenderFactory.poly.drawOnMap(new Color(255, 255, 0), 3, true);
+			for (TilePosition tile : TilePositionContenderFactory.covered) {
+				Display.drawTileFilled(Core.getInstance().getGame(), tile.getX(), tile.getY(), 1, 1,
+						new Color(255, 255, 0));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		if (this.tempBuildingLocationPrev != this.tempBuildingLocation) {
 			this.tempBuildingLocationPrev = this.tempBuildingLocation;

@@ -307,7 +307,7 @@ public abstract class PlayerUnit extends GoapUnit {
 
 			// TODO: DEBUG INFO
 			// Cone of possible retreat Positions
-			Position targetEndPosition = new Position(vecUTP.x + (int) (vecUTP.dirX), vecUTP.y + (int) (vecUTP.dirY));
+			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX), vecUTP.getY() + (int) (vecUTP.dirY));
 			// Position rotatedLVecEndPos = new Position(vecUTPRotatedL.x +
 			// (int) (vecUTPRotatedL.dirX),
 			// vecUTPRotatedL.y + (int) (vecUTPRotatedL.dirY));
@@ -356,7 +356,7 @@ public abstract class PlayerUnit extends GoapUnit {
 		int tPosX = (int) (vecRangeMultiplier * neededDistanceMultiplier * vecEU.dirX);
 		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * vecEU.dirY);
 
-		this.vecUTP = new Vector(this.vecEU.x, this.vecEU.y, tPosX, tPosY);
+		this.vecUTP = new Vector(this.vecEU.getX(), this.vecEU.getY(), tPosX, tPosY);
 	}
 
 	/**
@@ -371,8 +371,8 @@ public abstract class PlayerUnit extends GoapUnit {
 		// actual alpha value.
 		// vecRotatedL -> Rotated Vector left
 		// vecRotatedR -> Rotated Vector right
-		Vector rotatedL = new Vector(this.vecUTP.x, this.vecUTP.y, this.vecUTP.dirX, this.vecUTP.dirY);
-		Vector rotatedR = new Vector(this.vecUTP.x, this.vecUTP.y, this.vecUTP.dirX, this.vecUTP.dirY);
+		Vector rotatedL = new Vector(this.vecUTP.getX(), this.vecUTP.getY(), this.vecUTP.dirX, this.vecUTP.dirY);
+		Vector rotatedR = new Vector(this.vecUTP.getX(), this.vecUTP.getY(), this.vecUTP.dirX, this.vecUTP.dirY);
 		rotatedL.rotateLeftDEG(alphaActual);
 		rotatedR.rotateRightDEG(alphaActual);
 

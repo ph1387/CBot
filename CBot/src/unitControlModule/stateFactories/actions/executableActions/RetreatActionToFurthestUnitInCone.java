@@ -66,8 +66,8 @@ public class RetreatActionToFurthestUnitInCone extends RetreatActionGeneralSuper
 			Vector vecRotatedR = goapUnit.getVecUTPRotatedR();
 
 			for (Unit unit : goapUnit.getAllPlayerUnitsInRange((int) (vecUTP.length()))) {
-				Vector vecToUnit = new Vector(vecUTP.x, vecUTP.y, unit.getPosition().getX() - vecUTP.x,
-						unit.getPosition().getY() - vecUTP.y);
+				Vector vecToUnit = new Vector(vecUTP.getX(), vecUTP.getY(), unit.getPosition().getX() - vecUTP.getX(),
+						unit.getPosition().getY() - vecUTP.getY());
 
 				// -> If the Unit is between the left and right rotated Vectors
 				// then the sign of both cross products of the Vectors is
