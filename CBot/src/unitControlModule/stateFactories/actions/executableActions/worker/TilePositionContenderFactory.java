@@ -16,6 +16,8 @@ import bwapiMath.Point.Type;
 import bwta.BWTA;
 import core.Core;
 
+// TODO: Needed Change: Make non static!
+// TODO: Needed Change: Superclass together with TilePositionContenderFactory
 /**
  * TilePositionContenderGenerator.java --- Class for generating the default
  * contended construction spots on the map, on which no worker can construct a
@@ -206,42 +208,34 @@ public class TilePositionContenderFactory {
 	public static void contendTilePositionsInStartingLocation(HashSet<TilePosition> designatedHashSet,
 			List<Unit> startingMinerals, List<Unit> startingGeysers) {
 		try {
-			Unit centerUnit = getCenter(Core.getInstance().getPlayer().getUnits());
-
 			// Find the mineral spot and geyser that are closest to the center
-			// Unit
+			// Unit and get the direction from it to the resource depots.
+			Unit centerUnit = getCenter(Core.getInstance().getPlayer().getUnits());
 			Unit closestMienralSpot = getClosestUnit(startingMinerals, centerUnit);
 			Unit closestGeyser = getClosestUnit(startingGeysers, centerUnit);
-
-			// Get the direction of the mineral spots and geysers towards the
-			// center
-			// Unit.
 			Direction mineralsToBase = Point.getDirectionToSecondPoint(new Point(closestMienralSpot.getPosition()),
 					new Point(centerUnit.getPosition()));
 			Direction geysersToBase = Point.getDirectionToSecondPoint(new Point(closestGeyser.getPosition()),
 					new Point(centerUnit.getPosition()));
 
-			// TODO: DEBUG INFO
-			System.out.println("Minerals: " + mineralsToBase + " Geysers: " + geysersToBase);
-
-			// Find the two Units whose TilePositions generate the largest cone.
+			// Find Units that create the largest Polygon and instantiate it.
 			Pair<Unit, Unit> unitsWithGreatestCone = findUnitsWhichGenerateLargestArea(startingMinerals,
 					startingGeysers, mineralsToBase, geysersToBase);
+			Polygon constructionFreeZone = createStartLocationContendedPolygon(centerUnit, unitsWithGreatestCone,
+					mineralsToBase, geysersToBase);
 
-			// Generate a Polygon from those and two other Vectors which
-			// together
-			// inclose all starting resource spots.
-			// Generate a List of all vertices of the Polygon.
-			List<Point> points = new ArrayList<Point>();
-			points.add(new Point(centerUnit.getPosition()));
-			points.add(new Point(unitsWithGreatestCone.first.getPosition()));
-			points.add(generateThirdPointForPolygon(unitsWithGreatestCone, mineralsToBase, geysersToBase));
-			points.add(new Point(unitsWithGreatestCone.second.getPosition()));
-			Polygon constructionFreeZone = new Polygon(points);
-
-			// Get all TilePositions that are located inside the Polygon and add
-			// them to the HashSet.
+			// Add all covered TilePositions except the ones directly on top of
+			// the geysers. This ensures that the construction of the first
+			// refinery is not blocked and causing a deadlock.
 			designatedHashSet.addAll(constructionFreeZone.getCoveredTilePositions());
+
+			for (Unit unit : startingGeysers) {
+				designatedHashSet.removeAll(
+						generateNeededTilePositions(UnitType.Resource_Vespene_Geyser, unit.getTilePosition()));
+			}
+
+			// TODO: DEBUG INFO
+			System.out.println("Minerals: " + mineralsToBase + " Geysers: " + geysersToBase);
 
 			// TODO: REMOVE
 			poly = constructionFreeZone;
@@ -435,6 +429,34 @@ public class TilePositionContenderFactory {
 	}
 
 	/**
+	 * Function for generating a Polygon from the center Unit and two provided
+	 * Units as well as a fourth one, that is generated individually.
+	 *
+	 * @param centerUnit
+	 *            the center Unit that the Polygon is starting from.
+	 * @param unitsWithGreatestCone
+	 *            the Units whose Positions will function as vertices on the
+	 *            Polygon.
+	 * @param mineralsToBase
+	 *            the direction from the center Unit towards the mineral spots.
+	 * @param geysersToBase
+	 *            the direction from the center Unit towards the geysers.
+	 * @return a Polygon covering the largest possible area with the given
+	 *         Units.
+	 */
+	private static Polygon createStartLocationContendedPolygon(Unit centerUnit, Pair<Unit, Unit> unitsWithGreatestCone,
+			Direction mineralsToBase, Direction geysersToBase) {
+		List<Point> points = new ArrayList<Point>();
+
+		points.add(new Point(centerUnit.getPosition()));
+		points.add(new Point(unitsWithGreatestCone.first.getPosition()));
+		points.add(generateThirdPointForPolygon(unitsWithGreatestCone, mineralsToBase, geysersToBase));
+		points.add(new Point(unitsWithGreatestCone.second.getPosition()));
+
+		return new Polygon(points);
+	}
+
+	/**
 	 * Function for generating another Point for the Polygon, that is inserted
 	 * at the third position in the List of vertices. This Point marks the
 	 * Position at which the combined coordinates from the second (geyser or
@@ -464,5 +486,39 @@ public class TilePositionContenderFactory {
 					Type.POSITION);
 		}
 		return p;
+	}
+
+	// TODO: Needed Change: Put in superclass
+
+	/**
+	 * Function for finding all required TilePositions of a building plus a
+	 * additional row at the bottom, if the building can train Units.
+	 * 
+	 * @param unitType
+	 *            the UnitType whose TilePositions are going to be calculated.
+	 * @param targetTilePosition
+	 *            the TilePosition the Unit is going to be constructed /
+	 *            targeted at.
+	 * @return a HashSet containing all TilePositions that the constructed Unit
+	 *         would have if it was constructed at the targetTilePosition.
+	 */
+	private static HashSet<TilePosition> generateNeededTilePositions(UnitType unitType,
+			TilePosition targetTilePosition) {
+		HashSet<TilePosition> neededTilePositions = new HashSet<TilePosition>();
+		int bottomRowAddion = 0;
+
+		if (unitType.canProduce()) {
+			bottomRowAddion = 1;
+		}
+
+		for (int i = 0; i < unitType.tileWidth(); i++) {
+			for (int j = 0; j < unitType.tileHeight() + bottomRowAddion; j++) {
+				int targetX = targetTilePosition.getX() + i;
+				int targetY = targetTilePosition.getY() + j;
+
+				neededTilePositions.add(new TilePosition(targetX, targetY));
+			}
+		}
+		return neededTilePositions;
 	}
 }

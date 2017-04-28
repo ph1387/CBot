@@ -44,9 +44,11 @@ public class UnitControlModule {
 
 		// TODO: REMOVE
 		// Buildings
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 1; i++) {
 			this.buildingQueue.add(UnitType.Terran_Supply_Depot);
 		}
+		this.buildingQueue.add(UnitType.Terran_Refinery);
+		this.buildingQueue.add(UnitType.Terran_Command_Center);
 		// for (int i = 0; i < 2; i++) {
 		// this.buildingQueue.add(UnitType.Terran_Factory);
 		// }

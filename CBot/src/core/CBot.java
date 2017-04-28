@@ -29,7 +29,7 @@ public class CBot implements BWEventListener {
 	private UnitTrackerModule unitTrackerModule;
 	private UnitControlModule unitControlModule;
 	private BuildingOrderModule buildingOrderModule;
-	
+
 	private CBot() {
 
 	}
@@ -196,8 +196,12 @@ public class CBot implements BWEventListener {
 	}
 
 	@Override
-	public void onUnitMorph(Unit arg0) {
-
+	public void onUnitMorph(Unit unit) {
+		// Constructing a refinery is a morphing action!
+		if (this.firstFrameOver && unit.getPlayer() == this.game.self()
+				&& unit.getType() == this.game.self().getRace().getRefinery()) {
+			this.unitControlModule.addToBuildingsBeingCreated(unit);
+		}
 	}
 
 	@Override
@@ -209,7 +213,7 @@ public class CBot implements BWEventListener {
 	public void onUnitShow(Unit arg0) {
 
 	}
-	
+
 	// -------------------- Getter / Setter
 
 	public UnitTrackerModule getUnitTrackerModule() {
