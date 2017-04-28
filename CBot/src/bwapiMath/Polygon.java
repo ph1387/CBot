@@ -123,9 +123,6 @@ public class Polygon {
 			// recursion
 			this.tilePositionRecursion(coveredTilePositions, currentPoint);
 
-			// TODO: REMOVE DEBUG
-			System.out.println("Covered Tiles: " + coveredTilePositions.size());
-
 			return coveredTilePositions;
 		} else {
 			throw new PointTypeException(Type.POSITION);
