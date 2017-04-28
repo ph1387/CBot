@@ -16,8 +16,6 @@ import bwapiMath.Point.Type;
 import bwta.BWTA;
 import core.Core;
 
-// TODO: Needed Change: Make non static!
-// TODO: Needed Change: Superclass together with TilePositionContenderFactory
 /**
  * TilePositionContenderGenerator.java --- Class for generating the default
  * contended construction spots on the map, on which no worker can construct a
@@ -26,17 +24,19 @@ import core.Core;
  * @author P H - 21.04.2017
  *
  */
-public class TilePositionContenderFactory {
+public class TilePositionContenderFactory extends TilePositionFactory {
 
-	private static final int CONTENDED_TILE_RANGE_BORDER = 1;
-	private static final int CONTENDED_TILE_RANGE_MINERALS = 2;
-	private static final int CONTENDED_TILE_RANGE_GEYSERS = 2;
+	private int contendedTileRangeBorder = 1;
+	private int contendedTileRangeMinerals = 2;
+	private int contendedTileRangeGeysers = 2;
 
-	// TODO: REMOVE
-	public static Pair<Unit, Unit> polygonUnits = new Pair<>();
-	public static Polygon poly = null;
-	public static HashSet<TilePosition> covered = null;
-
+	// TODO: REMOVE DEBUG
+	public static Polygon debug_polygon;
+	
+	public TilePositionContenderFactory() {
+		
+	}
+	
 	// -------------------- Functions
 
 	/**
@@ -46,7 +46,7 @@ public class TilePositionContenderFactory {
 	 * 
 	 * @return a HashSet containing all default contended TilePositions.
 	 */
-	public static HashSet<TilePosition> generateDefaultContendedTilePositions() {
+	public HashSet<TilePosition> generateDefaultContendedTilePositions() {
 		HashSet<TilePosition> defaultContendedTilePositions = new HashSet<TilePosition>();
 		List<Unit> startingMinerals = BWTA.getStartLocation(Core.getInstance().getPlayer()).getMinerals();
 		List<Unit> startingGeysers = BWTA.getStartLocation(Core.getInstance().getPlayer()).getGeysers();
@@ -80,17 +80,17 @@ public class TilePositionContenderFactory {
 	 *            the Units that are not going to be looked at during the
 	 *            iterations.
 	 */
-	public static void contendTilePositionsAroundMinerals(HashSet<TilePosition> designatedHashSet,
+	public void contendTilePositionsAroundMinerals(HashSet<TilePosition> designatedHashSet,
 			List<Unit> excludedUnits) {
 		// TODO: DEBUG INFO
 		System.out.println("Default contended TilePositions excluded mineral spots:");
 
 		for (Unit unit : Core.getInstance().getGame().getMinerals()) {
 			if (!excludedUnits.contains(unit)) {
-				for (int i = unit.getTilePosition().getX() - CONTENDED_TILE_RANGE_MINERALS; i <= unit.getTilePosition()
-						.getX() + CONTENDED_TILE_RANGE_MINERALS; i++) {
-					for (int j = unit.getTilePosition().getY() - CONTENDED_TILE_RANGE_MINERALS; j <= unit
-							.getTilePosition().getY() + CONTENDED_TILE_RANGE_MINERALS; j++) {
+				for (int i = unit.getTilePosition().getX() - this.contendedTileRangeBorder; i <= unit.getTilePosition()
+						.getX() + this.contendedTileRangeBorder; i++) {
+					for (int j = unit.getTilePosition().getY() - this.contendedTileRangeMinerals; j <= unit
+							.getTilePosition().getY() + this.contendedTileRangeMinerals; j++) {
 						TilePosition generatedTilePosition = new TilePosition(i, j);
 
 						if (!designatedHashSet.contains(generatedTilePosition)
@@ -116,17 +116,17 @@ public class TilePositionContenderFactory {
 	 *            the Units that are not going to be looked at during the
 	 *            iterations.
 	 */
-	public static void contendTilePositionsAroundGeysers(HashSet<TilePosition> designatedHashSet,
+	public void contendTilePositionsAroundGeysers(HashSet<TilePosition> designatedHashSet,
 			List<Unit> excludedUnits) {
 		// TODO: DEBUG INFO
 		System.out.println("Default contended TilePositions excluded geysers:");
 
 		for (Unit unit : Core.getInstance().getGame().getGeysers()) {
 			if (!excludedUnits.contains(unit)) {
-				for (int i = unit.getTilePosition().getX() - CONTENDED_TILE_RANGE_GEYSERS; i <= unit.getTilePosition()
-						.getX() + CONTENDED_TILE_RANGE_GEYSERS; i++) {
-					for (int j = unit.getTilePosition().getY() - CONTENDED_TILE_RANGE_GEYSERS; j <= unit
-							.getTilePosition().getY() + CONTENDED_TILE_RANGE_GEYSERS; j++) {
+				for (int i = unit.getTilePosition().getX() - this.contendedTileRangeGeysers; i <= unit.getTilePosition()
+						.getX() + this.contendedTileRangeGeysers; i++) {
+					for (int j = unit.getTilePosition().getY() - this.contendedTileRangeGeysers; j <= unit
+							.getTilePosition().getY() + this.contendedTileRangeGeysers; j++) {
 						TilePosition generatedTilePosition = new TilePosition(i, j);
 
 						if (!designatedHashSet.contains(generatedTilePosition)
@@ -149,13 +149,13 @@ public class TilePositionContenderFactory {
 	 * @param designatedHashSet
 	 *            the HashSet in which the TilePositions are going to be stored.
 	 */
-	public static void contendTilePositionsAtMapEdges(HashSet<TilePosition> designatedHashSet) {
+	public void contendTilePositionsAtMapEdges(HashSet<TilePosition> designatedHashSet) {
 		Game game = Core.getInstance().getGame();
 
 		// Width and height are both reduced by 1 since the TilePositions
 		// leading to the ends are needed.
 		// -> top and bottom
-		for (int i = 0; i < CONTENDED_TILE_RANGE_BORDER; i++) {
+		for (int i = 0; i < this.contendedTileRangeBorder; i++) {
 			for (int j = 0; j < game.mapWidth(); j++) {
 				TilePosition topTilePosition = new TilePosition(j, i);
 				TilePosition bottomTilePosition = new TilePosition(j, game.mapHeight() - 1 - i);
@@ -170,7 +170,7 @@ public class TilePositionContenderFactory {
 			}
 		}
 		// -> left and right
-		for (int i = 0; i < CONTENDED_TILE_RANGE_BORDER; i++) {
+		for (int i = 0; i < this.contendedTileRangeBorder; i++) {
 			for (int j = 0; j < game.mapHeight(); j++) {
 				TilePosition leftTilePosition = new TilePosition(i, j);
 				TilePosition rightTilePosition = new TilePosition(game.mapWidth() - 1 - i, j);
@@ -205,7 +205,7 @@ public class TilePositionContenderFactory {
 	 *            the geysers that are located at the starting location of the
 	 *            Player.
 	 */
-	public static void contendTilePositionsInStartingLocation(HashSet<TilePosition> designatedHashSet,
+	public void contendTilePositionsInStartingLocation(HashSet<TilePosition> designatedHashSet,
 			List<Unit> startingMinerals, List<Unit> startingGeysers) {
 		try {
 			// Find the mineral spot and geyser that are closest to the center
@@ -237,10 +237,8 @@ public class TilePositionContenderFactory {
 			// TODO: DEBUG INFO
 			System.out.println("Minerals: " + mineralsToBase + " Geysers: " + geysersToBase);
 
-			// TODO: REMOVE
-			poly = constructionFreeZone;
-			polygonUnits = unitsWithGreatestCone;
-			covered = constructionFreeZone.getCoveredTilePositions();
+			// TODO: REMOVE DEBUG
+			TilePositionContenderFactory.debug_polygon = constructionFreeZone;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -255,7 +253,7 @@ public class TilePositionContenderFactory {
 	 *            searched for.
 	 * @return a center Unit if one is found or null.
 	 */
-	private static Unit getCenter(List<Unit> units) {
+	private Unit getCenter(List<Unit> units) {
 		UnitType centerType = Core.getInstance().getPlayer().getRace().getCenter();
 
 		for (Unit unit : units) {
@@ -276,7 +274,7 @@ public class TilePositionContenderFactory {
 	 *            collection is returned later on.
 	 * @return the closest Unit to the given reference Unit.
 	 */
-	private static Unit getClosestUnit(Iterable<Unit> units, Unit targetUnit) {
+	private Unit getClosestUnit(Iterable<Unit> units, Unit targetUnit) {
 		Unit closestUnit = null;
 
 		for (Unit unit : units) {
@@ -304,7 +302,7 @@ public class TilePositionContenderFactory {
 	 * @return a Pair of Units that together with the center Unit create a
 	 *         Polygon with the largest possible area.
 	 */
-	private static Pair<Unit, Unit> findUnitsWhichGenerateLargestArea(List<Unit> minerals, List<Unit> geysers,
+	private Pair<Unit, Unit> findUnitsWhichGenerateLargestArea(List<Unit> minerals, List<Unit> geysers,
 			Direction mineralsToBase, Direction geysersToBase) {
 		Pair<Unit, Unit> p = null;
 
@@ -356,7 +354,7 @@ public class TilePositionContenderFactory {
 	 * @return the Unit with the highest x coordinate or null if the List is
 	 *         empty.
 	 */
-	private static Unit findUnitWithHighestX(List<Unit> units) {
+	private Unit findUnitWithHighestX(List<Unit> units) {
 		Unit currentlyBestSuitedUnit = null;
 
 		for (Unit unit : units) {
@@ -376,7 +374,7 @@ public class TilePositionContenderFactory {
 	 * @return the Unit with the lowest x coordinate or null if the List is
 	 *         empty.
 	 */
-	private static Unit findUnitWithLowestX(List<Unit> units) {
+	private Unit findUnitWithLowestX(List<Unit> units) {
 		Unit currentlyBestSuitedUnit = null;
 
 		for (Unit unit : units) {
@@ -396,7 +394,7 @@ public class TilePositionContenderFactory {
 	 * @return the Unit with the highest y coordinate or null if the List is
 	 *         empty.
 	 */
-	private static Unit findUnitWithHighestY(List<Unit> units) {
+	private Unit findUnitWithHighestY(List<Unit> units) {
 		Unit currentlyBestSuitedUnit = null;
 
 		for (Unit unit : units) {
@@ -416,7 +414,7 @@ public class TilePositionContenderFactory {
 	 * @return the Unit with the lowest y coordinate or null if the List is
 	 *         empty.
 	 */
-	private static Unit findUnitWithLowestY(List<Unit> units) {
+	private Unit findUnitWithLowestY(List<Unit> units) {
 		Unit currentlyBestSuitedUnit = null;
 
 		for (Unit unit : units) {
@@ -444,7 +442,7 @@ public class TilePositionContenderFactory {
 	 * @return a Polygon covering the largest possible area with the given
 	 *         Units.
 	 */
-	private static Polygon createStartLocationContendedPolygon(Unit centerUnit, Pair<Unit, Unit> unitsWithGreatestCone,
+	private Polygon createStartLocationContendedPolygon(Unit centerUnit, Pair<Unit, Unit> unitsWithGreatestCone,
 			Direction mineralsToBase, Direction geysersToBase) {
 		List<Point> points = new ArrayList<Point>();
 
@@ -474,7 +472,7 @@ public class TilePositionContenderFactory {
 	 *         (between the mineral spot and the geyser) produces the largest
 	 *         possible area in a Polygon.
 	 */
-	private static Point generateThirdPointForPolygon(Pair<Unit, Unit> mineralAndGeyser, Direction mineralsToBase,
+	private Point generateThirdPointForPolygon(Pair<Unit, Unit> mineralAndGeyser, Direction mineralsToBase,
 			Direction geysersToBase) {
 		Point p = null;
 
@@ -486,39 +484,5 @@ public class TilePositionContenderFactory {
 					Type.POSITION);
 		}
 		return p;
-	}
-
-	// TODO: Needed Change: Put in superclass
-
-	/**
-	 * Function for finding all required TilePositions of a building plus a
-	 * additional row at the bottom, if the building can train Units.
-	 * 
-	 * @param unitType
-	 *            the UnitType whose TilePositions are going to be calculated.
-	 * @param targetTilePosition
-	 *            the TilePosition the Unit is going to be constructed /
-	 *            targeted at.
-	 * @return a HashSet containing all TilePositions that the constructed Unit
-	 *         would have if it was constructed at the targetTilePosition.
-	 */
-	private static HashSet<TilePosition> generateNeededTilePositions(UnitType unitType,
-			TilePosition targetTilePosition) {
-		HashSet<TilePosition> neededTilePositions = new HashSet<TilePosition>();
-		int bottomRowAddion = 0;
-
-		if (unitType.canProduce()) {
-			bottomRowAddion = 1;
-		}
-
-		for (int i = 0; i < unitType.tileWidth(); i++) {
-			for (int j = 0; j < unitType.tileHeight() + bottomRowAddion; j++) {
-				int targetX = targetTilePosition.getX() + i;
-				int targetY = targetTilePosition.getY() + j;
-
-				neededTilePositions.add(new TilePosition(targetX, targetY));
-			}
-		}
-		return neededTilePositions;
 	}
 }

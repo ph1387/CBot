@@ -19,18 +19,24 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  * @author P H - 26.04.2017
  *
  */
-public class BuildLocationFactory {
+public class BuildLocationFactory extends TilePositionFactory {
 
-	private static HashSet<TilePosition> tilePositionContenders = TilePositionContenderFactory
-			.generateDefaultContendedTilePositions();
-
+	// TODO: Possible Change: Non Static provided by creator
+	private static HashSet<TilePosition> tilePositionContenders;
+	private TilePositionContenderFactory tilePositionContenderFactory;
+	
 	private int maxBuildingSearchRadius = 5;
 	// Due to the large tile range there should not be any trouble finding a
 	// suitable building location.
 	private int maxTileRange = 50;
 
 	public BuildLocationFactory() {
-
+		this.tilePositionContenderFactory = new TilePositionContenderFactory();
+		
+		// Do not overwrite existing contender collections!
+		if(BuildLocationFactory.tilePositionContenders == null) {
+			BuildLocationFactory.tilePositionContenders = this.tilePositionContenderFactory.generateDefaultContendedTilePositions();
+		}
 	}
 
 	// -------------------- Functions
@@ -286,39 +292,6 @@ public class BuildLocationFactory {
 			}
 		}
 		return false;
-	}
-
-	// TODO: Needed Change: Superclass together with
-	// TilePositionContenderFactory
-	/**
-	 * Function for finding all required TilePositions of a building plus a
-	 * additional row at the bottom, if the building can train Units.
-	 * 
-	 * @param unitType
-	 *            the UnitType whose TilePositions are going to be calculated.
-	 * @param targetTilePosition
-	 *            the TilePosition the Unit is going to be constructed /
-	 *            targeted at.
-	 * @return a HashSet containing all TilePositions that the constructed Unit
-	 *         would have if it was constructed at the targetTilePosition.
-	 */
-	protected HashSet<TilePosition> generateNeededTilePositions(UnitType unitType, TilePosition targetTilePosition) {
-		HashSet<TilePosition> neededTilePositions = new HashSet<TilePosition>();
-		int bottomRowAddion = 0;
-
-		if (unitType.canProduce()) {
-			bottomRowAddion = 1;
-		}
-
-		for (int i = 0; i < unitType.tileWidth(); i++) {
-			for (int j = 0; j < unitType.tileHeight() + bottomRowAddion; j++) {
-				int targetX = targetTilePosition.getX() + i;
-				int targetY = targetTilePosition.getY() + j;
-
-				neededTilePositions.add(new TilePosition(targetX, targetY));
-			}
-		}
-		return neededTilePositions;
 	}
 
 	// ------------------------------ Getter / Setter

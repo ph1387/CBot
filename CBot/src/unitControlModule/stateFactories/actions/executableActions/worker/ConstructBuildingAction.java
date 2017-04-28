@@ -59,8 +59,8 @@ public class ConstructBuildingAction extends BaseAction {
 
 		// TODO: REMOVE DEBUG
 		try {
-			TilePositionContenderFactory.poly.drawOnMap(new Color(255, 255, 0), 3, true);
-			for (TilePosition tile : TilePositionContenderFactory.covered) {
+			TilePositionContenderFactory.debug_polygon.drawOnMap(new Color(255, 255, 0), 3, true);
+			for (TilePosition tile : TilePositionContenderFactory.debug_polygon.getCoveredTilePositions()) {
 				Display.drawTileFilled(Core.getInstance().getGame(), tile.getX(), tile.getY(), 1, 1,
 						new Color(255, 255, 0));
 			}
@@ -131,7 +131,6 @@ public class ConstructBuildingAction extends BaseAction {
 					this.tempBuildingLocation = generatedBuildLocation;
 					this.tempNeededTilePositions = this.buildLocationFactory.generateNeededTilePositions(building,
 							generatedBuildLocation);
-					;
 
 					((ConstructionJob) this.target).setTilePosition(this.tempBuildingLocation);
 				}
