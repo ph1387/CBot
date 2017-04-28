@@ -16,6 +16,7 @@ public class GoapAgentFactory {
 
 	// -------------------- Functions
 
+	// TODO: JAVADOC
 	public static GoapAgent createAgent(Unit unit) throws Exception {
 		GoapAgent agent = null;
 		

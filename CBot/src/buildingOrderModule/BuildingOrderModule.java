@@ -1,8 +1,10 @@
 package buildingOrderModule;
 
-import buildingOrderModule.commands.BuildBuildingCommandTimeWait;
+import buildingOrderModule.buildActionManagers.BuildActionManagerFactory;
 import bwapi.*;
 import core.Core;
+import javaGOAP.DefaultGoapAgent;
+import javaGOAP.GoapAgent;
 
 /**
  * BuildingOrderModule.java --- Module for controlling the Player's building
@@ -13,50 +15,55 @@ import core.Core;
  */
 public class BuildingOrderModule {
 
-	private Game game = Core.getInstance().getGame();
-	private Player player = this.game.self();
 	private CommandSender sender = new BuildingOrderSender();
-	private BuildingCommandManager currentBuildingCommandManager = new BuildingCommandManagerTestingPurpose(this.sender);
-	
+	private GoapAgent buildingAgent;
+
 	private int supplyDepotTimeStamp = 0;
 	private int supplyDepotWaitTime = 60;
 	private int supplyDepotBuildTriggerPoint = 2;
 
 	public BuildingOrderModule() {
-
+		this.buildingAgent = new DefaultGoapAgent(BuildActionManagerFactory.createManager(sender));
 	}
 
 	// -------------------- Functions
 
+	/**
+	 * Function for updating all major functionalities of this module.
+	 */
 	public void update() {
+		this.updateSupplyTriggerPoint();
+		this.buildSupplyIfNeeded();
+
 		try {
-			this.currentBuildingCommandManager.runCommands();
+			this.buildingAgent.update();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		this.updateSupplyTriggerPoint();
-		this.buildSupplyIfNeeded();
 	}
 
-	// Update the trigger point of the automatic supply building mechanism
+	/**
+	 * Function for updating the trigger point at which new supply providers are
+	 * being needed. This function ensures a dynamic construction of these.
+	 */
 	private void updateSupplyTriggerPoint() {
-		this.supplyDepotBuildTriggerPoint = (int) Math.round(3. / 20. * (this.player.supplyTotal() / 2.) + 1. / 2.);
+		this.supplyDepotBuildTriggerPoint = (int) Math
+				.round(3. / 20. * (Core.getInstance().getPlayer().supplyTotal() / 2.) + 1. / 2.);
 	}
 
-	// Build supply depots if the supply left count is low. Save the timestamp
-	// of the action to only build one depot at a time.
+	/**
+	 * Function for constructing supply providers if the current supply is below
+	 * the previously calculated trigger point. It has a time stamp as a safety
+	 * feature since buildings cannot be constructed immediately.
+	 */
 	private void buildSupplyIfNeeded() {
-		if ((this.player.supplyTotal() - this.player.supplyUsed()) / 2 <= this.supplyDepotBuildTriggerPoint
-				&& this.game.elapsedTime() - this.supplyDepotTimeStamp >= this.supplyDepotWaitTime) {
-			this.supplyDepotTimeStamp = this.game.elapsedTime();
-			this.currentBuildingCommandManager
-					.insertCommand(new BuildBuildingCommandTimeWait(UnitType.Terran_Supply_Depot, 0, this.sender));
-		}
+		Player player = Core.getInstance().getPlayer();
+		Game game = Core.getInstance().getGame();
 
-		// TODO: Enable
-		// Show the state of the current building list / queue and the elements
-		// in it.
-		// BuildingOrderModuleDisplay.showCurrentBuildingCommandSender(this.currentBuildingCommandManager);
+		if ((player.supplyTotal() - player.supplyUsed()) / 2 <= this.supplyDepotBuildTriggerPoint
+				&& game.elapsedTime() - this.supplyDepotTimeStamp >= this.supplyDepotWaitTime) {
+			this.supplyDepotTimeStamp = game.elapsedTime();
+			this.sender.buildBuilding(player.getRace().getSupplyProvider());
+		}
 	}
 }
