@@ -1,4 +1,4 @@
-package unitControlModule;
+package informationStorage;
 
 import bwapi.Player;
 import bwapi.TechType;
@@ -6,8 +6,7 @@ import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
 
-//TODO: OWN PACKAGE
-// TODO: UML NON SINGLETON
+// TODO: UML NON SINGLETON AND MOVED
 /**
  * ResourceReserver.java --- Class that holds any reserved minerals or gases.
  * 

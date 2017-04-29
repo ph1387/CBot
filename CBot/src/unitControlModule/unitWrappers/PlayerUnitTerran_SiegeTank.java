@@ -1,6 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
+import informationStorage.InformationPreserver;
 import unitControlModule.stateFactories.StateFactoryTerran_SiegeTank;
 import unitControlModule.stateFactories.StateFactory;
 
@@ -11,8 +12,8 @@ import unitControlModule.stateFactories.StateFactory;
  */
 public class PlayerUnitTerran_SiegeTank extends PlayerUnit {
 
-	public PlayerUnitTerran_SiegeTank(Unit unit) {
-		super(unit);
+	public PlayerUnitTerran_SiegeTank(Unit unit, InformationPreserver informationPreserver) {
+		super(unit, informationPreserver);
 		
 		// TODO: Possible Change: Siege Mode range change
 		// Siege mode -> min range = 2 * 32 (+ extra)

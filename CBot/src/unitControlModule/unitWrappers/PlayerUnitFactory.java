@@ -1,7 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
-import unitControlModule.InformationPreserver;
+import informationStorage.InformationPreserver;
 
 /**
  * PlayerUnitFactory.java --- Factory used to create different kinds of
@@ -14,16 +14,19 @@ public class PlayerUnitFactory {
 	
 	// -------------------- Functions
 	
-	public static PlayerUnit createSiegeTank(Unit unit) {
-		return new PlayerUnitTerran_SiegeTank(unit);
+	// TODO: UML
+	public static PlayerUnit createSiegeTank(Unit unit, InformationPreserver informationPreserver) {
+		return new PlayerUnitTerran_SiegeTank(unit, informationPreserver);
 	}
 	
-	public static PlayerUnit createMarine(Unit unit) {
-		return new PlayerUnitTerran_Marine(unit);
+	// TODO: UML
+	public static PlayerUnit createMarine(Unit unit, InformationPreserver informationPreserver) {
+		return new PlayerUnitTerran_Marine(unit, informationPreserver);
 	}
 	
-	public static PlayerUnit createVulture(Unit unit) {
-		return new PlayerUnitTerran_Vulture(unit);
+	// TODO: UML
+	public static PlayerUnit createVulture(Unit unit, InformationPreserver informationPreserver) {
+		return new PlayerUnitTerran_Vulture(unit, informationPreserver);
 	}
 	
 	// TODO: UML

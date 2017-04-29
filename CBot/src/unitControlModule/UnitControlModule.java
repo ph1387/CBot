@@ -11,6 +11,7 @@ import bwapi.*;
 import core.CBot;
 import core.Core;
 import core.Display;
+import informationStorage.InformationPreserver;
 import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -31,13 +32,15 @@ public class UnitControlModule {
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 
 	// TODO: UML
-	private InformationPreserver informationPreserver = new InformationPreserver();
+	private InformationPreserver informationPreserver;
 
-	public UnitControlModule() {
-
+	// TODO: UML
+	public UnitControlModule(InformationPreserver informationPreserver) {
+		this.informationPreserver = informationPreserver;
+		
 		// TODO: REMOVE
 		// Buildings
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 3; i++) {
 			this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Supply_Depot);
 		}
 //		this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Refinery);
@@ -63,7 +66,6 @@ public class UnitControlModule {
 	public void update() {
 		this.addTrackedUnits();
 		this.removeTrackedUnits();
-		this.updateInformation();
 
 		// Update Units
 		for (GoapAgent goapAgent : this.agents) {
@@ -246,25 +248,8 @@ public class UnitControlModule {
 		}
 	}
 
-	/**
-	 * Get all necessary information from a UnitTracker and transfer them into
-	 * the PlayerUnit class. This removes the dependency of the Actions and
-	 * updaters from this class as well as the UnitTrackerModule.
-	 */
-	private void updateInformation() {
-		UnitTrackerModule utm = CBot.getInstance().getUnitTrackerModule();
-
-		// TODO: Needed Change: Add to InformationPreserver
-		
-		// Forward the UnitTrackerModule information
-		PlayerUnit.setPlayerAirAttackTilePositions(utm.getPlayerAirAttackTilePositions());
-		PlayerUnit.setPlayerGroundAttackTilePositions(utm.getPlayerGroundAttackTilePositions());
-		PlayerUnit.setEnemyAirAttackTilePositions(utm.getEnemyAirAttackTilePositions());
-		PlayerUnit.setEnemyGroundAttackTilePositions(utm.getEnemyGroundAttackTilePositions());
-		PlayerUnit.setEnemyBuildings(utm.getEnemyBuildings());
-		PlayerUnit.setEnemyUnits(utm.getEnemyUnits());
-	}
-
+	// TODO: UML REMOVED UPDATE INFORMATION
+	
 	/**
 	 * Function for adding a Unit to the List of controllable Units.
 	 * 
@@ -362,8 +347,4 @@ public class UnitControlModule {
 	
 	// ------------------------------ Getter / Setter
 	
-	// TODO: UML
-	public InformationPreserver getInformationPreserver() {
-		return this.informationPreserver;
-	}
 }

@@ -1,7 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
-import unitControlModule.InformationPreserver;
+import informationStorage.InformationPreserver;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_SCV;
 

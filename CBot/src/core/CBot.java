@@ -7,6 +7,7 @@ import bwapi.Mirror;
 import bwapi.Player;
 import bwapi.Position;
 import bwapi.Unit;
+import informationStorage.InformationPreserver;
 import unitControlModule.UnitControlModule;
 import unitTrackerModule.UnitTrackerModule;
 
@@ -30,6 +31,10 @@ public class CBot implements BWEventListener {
 	private UnitControlModule unitControlModule;
 	private BuildingOrderModule buildingOrderModule;
 
+	// TODO: UML
+	// Information storage across multiple modules
+	private InformationPreserver informationPreserver = new InformationPreserver();
+	
 	private CBot() {
 
 	}
@@ -76,9 +81,9 @@ public class CBot implements BWEventListener {
 			this.game = Core.getInstance().getGame();
 			this.started = true;
 
-			this.unitTrackerModule = new UnitTrackerModule();
-			this.unitControlModule = new UnitControlModule();
-			this.buildingOrderModule = new BuildingOrderModule();
+			this.unitTrackerModule = new UnitTrackerModule(this.informationPreserver);
+			this.unitControlModule = new UnitControlModule(this.informationPreserver);
+			this.buildingOrderModule = new BuildingOrderModule(this.informationPreserver);
 
 			System.out.println("---STARTUP: success---");
 		} catch (Exception e) {

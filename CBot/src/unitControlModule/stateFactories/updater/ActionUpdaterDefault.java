@@ -53,8 +53,8 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 	protected void attackMoveToNearestKnownUnitConfiguration() {
 		TilePosition closestUnitTilePosition = null;
 
-		List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(PlayerUnit.getEnemyUnits());
-		enemyUnits.addAll(PlayerUnit.getEnemyBuildings());
+		List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(this.playerUnit.getInformationPreserver().getTrackerInfo().getEnemyUnits());
+		enemyUnits.addAll(this.playerUnit.getInformationPreserver().getTrackerInfo().getEnemyBuildings());
 
 		// Find the closest unit of the known ones
 		for (EnemyUnit unit : enemyUnits) {

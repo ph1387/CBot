@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 
 import bwapi.Unit;
 import bwapi.UnitType;
-import unitControlModule.InformationPreserver;
+import informationStorage.InformationPreserver;
 
 // TODO: UML MASSIVE CHANGES
 /**
@@ -39,10 +39,6 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected UnitType assignedBuildingType;
 	protected Unit assignedBuilding;
 	
-	// TODO: UML
-	// Information preserver which holds all important information
-	protected InformationPreserver informationPreserver;
-
 	// Resources
 	protected Unit closestFreeMineralField;
 	protected Unit closestFreeGasSource;
@@ -50,10 +46,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 	// TODO: UML
 	public PlayerUnitWorker(Unit unit, InformationPreserver informationPreserver) {
-		super(unit);
+		super(unit, informationPreserver);
 
-		this.informationPreserver = informationPreserver;
-		
 		this.informationPreserver.getWorkerConfig().incrementTotalWorkerCount();
 	}
 

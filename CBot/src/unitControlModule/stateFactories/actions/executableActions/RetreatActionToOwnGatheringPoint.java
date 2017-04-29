@@ -8,6 +8,7 @@ import bwapi.Unit;
 import bwapiMath.Vector;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
+import unitControlModule.unitWrappers.PlayerUnitWorker;
 
 /**
  * RetreatAction_ToOwnGatheringPoint.java --- An action with which a PlayerUnit
@@ -35,8 +36,8 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 
 		// Position missing -> action not performed yet
 		if (this.retreatPosition == null) {
-			Unit retreatableUnit = this
-					.getUnitWithGreatestTileStrengths(this.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit));
+			Unit retreatableUnit = this.getUnitWithGreatestTileStrengths(
+					this.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit), goapUnit);
 
 			if (retreatableUnit == null) {
 				// Walk a minimal distance in the target direction
@@ -62,7 +63,8 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 *         not.
 	 */
 	private boolean retreatToVectorEndPosition(Vector vecUTP) {
-		Position targetVecPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX), vecUTP.getY() + (int) (vecUTP.dirY));
+		Position targetVecPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
+				vecUTP.getY() + (int) (vecUTP.dirY));
 		boolean returnValue = true;
 
 		if (this.isInsideMap(targetVecPosition)) {
@@ -86,7 +88,8 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 *            the Unit in which direction the Units retreat path will lead.
 	 */
 	private void retreatToUnitPosition(Vector vecUTP, Unit retreatableUnit) {
-		Vector vecToUnit = new Vector(vecUTP.getX(), vecUTP.getY(), retreatableUnit.getPosition().getX() - vecUTP.getX(),
+		Vector vecToUnit = new Vector(vecUTP.getX(), vecUTP.getY(),
+				retreatableUnit.getPosition().getX() - vecUTP.getX(),
 				retreatableUnit.getPosition().getY() - vecUTP.getY());
 		vecToUnit.normalize();
 
@@ -144,6 +147,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		return unitsInRange;
 	}
 
+	// TODO: UML
 	/**
 	 * Function for retrieving the Unit with the greatest sum of strengths
 	 * around the units TilePosition.
@@ -151,9 +155,11 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 * @param units
 	 *            a HashSet containing all units which are going to be cycled
 	 *            through.
+	 * @param goapUnit
+	 *            the currently executing IGoapUnit.
 	 * @return the Unit with the greatest sum of strengths at its TilePosition.
 	 */
-	private Unit getUnitWithGreatestTileStrengths(HashSet<Unit> units) {
+	private Unit getUnitWithGreatestTileStrengths(HashSet<Unit> units, IGoapUnit goapUnit) {
 		Unit bestUnit = null;
 		int bestUnitStrengthTotal = 0;
 
@@ -166,8 +172,9 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 				for (int j = -TILE_RADIUS_AROUND_UNITS_SEARCH; j <= TILE_RADIUS_AROUND_UNITS_SEARCH; j++) {
 
 					// TODO: Possible Change: AirStrength Implementation
-					Integer value = PlayerUnit.getPlayerGroundAttackTilePositions().get(
-							new TilePosition(unit.getTilePosition().getX() + i, unit.getTilePosition().getY() + j));
+					Integer value = ((PlayerUnitWorker) goapUnit).getInformationPreserver().getTrackerInfo()
+							.getPlayerGroundAttackTilePositions().get(new TilePosition(
+									unit.getTilePosition().getX() + i, unit.getTilePosition().getY() + j));
 
 					if (value != null) {
 						currentStrengths += value;

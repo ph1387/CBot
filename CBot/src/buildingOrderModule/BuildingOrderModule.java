@@ -3,6 +3,7 @@ package buildingOrderModule;
 import buildingOrderModule.buildActionManagers.BuildActionManagerFactory;
 import bwapi.*;
 import core.Core;
+import informationStorage.InformationPreserver;
 import javaGOAP.DefaultGoapAgent;
 import javaGOAP.GoapAgent;
 
@@ -22,7 +23,12 @@ public class BuildingOrderModule {
 	private int supplyDepotWaitTime = 60;
 	private int supplyDepotBuildTriggerPoint = 2;
 
-	public BuildingOrderModule() {
+	// TODO: UML
+	private InformationPreserver informationPreserver;
+	
+	// TODO: UML
+	public BuildingOrderModule(InformationPreserver informationPreserver) {
+		this.informationPreserver = informationPreserver;
 		this.buildingAgent = new DefaultGoapAgent(BuildActionManagerFactory.createManager(sender));
 	}
 

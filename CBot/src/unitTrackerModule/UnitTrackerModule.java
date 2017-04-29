@@ -10,7 +10,10 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.WeaponType;
 import core.Core;
+import informationStorage.InformationPreserver;
+import informationStorage.UnitTrackerInformation;
 
+// TODO: UML
 /**
  * UnitTrackerModule.java --- Module for tracking enemy units and storing
  * information regarding their position and strength. Also stores information
@@ -23,6 +26,7 @@ public class UnitTrackerModule {
 
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
+	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> enemyAirAttackTilePositions = new HashMap<>();
@@ -30,8 +34,12 @@ public class UnitTrackerModule {
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
-	public UnitTrackerModule() {
+	// TODO: UML
+	private InformationPreserver informationPreserver;
 
+	// TODO: UML
+	public UnitTrackerModule(InformationPreserver informationPreserver) {
+		this.informationPreserver = informationPreserver;
 	}
 
 	// -------------------- Functions
@@ -41,6 +49,7 @@ public class UnitTrackerModule {
 	 */
 	public void update() {
 		this.updateEnemyUnitLists();
+		this.forwardInformation();
 
 		UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
 		UnitTrackerDisplay.showUnitsLastPosition(this.enemyUnits);
@@ -69,6 +78,22 @@ public class UnitTrackerModule {
 		this.enemyGroundAttackTilePositions = this.generateEnemyGroundAttackTilePositions();
 		this.playerAirAttackTilePositions = this.generatePlayerAirAttackTilePositions();
 		this.playerGroundAttackTilePositions = this.generatePlayerGroundAttackTilePositions();
+	}
+
+	/**
+	 * Forward all received information to the information storage for all other
+	 * modules to react to.
+	 */
+	private void forwardInformation() {
+		UnitTrackerInformation trackerInfo = this.informationPreserver.getTrackerInfo();
+
+		// Forward the UnitTrackerModule information.
+		trackerInfo.setPlayerAirAttackTilePositions(this.playerAirAttackTilePositions);
+		trackerInfo.setPlayerGroundAttackTilePositions(this.playerGroundAttackTilePositions);
+		trackerInfo.setEnemyAirAttackTilePositions(this.enemyAirAttackTilePositions);
+		trackerInfo.setEnemyGroundAttackTilePositions(this.enemyGroundAttackTilePositions);
+		trackerInfo.setEnemyBuildings(this.enemyBuildings);
+		trackerInfo.setEnemyUnits(this.enemyUnits);
 	}
 
 	/**

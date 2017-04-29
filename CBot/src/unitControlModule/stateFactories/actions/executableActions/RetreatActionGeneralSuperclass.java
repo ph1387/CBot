@@ -106,9 +106,8 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 			// The first ever found Position has to be added as temp retreat
 			// Position. This ensures, that isDone() returns false and the
-			// action
-			// gets actually executed. The actual retreatPosition gets set when
-			// performAction() gets called.
+			// action gets actually executed. The actual retreatPosition gets 
+			// set when performAction() gets called.
 			if (this.retreatPosition == null) {
 				this.retreatPosition = this.generatedTempRetreatPosition;
 				RetreatActionGeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);

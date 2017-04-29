@@ -4,7 +4,7 @@ import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
-import unitControlModule.InformationPreserver;
+import informationStorage.InformationPreserver;
 
 // TODO: UML REMOVED A LOT
 /**

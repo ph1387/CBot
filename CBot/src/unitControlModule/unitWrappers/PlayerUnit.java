@@ -16,6 +16,7 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
 import core.Display;
+import informationStorage.InformationPreserver;
 import javaGOAP.GoapUnit;
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.StateFactory;
@@ -39,13 +40,11 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
 
-	// Information regarding the enemy Units.
-	protected static HashMap<TilePosition, Integer> playerAirAttackTilePositions;
-	protected static HashMap<TilePosition, Integer> playerGroundAttackTilePositions;
-	protected static HashMap<TilePosition, Integer> enemyAirAttackTilePositions;
-	protected static HashMap<TilePosition, Integer> enemyGroundAttackTilePositions;
-	protected static List<EnemyUnit> enemyBuildings;
-	protected static List<EnemyUnit> enemyUnits;
+	// TODO: UML
+	// Information preserver which holds all important information
+	protected InformationPreserver informationPreserver;
+	
+	// TODO: UML REMOVED AL LOT OF STATICS
 
 	protected Unit unit;
 	protected Unit closestEnemyUnitInSight;
@@ -89,12 +88,15 @@ public abstract class PlayerUnit extends GoapUnit {
 	public ConfidenceRangeStates currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
 	public ConfidenceState currentConfidenceState = ConfidenceState.UNDER_THRESHOLD;
 
+	// TODO: UML
 	/**
 	 * @param unit
 	 *            the unit the class wraps around.
 	 */
-	public PlayerUnit(Unit unit) {
+	public PlayerUnit(Unit unit, InformationPreserver informationPreserver) {
 		this.unit = unit;
+		this.informationPreserver = informationPreserver;
+		
 		this.stateFactory = this.createFactory();
 		this.worldStateUpdater = this.stateFactory.getMatchingWorldStateUpdater(this);
 		this.goalStateUpdater = this.stateFactory.getMatchingGoalStateUpdater(this);
@@ -132,12 +134,12 @@ public abstract class PlayerUnit extends GoapUnit {
 	@Override
 	public void update() {
 		// FSM worldState changes in one cycle.
-		if (this.currentState == UnitStates.ENEMY_MISSING && (enemyUnits.size() != 0 || enemyBuildings.size() != 0)) {
+		if (this.currentState == UnitStates.ENEMY_MISSING && (this.informationPreserver.getTrackerInfo().getEnemyUnits().size() != 0 || this.informationPreserver.getTrackerInfo().getEnemyBuildings().size() != 0)) {
 			this.resetActions();
 			this.currentState = UnitStates.ENEMY_KNOWN;
 		}
 		if (this.currentState == UnitStates.ENEMY_KNOWN) {
-			if (enemyUnits.size() == 0 && enemyBuildings.size() == 0) {
+			if (this.informationPreserver.getTrackerInfo().getEnemyUnits().size() == 0 && this.informationPreserver.getTrackerInfo().getEnemyBuildings().size() == 0) {
 				this.resetActions();
 				this.currentState = UnitStates.ENEMY_MISSING;
 			} else {
@@ -235,8 +237,8 @@ public abstract class PlayerUnit extends GoapUnit {
 			for (int j = -CONFIDENCE_TILE_RADIUS; j <= CONFIDENCE_TILE_RADIUS; j++) {
 				TilePosition key = new TilePosition(this.unit.getTilePosition().getX() + i,
 						this.unit.getTilePosition().getY() + j);
-				int eStrength = enemyGroundAttackTilePositions.getOrDefault(key, 0);
-				int pStrength = playerGroundAttackTilePositions.getOrDefault(key, 0);
+				int eStrength = this.informationPreserver.getTrackerInfo().getEnemyGroundAttackTilePositions().getOrDefault(key, 0);
+				int pStrength = this.informationPreserver.getTrackerInfo().getPlayerGroundAttackTilePositions().getOrDefault(key, 0);
 
 				if (eStrength != 0) {
 					enemyStrengths.add(eStrength);
@@ -592,53 +594,11 @@ public abstract class PlayerUnit extends GoapUnit {
 		return this.vecUTPRotatedR;
 	}
 
-	public static HashMap<TilePosition, Integer> getPlayerAirAttackTilePositions() {
-		return playerAirAttackTilePositions;
+	// TODO: UML
+	public InformationPreserver getInformationPreserver() {
+		return informationPreserver;
 	}
-
-	public static void setPlayerAirAttackTilePositions(HashMap<TilePosition, Integer> playerAirAttackTilePositions) {
-		PlayerUnit.playerAirAttackTilePositions = playerAirAttackTilePositions;
-	}
-
-	public static HashMap<TilePosition, Integer> getPlayerGroundAttackTilePositions() {
-		return playerGroundAttackTilePositions;
-	}
-
-	public static void setPlayerGroundAttackTilePositions(
-			HashMap<TilePosition, Integer> playerGroundAttackTilePositions) {
-		PlayerUnit.playerGroundAttackTilePositions = playerGroundAttackTilePositions;
-	}
-
-	public static HashMap<TilePosition, Integer> getEnemyAirAttackTilePositions() {
-		return enemyAirAttackTilePositions;
-	}
-
-	public static void setEnemyAirAttackTilePositions(HashMap<TilePosition, Integer> enemyAirAttackTilePositions) {
-		PlayerUnit.enemyAirAttackTilePositions = enemyAirAttackTilePositions;
-	}
-
-	public static HashMap<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
-		return enemyGroundAttackTilePositions;
-	}
-
-	public static void setEnemyGroundAttackTilePositions(
-			HashMap<TilePosition, Integer> enemyGroundAttackTilePositions) {
-		PlayerUnit.enemyGroundAttackTilePositions = enemyGroundAttackTilePositions;
-	}
-
-	public static List<EnemyUnit> getEnemyBuildings() {
-		return enemyBuildings;
-	}
-
-	public static void setEnemyBuildings(List<EnemyUnit> enemyBuildings) {
-		PlayerUnit.enemyBuildings = enemyBuildings;
-	}
-
-	public static List<EnemyUnit> getEnemyUnits() {
-		return enemyUnits;
-	}
-
-	public static void setEnemyUnits(List<EnemyUnit> enemyUnits) {
-		PlayerUnit.enemyUnits = enemyUnits;
-	}
+	
+	// TODO: UML REMOVED AL LOT OF STATIC FUNCTIONS 12
+	
 }

@@ -1,4 +1,4 @@
-package unitControlModule;
+package informationStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,6 @@ import java.util.Queue;
 import bwapi.Unit;
 import bwapi.UnitType;
 
-// TODO: OWN PACKAGE
 // TODO: UML
 /**
  * WorkerConfiguration.java --- Configuration Class for the worker Units.
@@ -18,7 +17,7 @@ import bwapi.UnitType;
  *
  */
 public class WorkerConfiguration {
-	
+
 	private int maxNumberMining = 2;
 	private int maxNumberGatheringGas = 0; // TODO: 3
 	private int pixelGatherSearchRadius = 350;
@@ -34,24 +33,24 @@ public class WorkerConfiguration {
 	// Used to prevent double mapping of the same gathering source in one cycle.
 	private HashMap<Unit, ArrayList<Unit>> mappedSourceContenders = new HashMap<Unit, ArrayList<Unit>>();
 	private HashMap<Unit, UnitType> mappedBuildActions = new HashMap<>();
-	
+
 	private Queue<UnitType> buildingQueue = new LinkedList<>();
 	private HashSet<Unit> buildingsBeingCreated = new HashSet<Unit>();
-	
+
 	public WorkerConfiguration() {
-		
+
 	}
-	
+
 	// -------------------- Functions
 
 	public void incrementTotalWorkerCount() {
 		this.totalWorkerCount++;
 	}
-	
+
 	public void decrementTotalWorkerCount() {
 		this.totalWorkerCount--;
 	}
-	
+
 	// ------------------------------ Getter / Setter
 
 	public int getMaxNumberMining() {
@@ -77,7 +76,7 @@ public class WorkerConfiguration {
 	public int getTotalWorkerCount() {
 		return totalWorkerCount;
 	}
-	
+
 	public HashMap<Unit, ArrayList<Unit>> getMappedAccessibleGatheringSources() {
 		return mappedAccessibleGatheringSources;
 	}
