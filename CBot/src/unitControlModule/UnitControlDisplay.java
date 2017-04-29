@@ -11,6 +11,7 @@ import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
+// TODO: UML
 /**
  * UnitControlModuleDisplay.java --- Class for displaying all important
  * information regarding Units, resources, queues etc.
@@ -30,6 +31,7 @@ public class UnitControlDisplay {
 
 	// -------------------- Functions
 
+	// TODO: UML IN ALL FOLLOWING FUNCTIONS
 	/**
 	 * Main function for showing all important information regarding all
 	 * {@link PlayerBuilding}s and {@link PlayerUnitWorker}s.
@@ -40,22 +42,23 @@ public class UnitControlDisplay {
 	 * @param buildings
 	 *            the PlayerUnitBuilding instances that are going to be used to
 	 *            show information like training Units, added Addons, etc.
+	 * @param informationPreserver object that holds all important worker and resource information.
 	 */
-	public static void showImportantInformation(HashSet<GoapAgent> agents, HashSet<PlayerBuilding> buildings) {
+	public static void showImportantInformation(HashSet<GoapAgent> agents, HashSet<PlayerBuilding> buildings, InformationPreserver informationPreserver) {
 		int currentPosY = LINEHEIGHT;
 
 		// Calculate the new y position each time a function gets called. Each
 		// function returns the new y position of the text so that the following
 		// collection can be shown accordingly.
 		try {
-			currentPosY = showResourceInformation(OFFSET_LEFT_TOTAL, currentPosY);
+			currentPosY = showResourceInformation(OFFSET_LEFT_TOTAL, currentPosY, informationPreserver);
 			currentPosY = showWorkerInformation(OFFSET_LEFT_TOTAL, currentPosY, agents);
 			currentPosY = showBuildingInformation(OFFSET_LEFT_TOTAL, currentPosY, buildings);
-			currentPosY = showBuildingQueue(OFFSET_LEFT_TOTAL, currentPosY);
-			currentPosY = showTrainingQueue(OFFSET_LEFT_TOTAL, currentPosY);
-			currentPosY = showAddonQueue(OFFSET_LEFT_TOTAL, currentPosY);
-			currentPosY = showUpgradeQueue(OFFSET_LEFT_TOTAL, currentPosY);
-			currentPosY = showResearchQueue(OFFSET_LEFT_TOTAL, currentPosY);
+			currentPosY = showBuildingQueue(OFFSET_LEFT_TOTAL, currentPosY, informationPreserver);
+			currentPosY = showTrainingQueue(OFFSET_LEFT_TOTAL, currentPosY, informationPreserver);
+			currentPosY = showAddonQueue(OFFSET_LEFT_TOTAL, currentPosY, informationPreserver);
+			currentPosY = showUpgradeQueue(OFFSET_LEFT_TOTAL, currentPosY, informationPreserver);
+			currentPosY = showResearchQueue(OFFSET_LEFT_TOTAL, currentPosY, informationPreserver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -74,6 +77,7 @@ public class UnitControlDisplay {
 		return posY += LINEHEIGHT;
 	}
 
+	// TODO: UML CHANGED
 	/**
 	 * Function for showing the reserved resources of the ResourceReserver on
 	 * the screen.
@@ -82,12 +86,13 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
+	 * @param informationPreserver object that holds all important worker and resource information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
-	public static int showResourceInformation(int posX, int posY) {
-		String text = "Minerals: " + ResourceReserver.getInstance().getReservedMinerals() + " - Gas: "
-				+ ResourceReserver.getInstance().getReservedGas();
+	public static int showResourceInformation(int posX, int posY, InformationPreserver informationPreserver) {
+		String text = "Minerals: " + informationPreserver.getResourceReserver().getReservedMinerals() + " - Gas: "
+				+ informationPreserver.getResourceReserver().getReservedGas();
 
 		GAME.drawTextScreen(posX, posY, "Reserved Resources:");
 		GAME.drawTextScreen(posX, posY + LINEHEIGHT, text);
@@ -200,14 +205,15 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
+	 * @param informationPreserver object that holds all important worker and resource information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
-	public static int showBuildingQueue(int posX, int posY) {
+	public static int showBuildingQueue(int posX, int posY, InformationPreserver informationPreserver) {
 		int newPosY = posY;
 
-		if (!PlayerUnitWorker.buildingQueue.isEmpty()) {
-			newPosY = showIterableCollection(posX, posY, PlayerUnitWorker.buildingQueue, "Building Queue:");
+		if (!informationPreserver.getWorkerConfig().getBuildingQueue().isEmpty()) {
+			newPosY = showIterableCollection(posX, posY, informationPreserver.getWorkerConfig().getBuildingQueue(), "Building Queue:");
 		}
 		return leaveOneLineFree(newPosY);
 	}
@@ -219,14 +225,15 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
+	 * @param informationPreserver object that holds all important worker and resource information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
-	public static int showTrainingQueue(int posX, int posY) {
+	public static int showTrainingQueue(int posX, int posY, InformationPreserver informationPreserver) {
 		int newPosY = posY;
 
-		if (!PlayerBuilding.trainingQueue.isEmpty()) {
-			newPosY = showIterableCollection(posX, posY, PlayerBuilding.trainingQueue, "Training Queue:");
+		if (!informationPreserver.getTrainingQueue().isEmpty()) {
+			newPosY = showIterableCollection(posX, posY, informationPreserver.getTrainingQueue(), "Training Queue:");
 		}
 		return leaveOneLineFree(newPosY);
 	}
@@ -238,14 +245,15 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
+	 * @param informationPreserver object that holds all important worker and resource information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
-	public static int showAddonQueue(int posX, int posY) {
+	public static int showAddonQueue(int posX, int posY, InformationPreserver informationPreserver) {
 		int newPosY = posY;
 
-		if (!PlayerBuilding.addonQueue.isEmpty()) {
-			newPosY = showIterableCollection(posX, posY, PlayerBuilding.addonQueue, "Addon Queue:");
+		if (!informationPreserver.getAddonQueue().isEmpty()) {
+			newPosY = showIterableCollection(posX, posY, informationPreserver.getAddonQueue(), "Addon Queue:");
 		}
 		return leaveOneLineFree(newPosY);
 	}
@@ -257,14 +265,15 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
+	 * @param informationPreserver object that holds all important worker and resource information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
-	public static int showUpgradeQueue(int posX, int posY) {
+	public static int showUpgradeQueue(int posX, int posY, InformationPreserver informationPreserver) {
 		int newPosY = posY;
 
-		if (!PlayerBuilding.upgradeQueue.isEmpty()) {
-			newPosY = showIterableCollection(posX, posY, PlayerBuilding.upgradeQueue, "Upgrade Queue:");
+		if (!informationPreserver.getUpgradeQueue().isEmpty()) {
+			newPosY = showIterableCollection(posX, posY, informationPreserver.getUpgradeQueue(), "Upgrade Queue:");
 		}
 		return leaveOneLineFree(newPosY);
 	}
@@ -276,14 +285,15 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
+	 * @param informationPreserver object that holds all important worker and resource information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
-	public static int showResearchQueue(int posX, int posY) {
+	public static int showResearchQueue(int posX, int posY, InformationPreserver informationPreserver) {
 		int newPosY = posY;
 
-		if (!PlayerBuilding.researchQueue.isEmpty()) {
-			newPosY = showIterableCollection(posX, posY, PlayerBuilding.researchQueue, "Research Queue:");
+		if (!informationPreserver.getResearchQueue().isEmpty()) {
+			newPosY = showIterableCollection(posX, posY, informationPreserver.getResearchQueue(), "Research Queue:");
 		}
 		return leaveOneLineFree(newPosY);
 	}

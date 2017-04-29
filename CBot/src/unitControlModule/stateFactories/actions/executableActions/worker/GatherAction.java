@@ -25,7 +25,7 @@ public class GatherAction extends BaseAction {
 	 */
 	public GatherAction(Object target) {
 		super(target);
-		
+
 		this.addPrecondition(new GoapState(0, "allowGathering", true));
 	}
 
@@ -42,12 +42,13 @@ public class GatherAction extends BaseAction {
 
 			// Add executing Unit to the mapped HashMap, so that other Units can
 			// see that one place at this specific gathering source is reserved.
-			PlayerUnitWorker.mappedAccessibleGatheringSources.get(this.gatheringSource)
+			((PlayerUnitWorker) goapUnit).getInformationPreserver().getWorkerConfig()
+					.getMappedAccessibleGatheringSources().get(this.gatheringSource)
 					.add(((PlayerUnit) this.currentlyExecutingUnit).getUnit());
 		} else if (this.actionChangeTrigger && this.gatheringSourceTemp == null) {
 			success = false;
 		}
-		
+
 		return this.gatheringSource != null && success;
 	}
 
@@ -56,7 +57,8 @@ public class GatherAction extends BaseAction {
 		// Make the blocked space at the mapped gathering source available again
 		// if the Action stops.
 		try {
-			PlayerUnitWorker.mappedAccessibleGatheringSources.get(this.gatheringSource)
+			((PlayerUnitWorker) this.currentlyExecutingUnit).getInformationPreserver().getWorkerConfig()
+					.getMappedAccessibleGatheringSources().get(this.gatheringSource)
 					.remove(((PlayerUnit) this.currentlyExecutingUnit).getUnit());
 		} catch (Exception e) {
 		}
@@ -108,7 +110,8 @@ public class GatherAction extends BaseAction {
 		} else if (this.target != null) {
 			// Check if the Unit is a contender for the source
 			try {
-				success = PlayerUnitWorker.mappedSourceContenders.get((Unit) this.target)
+				success = ((PlayerUnitWorker) goapUnit).getInformationPreserver().getWorkerConfig()
+						.getMappedSourceContenders().get((Unit) this.target)
 						.contains(((PlayerUnit) goapUnit).getUnit());
 
 				if (success) {

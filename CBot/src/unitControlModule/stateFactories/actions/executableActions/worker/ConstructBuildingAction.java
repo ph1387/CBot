@@ -74,8 +74,8 @@ public class ConstructBuildingAction extends BaseAction {
 
 			((PlayerUnitWorker) goapUnit).getUnit().build(((ConstructionJob) this.target).getBuilding(),
 					((ConstructionJob) this.target).getTilePosition());
-			PlayerUnitWorker.mappedBuildActions.put(((PlayerUnitWorker) goapUnit).getUnit(),
-					((ConstructionJob) this.target).getBuilding());
+			((PlayerUnitWorker) goapUnit).getInformationPreserver().getWorkerConfig().getMappedBuildActions()
+					.put(((PlayerUnitWorker) goapUnit).getUnit(), ((ConstructionJob) this.target).getBuilding());
 		}
 
 		return success;
@@ -90,7 +90,8 @@ public class ConstructBuildingAction extends BaseAction {
 			// Remove the mapping from the Unit. If the Unit did not get its
 			// build flag set, set UnitType is inserted in the building Queue
 			// again.
-			PlayerUnitWorker.mappedBuildActions.remove(((PlayerUnitWorker) this.currentlyExecutingUnit).getUnit());
+			((PlayerUnitWorker) this.currentlyExecutingUnit).getInformationPreserver().getWorkerConfig()
+					.getMappedBuildActions().remove(((PlayerUnitWorker) this.currentlyExecutingUnit).getUnit());
 		} catch (Exception e) {
 		}
 
@@ -114,7 +115,8 @@ public class ConstructBuildingAction extends BaseAction {
 				this.constructingBuilding = this.findConstructingBuilding(goapUnit);
 
 				if (this.constructingBuilding != null) {
-					PlayerUnitWorker.buildingsBeingCreated.remove(this.constructingBuilding);
+					((PlayerUnitWorker) goapUnit).getInformationPreserver().getWorkerConfig().getBuildingsBeingCreated()
+							.remove(this.constructingBuilding);
 					((PlayerUnitWorker) goapUnit).setConstructingFlag(this.constructingBuilding);
 				}
 			}
@@ -174,7 +176,8 @@ public class ConstructBuildingAction extends BaseAction {
 	private Unit findConstructingBuilding(IGoapUnit goapUnit) {
 		Unit constructingBuilding = null;
 
-		for (Unit unit : PlayerUnitWorker.buildingsBeingCreated) {
+		for (Unit unit : ((PlayerUnitWorker) goapUnit).getInformationPreserver().getWorkerConfig()
+				.getBuildingsBeingCreated()) {
 			if (unit.getType() == (((ConstructionJob) this.target).getBuilding())) {
 				constructingBuilding = unit;
 				break;

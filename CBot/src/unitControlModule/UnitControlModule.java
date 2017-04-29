@@ -14,9 +14,9 @@ import core.Display;
 import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
-import unitControlModule.unitWrappers.PlayerUnitWorker;
 import unitTrackerModule.UnitTrackerModule;
 
+// TODO: UML MASSIVE CHANGES
 /**
  * UnitControlModule.java --- Module for controlling the Player's units.
  * 
@@ -30,34 +30,27 @@ public class UnitControlModule {
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 
-	// Construction related collections
-	private Queue<UnitType> buildingQueue = new LinkedList<UnitType>();
-	private HashSet<Unit> buildingsBeingCreated = new HashSet<Unit>();
-
-	// Training / Building related collections
-	private Queue<UnitType> trainingQueue = new LinkedList<UnitType>();
-	private Queue<UnitType> addonQueue = new LinkedList<UnitType>();
-	private Queue<UpgradeType> upgradeQueue = new LinkedList<UpgradeType>();
-	private Queue<TechType> researchQueue = new LinkedList<TechType>();
+	// TODO: UML
+	private InformationPreserver informationPreserver = new InformationPreserver();
 
 	public UnitControlModule() {
 
 		// TODO: REMOVE
 		// Buildings
 		for (int i = 0; i < 1; i++) {
-			this.buildingQueue.add(UnitType.Terran_Supply_Depot);
+			this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Supply_Depot);
 		}
-		this.buildingQueue.add(UnitType.Terran_Refinery);
-		this.buildingQueue.add(UnitType.Terran_Command_Center);
+//		this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Refinery);
+//		this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Command_Center);
 		// for (int i = 0; i < 2; i++) {
 		// this.buildingQueue.add(UnitType.Terran_Factory);
 		// }
 		for (int i = 0; i < 3; i++) {
-			this.buildingQueue.add(UnitType.Terran_Barracks);
+			this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Barracks);
 		}
 		// Units
 		for (int i = 0; i < 5; i++) {
-			this.trainingQueue.add(UnitType.Terran_SCV);
+			this.informationPreserver.getTrainingQueue().add(UnitType.Terran_SCV);
 		}
 	}
 
@@ -108,7 +101,7 @@ public class UnitControlModule {
 		}
 
 		// Display all important information on the screen
-		UnitControlDisplay.showImportantInformation(this.agents, this.buildings);
+		UnitControlDisplay.showImportantInformation(this.agents, this.buildings, this.informationPreserver);
 	}
 
 	/**
@@ -122,9 +115,9 @@ public class UnitControlModule {
 				// Differentiate between buildings and normal Units
 				if (unit.getType().isBuilding()) {
 					// TODO: Possible Change: Move to factory
-					this.buildings.add(new PlayerBuilding(unit));
+					this.buildings.add(new PlayerBuilding(unit, this.informationPreserver));
 				} else {
-					this.agents.add(GoapAgentFactory.createAgent(unit));
+					this.agents.add(GoapAgentFactory.createAgent(unit, this.informationPreserver));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -209,6 +202,8 @@ public class UnitControlModule {
 
 			if (unit.getType().isWorker()) {
 				this.removeAssignedWorkerEntries(unit);
+				// TODO: Possible Change: Enable and add "scoutOnceAssigned: Boolean" to workerConfig
+//				this.informationPreserver.getWorkerConfig().decrementTotalWorkerCount();
 			}
 		}
 		// TODO: REMOVE Safety feature since it is not clear if the Unit is
@@ -235,7 +230,7 @@ public class UnitControlModule {
 		final List<Unit> mappedSources = new ArrayList<Unit>();
 
 		// Find the assigned sources of the Unit.
-		PlayerUnitWorker.mappedAccessibleGatheringSources.forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
+		this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
 			public void accept(Unit source, ArrayList<Unit> units) {
 				for (Unit mappedUnit : units) {
 					if (mappedUnit.equals(mappedUnit)) {
@@ -247,7 +242,7 @@ public class UnitControlModule {
 
 		// Remove the Unit from the found sources.
 		for (Unit source : mappedSources) {
-			PlayerUnitWorker.mappedAccessibleGatheringSources.get(source).remove(unit);
+			this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().get(source).remove(unit);
 		}
 	}
 
@@ -259,6 +254,8 @@ public class UnitControlModule {
 	private void updateInformation() {
 		UnitTrackerModule utm = CBot.getInstance().getUnitTrackerModule();
 
+		// TODO: Needed Change: Add to InformationPreserver
+		
 		// Forward the UnitTrackerModule information
 		PlayerUnit.setPlayerAirAttackTilePositions(utm.getPlayerAirAttackTilePositions());
 		PlayerUnit.setPlayerGroundAttackTilePositions(utm.getPlayerGroundAttackTilePositions());
@@ -266,31 +263,6 @@ public class UnitControlModule {
 		PlayerUnit.setEnemyGroundAttackTilePositions(utm.getEnemyGroundAttackTilePositions());
 		PlayerUnit.setEnemyBuildings(utm.getEnemyBuildings());
 		PlayerUnit.setEnemyUnits(utm.getEnemyUnits());
-
-		// Forward the construction Queue
-		while (!this.buildingQueue.isEmpty()) {
-			PlayerUnitWorker.buildingQueue.add(this.buildingQueue.poll());
-		}
-
-		// Forward the currently constructed buildings
-		for (Unit unit : this.buildingsBeingCreated) {
-			PlayerUnitWorker.buildingsBeingCreated.add(unit);
-		}
-		this.buildingsBeingCreated.clear();
-
-		// Forward all relevant building information
-		while (!this.trainingQueue.isEmpty()) {
-			PlayerBuilding.trainingQueue.add(this.trainingQueue.poll());
-		}
-		while (!this.addonQueue.isEmpty()) {
-			PlayerBuilding.addonQueue.add(this.addonQueue.poll());
-		}
-		while (!this.upgradeQueue.isEmpty()) {
-			PlayerBuilding.upgradeQueue.add(this.upgradeQueue.poll());
-		}
-		while (!this.researchQueue.isEmpty()) {
-			PlayerBuilding.researchQueue.add(this.researchQueue.poll());
-		}
 	}
 
 	/**
@@ -323,7 +295,7 @@ public class UnitControlModule {
 	 */
 	public void addToBuildingQueue(UnitType unitType) {
 		if (unitType.isBuilding()) {
-			this.buildingQueue.add(unitType);
+			this.informationPreserver.getWorkerConfig().getBuildingQueue().add(unitType);
 		}
 	}
 
@@ -335,7 +307,7 @@ public class UnitControlModule {
 	 */
 	public void addToBuildingsBeingCreated(Unit unit) {
 		if (unit.getType().isBuilding()) {
-			this.buildingsBeingCreated.add(unit);
+			this.informationPreserver.getWorkerConfig().getBuildingsBeingCreated().add(unit);
 		}
 	}
 
@@ -348,7 +320,7 @@ public class UnitControlModule {
 	 */
 	public void addToTrainingQueue(UnitType unitType) {
 		if (!unitType.isBuilding() && !unitType.isAddon()) {
-			this.trainingQueue.add(unitType);
+			this.informationPreserver.getTrainingQueue().add(unitType);
 		}
 	}
 
@@ -362,7 +334,7 @@ public class UnitControlModule {
 	 */
 	public void addToAddonQueue(UnitType unitType) {
 		if (unitType.isAddon()) {
-			this.addonQueue.add(unitType);
+			this.informationPreserver.getAddonQueue().add(unitType);
 		}
 	}
 
@@ -374,7 +346,7 @@ public class UnitControlModule {
 	 *            the upgrade that is going to be built.
 	 */
 	public void addToUpgradeQueue(UpgradeType upgrade) {
-		this.upgradeQueue.add(upgrade);
+		this.informationPreserver.getUpgradeQueue().add(upgrade);
 	}
 
 	/**
@@ -385,6 +357,13 @@ public class UnitControlModule {
 	 *            the technology that is going to be researched.
 	 */
 	public void addToResearchQueue(TechType tech) {
-		this.researchQueue.add(tech);
+		this.informationPreserver.getResearchQueue().add(tech);
+	}
+	
+	// ------------------------------ Getter / Setter
+	
+	// TODO: UML
+	public InformationPreserver getInformationPreserver() {
+		return this.informationPreserver;
 	}
 }

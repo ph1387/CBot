@@ -1,14 +1,12 @@
 package unitControlModule.unitWrappers;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
-import unitControlModule.ResourceReserver;
+import unitControlModule.InformationPreserver;
 
+// TODO: UML REMOVED A LOT
 /**
  * PlayerBuilding.java --- Wrapper for a Player building. Uses a FSM to
  * determine its actions.
@@ -19,11 +17,7 @@ import unitControlModule.ResourceReserver;
 public class PlayerBuilding {
 
 	protected Unit unit;
-	public static Queue<UnitType> trainingQueue = new LinkedList<UnitType>();
-	public static Queue<UnitType> addonQueue = new LinkedList<UnitType>();
-	public static Queue<UpgradeType> upgradeQueue = new LinkedList<UpgradeType>();
-	public static Queue<TechType> researchQueue = new LinkedList<TechType>();
-
+	
 	protected UnitType trainedUnit;
 	protected UnitType constructedAddon;
 	protected UpgradeType builtUpgrade;
@@ -36,9 +30,14 @@ public class PlayerBuilding {
 	}
 
 	private State state = State.IDLE;
+	
+	// TODO: UML
+	private InformationPreserver informationPreserver;
 
-	public PlayerBuilding(Unit unit) {
+	// TODO: UML
+	public PlayerBuilding(Unit unit, InformationPreserver informationPreserver) {
 		this.unit = unit;
+		this.informationPreserver = informationPreserver;
 	}
 
 	// -------------------- Functions
@@ -86,40 +85,40 @@ public class PlayerBuilding {
 	 */
 	private boolean switchState() {
 		boolean resultMissing = true;
-		UnitType unitToTrain = PlayerBuilding.trainingQueue.peek();
-		UnitType addonToBuild = PlayerBuilding.addonQueue.peek();
-		UpgradeType upgradeToBuild = PlayerBuilding.upgradeQueue.peek();
-		TechType techToResearch = PlayerBuilding.researchQueue.peek();
+		UnitType unitToTrain = this.informationPreserver.getTrainingQueue().peek();
+		UnitType addonToBuild = this.informationPreserver.getAddonQueue().peek();
+		UpgradeType upgradeToBuild = this.informationPreserver.getUpgradeQueue().peek();
+		TechType techToResearch = this.informationPreserver.getResearchQueue().peek();
 
 		// Train an Unit
 		if (resultMissing && unitToTrain != null && this.unit.canTrain(unitToTrain)
-				&& ResourceReserver.getInstance().canAffordConstruction(unitToTrain)) {
+				&& this.informationPreserver.getResourceReserver().canAffordConstruction(unitToTrain)) {
 			this.state = State.TRAINING;
-			this.trainedUnit = PlayerBuilding.trainingQueue.poll();
+			this.trainedUnit = this.informationPreserver.getTrainingQueue().poll();
 			resultMissing = false;
 		}
 
 		// Construct an addon
 		if (resultMissing && addonToBuild != null && this.unit.canBuildAddon(addonToBuild)
-				&& ResourceReserver.getInstance().canAffordConstruction(addonToBuild)) {
+				&& this.informationPreserver.getResourceReserver().canAffordConstruction(addonToBuild)) {
 			this.state = State.CONSTRUCTING;
-			this.constructedAddon = PlayerBuilding.addonQueue.poll();
+			this.constructedAddon = this.informationPreserver.getAddonQueue().poll();
 			resultMissing = false;
 		}
 
 		// Build an upgrade
 		if (resultMissing && upgradeToBuild != null && this.unit.canUpgrade(upgradeToBuild)
-				&& ResourceReserver.getInstance().canAffordConstruction(upgradeToBuild)) {
+				&& this.informationPreserver.getResourceReserver().canAffordConstruction(upgradeToBuild)) {
 			this.state = State.UPGRADING;
-			this.builtUpgrade = PlayerBuilding.upgradeQueue.poll();
+			this.builtUpgrade = this.informationPreserver.getUpgradeQueue().poll();
 			resultMissing = false;
 		}
 
 		// Research a technology
 		if (resultMissing && techToResearch != null && this.unit.canResearch(techToResearch)
-				&& ResourceReserver.getInstance().canAffordConstruction(techToResearch)) {
+				&& this.informationPreserver.getResourceReserver().canAffordConstruction(techToResearch)) {
 			this.state = State.RESEARCHING;
-			this.researchedTech = PlayerBuilding.researchQueue.poll();
+			this.researchedTech = this.informationPreserver.getResearchQueue().poll();
 			resultMissing = false;
 		}
 

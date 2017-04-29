@@ -6,6 +6,8 @@ import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
 
+//TODO: OWN PACKAGE
+// TODO: UML NON SINGLETON
 /**
  * ResourceReserver.java --- Class that holds any reserved minerals or gases.
  * 
@@ -14,28 +16,14 @@ import core.Core;
  */
 public class ResourceReserver {
 
-	private static ResourceReserver instance;
-
 	private int reservedMinerals = 0;
 	private int reservedGas = 0;
 
-	private ResourceReserver() {
+	public ResourceReserver() {
 
 	}
 
 	// -------------------- Functions
-
-	/**
-	 * Singleton function.
-	 * 
-	 * @return instance of the class.
-	 */
-	public static ResourceReserver getInstance() {
-		if (instance == null) {
-			instance = new ResourceReserver();
-		}
-		return instance;
-	}
 
 	/**
 	 * Function to determined if the Player can afford the construction of the

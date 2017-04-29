@@ -1,6 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
+import unitControlModule.InformationPreserver;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_SCV;
 
@@ -12,8 +13,9 @@ import unitControlModule.stateFactories.StateFactoryTerran_SCV;
  */
 public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 
-	public PlayerUnitTerran_SCV(Unit unit) {
-		super(unit);
+	// TODO: UML
+	public PlayerUnitTerran_SCV(Unit unit, InformationPreserver informationPreserver) {
+		super(unit, informationPreserver);
 	}
 
 	// -------------------- Functions

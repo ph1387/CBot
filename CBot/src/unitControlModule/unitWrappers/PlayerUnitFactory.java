@@ -1,6 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
+import unitControlModule.InformationPreserver;
 
 /**
  * PlayerUnitFactory.java --- Factory used to create different kinds of
@@ -25,7 +26,8 @@ public class PlayerUnitFactory {
 		return new PlayerUnitTerran_Vulture(unit);
 	}
 	
-	public static PlayerUnit createSCV(Unit unit) {
-		return new PlayerUnitTerran_SCV(unit);
+	// TODO: UML
+	public static PlayerUnit createSCV(Unit unit, InformationPreserver informationPreserver) {
+		return new PlayerUnitTerran_SCV(unit, informationPreserver);
 	}
 }

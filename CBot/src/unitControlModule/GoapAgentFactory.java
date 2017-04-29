@@ -16,8 +16,15 @@ public class GoapAgentFactory {
 
 	// -------------------- Functions
 
+	// TODO: UML EXCEPTION ETC
 	// TODO: JAVADOC
-	public static GoapAgent createAgent(Unit unit) throws Exception {
+	public static GoapAgent createAgent(Unit unit) throws UnknownUnitTypeException {
+		return createAgent(unit, null);
+	}
+	
+	// TODO: UML EXCEPTION ETC
+	// TODO: JAVADOC
+	public static GoapAgent createAgent(Unit unit, InformationPreserver informationPreserver) throws UnknownUnitTypeException {
 		GoapAgent agent = null;
 		
 		// TODO: Add more Classes
@@ -32,14 +39,14 @@ public class GoapAgentFactory {
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createSiegeTank(unit));
 			break;
 		case "Terran_SCV":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createSCV(unit));
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createSCV(unit, informationPreserver));
 			break;
 		default:
 			break;
 		}
 
 		if(agent == null) {
-			throw new Exception("Unknown / Undefined UnitType.");
+			throw new UnknownUnitTypeException();
 		} else {
 			return agent;
 		}
