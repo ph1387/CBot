@@ -4,21 +4,24 @@ import javaGOAP.GoapAction;
 import javaGOAP.IGoapUnit;
 
 /**
- * ManagerBaseAction.java --- Superclass for BuildActionManager actions. 
+ * ManagerBaseAction.java --- Superclass for BuildActionManager actions.
+ * 
  * @author P H - 28.04.2017
  *
  */
 public abstract class ManagerBaseAction extends GoapAction {
 
 	/**
-	 * @param target type: Integer
+	 * @param target
+	 *            type: Integer, the amount of times the Unit, Upgrade etc. must
+	 *            be build.
 	 */
 	public ManagerBaseAction(Object target) {
 		super(target);
 	}
 
 	// -------------------- Functions
-	
+
 	@Override
 	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
 		return 0;
@@ -40,7 +43,7 @@ public abstract class ManagerBaseAction extends GoapAction {
 	}
 
 	// ------------------------------ Getter / Setter
-	
+
 	public void setTarget(Object target) {
 		this.target = target;
 	}

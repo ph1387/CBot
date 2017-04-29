@@ -22,10 +22,12 @@ public class WorkerConfiguration {
 	private int maxNumberGatheringGas = 0; // TODO: 3
 	private int pixelGatherSearchRadius = 350;
 	private int constructionCounterMax = 20;
-
+	
 	// Initial scouting configuration
 	private int workerScoutingTrigger = 9;
 	private int totalWorkerCount = 0;
+	// TODO: UML
+	private boolean workerOnceAssignedScouting = false;
 
 	// Mapped: gathering sources (Units) -> Units (worker)
 	// Each gathering source holds the Units that are currently working on it.
@@ -75,6 +77,14 @@ public class WorkerConfiguration {
 
 	public int getTotalWorkerCount() {
 		return totalWorkerCount;
+	}
+	
+	public boolean isWorkerOnceAssignedScouting() {
+		return workerOnceAssignedScouting;
+	}
+
+	public void setWorkerOnceAssignedScouting(boolean workerOnceAssignedScouting) {
+		this.workerOnceAssignedScouting = workerOnceAssignedScouting;
 	}
 
 	public HashMap<Unit, ArrayList<Unit>> getMappedAccessibleGatheringSources() {

@@ -3,20 +3,22 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import javaGOAP.IGoapUnit;
 
 /**
- * BuildWorkerAction.java --- Action for building a race specific worker Unit. 
+ * BuildWorkerAction.java --- Action for building a race specific worker Unit.
+ * 
  * @author P H - 28.04.2017
  *
  */
 public class BuildWorkerAction extends ManagerBaseAction {
 
 	/**
-	 * @param target type: Integer
+	 * @param target
+	 *            type: Integer
 	 */
 	public BuildWorkerAction(Object target) {
 		super(target);
-		
-//		this.addEffect(new GoapState(0, "unitsNeeded", false));
-//		this.addPrecondition(new GoapState(0, "unitsNeeded", true));
+
+		// this.addEffect(new GoapState(0, "unitsNeeded", false));
+		// this.addPrecondition(new GoapState(0, "unitsNeeded", true));
 	}
 
 	// -------------------- Functions

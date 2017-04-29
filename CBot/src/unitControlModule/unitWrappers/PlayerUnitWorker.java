@@ -19,8 +19,6 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 	// TODO: UML REMOVED STATICS
 	
-	protected static boolean workerOnceAssignedScouting = false;
-	
 	protected boolean assignedToSout = false;
 
 	// TODO: UML REMOVED MORE STATICS
@@ -109,10 +107,10 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 		// Scout at the beginning of the game if a certain worker count is
 		// reached.
-		if (!workerOnceAssignedScouting && this.informationPreserver.getWorkerConfig().getTotalWorkerCount() >= this.informationPreserver.getWorkerConfig().getWorkerScoutingTrigger()
+		if (!this.informationPreserver.getWorkerConfig().isWorkerOnceAssignedScouting() && this.informationPreserver.getWorkerConfig().getTotalWorkerCount() >= this.informationPreserver.getWorkerConfig().getWorkerScoutingTrigger()
 				&& this.currentConstructionState == ConstructionState.IDLE && this.assignedBuildingType == null
 				&& !this.unit.isGatheringGas()) {
-			workerOnceAssignedScouting = true;
+			this.informationPreserver.getWorkerConfig().setWorkerOnceAssignedScouting(true);
 			this.assignedToSout = true;
 			this.resetActions();
 		} else if (!this.assignedToSout) {

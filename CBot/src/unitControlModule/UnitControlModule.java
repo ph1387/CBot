@@ -204,8 +204,7 @@ public class UnitControlModule {
 
 			if (unit.getType().isWorker()) {
 				this.removeAssignedWorkerEntries(unit);
-				// TODO: Possible Change: Enable and add "scoutOnceAssigned: Boolean" to workerConfig
-//				this.informationPreserver.getWorkerConfig().decrementTotalWorkerCount();
+				this.informationPreserver.getWorkerConfig().decrementTotalWorkerCount();
 			}
 		}
 		// TODO: REMOVE Safety feature since it is not clear if the Unit is
