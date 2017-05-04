@@ -1,7 +1,7 @@
 package unitControlModule;
 
 import bwapi.Unit;
-import informationStorage.InformationPreserver;
+import informationStorage.InformationStorage;
 import javaGOAP.DefaultGoapAgent;
 import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerUnitFactory;
@@ -17,31 +17,43 @@ public class GoapAgentFactory {
 
 	// -------------------- Functions
 
-	// TODO: UML EXCEPTION ETC
-	// TODO: UML
-	// TODO: JAVADOC
-	public static GoapAgent createAgent(Unit unit, InformationPreserver informationPreserver) throws UnknownUnitTypeException {
+	/**
+	 * Main function for creating a GoapAgent using a Unit and a general
+	 * InformationStorage.
+	 * 
+	 * @param unit
+	 *            the Unit that the GoapAgent is assigned to.
+	 * @param informationStorage
+	 *            the InformationStorage that stores all important information.
+	 * @return a GoapAgent based on the provided information or null if the
+	 *         UnitType of the provided Unit is not known.
+	 * @throws UnknownUnitTypeException
+	 *             Exception indicating that the provided Unit has a not
+	 *             supported UnitType.
+	 */
+	public static GoapAgent createAgent(Unit unit, InformationStorage informationStorage)
+			throws UnknownUnitTypeException {
 		GoapAgent agent = null;
-		
+
 		// TODO: Add more Classes
 		switch (unit.getType().toString()) {
 		case "Terran_Marine":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createMarine(unit, informationPreserver));
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createMarine(unit, informationStorage));
 			break;
 		case "Terran_Vulture":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createVulture(unit, informationPreserver));
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createVulture(unit, informationStorage));
 			break;
 		case "Terran_Siege_Tank_Tank_Mode":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createSiegeTank(unit, informationPreserver));
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createSiegeTank(unit, informationStorage));
 			break;
 		case "Terran_SCV":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createSCV(unit, informationPreserver));
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createSCV(unit, informationStorage));
 			break;
 		default:
 			break;
 		}
 
-		if(agent == null) {
+		if (agent == null) {
 			throw new UnknownUnitTypeException();
 		} else {
 			return agent;

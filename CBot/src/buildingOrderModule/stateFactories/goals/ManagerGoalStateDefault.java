@@ -15,7 +15,5 @@ public class ManagerGoalStateDefault extends ArrayList<GoapState> {
 	public ManagerGoalStateDefault() {
 		this.add(new GoapState(1, "unitsNeeded", false));
 		this.add(new GoapState(1, "buildingsNeeded", false));
-		
-		// TODO: ADD MORE GOALS
 	}
 }

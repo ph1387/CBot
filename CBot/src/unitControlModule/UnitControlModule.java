@@ -8,16 +8,13 @@ import java.util.Queue;
 import java.util.function.BiConsumer;
 
 import bwapi.*;
-import core.CBot;
 import core.Core;
 import core.Display;
-import informationStorage.InformationPreserver;
+import informationStorage.InformationStorage;
 import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
-import unitTrackerModule.UnitTrackerModule;
 
-// TODO: UML MASSIVE CHANGES
 /**
  * UnitControlModule.java --- Module for controlling the Player's units.
  * 
@@ -31,30 +28,10 @@ public class UnitControlModule {
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 
-	// TODO: UML
-	private InformationPreserver informationPreserver;
+	private InformationStorage informationStorage;
 
-	// TODO: UML
-	public UnitControlModule(InformationPreserver informationPreserver) {
-		this.informationPreserver = informationPreserver;
-		
-		// TODO: REMOVE
-		// Buildings
-		for (int i = 0; i < 3; i++) {
-			this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Supply_Depot);
-		}
-//		this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Refinery);
-//		this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Command_Center);
-		// for (int i = 0; i < 2; i++) {
-		// this.buildingQueue.add(UnitType.Terran_Factory);
-		// }
-		for (int i = 0; i < 3; i++) {
-			this.informationPreserver.getWorkerConfig().getBuildingQueue().add(UnitType.Terran_Barracks);
-		}
-		// Units
-		for (int i = 0; i < 5; i++) {
-			this.informationPreserver.getTrainingQueue().add(UnitType.Terran_SCV);
-		}
+	public UnitControlModule(InformationStorage informationStorage) {
+		this.informationStorage = informationStorage;
 	}
 
 	// -------------------- Functions
@@ -103,7 +80,7 @@ public class UnitControlModule {
 		}
 
 		// Display all important information on the screen
-		UnitControlDisplay.showImportantInformation(this.agents, this.buildings, this.informationPreserver);
+		UnitControlDisplay.showImportantInformation(this.agents, this.buildings, this.informationStorage);
 	}
 
 	/**
@@ -117,9 +94,9 @@ public class UnitControlModule {
 				// Differentiate between buildings and normal Units
 				if (unit.getType().isBuilding()) {
 					// TODO: Possible Change: Move to factory
-					this.buildings.add(new PlayerBuilding(unit, this.informationPreserver));
+					this.buildings.add(new PlayerBuilding(unit, this.informationStorage));
 				} else {
-					this.agents.add(GoapAgentFactory.createAgent(unit, this.informationPreserver));
+					this.agents.add(GoapAgentFactory.createAgent(unit, this.informationStorage));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -204,7 +181,7 @@ public class UnitControlModule {
 
 			if (unit.getType().isWorker()) {
 				this.removeAssignedWorkerEntries(unit);
-				this.informationPreserver.getWorkerConfig().decrementTotalWorkerCount();
+				this.informationStorage.getWorkerConfig().decrementTotalWorkerCount();
 			}
 		}
 		// TODO: REMOVE Safety feature since it is not clear if the Unit is
@@ -231,24 +208,23 @@ public class UnitControlModule {
 		final List<Unit> mappedSources = new ArrayList<Unit>();
 
 		// Find the assigned sources of the Unit.
-		this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
-			public void accept(Unit source, ArrayList<Unit> units) {
-				for (Unit mappedUnit : units) {
-					if (mappedUnit.equals(mappedUnit)) {
-						mappedSources.add(source);
+		this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
+				.forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
+					public void accept(Unit source, ArrayList<Unit> units) {
+						for (Unit mappedUnit : units) {
+							if (mappedUnit.equals(mappedUnit)) {
+								mappedSources.add(source);
+							}
+						}
 					}
-				}
-			}
-		});
+				});
 
 		// Remove the Unit from the found sources.
 		for (Unit source : mappedSources) {
-			this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().get(source).remove(unit);
+			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().get(source).remove(unit);
 		}
 	}
 
-	// TODO: UML REMOVED UPDATE INFORMATION
-	
 	/**
 	 * Function for adding a Unit to the List of controllable Units.
 	 * 
@@ -279,7 +255,7 @@ public class UnitControlModule {
 	 */
 	public void addToBuildingQueue(UnitType unitType) {
 		if (unitType.isBuilding()) {
-			this.informationPreserver.getWorkerConfig().getBuildingQueue().add(unitType);
+			this.informationStorage.getWorkerConfig().getBuildingQueue().add(unitType);
 		}
 	}
 
@@ -291,7 +267,7 @@ public class UnitControlModule {
 	 */
 	public void addToBuildingsBeingCreated(Unit unit) {
 		if (unit.getType().isBuilding()) {
-			this.informationPreserver.getWorkerConfig().getBuildingsBeingCreated().add(unit);
+			this.informationStorage.getWorkerConfig().getBuildingsBeingCreated().add(unit);
 		}
 	}
 
@@ -304,7 +280,7 @@ public class UnitControlModule {
 	 */
 	public void addToTrainingQueue(UnitType unitType) {
 		if (!unitType.isBuilding() && !unitType.isAddon()) {
-			this.informationPreserver.getTrainingQueue().add(unitType);
+			this.informationStorage.getTrainingQueue().add(unitType);
 		}
 	}
 
@@ -318,7 +294,7 @@ public class UnitControlModule {
 	 */
 	public void addToAddonQueue(UnitType unitType) {
 		if (unitType.isAddon()) {
-			this.informationPreserver.getAddonQueue().add(unitType);
+			this.informationStorage.getAddonQueue().add(unitType);
 		}
 	}
 
@@ -330,7 +306,7 @@ public class UnitControlModule {
 	 *            the upgrade that is going to be built.
 	 */
 	public void addToUpgradeQueue(UpgradeType upgrade) {
-		this.informationPreserver.getUpgradeQueue().add(upgrade);
+		this.informationStorage.getUpgradeQueue().add(upgrade);
 	}
 
 	/**
@@ -341,9 +317,9 @@ public class UnitControlModule {
 	 *            the technology that is going to be researched.
 	 */
 	public void addToResearchQueue(TechType tech) {
-		this.informationPreserver.getResearchQueue().add(tech);
+		this.informationStorage.getResearchQueue().add(tech);
 	}
-	
+
 	// ------------------------------ Getter / Setter
-	
+
 }

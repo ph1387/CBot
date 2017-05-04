@@ -10,10 +10,9 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.WeaponType;
 import core.Core;
-import informationStorage.InformationPreserver;
+import informationStorage.InformationStorage;
 import informationStorage.UnitTrackerInformation;
 
-// TODO: UML
 /**
  * UnitTrackerModule.java --- Module for tracking enemy units and storing
  * information regarding their position and strength. Also stores information
@@ -34,12 +33,10 @@ public class UnitTrackerModule {
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
-	// TODO: UML
-	private InformationPreserver informationPreserver;
+	private InformationStorage informationStorage;
 
-	// TODO: UML
-	public UnitTrackerModule(InformationPreserver informationPreserver) {
-		this.informationPreserver = informationPreserver;
+	public UnitTrackerModule(InformationStorage informationStorage) {
+		this.informationStorage = informationStorage;
 	}
 
 	// -------------------- Functions
@@ -85,7 +82,7 @@ public class UnitTrackerModule {
 	 * modules to react to.
 	 */
 	private void forwardInformation() {
-		UnitTrackerInformation trackerInfo = this.informationPreserver.getTrackerInfo();
+		UnitTrackerInformation trackerInfo = this.informationStorage.getTrackerInfo();
 
 		// Forward the UnitTrackerModule information.
 		trackerInfo.setPlayerAirAttackTilePositions(this.playerAirAttackTilePositions);

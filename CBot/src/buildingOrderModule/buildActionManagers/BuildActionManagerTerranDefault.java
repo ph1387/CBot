@@ -3,6 +3,7 @@ package buildingOrderModule.buildActionManagers;
 import buildingOrderModule.CommandSender;
 import buildingOrderModule.stateFactories.StateFactory;
 import buildingOrderModule.stateFactories.StateFactoryTerranBasic;
+import informationStorage.InformationStorage;
 
 /**
  * BuildActionManagerTerranDefault.java --- Class for controlling the building,
@@ -13,8 +14,8 @@ import buildingOrderModule.stateFactories.StateFactoryTerranBasic;
  */
 public class BuildActionManagerTerranDefault extends BuildActionManager {
 
-	public BuildActionManagerTerranDefault(CommandSender sender) {
-		super(sender);
+	public BuildActionManagerTerranDefault(CommandSender sender, InformationStorage informationStorage) {
+		super(sender, informationStorage);
 	}
 
 	// -------------------- Functions

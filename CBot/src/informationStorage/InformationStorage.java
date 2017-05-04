@@ -7,15 +7,16 @@ import bwapi.TechType;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
 
-// TODO: UML
 /**
- * InformationPreserver.java --- Class for storing and distributing all kinds of
+ * InformationStorage.java --- Class for storing and distributing all kinds of
  * building, upgrade, etc. information.
  * 
  * @author P H - 28.04.2017
  *
  */
-public class InformationPreserver {
+public class InformationStorage {
+
+	private int maxConcurrentElements = 2;
 
 	// Training / Building related collections
 	private Queue<UnitType> trainingQueue = new LinkedList<UnitType>();
@@ -30,40 +31,53 @@ public class InformationPreserver {
 	// Tracking information
 	private UnitTrackerInformation trackerInfo;
 
-	public InformationPreserver(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
+	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
 			UnitTrackerInformation trackerInfo) {
 		this.resourceReserver = resourceReserver;
 		this.workerConfig = workerConfig;
 		this.trackerInfo = trackerInfo;
 	}
 
-	public InformationPreserver() {
+	public InformationStorage() {
 		this(new ResourceReserver(), new WorkerConfiguration(), new UnitTrackerInformation());
-	}
-
-	public InformationPreserver(ResourceReserver resourceReserver) {
-		this(resourceReserver, new WorkerConfiguration(), new UnitTrackerInformation());
-	}
-
-	public InformationPreserver(WorkerConfiguration workerConfig) {
-		this(new ResourceReserver(), workerConfig, new UnitTrackerInformation());
-	}
-
-	public InformationPreserver(UnitTrackerInformation trackerInfo) {
-		this(new ResourceReserver(), new WorkerConfiguration(), trackerInfo);
-	}
-
-	public InformationPreserver(WorkerConfiguration workerConfig, UnitTrackerInformation trackerInfo) {
-		this(new ResourceReserver(), workerConfig, trackerInfo);
-	}
-
-	public InformationPreserver(ResourceReserver resourceReserver, UnitTrackerInformation trackerInfo) {
-		this(resourceReserver, new WorkerConfiguration(), trackerInfo);
 	}
 
 	// -------------------- Functions
 
+	/**
+	 * Function for counting all concurrent actions, that are currently being
+	 * stored.
+	 * 
+	 * @return the number of all currently stored actions for the
+	 *         UnitControlModule to take.
+	 */
+	public int getConcurrentQueuedElementCount() {
+		int count = 0;
+
+		count += this.trainingQueue.size();
+		count += this.upgradeQueue.size();
+		count += this.addonQueue.size();
+		count += this.researchQueue.size();
+		count += this.workerConfig.getBuildingQueue().size();
+
+		return count;
+	}
+
+	/**
+	 * Function for retrieving the amount of elements that reside in the
+	 * training and building queues.
+	 * 
+	 * @return the amount of elements inside the training and building queues.
+	 */
+	public int getTrainingAndBuildingQueueSize() {
+		return (this.trainingQueue.size() + this.workerConfig.getBuildingQueue().size());
+	}
+
 	// ------------------------------ Getter / Setter
+
+	public int getMaxConcurrentElements() {
+		return maxConcurrentElements;
+	}
 
 	public Queue<UnitType> getTrainingQueue() {
 		return trainingQueue;

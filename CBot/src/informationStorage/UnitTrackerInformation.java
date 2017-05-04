@@ -7,7 +7,6 @@ import java.util.List;
 import bwapi.TilePosition;
 import unitTrackerModule.EnemyUnit;
 
-// TODO: UML
 /**
  * UnitTrackerInformation.java --- Class for storing UnitTrackerModule
  * information.

@@ -8,7 +8,6 @@ import bwapi.Unit;
 import bwapiMath.Vector;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
-import unitControlModule.unitWrappers.PlayerUnitWorker;
 
 /**
  * RetreatAction_ToOwnGatheringPoint.java --- An action with which a PlayerUnit
@@ -147,7 +146,6 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		return unitsInRange;
 	}
 
-	// TODO: UML
 	/**
 	 * Function for retrieving the Unit with the greatest sum of strengths
 	 * around the units TilePosition.
@@ -172,7 +170,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 				for (int j = -TILE_RADIUS_AROUND_UNITS_SEARCH; j <= TILE_RADIUS_AROUND_UNITS_SEARCH; j++) {
 
 					// TODO: Possible Change: AirStrength Implementation
-					Integer value = ((PlayerUnitWorker) goapUnit).getInformationPreserver().getTrackerInfo()
+					Integer value = ((PlayerUnit) goapUnit).getInformationStorage().getTrackerInfo()
 							.getPlayerGroundAttackTilePositions().get(new TilePosition(
 									unit.getTilePosition().getX() + i, unit.getTilePosition().getY() + j));
 

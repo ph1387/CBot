@@ -16,12 +16,11 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
 import core.Display;
-import informationStorage.InformationPreserver;
+import informationStorage.InformationStorage;
 import javaGOAP.GoapUnit;
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.updater.Updater;
-import unitTrackerModule.EnemyUnit;
 
 /**
  * PlayerUnit.java --- Wrapper for a player unit. All Player Units derive from
@@ -35,17 +34,14 @@ public abstract class PlayerUnit extends GoapUnit {
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their own parameters
 	public static final double CONFIDENCE_THRESHHOLD = 0.7;
-	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 5;
+	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
 
-	// TODO: UML
 	// Information preserver which holds all important information
-	protected InformationPreserver informationPreserver;
+	protected InformationStorage informationStorage;
 	
-	// TODO: UML REMOVED AL LOT OF STATICS
-
 	protected Unit unit;
 	protected Unit closestEnemyUnitInSight;
 	protected Unit closestEnemyUnitInConfidenceRange;
@@ -88,14 +84,13 @@ public abstract class PlayerUnit extends GoapUnit {
 	public ConfidenceRangeStates currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
 	public ConfidenceState currentConfidenceState = ConfidenceState.UNDER_THRESHOLD;
 
-	// TODO: UML
 	/**
 	 * @param unit
 	 *            the unit the class wraps around.
 	 */
-	public PlayerUnit(Unit unit, InformationPreserver informationPreserver) {
+	public PlayerUnit(Unit unit, InformationStorage informationStorage) {
 		this.unit = unit;
-		this.informationPreserver = informationPreserver;
+		this.informationStorage = informationStorage;
 		
 		this.stateFactory = this.createFactory();
 		this.worldStateUpdater = this.stateFactory.getMatchingWorldStateUpdater(this);
@@ -134,12 +129,12 @@ public abstract class PlayerUnit extends GoapUnit {
 	@Override
 	public void update() {
 		// FSM worldState changes in one cycle.
-		if (this.currentState == UnitStates.ENEMY_MISSING && (this.informationPreserver.getTrackerInfo().getEnemyUnits().size() != 0 || this.informationPreserver.getTrackerInfo().getEnemyBuildings().size() != 0)) {
+		if (this.currentState == UnitStates.ENEMY_MISSING && (this.informationStorage.getTrackerInfo().getEnemyUnits().size() != 0 || this.informationStorage.getTrackerInfo().getEnemyBuildings().size() != 0)) {
 			this.resetActions();
 			this.currentState = UnitStates.ENEMY_KNOWN;
 		}
 		if (this.currentState == UnitStates.ENEMY_KNOWN) {
-			if (this.informationPreserver.getTrackerInfo().getEnemyUnits().size() == 0 && this.informationPreserver.getTrackerInfo().getEnemyBuildings().size() == 0) {
+			if (this.informationStorage.getTrackerInfo().getEnemyUnits().size() == 0 && this.informationStorage.getTrackerInfo().getEnemyBuildings().size() == 0) {
 				this.resetActions();
 				this.currentState = UnitStates.ENEMY_MISSING;
 			} else {
@@ -237,8 +232,8 @@ public abstract class PlayerUnit extends GoapUnit {
 			for (int j = -CONFIDENCE_TILE_RADIUS; j <= CONFIDENCE_TILE_RADIUS; j++) {
 				TilePosition key = new TilePosition(this.unit.getTilePosition().getX() + i,
 						this.unit.getTilePosition().getY() + j);
-				int eStrength = this.informationPreserver.getTrackerInfo().getEnemyGroundAttackTilePositions().getOrDefault(key, 0);
-				int pStrength = this.informationPreserver.getTrackerInfo().getPlayerGroundAttackTilePositions().getOrDefault(key, 0);
+				int eStrength = this.informationStorage.getTrackerInfo().getEnemyGroundAttackTilePositions().getOrDefault(key, 0);
+				int pStrength = this.informationStorage.getTrackerInfo().getPlayerGroundAttackTilePositions().getOrDefault(key, 0);
 
 				if (eStrength != 0) {
 					enemyStrengths.add(eStrength);
@@ -594,11 +589,7 @@ public abstract class PlayerUnit extends GoapUnit {
 		return this.vecUTPRotatedR;
 	}
 
-	// TODO: UML
-	public InformationPreserver getInformationPreserver() {
-		return informationPreserver;
+	public InformationStorage getInformationStorage() {
+		return informationStorage;
 	}
-	
-	// TODO: UML REMOVED AL LOT OF STATIC FUNCTIONS 12
-	
 }

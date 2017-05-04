@@ -5,6 +5,7 @@ import java.util.Queue;
 import buildingOrderModule.CommandSender;
 import buildingOrderModule.stateFactories.StateFactory;
 import buildingOrderModule.stateFactories.updater.Updater;
+import informationStorage.InformationStorage;
 import javaGOAP.GoapAction;
 import javaGOAP.GoapUnit;
 
@@ -17,6 +18,7 @@ import javaGOAP.GoapUnit;
 public abstract class BuildActionManager extends GoapUnit {
 
 	private CommandSender sender;
+	private InformationStorage informationStorage;
 
 	// Factories and Objects needed for an accurate representation of the
 	// managers capabilities.
@@ -25,8 +27,9 @@ public abstract class BuildActionManager extends GoapUnit {
 	private Updater goalStateUpdater;
 	private Updater actionUpdater;
 
-	public BuildActionManager(CommandSender sender) {
+	public BuildActionManager(CommandSender sender, InformationStorage informationStorage) {
 		this.sender = sender;
+		this.informationStorage = informationStorage;
 
 		this.stateFactory = this.createFactory();
 		this.worldStateUpdater = this.stateFactory.getMatchingWorldStateUpdater(this);
@@ -86,5 +89,9 @@ public abstract class BuildActionManager extends GoapUnit {
 
 	public CommandSender getSender() {
 		return this.sender;
+	}
+	
+	public InformationStorage getInformationStorage() {
+		return informationStorage;
 	}
 }

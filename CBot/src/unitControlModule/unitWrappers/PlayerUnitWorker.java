@@ -6,9 +6,8 @@ import java.util.function.BiConsumer;
 
 import bwapi.Unit;
 import bwapi.UnitType;
-import informationStorage.InformationPreserver;
+import informationStorage.InformationStorage;
 
-// TODO: UML MASSIVE CHANGES
 /**
  * PlayerUnitWorker.java --- Wrapper for a general worker Unit.
  * 
@@ -17,11 +16,7 @@ import informationStorage.InformationPreserver;
  */
 public abstract class PlayerUnitWorker extends PlayerUnit {
 
-	// TODO: UML REMOVED STATICS
-	
 	protected boolean assignedToSout = false;
-
-	// TODO: UML REMOVED MORE STATICS
 	
 	// Building related stuff
 	protected boolean constructingFlag = false;
@@ -42,11 +37,10 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected Unit closestFreeGasSource;
 	protected boolean resourcesResettable = false;
 
-	// TODO: UML
-	public PlayerUnitWorker(Unit unit, InformationPreserver informationPreserver) {
-		super(unit, informationPreserver);
+	public PlayerUnitWorker(Unit unit, InformationStorage informationStorage) {
+		super(unit, informationStorage);
 
-		this.informationPreserver.getWorkerConfig().incrementTotalWorkerCount();
+		this.informationStorage.getWorkerConfig().incrementTotalWorkerCount();
 	}
 
 	// -------------------- Functions
@@ -76,12 +70,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 			// Assign a new closestFreeMineralField / closestFreeGasSource since
 			// these are being transferred over to the GatherAction at the end
-			// of
-			// the main update function (especially after a reset!). Without
-			// this
-			// the Units would refrain from gathering for one cycle and possibly
-			// end
-			// up attacking the enemy.
+			// of the main update function (especially after a reset!). Without
+			// this the Units would refrain from gathering for one cycle and possibly end up attacking the enemy.
 			if (!this.isMappedToGatheringSource()) {
 				this.markContenders();
 			}
@@ -107,10 +97,10 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 		// Scout at the beginning of the game if a certain worker count is
 		// reached.
-		if (!this.informationPreserver.getWorkerConfig().isWorkerOnceAssignedScouting() && this.informationPreserver.getWorkerConfig().getTotalWorkerCount() >= this.informationPreserver.getWorkerConfig().getWorkerScoutingTrigger()
+		if (!this.informationStorage.getWorkerConfig().isWorkerOnceAssignedScouting() && this.informationStorage.getWorkerConfig().getTotalWorkerCount() >= this.informationStorage.getWorkerConfig().getWorkerScoutingTrigger()
 				&& this.currentConstructionState == ConstructionState.IDLE && this.assignedBuildingType == null
 				&& !this.unit.isGatheringGas()) {
-			this.informationPreserver.getWorkerConfig().setWorkerOnceAssignedScouting(true);
+			this.informationStorage.getWorkerConfig().setWorkerOnceAssignedScouting(true);
 			this.assignedToSout = true;
 			this.resetActions();
 		} else if (!this.assignedToSout) {
@@ -138,8 +128,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 * Function for actually freeing the reserved resources of the Unit.
 	 */
 	protected void freeResources() {
-		this.informationPreserver.getResourceReserver().freeMinerals(this.personalReservedMinerals);
-		this.informationPreserver.getResourceReserver().freeGas(this.personalReservedGas);
+		this.informationStorage.getResourceReserver().freeMinerals(this.personalReservedMinerals);
+		this.informationStorage.getResourceReserver().freeGas(this.personalReservedGas);
 		this.personalReservedMinerals = 0;
 		this.personalReservedGas = 0;
 	}
@@ -150,11 +140,11 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 * example starts constructing a building.
 	 */
 	protected void updateMappedSourceContenders() {
-		if (this.informationPreserver.getWorkerConfig().getMappedSourceContenders().containsKey(this.closestFreeMineralField)) {
-			this.informationPreserver.getWorkerConfig().getMappedSourceContenders().get(this.closestFreeMineralField).remove(this.unit);
+		if (this.informationStorage.getWorkerConfig().getMappedSourceContenders().containsKey(this.closestFreeMineralField)) {
+			this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(this.closestFreeMineralField).remove(this.unit);
 		}
-		if (this.informationPreserver.getWorkerConfig().getMappedSourceContenders().containsKey(this.closestFreeGasSource)) {
-			this.informationPreserver.getWorkerConfig().getMappedSourceContenders().get(this.closestFreeGasSource).remove(this.unit);
+		if (this.informationStorage.getWorkerConfig().getMappedSourceContenders().containsKey(this.closestFreeGasSource)) {
+			this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(this.closestFreeGasSource).remove(this.unit);
 		}
 	}
 
@@ -173,7 +163,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		// Wait for the confirmation until either a limit is reached or the
 		// confirmation was given.
 		if (this.currentConstructionState == ConstructionState.AWAIT_CONFIRMATION) {
-			if (this.constructionCounter < this.informationPreserver.getWorkerConfig().getConstructionCounterMax()) {
+			if (this.constructionCounter < this.informationStorage.getWorkerConfig().getConstructionCounterMax()) {
 				this.constructionCounter++;
 			} else {
 				this.constructionCounter = 0;
@@ -183,7 +173,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 			}
 
 			if (this.assignedBuildingType != null
-					&& this.informationPreserver.getWorkerConfig().getMappedBuildActions().getOrDefault(this.unit, null) == this.assignedBuildingType) {
+					&& this.informationStorage.getWorkerConfig().getMappedBuildActions().getOrDefault(this.unit, null) == this.assignedBuildingType) {
 				this.constructionCounter = 0;
 				this.currentConstructionState = ConstructionState.CONFIRMED;
 			}
@@ -196,7 +186,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 			// -> Safety feature, so that no Unit holds a order and does not
 			// execute it because as soon as a building location is occupied,
 			// the building gets added back into the building queue.
-			if (this.assignedBuildingType != null && this.informationPreserver.getWorkerConfig().getMappedBuildActions().getOrDefault(this.unit, null) == null) {
+			if (this.assignedBuildingType != null && this.informationStorage.getWorkerConfig().getMappedBuildActions().getOrDefault(this.unit, null) == null) {
 				this.currentConstructionState = ConstructionState.IDLE;
 
 				this.resetAwaitedConstruction();
@@ -211,8 +201,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 */
 	protected void updateCurrentActionInformation() {
 		// Get a building from the building Queue and reset actions if possible.
-		if (!this.unit.isGatheringGas() && !this.informationPreserver.getWorkerConfig().getBuildingQueue().isEmpty()
-				&& this.informationPreserver.getResourceReserver().canAffordConstruction(this.informationPreserver.getWorkerConfig().getBuildingQueue().peek())
+		if (!this.unit.isGatheringGas() && !this.informationStorage.getWorkerConfig().getBuildingQueue().isEmpty()
+				&& this.informationStorage.getResourceReserver().canAffordConstruction(this.informationStorage.getWorkerConfig().getBuildingQueue().peek())
 				&& this.currentConstructionState == ConstructionState.IDLE) {
 			this.assignConstructionJob();
 		}
@@ -231,11 +221,11 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected void assignConstructionJob() {
 		// Reset first or the assigned building type will be removed!
 		this.resetActions();
-		this.assignedBuildingType = this.informationPreserver.getWorkerConfig().getBuildingQueue().poll();
+		this.assignedBuildingType = this.informationStorage.getWorkerConfig().getBuildingQueue().poll();
 
 		// Reserve the resources for the construction.
-		this.informationPreserver.getResourceReserver().reserveMinerals(this.assignedBuildingType.mineralPrice());
-		this.informationPreserver.getResourceReserver().reserveGas(this.assignedBuildingType.gasPrice());
+		this.informationStorage.getResourceReserver().reserveMinerals(this.assignedBuildingType.mineralPrice());
+		this.informationStorage.getResourceReserver().reserveGas(this.assignedBuildingType.gasPrice());
 		this.personalReservedMinerals = this.assignedBuildingType.mineralPrice();
 		this.personalReservedGas = this.assignedBuildingType.gasPrice();
 
@@ -256,7 +246,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		final HashSet<Unit> mappedSource = new HashSet<>();
 
 		// Get all assigned gathering source(s) for this Unit.
-		this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
+		this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
 			@Override
 			public void accept(Unit unit, ArrayList<Unit> set) {
 				if (set.contains(mappedUnit)) {
@@ -277,7 +267,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected void resetAwaitedConstruction() {
 		// Flag is not set = construction has not started
 		if (!this.constructingFlag) {
-			this.informationPreserver.getWorkerConfig().getBuildingQueue().add(this.assignedBuildingType);
+			this.informationStorage.getWorkerConfig().getBuildingQueue().add(this.assignedBuildingType);
 			this.freeResources();
 
 			// TODO: REMOVE extra Information
@@ -300,17 +290,17 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		Unit gasSource = this.findClosestFreeGasSource();
 
 		// Create new entries if necessary.
-		if (!this.informationPreserver.getWorkerConfig().getMappedSourceContenders().containsKey(mineralField)) {
-			this.informationPreserver.getWorkerConfig().getMappedSourceContenders().put(mineralField, new ArrayList<Unit>());
+		if (!this.informationStorage.getWorkerConfig().getMappedSourceContenders().containsKey(mineralField)) {
+			this.informationStorage.getWorkerConfig().getMappedSourceContenders().put(mineralField, new ArrayList<Unit>());
 		}
-		if (!this.informationPreserver.getWorkerConfig().getMappedSourceContenders().containsKey(gasSource)) {
-			this.informationPreserver.getWorkerConfig().getMappedSourceContenders().put(gasSource, new ArrayList<Unit>());
+		if (!this.informationStorage.getWorkerConfig().getMappedSourceContenders().containsKey(gasSource)) {
+			this.informationStorage.getWorkerConfig().getMappedSourceContenders().put(gasSource, new ArrayList<Unit>());
 		}
-		if (!this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().containsKey(mineralField)) {
-			this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().put(mineralField, new ArrayList<Unit>());
+		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().containsKey(mineralField)) {
+			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(mineralField, new ArrayList<Unit>());
 		}
-		if (!this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().containsKey(gasSource)) {
-			this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().put(gasSource, new ArrayList<Unit>());
+		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().containsKey(gasSource)) {
+			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(gasSource, new ArrayList<Unit>());
 		}
 
 		// If a space for gathering a resource is free, set this Unit as a
@@ -318,14 +308,14 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		// while the action is executed so that, if the found source has no
 		// free spot, a new one will be eventually found in one of the next
 		// iterations.
-		if (this.informationPreserver.getWorkerConfig().getMappedSourceContenders().get(mineralField).size()
-				+ this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().get(mineralField).size() < this.informationPreserver.getWorkerConfig().getMaxNumberMining()) {
-			this.informationPreserver.getWorkerConfig().getMappedSourceContenders().get(mineralField).add(this.unit);
+		if (this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(mineralField).size()
+				+ this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().get(mineralField).size() < this.informationStorage.getWorkerConfig().getMaxNumberMining()) {
+			this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(mineralField).add(this.unit);
 			this.closestFreeMineralField = mineralField;
 		}
-		if (this.informationPreserver.getWorkerConfig().getMappedSourceContenders().get(gasSource).size()
-				+ this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().get(gasSource).size() < this.informationPreserver.getWorkerConfig().getMaxNumberGatheringGas()) {
-			this.informationPreserver.getWorkerConfig().getMappedSourceContenders().get(gasSource).add(this.unit);
+		if (this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(gasSource).size()
+				+ this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().get(gasSource).size() < this.informationStorage.getWorkerConfig().getMaxNumberGatheringGas()) {
+			this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(gasSource).add(this.unit);
 			this.closestFreeGasSource = gasSource;
 		}
 	}
@@ -339,10 +329,10 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		Unit closestFreeMineralField = null;
 
 		// Get all mineral fields
-		for (Unit gatheringSource : this.getUnit().getUnitsInRadius(this.informationPreserver.getWorkerConfig().getPixelGatherSearchRadius())) {
+		for (Unit gatheringSource : this.getUnit().getUnitsInRadius(this.informationStorage.getWorkerConfig().getPixelGatherSearchRadius())) {
 			if (gatheringSource.getType().isMineralField()) {
 				closestFreeMineralField = this.checkAgainstMappedAccessibleSources(gatheringSource,
-						closestFreeMineralField, this.informationPreserver.getWorkerConfig().getMaxNumberMining());
+						closestFreeMineralField, this.informationStorage.getWorkerConfig().getMaxNumberMining());
 			}
 		}
 		return closestFreeMineralField;
@@ -357,10 +347,10 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 		Unit closestRefinery = null;
 
 		// Get all vaspene geysers
-		for (Unit gatheringSource : this.getUnit().getUnitsInRadius(this.informationPreserver.getWorkerConfig().getPixelGatherSearchRadius())) {
+		for (Unit gatheringSource : this.getUnit().getUnitsInRadius(this.informationStorage.getWorkerConfig().getPixelGatherSearchRadius())) {
 			if (gatheringSource.getType().isRefinery()) {
 				closestRefinery = this.checkAgainstMappedAccessibleSources(gatheringSource, closestRefinery,
-						this.informationPreserver.getWorkerConfig().getMaxNumberGatheringGas());
+						this.informationStorage.getWorkerConfig().getMaxNumberGatheringGas());
 			}
 		}
 		return closestRefinery;
@@ -390,11 +380,11 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	protected Unit checkAgainstMappedAccessibleSources(Unit gatheringSource, Unit referenceUnit, int workerThreshold) {
 		// Create a new entry in the map if no other entry for the gathering
 		// source is found.
-		if (!this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().containsKey(gatheringSource)) {
-			this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().put(gatheringSource, new ArrayList<Unit>());
+		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().containsKey(gatheringSource)) {
+			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(gatheringSource, new ArrayList<Unit>());
 		}
 
-		ArrayList<Unit> mappedUnits = this.informationPreserver.getWorkerConfig().getMappedAccessibleGatheringSources().get(gatheringSource);
+		ArrayList<Unit> mappedUnits = this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().get(gatheringSource);
 
 		// If the threshold is not reached, the Unit can gather there.
 		if (mappedUnits.size() < workerThreshold && (referenceUnit == null
@@ -443,10 +433,4 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	public boolean isAssignedToSout() {
 		return assignedToSout;
 	}
-	
-	// TODO: UML
-	public InformationPreserver getInformationPreserver() {
-		return informationPreserver;
-	}
-
 }

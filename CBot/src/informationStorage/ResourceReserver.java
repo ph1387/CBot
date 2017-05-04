@@ -6,7 +6,6 @@ import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
 
-// TODO: UML NON SINGLETON AND MOVED
 /**
  * ResourceReserver.java --- Class that holds any reserved minerals or gases.
  * 

@@ -28,7 +28,7 @@ public class BuildingOrderSender implements CommandSender {
 	}
 
 	public void buildBuilding(UnitType unitType) {
-		this.unitControlModule.addToTrainingQueue(unitType);
+		this.unitControlModule.addToBuildingQueue(unitType);
 	}
 
 	@Override

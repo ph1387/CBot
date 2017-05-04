@@ -1,6 +1,5 @@
 package unitControlModule;
 
-// TODO: UML
 /**
  * UnknownUnitTypeException.java --- Exception for handling unknown UnitTypes.
  * 

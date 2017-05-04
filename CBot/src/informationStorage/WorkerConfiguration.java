@@ -9,7 +9,6 @@ import java.util.Queue;
 import bwapi.Unit;
 import bwapi.UnitType;
 
-// TODO: UML
 /**
  * WorkerConfiguration.java --- Configuration Class for the worker Units.
  * 
@@ -19,14 +18,13 @@ import bwapi.UnitType;
 public class WorkerConfiguration {
 
 	private int maxNumberMining = 2;
-	private int maxNumberGatheringGas = 0; // TODO: 3
+	private int maxNumberGatheringGas = 3;
 	private int pixelGatherSearchRadius = 350;
 	private int constructionCounterMax = 20;
-	
+
 	// Initial scouting configuration
 	private int workerScoutingTrigger = 9;
 	private int totalWorkerCount = 0;
-	// TODO: UML
 	private boolean workerOnceAssignedScouting = false;
 
 	// Mapped: gathering sources (Units) -> Units (worker)
@@ -78,7 +76,7 @@ public class WorkerConfiguration {
 	public int getTotalWorkerCount() {
 		return totalWorkerCount;
 	}
-	
+
 	public boolean isWorkerOnceAssignedScouting() {
 		return workerOnceAssignedScouting;
 	}

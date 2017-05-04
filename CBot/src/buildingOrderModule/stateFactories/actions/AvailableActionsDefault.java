@@ -2,7 +2,10 @@ package buildingOrderModule.stateFactories.actions;
 
 import java.util.HashSet;
 
-import buildingOrderModule.stateFactories.actions.executableActions.BuildWorkerAction;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionSupply;
+import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
 import javaGOAP.GoapAction;
 
 /**
@@ -15,6 +18,9 @@ import javaGOAP.GoapAction;
 public class AvailableActionsDefault extends HashSet<GoapAction> {
 
 	public AvailableActionsDefault() {
-		this.add(new BuildWorkerAction(0));
+		this.add(new TrainUnitActionWorker(1));
+		this.add(new ConstructActionSupply(1));
+		this.add(new ConstructActionCenter(1));
+		this.add(new ConstructActionRefinery(1));
 	}
 }

@@ -1,7 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
-import informationStorage.InformationPreserver;
+import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactoryDefault;
 import unitControlModule.stateFactories.StateFactory;
 
@@ -12,9 +12,8 @@ import unitControlModule.stateFactories.StateFactory;
  */
 public class PlayerUnitTerran_Marine extends PlayerUnit {
 
-	// TODO: UML
-	public PlayerUnitTerran_Marine(Unit unit, InformationPreserver informationPreserver) {
-		super(unit, informationPreserver);
+	public PlayerUnitTerran_Marine(Unit unit, InformationStorage informationStorage) {
+		super(unit, informationStorage);
 	}
 
 	// -------------------- Functions

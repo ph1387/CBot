@@ -1,7 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import bwapi.Unit;
-import informationStorage.InformationPreserver;
+import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactoryDefault;
 import unitControlModule.stateFactories.StateFactory;
 
@@ -12,8 +12,8 @@ import unitControlModule.stateFactories.StateFactory;
  */
 public class PlayerUnitTerran_Vulture extends PlayerUnit {
 
-	public PlayerUnitTerran_Vulture(Unit unit, InformationPreserver informationPreserver) {
-		super(unit, informationPreserver);
+	public PlayerUnitTerran_Vulture(Unit unit, InformationStorage informationStorage) {
+		super(unit, informationStorage);
 		
 		// TODO: Possible Change: Update confidenceDefaultRange based on the closestEnemy's weapon range
 		this.extraConfidencePixelRangeToClosestUnits = 112;
