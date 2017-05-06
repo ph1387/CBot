@@ -11,6 +11,10 @@ import bwapi.UnitType;
  */
 public class ConstrucActionTerran_Factory extends ConstructBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ConstrucActionTerran_Factory(Object target) {
 		super(target);
 	}

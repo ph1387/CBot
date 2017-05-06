@@ -5,18 +5,19 @@ import javaGOAP.GoapState;
 
 // TODO: Needed Change: Combine with the UnitControl Updater
 /**
- * GoalStateUpdaterGeneral.java --- Superclass for updating most GoalStates. 
+ * GoalStateUpdaterGeneral.java --- Superclass for updating most GoalStates.
+ * 
  * @author P H - 28.04.2017
  *
  */
 public abstract class GoalStateUpdaterGeneral implements Updater {
-	
+
 	protected BuildActionManager buildActionManager;
 
 	public GoalStateUpdaterGeneral(BuildActionManager buildActionManager) {
 		this.buildActionManager = buildActionManager;
 	}
-	
+
 	// -------------------- Functions
 
 	/**

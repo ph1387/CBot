@@ -15,7 +15,9 @@ import javaGOAP.IGoapUnit;
  */
 public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExtension {
 
-	// Anonymous inner class for the precondition check.
+	/**
+	 * Anonymous inner class for the precondition check.
+	 */
 	private class CustomPreconditionChecker implements PreconditionChecker {
 
 		private UpgradeBaseAction actionReference;
@@ -41,6 +43,10 @@ public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExt
 
 	protected UpgradeType type;
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public UpgradeBaseAction(Object target) {
 		super(target);
 

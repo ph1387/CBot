@@ -17,6 +17,10 @@ public abstract class ConstructBaseAction extends ManagerBaseAction {
 
 	protected UnitType type;
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ConstructBaseAction(Object target) {
 		super(target);
 

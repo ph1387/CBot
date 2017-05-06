@@ -17,7 +17,9 @@ import javaGOAP.IGoapUnit;
  */
 public abstract class ManagerBaseActionPreconditionExtension extends ManagerBaseAction {
 
-	// Interface for checking the preconditions of the different subclasses.
+	/**
+	 * Interface for checking the preconditions of the different subclasses.
+	 */
 	protected interface PreconditionChecker {
 		boolean check(Unit unit);
 
@@ -26,6 +28,10 @@ public abstract class ManagerBaseActionPreconditionExtension extends ManagerBase
 
 	private PreconditionChecker checker;
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ManagerBaseActionPreconditionExtension(Object target) {
 		super(target);
 
@@ -34,6 +40,12 @@ public abstract class ManagerBaseActionPreconditionExtension extends ManagerBase
 
 	// -------------------- Functions
 
+	/**
+	 * Function needed for checking if certain criteria are matched.
+	 * 
+	 * @return a PreconditionChecker object which can be used for checking the
+	 *         procedural preconditions.
+	 */
 	protected abstract PreconditionChecker definePreconditionChecker();
 
 	/**

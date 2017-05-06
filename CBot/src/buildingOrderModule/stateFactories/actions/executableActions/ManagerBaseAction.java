@@ -38,6 +38,13 @@ public abstract class ManagerBaseAction extends GoapAction {
 		return success && this.checkProceduralSpecificPrecondition(goapUnit);
 	}
 
+	/**
+	 * Function for checking a more specific precondition of any subclass.
+	 * 
+	 * @param goapUnit
+	 *            the executing GoapUnit.
+	 * @return true or false depending if the specific preconditions are met.
+	 */
 	protected abstract boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit);
 
 	@Override

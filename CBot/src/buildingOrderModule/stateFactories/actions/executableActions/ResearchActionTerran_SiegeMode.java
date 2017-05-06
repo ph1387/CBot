@@ -11,6 +11,10 @@ import bwapi.TechType;
  */
 public class ResearchActionTerran_SiegeMode extends ResearchBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ResearchActionTerran_SiegeMode(Object target) {
 		super(target);
 	}

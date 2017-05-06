@@ -1,7 +1,8 @@
 package buildingOrderModule.stateFactories.worldStates;
 
 /**
- * ManagerWorldStateActionQueueTerran.java --- WorldState for a Terran BuildActionManager.
+ * ManagerWorldStateActionQueueTerran.java --- WorldState for a Terran
+ * BuildActionManager.
  * 
  * @author P H - 30.04.2017
  *
@@ -9,6 +10,6 @@ package buildingOrderModule.stateFactories.worldStates;
 public class ManagerWorldStateActionQueueTerran extends ManagerWorldStateActionQueue {
 
 	public ManagerWorldStateActionQueueTerran() {
-		
+
 	}
 }

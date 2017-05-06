@@ -12,6 +12,10 @@ import core.Core;
  */
 public class ConstructActionCenter extends ConstructBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ConstructActionCenter(Object target) {
 		super(target);
 	}

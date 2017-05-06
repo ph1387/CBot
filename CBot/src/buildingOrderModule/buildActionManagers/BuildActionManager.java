@@ -54,6 +54,12 @@ public abstract class BuildActionManager extends GoapUnit {
 		}
 	}
 
+	/**
+	 * Function for providing a StateFactory which will be used to determine the
+	 * possible actions, goals, worldState etc. of the BuildActionManager.
+	 * 
+	 * @return a StateFactory providing all necessary information.
+	 */
 	protected abstract StateFactory createFactory();
 
 	@Override
@@ -90,7 +96,7 @@ public abstract class BuildActionManager extends GoapUnit {
 	public CommandSender getSender() {
 		return this.sender;
 	}
-	
+
 	public InformationStorage getInformationStorage() {
 		return informationStorage;
 	}

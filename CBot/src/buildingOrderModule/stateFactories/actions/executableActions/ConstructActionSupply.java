@@ -12,6 +12,10 @@ import core.Core;
  */
 public class ConstructActionSupply extends ConstructBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ConstructActionSupply(Object target) {
 		super(target);
 	}

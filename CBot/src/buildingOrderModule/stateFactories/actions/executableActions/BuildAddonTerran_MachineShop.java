@@ -11,10 +11,14 @@ import bwapi.UnitType;
  */
 public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public BuildAddonTerran_MachineShop(Object target) {
 		super(target);
 	}
-	
+
 	// -------------------- Functions
 
 	@Override

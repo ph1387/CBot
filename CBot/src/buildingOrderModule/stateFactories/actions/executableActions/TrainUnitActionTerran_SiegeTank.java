@@ -11,6 +11,10 @@ import bwapi.UnitType;
  */
 public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public TrainUnitActionTerran_SiegeTank(Object target) {
 		super(target);
 	}

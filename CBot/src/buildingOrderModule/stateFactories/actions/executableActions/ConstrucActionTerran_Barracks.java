@@ -11,6 +11,10 @@ import bwapi.UnitType;
  */
 public class ConstrucActionTerran_Barracks extends ConstructBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ConstrucActionTerran_Barracks(Object target) {
 		super(target);
 	}

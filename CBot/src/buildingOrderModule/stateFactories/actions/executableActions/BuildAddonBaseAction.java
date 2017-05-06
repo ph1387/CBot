@@ -13,7 +13,9 @@ import javaGOAP.IGoapUnit;
  */
 public abstract class BuildAddonBaseAction extends ManagerBaseActionPreconditionExtension {
 
-	// Anonymous inner class for the precondition check.
+	/**
+	 * Anonymous inner class for the precondition check.
+	 */
 	private class CustomPreconditionChecker implements PreconditionChecker {
 
 		private BuildAddonBaseAction actionReference;
@@ -37,6 +39,9 @@ public abstract class BuildAddonBaseAction extends ManagerBaseActionPrecondition
 
 	protected UnitType type;
 
+	/**
+	 * @param target type: Integer
+	 */
 	public BuildAddonBaseAction(Object target) {
 		super(target);
 

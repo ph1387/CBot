@@ -6,7 +6,8 @@ import buildingOrderModule.stateFactories.actions.executableActions.actionQueues
 import javaGOAP.GoapAction;
 
 /**
- * AvailableActionsTerran.java --- Available actions for the Terran race. 
+ * AvailableActionsTerran.java --- Available actions for the Terran race.
+ * 
  * @author P H - 30.04.2017
  *
  */

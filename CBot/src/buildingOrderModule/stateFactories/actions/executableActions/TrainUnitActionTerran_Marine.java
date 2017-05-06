@@ -10,6 +10,10 @@ import bwapi.UnitType;
  */
 public class TrainUnitActionTerran_Marine extends TrainUnitBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public TrainUnitActionTerran_Marine(Object target) {
 		super(target);
 	}

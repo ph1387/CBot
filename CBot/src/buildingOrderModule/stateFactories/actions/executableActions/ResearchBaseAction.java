@@ -15,7 +15,9 @@ import javaGOAP.IGoapUnit;
  */
 public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionExtension {
 
-	// Anonymous inner class for the precondition check.
+	/**
+	 * Anonymous inner class for the precondition check.
+	 */
 	private class CustomPreconditionChecker implements PreconditionChecker {
 
 		private ResearchBaseAction actionReference;
@@ -38,6 +40,10 @@ public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionEx
 
 	protected TechType type;
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ResearchBaseAction(Object target) {
 		super(target);
 
