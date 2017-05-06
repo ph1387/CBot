@@ -5,8 +5,10 @@ import java.util.List;
 
 import bwapi.Color;
 import bwapi.Game;
+import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
+import bwapiMath.Polygon;
 
 /**
  * Display.java --- A class used for displaying all sorts of basic information
@@ -19,6 +21,13 @@ public class Display {
 	private static int lineHeight = Core.getInstance().getLineheight();
 	private static int offsetLeft = Core.getInstance().getOffsetLeft();
 	private static int tileSize = Core.getInstance().getTileSize();
+	
+	// Map information visualization
+	private static boolean enableMapPolygons = true;
+	private static boolean enableMapContendedTilePositions = true;
+	private static Color polygonColor = new Color(255, 128, 0);
+	private static int polygonVertexRadius = 5;
+	private static Color contendedTilePositionColor = new Color(128, 128, 0);
 
 	// Displays the unit tile ingame
 	public static void showUnitTile(Game game, Unit unit, Color color) {
@@ -33,18 +42,18 @@ public class Display {
 			tileSizeY = unit.getType().tileHeight();
 		}
 
-		drawTile(game, posX, posY, tileSizeX, tileSizeY, color);
+		drawTile(posX, posY, tileSizeX, tileSizeY, color);
 	}
 
 	// Display a box around (a) tile/-s
-	public static void drawTile(Game game, int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
-		game.drawBoxMap(tileX * tileSize, tileY * tileSize, (tileX + tileWidth) * tileSize,
+	public static void drawTile(int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
+		Core.getInstance().getGame().drawBoxMap(tileX * tileSize, tileY * tileSize, (tileX + tileWidth) * tileSize,
 				(tileY + tileHeight) * tileSize, color);
 	}
 
 	// Display a filled tile on the map
-	public static void drawTileFilled(Game game, int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
-		game.drawBoxMap(tileX * tileSize, tileY * tileSize, (tileX + tileWidth) * tileSize,
+	public static void drawTileFilled(int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
+		Core.getInstance().getGame().drawBoxMap(tileX * tileSize, tileY * tileSize, (tileX + tileWidth) * tileSize,
 				(tileY + tileHeight) * tileSize, color, true);
 	}
 
@@ -89,7 +98,7 @@ public class Display {
 	}
 
 	// Display a list of strings
-	public static void showList(Game game, List<String> list, int offsetX, int offsetY) {
+	private static void showList(Game game, List<String> list, int offsetX, int offsetY) {
 		for (int i = 1; i <= list.size(); i++) {
 			game.drawTextScreen(offsetX, offsetY + (lineHeight * i), list.get(i - 1));
 		}
@@ -100,10 +109,17 @@ public class Display {
 		showTime(game, offsetLeft, lineHeight);
 		showAPM(game, offsetLeft, lineHeight * 2);
 		showFPS(game, offsetLeft, lineHeight * 3);
+		
+		if(enableMapPolygons) {
+			showContendedTilePositions();
+		}
+		if(enableMapContendedTilePositions) {
+			showPolygons();
+		}
 	}
 
 	// Display the current time
-	public static void showTime(Game game, int offsetX, int offsetY) {
+	private static void showTime(Game game, int offsetX, int offsetY) {
 		String minutesString = (int) Math.floor(game.elapsedTime() / 60) + "";
 		String secondsString = "";
 		int seconds = (int) game.elapsedTime() % 60;
@@ -121,14 +137,26 @@ public class Display {
 	}
 
 	// Display the APM counter
-	public static void showAPM(Game game, int offsetX, int offsetY) {
+	private static void showAPM(Game game, int offsetX, int offsetY) {
 		String text = "APM: " + game.getAPM();
 		game.drawTextScreen(offsetX, offsetY, text);
 	}
 
 	// Display FPS
-	public static void showFPS(Game game, int offsetX, int offsetY) {
+	private static void showFPS(Game game, int offsetX, int offsetY) {
 		String text = "FPS: " + game.getFPS();
 		game.drawTextScreen(offsetX, offsetY, text);
+	}
+	
+	private static void showPolygons() {
+		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getPolygons()) {
+			polygon.drawOnMap(polygonColor, polygonVertexRadius);
+		}
+	}
+
+	private static void showContendedTilePositions() {
+		for (TilePosition tilePosition : CBot.getInstance().getInformationStorage().getMapInfo().getTilePositionContenders()) {
+			drawTileFilled(tilePosition.getX(), tilePosition.getY(), 1, 1, contendedTilePositionColor);
+		}
 	}
 }

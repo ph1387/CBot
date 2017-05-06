@@ -32,7 +32,8 @@ import unitControlModule.stateFactories.updater.Updater;
 public abstract class PlayerUnit extends GoapUnit {
 
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
-	// TODO: Possible Change: Reevaluate the importance of Units choosing their own parameters
+	// TODO: Possible Change: Reevaluate the importance of Units choosing their
+	// own parameters
 	public static final double CONFIDENCE_THRESHHOLD = 0.7;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
@@ -41,7 +42,7 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	// Information preserver which holds all important information
 	protected InformationStorage informationStorage;
-	
+
 	protected Unit unit;
 	protected Unit closestEnemyUnitInSight;
 	protected Unit closestEnemyUnitInConfidenceRange;
@@ -91,7 +92,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	public PlayerUnit(Unit unit, InformationStorage informationStorage) {
 		this.unit = unit;
 		this.informationStorage = informationStorage;
-		
+
 		this.stateFactory = this.createFactory();
 		this.worldStateUpdater = this.stateFactory.getMatchingWorldStateUpdater(this);
 		this.goalStateUpdater = this.stateFactory.getMatchingGoalStateUpdater(this);
@@ -129,12 +130,15 @@ public abstract class PlayerUnit extends GoapUnit {
 	@Override
 	public void update() {
 		// FSM worldState changes in one cycle.
-		if (this.currentState == UnitStates.ENEMY_MISSING && (this.informationStorage.getTrackerInfo().getEnemyUnits().size() != 0 || this.informationStorage.getTrackerInfo().getEnemyBuildings().size() != 0)) {
+		if (this.currentState == UnitStates.ENEMY_MISSING
+				&& (this.informationStorage.getTrackerInfo().getEnemyUnits().size() != 0
+						|| this.informationStorage.getTrackerInfo().getEnemyBuildings().size() != 0)) {
 			this.resetActions();
 			this.currentState = UnitStates.ENEMY_KNOWN;
 		}
 		if (this.currentState == UnitStates.ENEMY_KNOWN) {
-			if (this.informationStorage.getTrackerInfo().getEnemyUnits().size() == 0 && this.informationStorage.getTrackerInfo().getEnemyBuildings().size() == 0) {
+			if (this.informationStorage.getTrackerInfo().getEnemyUnits().size() == 0
+					&& this.informationStorage.getTrackerInfo().getEnemyBuildings().size() == 0) {
 				this.resetActions();
 				this.currentState = UnitStates.ENEMY_MISSING;
 			} else {
@@ -168,9 +172,10 @@ public abstract class PlayerUnit extends GoapUnit {
 		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
 
 		// TODO: Fixed FPS Drops
-		// Only update the following information if an enemy is in the confidence range. 
+		// Only update the following information if an enemy is in the
+		// confidence range.
 		// -> FPS boost!
-		if(this.closestEnemyUnitInConfidenceRange != null) {
+		if (this.closestEnemyUnitInConfidenceRange != null) {
 			this.updateConfidence();
 			this.updateConfidenceState();
 			this.updateCurrentRangeState();
@@ -232,8 +237,10 @@ public abstract class PlayerUnit extends GoapUnit {
 			for (int j = -CONFIDENCE_TILE_RADIUS; j <= CONFIDENCE_TILE_RADIUS; j++) {
 				TilePosition key = new TilePosition(this.unit.getTilePosition().getX() + i,
 						this.unit.getTilePosition().getY() + j);
-				int eStrength = this.informationStorage.getTrackerInfo().getEnemyGroundAttackTilePositions().getOrDefault(key, 0);
-				int pStrength = this.informationStorage.getTrackerInfo().getPlayerGroundAttackTilePositions().getOrDefault(key, 0);
+				int eStrength = this.informationStorage.getTrackerInfo().getEnemyGroundAttackTilePositions()
+						.getOrDefault(key, 0);
+				int pStrength = this.informationStorage.getTrackerInfo().getPlayerGroundAttackTilePositions()
+						.getOrDefault(key, 0);
 
 				if (eStrength != 0) {
 					enemyStrengths.add(eStrength);
@@ -285,8 +292,7 @@ public abstract class PlayerUnit extends GoapUnit {
 
 				// TODO: DEBUG INFO
 				// Nearest enemy Unit display.
-				Display.drawTileFilled(Core.getInstance().getGame(),
-						this.closestEnemyUnitInConfidenceRange.getTilePosition().getX(),
+				Display.drawTileFilled(this.closestEnemyUnitInConfidenceRange.getTilePosition().getX(),
 						this.closestEnemyUnitInConfidenceRange.getTilePosition().getY(), 1, 1, new Color(0, 0, 255));
 
 			}
@@ -304,7 +310,8 @@ public abstract class PlayerUnit extends GoapUnit {
 
 			// TODO: DEBUG INFO
 			// Cone of possible retreat Positions
-			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX), vecUTP.getY() + (int) (vecUTP.dirY));
+			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
+					vecUTP.getY() + (int) (vecUTP.dirY));
 			// Position rotatedLVecEndPos = new Position(vecUTPRotatedL.x +
 			// (int) (vecUTPRotatedL.dirX),
 			// vecUTPRotatedL.y + (int) (vecUTPRotatedL.dirY));

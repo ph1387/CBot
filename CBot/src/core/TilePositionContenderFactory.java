@@ -1,4 +1,4 @@
-package unitControlModule.stateFactories.actions.executableActions.worker;
+package core;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,7 +14,8 @@ import bwapiMath.Polygon;
 import bwapiMath.Point.Direction;
 import bwapiMath.Point.Type;
 import bwta.BWTA;
-import core.Core;
+import informationStorage.InformationStorage;
+import unitControlModule.stateFactories.actions.executableActions.worker.TilePositionFactory;
 
 /**
  * TilePositionContenderGenerator.java --- Class for generating the default
@@ -30,11 +31,10 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 	private int contendedTileRangeMinerals = 2;
 	private int contendedTileRangeGeysers = 2;
 
-	// TODO: REMOVE DEBUG
-	public static Polygon debug_polygon;
+	private InformationStorage informationStorage;
 	
-	public TilePositionContenderFactory() {
-		
+	public TilePositionContenderFactory(InformationStorage informationStorage) {
+		this.informationStorage = informationStorage;
 	}
 	
 	// -------------------- Functions
@@ -231,14 +231,14 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 
 			for (Unit unit : startingGeysers) {
 				designatedHashSet.removeAll(
-						generateNeededTilePositions(UnitType.Resource_Vespene_Geyser, unit.getTilePosition()));
+						this.generateNeededTilePositions(UnitType.Resource_Vespene_Geyser, unit.getTilePosition()));
 			}
 
+			// Add the Polygon to the Set of Polygons
+			this.informationStorage.getMapInfo().getPolygons().add(constructionFreeZone);
+			
 			// TODO: DEBUG INFO
 			System.out.println("Minerals: " + mineralsToBase + " Geysers: " + geysersToBase);
-
-			// TODO: REMOVE DEBUG
-			TilePositionContenderFactory.debug_polygon = constructionFreeZone;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

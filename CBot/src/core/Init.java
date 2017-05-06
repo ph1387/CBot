@@ -13,7 +13,7 @@ import bwta.BWTA;
  */
 public class Init {
 	private static final int UNIT_FLAG = 1;
-	private static final int GAME_SPEED = 0;		// TODO: 20, 0, etc.
+	private static final int GAME_SPEED = 0; // TODO: 20, 0, etc.
 
 	/**
 	 * Function for initializing all important Functions in the beginning.
@@ -33,6 +33,11 @@ public class Init {
 			// Use BWTA to analyze map
 			BWTA.readMap();
 			BWTA.analyze();
+
+			// Add all default contended TilePositions
+			CBot.getInstance().getInformationStorage().getMapInfo().getTilePositionContenders()
+					.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
+							.generateDefaultContendedTilePositions());
 
 			// Change game settings
 			game.enableFlag(UNIT_FLAG);

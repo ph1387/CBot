@@ -21,22 +21,13 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  */
 public class BuildLocationFactory extends TilePositionFactory {
 
-	// TODO: Possible Change: Non Static provided by creator
-	private static HashSet<TilePosition> tilePositionContenders;
-	private TilePositionContenderFactory tilePositionContenderFactory;
-	
 	private int maxBuildingSearchRadius = 5;
 	// Due to the large tile range there should not be any trouble finding a
 	// suitable building location.
 	private int maxTileRange = 50;
 
 	public BuildLocationFactory() {
-		this.tilePositionContenderFactory = new TilePositionContenderFactory();
-		
-		// Do not overwrite existing contender collections!
-		if(BuildLocationFactory.tilePositionContenders == null) {
-			BuildLocationFactory.tilePositionContenders = this.tilePositionContenderFactory.generateDefaultContendedTilePositions();
-		}
+
 	}
 
 	// -------------------- Functions
@@ -221,13 +212,9 @@ public class BuildLocationFactory extends TilePositionFactory {
 					// location.
 					if (Core.getInstance().getGame().canBuildHere(testPosition, building)
 							&& !this.arePlayerUnitsBlocking(neededTilePositions, goapUnit)
-							&& !this.areTilePositionsContended(neededTilePositions)) {
+							&& !this.areTilePositionsContended(neededTilePositions, ((PlayerUnitWorker) goapUnit)
+									.getInformationStorage().getMapInfo().getTilePositionContenders())) {
 						buildLocation = testPosition;
-
-						// Remove old contended entries and add new ones
-						tilePositionContenders
-								.removeAll(this.generateNeededTilePositions(building, targetTilePosition));
-						tilePositionContenders.addAll(neededTilePositions);
 					}
 				}
 			}
@@ -253,22 +240,10 @@ public class BuildLocationFactory extends TilePositionFactory {
 	 */
 	protected boolean arePlayerUnitsBlocking(HashSet<TilePosition> desiredTilePositions, IGoapUnit constructor) {
 		// Check each player Unit except the constructor itself
-		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-			if (unit != ((PlayerUnitWorker) constructor).getUnit()) {
-				HashSet<TilePosition> blockedTilePositions = new HashSet<TilePosition>();
-
-				if (unit.getType().isBuilding()) {
-					blockedTilePositions = this.generateNeededTilePositions(unit.getType(), unit.getTilePosition());
-				} else {
-					blockedTilePositions.add(unit.getTilePosition());
-				}
-
-				// Check the occupied TilePosition(s) of the currently tested
-				// Unit
-				for (TilePosition tilePosition : blockedTilePositions) {
-					if (desiredTilePositions.contains(tilePosition)) {
-						return true;
-					}
+		for (TilePosition tilePosition : desiredTilePositions) {
+			for (Unit unit : Core.getInstance().getGame().getUnitsOnTile(tilePosition)) {
+				if(unit != ((PlayerUnitWorker) constructor).getUnit()) {
+					return true;
 				}
 			}
 		}
@@ -282,10 +257,13 @@ public class BuildLocationFactory extends TilePositionFactory {
 	 * @param desiredTilePositions
 	 *            the TilePositions that are going to be checked against all
 	 *            contended TilePositions.
+	 * @param tilePositionContenders
+	 *            the HashSet that stores all currently contended TilePositions.
 	 * @return true or false depending if one of the desired TilePositions is
 	 *         already contended.
 	 */
-	protected boolean areTilePositionsContended(HashSet<TilePosition> desiredTilePositions) {
+	protected boolean areTilePositionsContended(HashSet<TilePosition> desiredTilePositions,
+			HashSet<TilePosition> tilePositionContenders) {
 		for (TilePosition tilePosition : desiredTilePositions) {
 			if (tilePositionContenders.contains(tilePosition)) {
 				return true;
@@ -294,9 +272,4 @@ public class BuildLocationFactory extends TilePositionFactory {
 		return false;
 	}
 
-	// ------------------------------ Getter / Setter
-
-	protected HashSet<TilePosition> getTilePositionContenders() {
-		return tilePositionContenders;
-	}
 }

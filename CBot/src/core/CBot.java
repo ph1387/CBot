@@ -231,4 +231,8 @@ public class CBot implements BWEventListener {
 	public BuildingOrderModule getBuildingOrderModule() {
 		return buildingOrderModule;
 	}
+	
+	public InformationStorage getInformationStorage() {
+		return informationStorage;
+	}
 }

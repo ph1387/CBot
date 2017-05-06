@@ -117,7 +117,7 @@ class UnitTrackerDisplay {
 	 *            the color which the position is going to be marked with.
 	 */
 	private static void showUnitTileStrength(TilePosition tilePosition, Integer value, Color displayColor) {
-		Display.drawTile(Core.getInstance().getGame(), tilePosition.getX(), tilePosition.getY(), 1, 1, displayColor);
+		Display.drawTile(tilePosition.getX(), tilePosition.getY(), 1, 1, displayColor);
 		GAME.drawTextMap(tilePosition.toPosition(), String.valueOf(value));
 	}
 

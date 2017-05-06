@@ -30,16 +30,20 @@ public class InformationStorage {
 
 	// Tracking information
 	private UnitTrackerInformation trackerInfo;
+	
+	// Map information
+	private MapInformation mapInfo;
 
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
-			UnitTrackerInformation trackerInfo) {
+			UnitTrackerInformation trackerInfo, MapInformation mapInfo) {
 		this.resourceReserver = resourceReserver;
 		this.workerConfig = workerConfig;
 		this.trackerInfo = trackerInfo;
+		this.mapInfo = mapInfo;
 	}
 
 	public InformationStorage() {
-		this(new ResourceReserver(), new WorkerConfiguration(), new UnitTrackerInformation());
+		this(new ResourceReserver(), new WorkerConfiguration(), new UnitTrackerInformation(), new MapInformation());
 	}
 
 	// -------------------- Functions
@@ -105,5 +109,9 @@ public class InformationStorage {
 
 	public UnitTrackerInformation getTrackerInfo() {
 		return trackerInfo;
+	}
+	
+	public MapInformation getMapInfo() {
+		return mapInfo;
 	}
 }
