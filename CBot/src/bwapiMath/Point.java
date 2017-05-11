@@ -98,7 +98,11 @@ public class Point {
 	 *         with the ingame tile size.
 	 */
 	public Position transformFromTilePositionToPosition() {
-		return new Position(this.x * Core.getInstance().getTileSize(), this.y * Core.getInstance().getTileSize());
+		if (this.type == Type.POSITION) {
+			return new Position(this.x, this.y);
+		} else {
+			return new Position(this.x * Core.getInstance().getTileSize(), this.y * Core.getInstance().getTileSize());
+		}
 	}
 
 	/**
@@ -109,7 +113,12 @@ public class Point {
 	 *         by the ingame tile size.
 	 */
 	public TilePosition transformFromPositionToTilePosition() {
-		return new TilePosition(this.x / Core.getInstance().getTileSize(), this.y / Core.getInstance().getTileSize());
+		if (this.type == Type.TILEPOSITION) {
+			return new TilePosition(this.x, this.y);
+		} else {
+			return new TilePosition(this.x / Core.getInstance().getTileSize(),
+					this.y / Core.getInstance().getTileSize());
+		}
 	}
 
 	/**
