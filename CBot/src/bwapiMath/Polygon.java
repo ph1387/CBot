@@ -38,6 +38,10 @@ public class Polygon {
 		}
 	}
 
+	public Polygon(bwta.Polygon bwtaPolygon) {
+		this(generatePointList(bwtaPolygon));
+	}
+
 	/**
 	 * Function for generating a Polygon object using a List of BWAPI Positions.
 	 * 
@@ -55,6 +59,22 @@ public class Polygon {
 	}
 
 	// -------------------- Functions
+
+	/**
+	 * Function for converting the Positions inside a BWTA Polygon to Points.
+	 * 
+	 * @param bwtaPolygon
+	 *            the Polygon that is going to be converted.
+	 * @return a List of Points which are the vertices of the provided Polygon.
+	 */
+	private static List<Point> generatePointList(bwta.Polygon bwtaPolygon) {
+		List<Point> points = new ArrayList<>();
+
+		for (Position position : bwtaPolygon.getPoints()) {
+			points.add(new Point(position.getPoint()));
+		}
+		return points;
+	}
 
 	/**
 	 * Convenience function.
