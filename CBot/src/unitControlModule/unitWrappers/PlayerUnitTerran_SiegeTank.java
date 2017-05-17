@@ -18,7 +18,7 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnit {
 		// TODO: Possible Change: Siege Mode range change
 		// Siege mode -> min range = 2 * 32 (+ extra)
 		this.extraConfidencePixelRangeToClosestUnits = 128;
-		this.confidenceDefault = 0.4;
+		this.confidenceDefault = 0.3;
 	}
 
 	// -------------------- Functions
