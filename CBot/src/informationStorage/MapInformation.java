@@ -14,7 +14,8 @@ import bwapiMath.Polygon;
 public class MapInformation {
 
 	private HashSet<TilePosition> tilePositionContenders = new HashSet<>();
-	private HashSet<Polygon> polygons = new HashSet<>();
+	private HashSet<Polygon> reservedSpace = new HashSet<>();
+	private HashSet<Polygon> mapBoundaries = new HashSet<>();
 	
 	public MapInformation() {
 		
@@ -28,7 +29,11 @@ public class MapInformation {
 		return tilePositionContenders;
 	}
 	
-	public HashSet<Polygon> getPolygons() {
-		return polygons;
+	public HashSet<Polygon> getReservedSpace() {
+		return reservedSpace;
+	}
+	
+	public HashSet<Polygon> getMapBoundaries() {
+		return mapBoundaries;
 	}
 }

@@ -25,7 +25,8 @@ public class Display {
 	// Map information visualization
 	private static boolean enableMapPolygons = true;
 	private static boolean enableMapContendedTilePositions = true;
-	private static Color polygonColor = new Color(255, 128, 0);
+	private static Color mapBoundariesColor = new Color(255, 255, 0);
+	private static Color reservedSpaceColor = new Color(255, 128, 0);
 	private static int polygonVertexRadius = 5;
 	private static Color contendedTilePositionColor = new Color(128, 128, 0);
 
@@ -149,8 +150,14 @@ public class Display {
 	}
 	
 	private static void showPolygons() {
-		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getPolygons()) {
-			polygon.drawOnMap(polygonColor, polygonVertexRadius);
+		// Map boundaries
+		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
+			polygon.drawOnMap(mapBoundariesColor, polygonVertexRadius);
+		}
+		
+		// Custom Polygons
+		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getReservedSpace()) {
+			polygon.drawOnMap(reservedSpaceColor, polygonVertexRadius);
 		}
 	}
 

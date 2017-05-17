@@ -73,7 +73,7 @@ public class CBot implements BWEventListener {
 	@Override
 	public void onStart() {
 		try {
-			if (!Init.init(this.mirror)) {
+			if (!Init.init(this.mirror, this.informationStorage)) {
 				throw new Exception();
 			}
 

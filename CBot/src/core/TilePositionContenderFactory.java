@@ -235,7 +235,7 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 			}
 
 			// Add the Polygon to the Set of Polygons
-			this.informationStorage.getMapInfo().getPolygons().add(constructionFreeZone);
+			this.informationStorage.getMapInfo().getReservedSpace().add(constructionFreeZone);
 			
 			// TODO: DEBUG INFO
 			System.out.println("Minerals: " + mineralsToBase + " Geysers: " + geysersToBase);
