@@ -26,7 +26,7 @@ public class Display {
 	
 	// Map information visualization
 	private static boolean enableMapPolygons = true;
-	private static boolean enableMapContendedTilePositions = true;
+	private static boolean enableMapContendedTilePositions = false;
 	private static Color mapBoundariesColor = new Color(255, 255, 0);
 	private static Color reservedSpaceColor = new Color(255, 128, 0);
 	private static int polygonVertexRadius = 5;
@@ -113,10 +113,10 @@ public class Display {
 		showAPM(game, offsetLeft, lineHeight * 2);
 		showFPS(game, offsetLeft, lineHeight * 3);
 		
-		if(enableMapPolygons) {
+		if(enableMapContendedTilePositions) {
 			showContendedTilePositions();
 		}
-		if(enableMapContendedTilePositions) {
+		if(enableMapPolygons) {
 			showPolygons();
 		}
 	}
