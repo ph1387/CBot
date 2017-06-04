@@ -9,6 +9,7 @@ import java.util.List;
 
 import bwapi.Color;
 import bwapi.Game;
+import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapiMath.Point.Type;
@@ -235,8 +236,24 @@ public class Polygon {
 		return this.polygon.contains(p.x, p.y);
 	}
 
-	public List<Point> findIntersections(Vector testVector) {
-		List<Point> intersections = new ArrayList<>();
+	/**
+	 * Function for finding an intersection between this Polygon and a given
+	 * Vector. This function returns a List of Vector, Point Pairs. The Points
+	 * represent the Intersection itself, while the Vector is the segment of the
+	 * Polygon that Point is on.
+	 * 
+	 * @param testVector
+	 *            the Vector whose intersections with the Polygon are being
+	 *            tested.
+	 * @return a List of Pairs containing Vectors and Points.
+	 *         <ul>
+	 *         <li>Vector: the segment of the Polygon that is being
+	 *         intersected.</li>
+	 *         <li>Point: the intersection with the Polygon.</li>
+	 *         </ul>
+	 */
+	public List<Pair<Vector, Point>> findIntersections(Vector testVector) {
+		List<Pair<Vector, Point>> intersections = new ArrayList<>();
 		PathIterator pathIterator = this.polygon.getPathIterator(null);
 		Line2D testLine = new Line2D.Double(testVector.x, testVector.y, testVector.x + testVector.dirX,
 				testVector.y + testVector.dirY);
@@ -280,15 +297,12 @@ public class Polygon {
 				int posY = (int) polyLine.getY1();
 				double dirX = polyLine.getX2() - polyLine.getX1();
 				double dirY = polyLine.getY2() - polyLine.getY1();
+				Vector polyVector = new Vector(posX, posY, dirX, dirY);
 
 				// Find the intersection itself.
-				Point intersection = testVector.getIntersection(new Vector(posX, posY, dirX, dirY));
-				intersections.add(intersection);
+				Point intersection = testVector.getIntersection(polyVector);
+				intersections.add(new Pair<Vector, Point>(polyVector, intersection));
 			}
-
-			// TODO: REMOVE
-			System.out.println(polyLine.intersectsLine(testLine));
-			System.out.println(polyLine.x1 + " " + polyLine.y1 + " -> " + polyLine.x2 + " " + polyLine.y2);
 
 			// Swap the current coordinates with the previous ones.
 			prevCoords[0] = currentCoords[0];

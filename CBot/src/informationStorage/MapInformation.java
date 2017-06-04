@@ -2,6 +2,7 @@ package informationStorage;
 
 import java.util.HashSet;
 
+import bwapi.Pair;
 import bwapi.TilePosition;
 import bwapiMath.Polygon;
 
@@ -15,7 +16,7 @@ public class MapInformation {
 
 	private HashSet<TilePosition> tilePositionContenders = new HashSet<>();
 	private HashSet<Polygon> reservedSpace = new HashSet<>();
-	private HashSet<Polygon> mapBoundaries = new HashSet<>();
+	private HashSet<Pair<bwta.Region, Polygon>> mapBoundaries = new HashSet<>();
 	
 	public MapInformation() {
 		
@@ -33,7 +34,7 @@ public class MapInformation {
 		return reservedSpace;
 	}
 	
-	public HashSet<Polygon> getMapBoundaries() {
+	public HashSet<Pair<bwta.Region, Polygon>> getMapBoundaries() {
 		return mapBoundaries;
 	}
 }

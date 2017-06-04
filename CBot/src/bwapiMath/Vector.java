@@ -25,6 +25,16 @@ public class Vector extends Point {
 
 	// -------------------- Functions
 
+	@Override
+	public Vector clone() {
+		return new Vector(this.x, this.y, this.dirX, this.dirY);
+	}
+
+	@Override
+	public String toString() {
+		return "[" + this.x + " + " + this.dirX + ", " + this.y + " + " + this.dirY + "]";
+	}
+
 	/**
 	 * @see #rotateLeftRAD(double)
 	 * @param alpha
@@ -174,5 +184,32 @@ public class Vector extends Point {
 		double newDirY = (1. / this.length()) * this.dirY;
 		this.dirX = newDirX;
 		this.dirY = newDirY;
+	}
+
+	/**
+	 * Function for generating the scalar / dot product of the current and a
+	 * given Vector.
+	 * 
+	 * @param vectorB
+	 *            the Vector the scalar product is calculated with.
+	 * @return the scalar / dot product of the current and the given Vector.
+	 */
+	public double getScalarProduct(Vector vectorB) {
+		double xProduct = this.dirX * vectorB.dirX;
+		double yProduct = this.dirY * vectorB.dirY;
+
+		return (xProduct + yProduct);
+	}
+
+	/**
+	 * Function for calculating the angle of this Vector to another given one in
+	 * <b>degrees</b>.
+	 * 
+	 * @param vectorB
+	 *            the Vector the angle is calculated to.
+	 * @return the angle of this Vector to another given one in <b>degrees</b>.
+	 */
+	public double getAngleToVector(Vector vectorB) {
+		return Math.toDegrees(Math.acos(this.getScalarProduct(vectorB) / (this.length() * vectorB.length())));
 	}
 }

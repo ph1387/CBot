@@ -68,7 +68,8 @@ public class RetreatActionToFurthestUnitInCone extends RetreatActionGeneralSuper
 			for (Unit unit : goapUnit.getAllPlayerUnitsInRange((int) (vecUTP.length()))) {
 				Vector vecToUnit = new Vector(vecUTP.getX(), vecUTP.getY(), unit.getPosition().getX() - vecUTP.getX(),
 						unit.getPosition().getY() - vecUTP.getY());
-
+				int distanceGoapUnitToUnit = goapUnit.getUnit().getDistance(unit);
+				
 				// -> If the Unit is between the left and right rotated Vectors
 				// then the sign of both cross products of the Vectors is
 				// positive.
@@ -76,9 +77,9 @@ public class RetreatActionToFurthestUnitInCone extends RetreatActionGeneralSuper
 				// inside the created cone.
 				if (vecRotatedL.getCrossProduct(vecToUnit) * vecRotatedL.getCrossProduct(vecRotatedR) >= 0
 						&& vecRotatedR.getCrossProduct(vecToUnit) * vecRotatedR.getCrossProduct(vecRotatedL) >= 0) {
-					if ((goapUnit.getUnit().getDistance(unit) > MIN_PIXELDISTANCE_TO_UNIT && retreatUnit == null)
-							|| (goapUnit.getUnit().getDistance(unit) > MIN_PIXELDISTANCE_TO_UNIT && goapUnit.getUnit()
-									.getDistance(retreatUnit) < goapUnit.getUnit().getDistance(unit))) {
+					if ((distanceGoapUnitToUnit > MIN_PIXELDISTANCE_TO_UNIT && retreatUnit == null)
+							|| (distanceGoapUnitToUnit > MIN_PIXELDISTANCE_TO_UNIT && goapUnit.getUnit()
+									.getDistance(retreatUnit) < distanceGoapUnitToUnit)) {
 						retreatUnit = unit;
 					}
 				}

@@ -5,10 +5,12 @@ import java.util.List;
 
 import bwapi.Color;
 import bwapi.Game;
+import bwapi.Pair;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapiMath.Polygon;
+import bwta.Region;
 
 /**
  * Display.java --- A class used for displaying all sorts of basic information
@@ -151,8 +153,8 @@ public class Display {
 	
 	private static void showPolygons() {
 		// Map boundaries
-		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
-			polygon.drawOnMap(mapBoundariesColor, polygonVertexRadius);
+		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
+			pair.second.drawOnMap(mapBoundariesColor, polygonVertexRadius);
 		}
 		
 		// Custom Polygons

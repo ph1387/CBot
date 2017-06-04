@@ -2,6 +2,7 @@ package core;
 
 import bwapi.Game;
 import bwapi.Mirror;
+import bwapi.Pair;
 import bwapiMath.Polygon;
 import bwta.BWTA;
 import bwta.Region;
@@ -16,7 +17,7 @@ import informationStorage.InformationStorage;
  */
 public class Init {
 	private static final int UNIT_FLAG = 1;
-	private static final int GAME_SPEED = 0; // TODO: 20, 0, etc.
+	private static final int GAME_SPEED = 120; // TODO: 20, 0, etc.
 
 	/**
 	 * Function for initializing all important Functions in the beginning.
@@ -36,12 +37,14 @@ public class Init {
 			// Use BWTA to analyze map
 			BWTA.readMap();
 			BWTA.analyze();
-
+			
+			// TODO: UML ENABLE
+/*
 			// Add all default contended TilePositions.
 			informationStorage.getMapInfo().getTilePositionContenders()
 					.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
 							.generateDefaultContendedTilePositions());
-
+*/
 			// Add all BWTA-Polygons to the collection of Polygons in the
 			// InformationStorage.
 			convertBWTAPolygons(informationStorage);
@@ -66,7 +69,7 @@ public class Init {
 	 */
 	private static void convertBWTAPolygons(InformationStorage informationStorage) {
 		for (Region region : BWTA.getRegions()) {
-			informationStorage.getMapInfo().getMapBoundaries().add(new Polygon(region.getPolygon()));
+			informationStorage.getMapInfo().getMapBoundaries().add(new Pair<bwta.Region, Polygon>(region, new Polygon(region.getPolygon())));
 		}
 	}
 }

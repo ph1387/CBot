@@ -312,18 +312,12 @@ public abstract class PlayerUnit extends GoapUnit {
 			// Cone of possible retreat Positions
 			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
 					vecUTP.getY() + (int) (vecUTP.dirY));
-			// Position rotatedLVecEndPos = new Position(vecUTPRotatedL.x +
-			// (int) (vecUTPRotatedL.dirX),
-			// vecUTPRotatedL.y + (int) (vecUTPRotatedL.dirY));
-			// Position rotatedRVecEndPos = new Position(vecUTPRotatedR.x +
-			// (int) (vecUTPRotatedR.dirX),
-			// vecUTPRotatedR.y + (int) (vecUTPRotatedR.dirY));
+			Position rotatedLVecEndPos = new Position(vecUTPRotatedL.getX() + (int) (vecUTPRotatedL.dirX), vecUTPRotatedL.getY() + (int) (vecUTPRotatedL.dirY));
+			Position rotatedRVecEndPos = new Position(vecUTPRotatedR.getX() + (int) (vecUTPRotatedR.dirX), vecUTPRotatedR.getY() + (int) (vecUTPRotatedR.dirY));
 			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), targetEndPosition,
 					new Color(255, 128, 255));
-			// Core.getInstance().getGame().drawLineMap(this.unit.getPosition(),
-			// rotatedLVecEndPos, new Color(255, 0, 0));
-			// Core.getInstance().getGame().drawLineMap(this.unit.getPosition(),
-			// rotatedRVecEndPos, new Color(0, 255, 0));
+			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedLVecEndPos, new Color(255, 0, 0));
+			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedRVecEndPos, new Color(0, 255, 0));
 			// Core.getInstance().getGame().drawTextMap(rotatedLVecEndPos,
 			// String.valueOf(alphaActual));
 			// Core.getInstance().getGame().drawTextMap(rotatedRVecEndPos,
