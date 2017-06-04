@@ -30,6 +30,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperclass {
 	private static final int EXPAND_MULTIPLIER_MAX = 2;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
+	// UML
+	private static final int MIN_VERTEX_OFFSET = 0;
 
 	/**
 	 * @param target
@@ -197,7 +199,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		// Get the vertex and its index of the Polygon that is the closest to
 		// the intersection.
 		Pair<Point, Integer> closestPair = this.findClosestVertexAtIntersection(vertices,
-				intersectionWithMapBoundaries.get(elementIndex).second.toPosition());
+				intersectionWithMapBoundaries.get(elementIndex).second);
 
 		// Sort the intersections based on the distance to the Unit itself. This
 		// ensures the finding of the closest one with the index 0.
@@ -263,6 +265,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		});
 	}
 
+	// TODO: UML PARAMTERS
 	/**
 	 * Function for finding the closest Point (vertex) based on its distance to
 	 * a given intersection in a List of vertices.
@@ -270,19 +273,19 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 * @param vertices
 	 *            the List of possible vertices the Point is being chosen from.
 	 * @param intersection
-	 *            the Position to which the closest vertex is being looked for.
+	 *            the Point to which the closest vertex must be found.
 	 * @return a Pair of a Point which resembles the vertex and an Integer which
 	 *         is the Point's index in the List of vertices.
 	 */
-	private Pair<Point, Integer> findClosestVertexAtIntersection(List<Point> vertices, Position intersection) {
+	private Pair<Point, Integer> findClosestVertexAtIntersection(List<Point> vertices, Point intersection) {
 		Point closestVertex = null;
 		Integer indexClosestVertex = null;
 
 		// Find the index and the actual reference to the vertex with the
 		// smallest distance to the intersection.
 		for (int i = 0; i < vertices.size(); i++) {
-			if (closestVertex == null || vertices.get(i).toPosition().getDistance(intersection) < closestVertex
-					.toPosition().getDistance(intersection)) {
+			if (closestVertex == null || vertices.get(i).toPosition().getDistance(intersection.toPosition()) < closestVertex
+					.toPosition().getDistance(intersection.toPosition())) {
 				closestVertex = vertices.get(i);
 				indexClosestVertex = i;
 			}
@@ -542,15 +545,18 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 */
 	private int verifyIndexSize(int index, List<Point> vertices) {
 		int currentIndex = index;
+		boolean running = true;
 
-		// First to last.
-		if (index < 0) {
-			currentIndex = vertices.size() - 1;
+		while(running || currentIndex >= vertices.size() || currentIndex < 0) {
+			if(currentIndex < 0) {
+				currentIndex = (vertices.size() - 1) - currentIndex;
+			} else if (currentIndex >= vertices.size()){
+				currentIndex = currentIndex - (vertices.size() - 1);
+			} else {
+				running = false;
+			}
 		}
-		// Last to first.
-		else if (currentIndex >= vertices.size()) {
-			currentIndex = 0;
-		}
+
 		return currentIndex;
 	}
 
