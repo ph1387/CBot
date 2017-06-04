@@ -31,7 +31,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	private static final int EXPAND_MULTIPLIER_MAX = 2;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 	// UML
-	private static final int MIN_VERTEX_OFFSET = 0;
+	private static final int MIN_VERTEX_OFFSET = 2;
 
 	/**
 	 * @param target
@@ -284,8 +284,9 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		// Find the index and the actual reference to the vertex with the
 		// smallest distance to the intersection.
 		for (int i = 0; i < vertices.size(); i++) {
-			if (closestVertex == null || vertices.get(i).toPosition().getDistance(intersection.toPosition()) < closestVertex
-					.toPosition().getDistance(intersection.toPosition())) {
+			if (closestVertex == null
+					|| vertices.get(i).toPosition().getDistance(intersection.toPosition()) < closestVertex.toPosition()
+							.getDistance(intersection.toPosition())) {
 				closestVertex = vertices.get(i);
 				indexClosestVertex = i;
 			}
@@ -354,14 +355,22 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		Position vecUTPEndPosition = new Position((int) (vector.getX() + vector.dirX),
 				(int) (vector.getY() + vector.dirY));
 		Integer stepVerticesDirection = null;
+		Integer previousVertexIndex = this.verifyIndexSize(previousAndNextIndices.first - MIN_VERTEX_OFFSET, vertices);
+		Integer nextVertexIndex = this.verifyIndexSize(previousAndNextIndices.second + MIN_VERTEX_OFFSET, vertices);
 
 		// Determine the direction in which the Unit has to move along the
 		// boundaries of the Polygon. This is either the found index of the
 		// closest vertex + or -1. Therefore check the next and the previous
 		// vertex and decide on the fact which one of them is closer to the
 		// vecUTP end-Position.
-		if (vertices.get(previousAndNextIndices.first).toPosition().getDistance(vecUTPEndPosition) < vertices
-				.get(previousAndNextIndices.second).toPosition().getDistance(vecUTPEndPosition)) {
+		// This whole operation uses an previously specified offset which is
+		// either subtracted or added from the previous and next indices. This
+		// provides a more accurate path-finding result than simply choosing the
+		// next and previous Points since this leads to errors in corners which
+		// in conclusion might order the Unit to retreat towards the attacker
+		// himself.
+		if (vertices.get(previousVertexIndex).toPosition().getDistance(vecUTPEndPosition) < vertices
+				.get(nextVertexIndex).toPosition().getDistance(vecUTPEndPosition)) {
 			stepVerticesDirection = -1;
 		} else {
 			stepVerticesDirection = 1;
@@ -547,10 +556,10 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		int currentIndex = index;
 		boolean running = true;
 
-		while(running || currentIndex >= vertices.size() || currentIndex < 0) {
-			if(currentIndex < 0) {
+		while (running || currentIndex >= vertices.size() || currentIndex < 0) {
+			if (currentIndex < 0) {
 				currentIndex = (vertices.size() - 1) - currentIndex;
-			} else if (currentIndex >= vertices.size()){
+			} else if (currentIndex >= vertices.size()) {
 				currentIndex = currentIndex - (vertices.size() - 1);
 			} else {
 				running = false;
