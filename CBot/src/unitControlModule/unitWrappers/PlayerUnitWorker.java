@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 
 import bwapi.Unit;
 import bwapi.UnitType;
+import core.Core;
 import informationStorage.InformationStorage;
 
 /**
@@ -81,7 +82,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	@Override
 	public void update() {
 		this.customUpdate();
-
+		
 		super.update();
 	}
 
@@ -206,8 +207,8 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 				&& this.currentConstructionState == ConstructionState.IDLE) {
 			this.assignConstructionJob();
 		}
-		// Find a gathering source.
-		else {
+		// Find a gathering source if the Unit is not constructing a building. Do not block the spots for other Units if that is the case.
+		else if(!this.unit.isConstructing()) {
 			if (!this.isMappedToGatheringSource()) {
 				this.markContenders();
 			}
@@ -360,7 +361,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 
 		// Get all vaspene geysers
 		for (Unit gatheringSource : this.getUnit().getUnitsInRadius(this.informationStorage.getWorkerConfig().getPixelGatherSearchRadius())) {
-			if (gatheringSource.getType().isRefinery()) {
+			if (gatheringSource.getType().isRefinery() && !gatheringSource.isBeingConstructed()) {
 				closestRefinery = this.checkAgainstMappedAccessibleSources(gatheringSource, closestRefinery,
 						this.informationStorage.getWorkerConfig().getMaxNumberGatheringGas());
 			}
