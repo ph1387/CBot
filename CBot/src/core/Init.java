@@ -17,7 +17,7 @@ import informationStorage.InformationStorage;
  */
 public class Init {
 	private static final int UNIT_FLAG = 1;
-	private static final int GAME_SPEED = 10; // TODO: 20, 0, etc.
+	private static final int GAME_SPEED = 0; // TODO: 20, 0, etc.
 
 	/**
 	 * Function for initializing all important Functions in the beginning.
@@ -39,12 +39,12 @@ public class Init {
 			BWTA.analyze();
 			
 			// TODO: UML ENABLE
-/*
+
 			// Add all default contended TilePositions.
 			informationStorage.getMapInfo().getTilePositionContenders()
 					.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
 							.generateDefaultContendedTilePositions());
-*/
+
 			// Add all BWTA-Polygons to the collection of Polygons in the
 			// InformationStorage.
 			convertBWTAPolygons(informationStorage);

@@ -327,14 +327,26 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 	 */
 	protected Unit findClosestFreeMineralField() {
 		Unit closestFreeMineralField = null;
-
-		// Get all mineral fields
-		for (Unit gatheringSource : this.getUnit().getUnitsInRadius(this.informationStorage.getWorkerConfig().getPixelGatherSearchRadius())) {
-			if (gatheringSource.getType().isMineralField()) {
-				closestFreeMineralField = this.checkAgainstMappedAccessibleSources(gatheringSource,
-						closestFreeMineralField, this.informationStorage.getWorkerConfig().getMaxNumberMining());
+		HashSet<Unit> checkedUnits = new HashSet<Unit>();
+		int searchRadiusMultiplier = 1;
+		
+		while(closestFreeMineralField == null) {
+			// Check all Units in an increasing range around the worker Unit.
+			for (Unit gatheringSource : this.getUnit().getUnitsInRadius(this.informationStorage.getWorkerConfig().getPixelGatherSearchRadius() * searchRadiusMultiplier)) {
+				if(!checkedUnits.contains(gatheringSource)) {
+					checkedUnits.add(gatheringSource);
+					
+					// Get all mineral fields
+					if (gatheringSource.getType().isMineralField()) {
+						closestFreeMineralField = this.checkAgainstMappedAccessibleSources(gatheringSource,
+								closestFreeMineralField, this.informationStorage.getWorkerConfig().getMaxNumberMining());
+					}
+				}
 			}
+			
+			searchRadiusMultiplier++;
 		}
+		
 		return closestFreeMineralField;
 	}
 
