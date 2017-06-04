@@ -17,7 +17,7 @@ import informationStorage.InformationStorage;
  */
 public class Init {
 	private static final int UNIT_FLAG = 1;
-	private static final int GAME_SPEED = 120; // TODO: 20, 0, etc.
+	private static final int GAME_SPEED = 10; // TODO: 20, 0, etc.
 
 	/**
 	 * Function for initializing all important Functions in the beginning.

@@ -37,6 +37,10 @@ public abstract class PlayerUnit extends GoapUnit {
 	public static final double CONFIDENCE_THRESHHOLD = 0.7;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	protected static final int CONFIDENCE_TILE_RADIUS = 15;
+	// TODO: UML
+	// The higher the value the more passive the Unit reacts to a change
+	// regarding the closest enemy Unit in its confidence range.
+	protected static final int CONFIDENCE_RANGE_REACT_COUNTER_MAX = 10;
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
 
@@ -46,6 +50,8 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected Unit unit;
 	protected Unit closestEnemyUnitInSight;
 	protected Unit closestEnemyUnitInConfidenceRange;
+	// TODO: UML
+	protected int closestEnemyUnitInConfidenceRangeReactCounter = 0;
 	protected double confidence = 1.;
 	protected int extraConfidencePixelRangeToClosestUnits = 16;
 	protected double confidenceDefault = 0.75;
@@ -169,7 +175,25 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected void actOnUnitsKnown() {
 		this.closestEnemyUnitInSight = this
 				.getClosestUnit(this.getAllEnemyUnitsInRange(this.unit.getType().sightRange()));
-		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
+		Unit newClosestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
+
+		// React on the fact that the previously chosen Action might be not
+		// appropriate for the new closest Unit. This has to use a previously
+		// set counter since not using that could cause the Bot to spin
+		// uncontrollably in a circle when two enemies are near him on opposing
+		// sites.
+		// The counter determines the passiveness with which the Unit reacts to
+		// a closest enemy Unit in confidence change (higher = more passive).
+		if (this.closestEnemyUnitInConfidenceRangeReactCounter == 0
+				&& this.closestEnemyUnitInConfidenceRange != newClosestEnemyUnitInConfidenceRange) {
+			this.closestEnemyUnitInConfidenceRangeReactCounter = CONFIDENCE_RANGE_REACT_COUNTER_MAX;
+			this.resetActions();
+		}
+		if (this.closestEnemyUnitInConfidenceRangeReactCounter > 0) {
+			this.closestEnemyUnitInConfidenceRangeReactCounter--;
+		}
+
+		this.closestEnemyUnitInConfidenceRange = newClosestEnemyUnitInConfidenceRange;
 
 		// TODO: Fixed FPS Drops
 		// Only update the following information if an enemy is in the
@@ -312,8 +336,10 @@ public abstract class PlayerUnit extends GoapUnit {
 			// Cone of possible retreat Positions
 			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
 					vecUTP.getY() + (int) (vecUTP.dirY));
-			Position rotatedLVecEndPos = new Position(vecUTPRotatedL.getX() + (int) (vecUTPRotatedL.dirX), vecUTPRotatedL.getY() + (int) (vecUTPRotatedL.dirY));
-			Position rotatedRVecEndPos = new Position(vecUTPRotatedR.getX() + (int) (vecUTPRotatedR.dirX), vecUTPRotatedR.getY() + (int) (vecUTPRotatedR.dirY));
+			Position rotatedLVecEndPos = new Position(vecUTPRotatedL.getX() + (int) (vecUTPRotatedL.dirX),
+					vecUTPRotatedL.getY() + (int) (vecUTPRotatedL.dirY));
+			Position rotatedRVecEndPos = new Position(vecUTPRotatedR.getX() + (int) (vecUTPRotatedR.dirX),
+					vecUTPRotatedR.getY() + (int) (vecUTPRotatedR.dirY));
 			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), targetEndPosition,
 					new Color(255, 128, 255));
 			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedLVecEndPos, new Color(255, 0, 0));
