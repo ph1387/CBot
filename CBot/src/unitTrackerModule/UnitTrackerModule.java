@@ -334,7 +334,7 @@ public class UnitTrackerModule {
 
 		for (int i = -maxAttackTileRange; i <= maxAttackTileRange; i++) {
 			for (int j = -maxAttackTileRange; j <= maxAttackTileRange; j++) {
-				if (tilePosition.getX() + i > 0 && tilePosition.getY() + j > 0) {
+				if (tilePosition.getX() + i >= 0 && tilePosition.getY() + j >= 0) {
 					TilePosition mappedTilePosition = new TilePosition(tilePosition.getX() + i,
 							tilePosition.getY() + j);
 					Integer foundIntegerValue = valueTiles.get(mappedTilePosition);
