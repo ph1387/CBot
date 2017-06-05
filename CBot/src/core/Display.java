@@ -152,10 +152,37 @@ public class Display {
 	}
 	
 	private static void showPolygons() {
-		// Map boundaries
+		
+		
+		
+		
+		
+		// TODO: REMOVE
+		int boundaryCount = CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries().size();
+		int stepSize = 0xFFFFFF / boundaryCount;
+		int currentCount = 1;
 		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
-			pair.second.drawOnMap(mapBoundariesColor, polygonVertexRadius);
+			int currentR = 0b111111110000000000000000 & (stepSize * currentCount);
+			int currentG = 0b000000001111111100000000 & (stepSize * currentCount);
+			int currentB = 0b000000000000000011111111 & (stepSize * currentCount);
+			currentR = currentR >> 16;
+			currentG = currentG >> 8;
+			
+			pair.second.drawOnMap(new Color(currentR, currentG, currentB), polygonVertexRadius);
+			currentCount++;
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		// Map boundaries
+//		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
+//			pair.second.drawOnMap(mapBoundariesColor, polygonVertexRadius);
+//		}
 		
 		// Custom Polygons
 		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getReservedSpace()) {

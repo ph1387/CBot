@@ -313,6 +313,89 @@ public class Polygon {
 		return intersections;
 	}
 
+	// TODO: UML
+	/**
+	 * Function for splitting all edges of the Polygon into pieces which are
+	 * smaller or equal to a provided length.
+	 * 
+	 * @param maxEdgeLength
+	 *            the maximum length an edge is allowed to have.
+	 */
+	public void splitLongEdges(int maxEdgeLength) {
+		for (int i = 0; i < this.vertices.size(); i++) {
+			int indexNextVertex = i + 1;
+
+			if (indexNextVertex >= this.vertices.size()) {
+				indexNextVertex = 0;
+			}
+
+			// Create a Vector to the next vertex.
+			Point currentPoint = this.vertices.get(i);
+			Point nextPoint = this.vertices.get(indexNextVertex);
+			Vector vecToNextPoint = new Vector(currentPoint.x, currentPoint.y, nextPoint.x - currentPoint.x,
+					nextPoint.y - currentPoint.y);
+
+			// Split the edge in half if necessary.
+			if (vecToNextPoint.length() > maxEdgeLength) {
+				this.splitEdgesInHalfRecursion(i, indexNextVertex, vecToNextPoint, maxEdgeLength);
+			}
+		}
+	}
+
+	// TODO UML
+	/**
+	 * Recursive function for splitting a edge inside the Polygon into two
+	 * halves. This continues until all sub-halves have a shorter length then
+	 * the provided parameter specifies.
+	 * 
+	 * @param currentIndex
+	 *            the index of the starting vertex inside the Polygon.
+	 * @param nextIndex
+	 *            the index of the following vertex inside the Polygon.
+	 * @param vecToNextPoint
+	 *            the Vector which starts at the starting vertex and leads
+	 *            towards the following vertex.
+	 * @param maxEdgeLength
+	 *            the maximum length any edge is allowed to have. Any edge which
+	 *            is longer than this provided value will be split in half.
+	 */
+	private void splitEdgesInHalfRecursion(int currentIndex, int nextIndex, Vector vecToNextPoint, int maxEdgeLength) {
+		Point endPoint = this.vertices.get(nextIndex);
+		double vecLengthHalf = vecToNextPoint.length() / 2.;
+
+		// Find the middle of the edge.
+		vecToNextPoint.normalize();
+		Vector vecToMiddlePoint = new Vector(vecToNextPoint.x, vecToNextPoint.y, vecToNextPoint.dirX * vecLengthHalf,
+				vecToNextPoint.dirY * vecLengthHalf);
+		Point middlePoint = new Point((int) (vecToMiddlePoint.x + vecToMiddlePoint.dirX),
+				(int) (vecToMiddlePoint.y + vecToMiddlePoint.dirY), Point.Type.POSITION);
+		Vector vecToEndPoint = new Vector(middlePoint.x, middlePoint.y, endPoint.x - middlePoint.x,
+				endPoint.y - middlePoint.y);
+
+		// Add the generated Point in between the two known Points.
+		this.vertices.add(nextIndex, middlePoint);
+
+		// Adjust the index of the middle Point and the end Point.
+		int middleIndex = nextIndex;
+		nextIndex++;
+		if (nextIndex >= this.vertices.size()) {
+			nextIndex = 0;
+		}
+
+		// Start a recursion if the length of the two new Vectors exceeds the
+		// given max length. This has to be done in this order since inserting
+		// Points causes the calculated indices to offset.
+		// -> Middle Point to end.
+		if (vecToEndPoint.length() > maxEdgeLength) {
+			this.splitEdgesInHalfRecursion(middleIndex, nextIndex, vecToEndPoint, maxEdgeLength);
+		}
+		// -> Start Point to middle.
+		if (vecToMiddlePoint.length() > maxEdgeLength) {
+			this.splitEdgesInHalfRecursion(currentIndex, middleIndex, vecToMiddlePoint, maxEdgeLength);
+		}
+
+	}
+
 	// ------------------------------ Getter / Setter
 
 	public List<Point> getVertices() {
