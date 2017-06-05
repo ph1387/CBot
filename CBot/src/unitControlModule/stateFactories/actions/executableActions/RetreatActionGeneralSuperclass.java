@@ -43,7 +43,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		if (((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT)) {
+		if (((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT) || this.target == null) {
 			RetreatActionGeneralSuperclass.gatheringPoints.remove(this.retreatPosition);
 		}
 
@@ -138,5 +138,6 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	@Override
 	protected void resetSpecific() {
 		this.retreatPosition = null;
+		this.generatedTempRetreatPosition = null;
 	}
 }

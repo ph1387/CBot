@@ -76,6 +76,7 @@ public abstract class BaseAction extends GoapAction {
 
 	@Override
 	protected void reset() {
+		this.target = null;
 		this.resetStoredAction();
 		this.resetSpecific();
 	}
