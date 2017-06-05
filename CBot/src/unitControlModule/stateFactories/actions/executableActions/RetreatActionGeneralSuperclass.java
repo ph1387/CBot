@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import bwapi.Color;
 import bwapi.Position;
+import bwapiMath.Vector;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -28,6 +29,13 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	protected Position generatedTempRetreatPosition = null;
 	protected Position retreatPosition = null;
 
+	// Vector related stuff
+	protected static final int ALPHA_MAX = 90;
+	protected double maxDistance = PlayerUnit.CONFIDENCE_TILE_RADIUS * Core.getInstance().getTileSize();
+	// vecEU -> Vector(enemyUnit, playerUnit)
+	// vecUTP -> Vector(playerUnit, targetPosition)
+	protected Vector vecEU, vecUTP;
+
 	/**
 	 * @param target
 	 *            type: Unit
@@ -43,7 +51,8 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		if (((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT) || this.target == null) {
+		if (((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT)
+				|| this.target == null) {
 			RetreatActionGeneralSuperclass.gatheringPoints.remove(this.retreatPosition);
 		}
 
@@ -102,16 +111,26 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		boolean success = false;
 
 		if (this.target != null && ((PlayerUnit) goapUnit).getClosestEnemyUnitInConfidenceRange() != null) {
+			this.updateVecEU(goapUnit);
+			this.updateVecUTP();
+
 			success = this.checkProceduralSpecificPrecondition(goapUnit);
 
 			// The first ever found Position has to be added as temp retreat
 			// Position. This ensures, that isDone() returns false and the
-			// action gets actually executed. The actual retreatPosition gets 
+			// action gets actually executed. The actual retreatPosition gets
 			// set when performAction() gets called.
 			if (this.retreatPosition == null) {
 				this.retreatPosition = this.generatedTempRetreatPosition;
 				RetreatActionGeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
 			}
+
+			// TODO: DEBUG INFO
+			// Targeted retreat-Position
+			bwapi.Unit unit = ((PlayerUnit) goapUnit).getUnit();
+			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
+					vecUTP.getY() + (int) (vecUTP.dirY));
+			Core.getInstance().getGame().drawLineMap(unit.getPosition(), targetEndPosition, new Color(255, 128, 255));
 		}
 		return success;
 	}
@@ -124,6 +143,43 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	 * @return true or false depending if the test was successful or not.
 	 */
 	protected abstract boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit);
+
+	/**
+	 * Used for updating the Vector from the closest enemy Unit in the
+	 * confidence range to the PlayerUnit.
+	 * 
+	 * @param goapUnit
+	 *            the Unit whose Vectors are being calculated.
+	 */
+	private void updateVecEU(IGoapUnit goapUnit) {
+		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
+
+		// uPos -> Unit Position, ePos -> Enemy Position
+		int uPosX = playerUnit.getUnit().getPosition().getX();
+		int uPosY = playerUnit.getUnit().getPosition().getY();
+		int ePosX = playerUnit.getClosestEnemyUnitInConfidenceRange().getPosition().getX();
+		int ePosY = playerUnit.getClosestEnemyUnitInConfidenceRange().getPosition().getY();
+
+		this.vecEU = new Vector(ePosX, ePosY, uPosX - ePosX, uPosY - ePosY);
+	}
+
+	/**
+	 * Used for updating the Vector from the PlayerUnit to a possible retreat
+	 * position.
+	 */
+	private void updateVecUTP() {
+		double vecRangeMultiplier = (this.maxDistance - vecEU.length()) / this.maxDistance;
+		double neededDistanceMultiplier = this.maxDistance / vecEU.length();
+
+		// The direction-Vector is projected on the maxDistance and then
+		// combined with the rangeMultiplier to receive a representation of
+		// the distance between the enemyUnit and the currentUnit based on
+		// their distance to another.
+		int tPosX = (int) (vecRangeMultiplier * neededDistanceMultiplier * vecEU.dirX);
+		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * vecEU.dirY);
+
+		this.vecUTP = new Vector(this.vecEU.getX(), this.vecEU.getY(), tPosX, tPosY);
+	}
 
 	@Override
 	protected boolean requiresInRange(IGoapUnit goapUnit) {

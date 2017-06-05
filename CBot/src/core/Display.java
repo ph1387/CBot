@@ -152,12 +152,8 @@ public class Display {
 	}
 	
 	private static void showPolygons() {
-		
-		
-		
-		
-		
-		// TODO: REMOVE
+
+		// TODO: REMOVE DEBUG
 		int boundaryCount = CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries().size();
 		int stepSize = 0xFFFFFF / boundaryCount;
 		int currentCount = 1;
@@ -171,13 +167,6 @@ public class Display {
 			pair.second.drawOnMap(new Color(currentR, currentG, currentB), polygonVertexRadius);
 			currentCount++;
 		}
-		
-		
-		
-		
-		
-		
-		
 		
 		// Map boundaries
 //		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {

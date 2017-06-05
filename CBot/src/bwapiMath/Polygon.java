@@ -313,7 +313,6 @@ public class Polygon {
 		return intersections;
 	}
 
-	// TODO: UML
 	/**
 	 * Function for splitting all edges of the Polygon into pieces which are
 	 * smaller or equal to a provided length.
@@ -342,7 +341,6 @@ public class Polygon {
 		}
 	}
 
-	// TODO UML
 	/**
 	 * Recursive function for splitting a edge inside the Polygon into two
 	 * halves. This continues until all sub-halves have a shorter length then

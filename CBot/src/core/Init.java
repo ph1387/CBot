@@ -17,9 +17,8 @@ import informationStorage.InformationStorage;
  */
 public class Init {
 	private static final int UNIT_FLAG = 1;
-	private static final int GAME_SPEED = 300; // TODO: 20, 0, etc.
-	// TODO: UML
-	private static final int MAX_POLYGON_EDGE_LENGTH = 50;
+	private static final int GAME_SPEED = 0; // TODO: 20, 0, etc.
+	private static final int MAX_POLYGON_EDGE_LENGTH = 100;
 
 	/**
 	 * Function for initializing all important Functions in the beginning.
@@ -39,14 +38,13 @@ public class Init {
 			// Use BWTA to analyze map
 			BWTA.readMap();
 			BWTA.analyze();
-			
-			// TODO: UML ENABLE
-/*
+
+			// TODO: Possible Change: Disable on Custom Maps!
 			// Add all default contended TilePositions.
 			informationStorage.getMapInfo().getTilePositionContenders()
 					.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
 							.generateDefaultContendedTilePositions());
-*/
+
 			// Add all BWTA-Polygons to the collection of Polygons in the
 			// InformationStorage.
 			convertBWTAPolygons(informationStorage);
@@ -72,9 +70,10 @@ public class Init {
 	private static void convertBWTAPolygons(InformationStorage informationStorage) {
 		for (Region region : BWTA.getRegions()) {
 			Polygon regionPolygon = new Polygon(region.getPolygon());
-			
+
 			regionPolygon.splitLongEdges(MAX_POLYGON_EDGE_LENGTH);
-			informationStorage.getMapInfo().getMapBoundaries().add(new Pair<bwta.Region, Polygon>(region, regionPolygon));
+			informationStorage.getMapInfo().getMapBoundaries()
+					.add(new Pair<bwta.Region, Polygon>(region, regionPolygon));
 		}
 	}
 }

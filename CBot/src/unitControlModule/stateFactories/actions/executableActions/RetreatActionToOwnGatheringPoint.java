@@ -30,8 +30,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperclass {
 	private static final int EXPAND_MULTIPLIER_MAX = 2;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
-	// UML
 	private static final int MIN_VERTEX_OFFSET = 2;
+	private static final double DISTANCE_MULTIPLIER = 0.9;
 
 	/**
 	 * @param target
@@ -43,7 +43,6 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 
 	@Override
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
-		Vector vecUTP = ((PlayerUnit) goapUnit).getVecUTP();
 		boolean precondtionsMet = true;
 
 		// Position missing -> action not performed yet
@@ -53,12 +52,12 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 			Vector usedVector = null;
 
 			if (retreatableUnit == null) {
-				usedVector = vecUTP;
+				usedVector = this.vecUTP;
 			} else {
 				// Create a Vector from the current Unit to the found Unit.
-				Vector vecToUnit = new Vector(vecUTP.getX(), vecUTP.getY(),
-						retreatableUnit.getPosition().getX() - vecUTP.getX(),
-						retreatableUnit.getPosition().getY() - vecUTP.getY());
+				Vector vecToUnit = new Vector(this.vecUTP.getX(), this.vecUTP.getY(),
+						retreatableUnit.getPosition().getX() - this.vecUTP.getX(),
+						retreatableUnit.getPosition().getY() - this.vecUTP.getY());
 				vecToUnit.normalize();
 
 				// Generate a Vector from the normalized Vector to the found
@@ -137,7 +136,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 			success = false;
 			// TODO: Possible Change: Move the Unit back to the nearest Region?
 		}
-		
+
 		return success;
 	}
 
@@ -193,8 +192,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		// Distance which determines if the while loop has to do another
 		// iteration. Used to shorten / lengthen the distance the end-Position
 		// will be away from the Unit starting Position.
-		double distanceMultiplier = 0.6;
-		double distanceTotal = vector.length() * distanceMultiplier;
+		double distanceTotal = vector.length() * DISTANCE_MULTIPLIER;
 		double distanceLeft = distanceTotal
 				- (vector.getNeededMultiplier(intersectionWithMapBoundaries.get(elementIndex).second) * distanceTotal);
 		// Get the vertex and its index of the Polygon that is the closest to
@@ -266,7 +264,6 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		});
 	}
 
-	// TODO: UML PARAMTERS
 	/**
 	 * Function for finding the closest Point (vertex) based on its distance to
 	 * a given intersection in a List of vertices.

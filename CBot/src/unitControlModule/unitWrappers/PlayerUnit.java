@@ -11,7 +11,6 @@ import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
-import bwapiMath.Vector;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
@@ -36,8 +35,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	// own parameters
 	public static final double CONFIDENCE_THRESHHOLD = 0.7;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
-	protected static final int CONFIDENCE_TILE_RADIUS = 15;
-	// TODO: UML
+	public static final int CONFIDENCE_TILE_RADIUS = 15;
 	// The higher the value the more passive the Unit reacts to a change
 	// regarding the closest enemy Unit in its confidence range.
 	protected static final int CONFIDENCE_RANGE_REACT_COUNTER_MAX = 10;
@@ -50,22 +48,10 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected Unit unit;
 	protected Unit closestEnemyUnitInSight;
 	protected Unit closestEnemyUnitInConfidenceRange;
-	// TODO: UML
 	protected int closestEnemyUnitInConfidenceRangeReactCounter = 0;
 	protected double confidence = 1.;
 	protected int extraConfidencePixelRangeToClosestUnits = 16;
 	protected double confidenceDefault = 0.75;
-
-	// Vector related stuff
-	protected static final int ALPHA_MAX = 90;
-	protected double maxDistance = CONFIDENCE_TILE_RADIUS * Core.getInstance().getTileSize();
-	protected double alphaMod = 75.;
-	protected double alphaAdd = 10.; // AlphaMod + AlphaAdd < AlphaMax
-	// vecEU -> Vector(enemyUnit, playerUnit)
-	// vecUTP -> Vector(playerUnit, targetPosition)
-	// vecUTPRotatedL -> Rotated Vector left
-	// vecUTPRotatedR -> Rotated Vector right
-	protected Vector vecEU, vecUTP, vecUTPRotatedL, vecUTPRotatedR;
 
 	// Factories and Objects needed for an accurate representation of the Units
 	// capabilities.
@@ -155,11 +141,6 @@ public abstract class PlayerUnit extends GoapUnit {
 		try {
 			this.worldStateUpdater.update(this);
 			this.goalStateUpdater.update(this);
-
-			// Vector update has to be here since some depend on the results of
-			// these.
-			this.updateVectors();
-
 			this.actionUpdater.update(this);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -321,87 +302,6 @@ public abstract class PlayerUnit extends GoapUnit {
 
 			}
 		}
-	}
-
-	/**
-	 * Function for updating all vectors of the PlayerUnit.
-	 */
-	private void updateVectors() {
-		if (this.closestEnemyUnitInConfidenceRange != null) {
-			this.updateVecEU();
-			this.updateVecUTP();
-			this.updateVecRotated();
-
-			// TODO: DEBUG INFO
-			// Cone of possible retreat Positions
-			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
-					vecUTP.getY() + (int) (vecUTP.dirY));
-			Position rotatedLVecEndPos = new Position(vecUTPRotatedL.getX() + (int) (vecUTPRotatedL.dirX),
-					vecUTPRotatedL.getY() + (int) (vecUTPRotatedL.dirY));
-			Position rotatedRVecEndPos = new Position(vecUTPRotatedR.getX() + (int) (vecUTPRotatedR.dirX),
-					vecUTPRotatedR.getY() + (int) (vecUTPRotatedR.dirY));
-			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), targetEndPosition,
-					new Color(255, 128, 255));
-			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedLVecEndPos, new Color(255, 0, 0));
-			Core.getInstance().getGame().drawLineMap(this.unit.getPosition(), rotatedRVecEndPos, new Color(0, 255, 0));
-			// Core.getInstance().getGame().drawTextMap(rotatedLVecEndPos,
-			// String.valueOf(alphaActual));
-			// Core.getInstance().getGame().drawTextMap(rotatedRVecEndPos,
-			// String.valueOf(alphaActual));
-		}
-	}
-
-	/**
-	 * Used for updating the Vector from the closest enemy Unit in the
-	 * confidence range to the PlayerUnit.
-	 */
-	private void updateVecEU() {
-		// uPos -> Unit Position, ePos -> Enemy Position
-		int uPosX = this.unit.getPosition().getX();
-		int uPosY = this.unit.getPosition().getY();
-		int ePosX = this.closestEnemyUnitInConfidenceRange.getPosition().getX();
-		int ePosY = this.closestEnemyUnitInConfidenceRange.getPosition().getY();
-
-		this.vecEU = new Vector(ePosX, ePosY, uPosX - ePosX, uPosY - ePosY);
-	}
-
-	/**
-	 * Used for updating the Vector from the PlayerUnit to a possible retreat
-	 * position.
-	 */
-	private void updateVecUTP() {
-		double vecRangeMultiplier = (this.maxDistance - vecEU.length()) / this.maxDistance;
-		double neededDistanceMultiplier = this.maxDistance / vecEU.length();
-
-		// The direction-Vector is projected on the maxDistance and then
-		// combined with the rangeMultiplier to receive a representation of
-		// the distance between the enemyUnit and the currentUnit based on
-		// their distance to another.
-		int tPosX = (int) (vecRangeMultiplier * neededDistanceMultiplier * vecEU.dirX);
-		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * vecEU.dirY);
-
-		this.vecUTP = new Vector(this.vecEU.getX(), this.vecEU.getY(), tPosX, tPosY);
-	}
-
-	/**
-	 * Used for updating all Vectors which are the rotated equivalent to the
-	 * Vector targeting the possible retreat position.
-	 */
-	private void updateVecRotated() {
-		double alphaActual = (this.alphaMod * (this.vecEU.length() / this.maxDistance)) + this.alphaAdd;
-
-		// Create two vectors that are left and right rotated
-		// representations of the vector(playerUnit, targetPosition) by the
-		// actual alpha value.
-		// vecRotatedL -> Rotated Vector left
-		// vecRotatedR -> Rotated Vector right
-		Vector rotatedL = new Vector(this.vecUTP.getX(), this.vecUTP.getY(), this.vecUTP.dirX, this.vecUTP.dirY);
-		Vector rotatedR = new Vector(this.vecUTP.getX(), this.vecUTP.getY(), this.vecUTP.dirX, this.vecUTP.dirY);
-		rotatedL.rotateLeftDEG(alphaActual);
-		rotatedR.rotateRightDEG(alphaActual);
-
-		this.vecUTPRotatedL = rotatedL;
-		this.vecUTPRotatedR = rotatedR;
 	}
 
 	/**
@@ -602,18 +502,6 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public double getConfidence() {
 		return this.confidence;
-	}
-
-	public Vector getVecUTP() {
-		return this.vecUTP;
-	}
-
-	public Vector getVecUTPRotatedL() {
-		return this.vecUTPRotatedL;
-	}
-
-	public Vector getVecUTPRotatedR() {
-		return this.vecUTPRotatedR;
 	}
 
 	public InformationStorage getInformationStorage() {
