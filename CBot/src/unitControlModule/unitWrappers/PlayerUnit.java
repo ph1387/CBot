@@ -31,9 +31,10 @@ import unitControlModule.stateFactories.updater.Updater;
 public abstract class PlayerUnit extends GoapUnit {
 
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
+	// TODO: UML VISIBILITY
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
 	// own parameters
-	public static final double CONFIDENCE_THRESHHOLD = 0.7;
+	protected static final double CONFIDENCE_THRESHHOLD = 0.7;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	// UML VISIBILITY
 	private static final int CONFIDENCE_TILE_RADIUS = 15;
@@ -503,8 +504,19 @@ public abstract class PlayerUnit extends GoapUnit {
 		return this.closestEnemyUnitInConfidenceRange;
 	}
 
-	public double getConfidence() {
-		return this.confidence;
+	// TODO: UML REMOVE
+//	public double getConfidence() {
+//		return this.confidence;
+//	}
+	
+	// TODO: UML ADD
+	public boolean isConfidenceBelowThreshold() {
+		return this.confidence < CONFIDENCE_THRESHHOLD;
+	}
+	
+	// TODO: UML ADD
+	public boolean isConfidenceAboveThreshold() {
+		return this.confidence >= CONFIDENCE_THRESHHOLD;
 	}
 
 	public InformationStorage getInformationStorage() {
