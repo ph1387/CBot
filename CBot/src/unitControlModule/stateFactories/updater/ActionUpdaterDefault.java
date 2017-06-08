@@ -12,6 +12,7 @@ import core.Core;
 import unitControlModule.stateFactories.actions.AvailableActionsDefault;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirection;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionToFurthestUnitInCone;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionToOwnGatheringPoint;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
@@ -41,8 +42,9 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 			this.attackMoveToNearestKnownUnitConfiguration();
 			
 			((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
-			((RetreatActionToFurthestUnitInCone) this.getActionFromInstance(RetreatActionToFurthestUnitInCone.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
-			((RetreatActionToOwnGatheringPoint) this.getActionFromInstance(RetreatActionToOwnGatheringPoint.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+//			((RetreatActionToFurthestUnitInCone) this.getActionFromInstance(RetreatActionToFurthestUnitInCone.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+//			((RetreatActionToOwnGatheringPoint) this.getActionFromInstance(RetreatActionToOwnGatheringPoint.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+			((RetreatActionSteerInGoalDirection) this.getActionFromInstance(RetreatActionSteerInGoalDirection.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 		}
 	}
 

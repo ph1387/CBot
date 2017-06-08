@@ -3,20 +3,32 @@ package unitControlModule.stateFactories.actions.executableActions;
 import java.util.HashSet;
 
 import bwapi.Color;
+import bwapi.Pair;
 import bwapi.Position;
+import bwapi.TilePosition;
+import bwapi.Unit;
+import bwapiMath.Polygon;
 import bwapiMath.Vector;
+import bwta.Region;
+import core.CBot;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
- * RetreatAction_GeneralSuperclass.java --- Superclass for RetreatActions.
+ * RetreatAction_GeneralSuperclass.java --- Superclass for RetreatActions. <br>
+ * <b>Notice:</b> <br>
+ * The temporary retreat-Position has to be set by subclasses since this
+ * determines if this Action can actually be taken or not.
  * 
  * @author P H - 10.03.2017
  *
  */
 public abstract class RetreatActionGeneralSuperclass extends BaseAction {
+	private static final int EXPAND_MULTIPLIER_MAX = 5;
+	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
+
 	private static final int DIST_TO_GATHERING_POINT = Core.getInstance().getTileSize();
 	protected static final int TILE_RADIUS_NEAR = 1;
 	// Has to be larger than DIST_TO_GATHERING_POINT
@@ -31,7 +43,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	// Vector related stuff
 	protected static final int ALPHA_MAX = 90;
-	protected double maxDistance = PlayerUnit.CONFIDENCE_TILE_RADIUS * Core.getInstance().getTileSize();
+	protected double maxDistance = 10 * Core.getInstance().getTileSize();
 	// vecEU -> Vector(enemyUnit, playerUnit)
 	// vecUTP -> Vector(playerUnit, targetPosition)
 	protected Vector vecEU, vecUTP;
@@ -63,11 +75,6 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
 
-		// TODO: DEBUG INFO
-		// // Position to which the Unit retreats to
-		Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(), this.retreatPosition,
-				new Color(255, 255, 0));
-
 		// Only override the current retreatPosition if the action trigger is
 		// set and move towards it. This enables the ability of storing the
 		// Positions inside a HashSet and moving other Units towards them
@@ -88,7 +95,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 			// // Position to which the Unit retreats to
 			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(),
 					this.retreatPosition, new Color(255, 255, 0));
-
+			Core.getInstance().getGame().drawCircleMap(this.retreatPosition.getPoint(), 5, new Color(0, 255, 0), true);
 		}
 		return this.retreatPosition != null && success;
 	}
@@ -111,8 +118,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		boolean success = false;
 
 		if (this.target != null && ((PlayerUnit) goapUnit).getClosestEnemyUnitInConfidenceRange() != null) {
-			this.updateVecEU(goapUnit);
-			this.updateVecUTP();
+			this.updateVectors(goapUnit);
 
 			success = this.checkProceduralSpecificPrecondition(goapUnit);
 
@@ -126,11 +132,11 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 			}
 
 			// TODO: DEBUG INFO
-			// Targeted retreat-Position
+			// Targeted retreat-Position (Vector Unit -> TargetPosition)
 			bwapi.Unit unit = ((PlayerUnit) goapUnit).getUnit();
 			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
 					vecUTP.getY() + (int) (vecUTP.dirY));
-			Core.getInstance().getGame().drawLineMap(unit.getPosition(), targetEndPosition, new Color(255, 128, 255));
+			Core.getInstance().getGame().drawLineMap(unit.getPosition(), targetEndPosition, new Color(255, 255, 255));
 		}
 		return success;
 	}
@@ -145,40 +151,173 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	protected abstract boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit);
 
 	/**
-	 * Used for updating the Vector from the closest enemy Unit in the
-	 * confidence range to the PlayerUnit.
+	 * Function for updating the main Vectors this Class provides.
 	 * 
 	 * @param goapUnit
-	 *            the Unit whose Vectors are being calculated.
+	 *            the Unit that is currently trying to retreat.
 	 */
-	private void updateVecEU(IGoapUnit goapUnit) {
+	private void updateVectors(IGoapUnit goapUnit) {
+		this.vecEU = this.generateVectorFromEnemyToUnit(goapUnit,
+				((PlayerUnit) goapUnit).getClosestEnemyUnitInConfidenceRange());
+		this.vecUTP = this.projectVectorOntoMaxLength(this.vecEU);
+	}
+
+	/**
+	 * Function for generating a Vector from an (enemy) Unit to this current
+	 * Unit.
+	 * 
+	 * @param goapUnit
+	 *            the Unit at which the Vector will point.
+	 * @param enemyUnit
+	 *            the Unit the Vector will emerge from.
+	 * @return a Vector pointing from an enemy Unit to the provided Unit.
+	 */
+	protected Vector generateVectorFromEnemyToUnit(IGoapUnit goapUnit, Unit enemyUnit) {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
 
 		// uPos -> Unit Position, ePos -> Enemy Position
 		int uPosX = playerUnit.getUnit().getPosition().getX();
 		int uPosY = playerUnit.getUnit().getPosition().getY();
-		int ePosX = playerUnit.getClosestEnemyUnitInConfidenceRange().getPosition().getX();
-		int ePosY = playerUnit.getClosestEnemyUnitInConfidenceRange().getPosition().getY();
+		int ePosX = enemyUnit.getX();
+		int ePosY = enemyUnit.getY();
 
-		this.vecEU = new Vector(ePosX, ePosY, uPosX - ePosX, uPosY - ePosY);
+		return new Vector(ePosX, ePosY, uPosX - ePosX, uPosY - ePosY);
 	}
 
 	/**
-	 * Used for updating the Vector from the PlayerUnit to a possible retreat
-	 * position.
+	 * Function for generating a (retreat) Vector from an incoming provided one,
+	 * whose end-Position is the start of the newly created Vector. The provided
+	 * Vector is projected onto a predefined length which shortens or lengthens
+	 * the outgoing (generated) Vector based the incoming Vector's length. The
+	 * returned Vector's length can not be larger than the specified length.
+	 *
+	 * @param incomingVector
+	 *            the Vector which is going to be projected onto a predefined
+	 *            length.
+	 * @return a Vector starting from the provided Vectors end-Position and has
+	 *         a length that represents the provided Vector's length in relation
+	 *         to the maximum possible length.
 	 */
-	private void updateVecUTP() {
-		double vecRangeMultiplier = (this.maxDistance - vecEU.length()) / this.maxDistance;
-		double neededDistanceMultiplier = this.maxDistance / vecEU.length();
+	protected Vector projectVectorOntoMaxLength(Vector incomingVector) {
+		double vecRangeMultiplier = (this.maxDistance - incomingVector.length()) / this.maxDistance;
+		double neededDistanceMultiplier = this.maxDistance / incomingVector.length();
 
 		// The direction-Vector is projected on the maxDistance and then
 		// combined with the rangeMultiplier to receive a representation of
 		// the distance between the enemyUnit and the currentUnit based on
 		// their distance to another.
-		int tPosX = (int) (vecRangeMultiplier * neededDistanceMultiplier * vecEU.dirX);
-		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * vecEU.dirY);
+		int tPosX = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.dirX);
+		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.dirY);
 
-		this.vecUTP = new Vector(this.vecEU.getX(), this.vecEU.getY(), tPosX, tPosY);
+		return new Vector(incomingVector.getX() + (int) (incomingVector.dirX),
+				incomingVector.getY() + (int) (incomingVector.dirY), tPosX, tPosY); // TODO:
+																					// WIP
+																					// BUGFIX
+																					// HARD!!!
+	}
+
+	/**
+	 * Function for finding the Polygon that the Position is in.
+	 * 
+	 * @param position
+	 *            the Position that is being checked.
+	 * @return the Region and the Polygon that the Position is located in.
+	 */
+	protected static Pair<Region, Polygon> findBoundariesPositionIsIn(Position position) {
+		Pair<Region, Polygon> matchingRegionPolygonPair = null;
+
+		// Search for the Pair of Regions and Polygons that includes the Unit's
+		// Position.
+		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
+			if (pair.first.getPolygon().isInside(position)) {
+				matchingRegionPolygonPair = pair;
+				break;
+			}
+		}
+		return matchingRegionPolygonPair;
+	}
+
+	/**
+	 * Function for retrieving all Units in an increasing range around the given
+	 * PlayerUnit. The range at which the Units are searched for increases
+	 * stepwise until Units are found or the preset maximum is reached.
+	 * 
+	 * @param goapUnit
+	 *            the PlayerUnit that the search is based around.
+	 * @return a HashSet containing all Units in a range around the given
+	 *         PlayerUnit with at least minimum distance to it.
+	 */
+	protected static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit goapUnit) {
+		HashSet<Unit> unitsTooClose = new HashSet<Unit>();
+		HashSet<Unit> unitsInRange = new HashSet<Unit>();
+		int iterationCounter = 1;
+
+		// Increase range until a Unit is found or the threshold is reached.
+		while (unitsInRange.isEmpty() && iterationCounter <= EXPAND_MULTIPLIER_MAX) {
+			HashSet<Unit> foundUnits = goapUnit
+					.getAllPlayerUnitsInRange((int) (iterationCounter * MAX_PIXELDISTANCE_TO_UNIT));
+			HashSet<Unit> unitsToBeRemoved = new HashSet<Unit>();
+
+			// Test all found Units, a Unit has to have a minimum distance to
+			// the PlayerUnit.
+			for (Unit unit : foundUnits) {
+				if (!unitsTooClose.contains(unit)
+						&& goapUnit.getUnit().getDistance(unit.getPosition()) < MIN_PIXELDISTANCE_TO_UNIT) {
+					unitsToBeRemoved.add(unit);
+					unitsTooClose.add(unit);
+				}
+			}
+
+			for (Unit unit : unitsToBeRemoved) {
+				foundUnits.remove(unit);
+			}
+
+			unitsInRange.addAll(foundUnits);
+			iterationCounter++;
+		}
+		return unitsInRange;
+	}
+
+	/**
+	 * Function for retrieving the Unit with the greatest sum of strengths
+	 * around the units TilePosition.
+	 * 
+	 * @param units
+	 *            a HashSet containing all units which are going to be cycled
+	 *            through.
+	 * @param goapUnit
+	 *            the currently executing IGoapUnit.
+	 * @return the Unit with the greatest sum of strengths at its TilePosition.
+	 */
+	protected static Unit getUnitWithGreatestTileStrengths(HashSet<Unit> units, IGoapUnit goapUnit) {
+		Unit bestUnit = null;
+		int bestUnitStrengthTotal = 0;
+
+		// Iterate over the Units and over their TilePositions in a specific
+		// radius.
+		for (Unit unit : units) {
+			int currentStrengths = 0;
+
+			for (int i = -TILE_RADIUS_AROUND_UNITS_SEARCH; i <= TILE_RADIUS_AROUND_UNITS_SEARCH; i++) {
+				for (int j = -TILE_RADIUS_AROUND_UNITS_SEARCH; j <= TILE_RADIUS_AROUND_UNITS_SEARCH; j++) {
+
+					// TODO: Possible Change: AirStrength Implementation
+					Integer value = ((PlayerUnit) goapUnit).getInformationStorage().getTrackerInfo()
+							.getPlayerGroundAttackTilePositions().get(new TilePosition(
+									unit.getTilePosition().getX() + i, unit.getTilePosition().getY() + j));
+
+					if (value != null) {
+						currentStrengths += value;
+					}
+				}
+			}
+
+			if (bestUnit == null || currentStrengths > bestUnitStrengthTotal) {
+				bestUnit = unit;
+				bestUnitStrengthTotal = currentStrengths;
+			}
+		}
+		return bestUnit;
 	}
 
 	@Override

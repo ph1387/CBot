@@ -187,6 +187,19 @@ public class Vector extends Point {
 	}
 
 	/**
+	 * Sets the Vector to a specific length.
+	 * 
+	 * @param length
+	 *            the length that the Vector is supposed to have.
+	 */
+	public void setToLength(double length) {
+		this.normalize();
+		
+		this.dirX *= length;
+		this.dirY *= length;
+	}
+
+	/**
 	 * Function for generating the scalar / dot product of the current and a
 	 * given Vector.
 	 * 

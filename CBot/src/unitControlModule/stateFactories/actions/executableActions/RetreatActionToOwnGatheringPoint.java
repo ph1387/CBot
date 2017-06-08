@@ -1,13 +1,11 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 import bwapi.Color;
 import bwapi.Pair;
 import bwapi.Position;
-import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapiMath.Point;
 import bwapiMath.Polygon;
@@ -15,7 +13,6 @@ import bwapiMath.Vector;
 import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
-import core.CBot;
 import core.Core;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -28,8 +25,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  *
  */
 public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperclass {
-	private static final int EXPAND_MULTIPLIER_MAX = 2;
-	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 	private static final int MIN_VERTEX_OFFSET = 2;
 	private static final double DISTANCE_MULTIPLIER = 0.9;
 
@@ -47,8 +42,8 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 
 		// Position missing -> action not performed yet
 		if (this.retreatPosition == null) {
-			Unit retreatableUnit = this.getUnitWithGreatestTileStrengths(
-					this.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit), goapUnit);
+			Unit retreatableUnit = getUnitWithGreatestTileStrengths(
+					getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit), goapUnit);
 			Vector usedVector = null;
 
 			if (retreatableUnit == null) {
@@ -74,12 +69,6 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		// Position known -> action performed once
 		else {
 			precondtionsMet = ((PlayerUnit) goapUnit).getUnit().hasPath(this.retreatPosition);
-		}
-
-		// TODO: REMOVE DEBUG
-		// Display the actual retreat Position
-		if (this.retreatPosition != null) {
-			Core.getInstance().getGame().drawCircleMap(this.retreatPosition.getPoint(), 5, new Color(0, 255, 0), true);
 		}
 
 		return precondtionsMet;
@@ -117,7 +106,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 
 		try {
 			Position unitPosition = ((PlayerUnit) goapUnit).getUnit().getPosition();
-			Pair<Region, Polygon> matchingRegionPolygonPair = this.findBoundariesPositionIsIn(unitPosition);
+			Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(unitPosition);
 
 			// Get the List of intersection Points with the retreat Vector.
 			List<Pair<Vector, Point>> intersectionWithMapBoundaries = matchingRegionPolygonPair.second
@@ -138,27 +127,6 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		}
 
 		return success;
-	}
-
-	/**
-	 * Function for finding the Polygon that the Position is in.
-	 * 
-	 * @param position
-	 *            the Position that is being checked.
-	 * @return the Region and the Polygon that the Position is located in.
-	 */
-	private Pair<Region, Polygon> findBoundariesPositionIsIn(Position position) {
-		Pair<Region, Polygon> matchingRegionPolygonPair = null;
-
-		// Search for the Pair of Regions and Polygons that includes the Unit's
-		// Position.
-		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
-			if (pair.first.getPolygon().isInside(position)) {
-				matchingRegionPolygonPair = pair;
-				break;
-			}
-		}
-		return matchingRegionPolygonPair;
 	}
 
 	/**
@@ -235,7 +203,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 			success = false;
 		}
 
-		// TODO: REMOVE DEBUG
+		// TODO: DEBUG INFO
 		// Display intersections with the Polygon itself.
 		Core.getInstance().getGame().drawCircleMap(intersectionWithMapBoundaries.get(elementIndex).second.toPosition(),
 				5, new Color(0, 0, 255), true);
@@ -422,7 +390,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		// Counters for traversing a ChokePoint. This is necessary since
 		// sometimes the second Position of a ChokePoint is chosen as the next
 		// Point and therefore causes the while loop to go on indefinitely.
-		int chokePointCounterMax = 3;
+		int chokePointCounterMax = 5;
 		int chokePointCounter = 0;
 
 		while (distanceLeft > 0) {
@@ -480,7 +448,7 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 			// Move the next Point in the desired direction.
 			nextPoint = currentVertices.get(currentIndex);
 
-			// TODO: REMOVE DEBUG
+			// TODO: DEBUG INFO
 			// Display vectors and generated temp. retreat Positions
 			Core.getInstance().getGame().drawLineMap(vecToNextPoint.getX(), vecToNextPoint.getY(),
 					(int) (vecToNextPoint.getX() + vecToNextPoint.dirX),
@@ -644,88 +612,5 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 		// in consideration, if no gathering point from another PlayerUnit is
 		// found inside the cone (is another Action).
 		return 100;
-	}
-
-	/**
-	 * Function for retrieving all Units in an increasing range around the given
-	 * PlayerUnit. The range at which the Units are searched for increases
-	 * stepwise until Units are found or the preset maximum is reached.
-	 * 
-	 * @param goapUnit
-	 *            the PlayerUnit that the search is based around.
-	 * @return a HashSet containing all Units in a range around the given
-	 *         PlayerUnit with at least minimum distance to it.
-	 */
-	private HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit goapUnit) {
-		HashSet<Unit> unitsTooClose = new HashSet<Unit>();
-		HashSet<Unit> unitsInRange = new HashSet<Unit>();
-		int iterationCounter = 1;
-
-		// Increase range until a Unit is found or the threshold is reached.
-		while (unitsInRange.isEmpty() && iterationCounter <= EXPAND_MULTIPLIER_MAX) {
-			HashSet<Unit> foundUnits = goapUnit
-					.getAllPlayerUnitsInRange((int) (iterationCounter * MAX_PIXELDISTANCE_TO_UNIT));
-			HashSet<Unit> unitsToBeRemoved = new HashSet<Unit>();
-
-			// Test all found Units, a Unit has to have a minimum distance to
-			// the PlayerUnit.
-			for (Unit unit : foundUnits) {
-				if (!unitsTooClose.contains(unit)
-						&& goapUnit.getUnit().getDistance(unit.getPosition()) < MIN_PIXELDISTANCE_TO_UNIT) {
-					unitsToBeRemoved.add(unit);
-					unitsTooClose.add(unit);
-				}
-			}
-
-			for (Unit unit : unitsToBeRemoved) {
-				foundUnits.remove(unit);
-			}
-
-			unitsInRange.addAll(foundUnits);
-			iterationCounter++;
-		}
-		return unitsInRange;
-	}
-
-	/**
-	 * Function for retrieving the Unit with the greatest sum of strengths
-	 * around the units TilePosition.
-	 * 
-	 * @param units
-	 *            a HashSet containing all units which are going to be cycled
-	 *            through.
-	 * @param goapUnit
-	 *            the currently executing IGoapUnit.
-	 * @return the Unit with the greatest sum of strengths at its TilePosition.
-	 */
-	private Unit getUnitWithGreatestTileStrengths(HashSet<Unit> units, IGoapUnit goapUnit) {
-		Unit bestUnit = null;
-		int bestUnitStrengthTotal = 0;
-
-		// Iterate over the Units and over their TilePositions in a specific
-		// radius.
-		for (Unit unit : units) {
-			int currentStrengths = 0;
-
-			for (int i = -TILE_RADIUS_AROUND_UNITS_SEARCH; i <= TILE_RADIUS_AROUND_UNITS_SEARCH; i++) {
-				for (int j = -TILE_RADIUS_AROUND_UNITS_SEARCH; j <= TILE_RADIUS_AROUND_UNITS_SEARCH; j++) {
-
-					// TODO: Possible Change: AirStrength Implementation
-					Integer value = ((PlayerUnit) goapUnit).getInformationStorage().getTrackerInfo()
-							.getPlayerGroundAttackTilePositions().get(new TilePosition(
-									unit.getTilePosition().getX() + i, unit.getTilePosition().getY() + j));
-
-					if (value != null) {
-						currentStrengths += value;
-					}
-				}
-			}
-
-			if (bestUnit == null || currentStrengths > bestUnitStrengthTotal) {
-				bestUnit = unit;
-				bestUnitStrengthTotal = currentStrengths;
-			}
-		}
-		return bestUnit;
 	}
 }
