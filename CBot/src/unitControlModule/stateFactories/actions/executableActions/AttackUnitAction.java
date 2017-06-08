@@ -29,7 +29,10 @@ public class AttackUnitAction extends BaseAction {
 	
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().contains(this.target);
+		boolean isEnemyDead = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().contains(this.target);
+		boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
+		
+		return isEnemyDead || isConfidenceLow;
 	}
 
 	@Override
