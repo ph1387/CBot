@@ -38,10 +38,11 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	// UML VISIBILITY
 	private static final int CONFIDENCE_TILE_RADIUS = 15;
-	// TODO: WIP: Does not need to be enabled if Actions regarding evading enemies do not depend on it!
+	// TODO: WIP: Does not need to be enabled if Actions regarding evading
+	// enemies do not depend on it!
 	// The higher the value the more passive the Unit reacts to a change
 	// regarding the closest enemy Unit in its confidence range.
-//	protected static final int CONFIDENCE_RANGE_REACT_COUNTER_MAX = 10;
+	// protected static final int CONFIDENCE_RANGE_REACT_COUNTER_MAX = 10;
 
 	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
 
@@ -161,7 +162,8 @@ public abstract class PlayerUnit extends GoapUnit {
 				.getClosestUnit(this.getAllEnemyUnitsInRange(this.unit.getType().sightRange()));
 		Unit newClosestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
 
-		// TODO: WIP: Does not need to be enabled if Actions regarding evading enemies do not depend on it!
+		// TODO: WIP: Does not need to be enabled if Actions regarding evading
+		// enemies do not depend on it!
 		// React on the fact that the previously chosen Action might be not
 		// appropriate for the new closest Unit. This has to use a previously
 		// set counter since not using that could cause the Bot to spin
@@ -169,14 +171,16 @@ public abstract class PlayerUnit extends GoapUnit {
 		// sites.
 		// The counter determines the passiveness with which the Unit reacts to
 		// a closest enemy Unit in confidence change (higher = more passive).
-//		if (this.closestEnemyUnitInConfidenceRangeReactCounter == 0
-//				&& this.closestEnemyUnitInConfidenceRange != newClosestEnemyUnitInConfidenceRange) {
-//			this.closestEnemyUnitInConfidenceRangeReactCounter = CONFIDENCE_RANGE_REACT_COUNTER_MAX;
-//			this.resetActions();
-//		}
-//		if (this.closestEnemyUnitInConfidenceRangeReactCounter > 0) {
-//			this.closestEnemyUnitInConfidenceRangeReactCounter--;
-//		}
+		// if (this.closestEnemyUnitInConfidenceRangeReactCounter == 0
+		// && this.closestEnemyUnitInConfidenceRange !=
+		// newClosestEnemyUnitInConfidenceRange) {
+		// this.closestEnemyUnitInConfidenceRangeReactCounter =
+		// CONFIDENCE_RANGE_REACT_COUNTER_MAX;
+		// this.resetActions();
+		// }
+		// if (this.closestEnemyUnitInConfidenceRangeReactCounter > 0) {
+		// this.closestEnemyUnitInConfidenceRangeReactCounter--;
+		// }
 
 		this.closestEnemyUnitInConfidenceRange = newClosestEnemyUnitInConfidenceRange;
 
@@ -204,7 +208,7 @@ public abstract class PlayerUnit extends GoapUnit {
 		// Calculate the offset of the confidence based on the current Units
 		// health.
 		double lifeConfidenceMultiplicator = (double) (this.unit.getHitPoints())
-				/ (double) (this.unit.getInitialHitPoints());
+				/ (double) (this.unit.getType().maxHitPoints());
 
 		// Has to be set for following equation
 		if (enemyStrengthTotal == 0.) {
@@ -505,15 +509,15 @@ public abstract class PlayerUnit extends GoapUnit {
 	}
 
 	// TODO: UML REMOVE
-//	public double getConfidence() {
-//		return this.confidence;
-//	}
-	
+	// public double getConfidence() {
+	// return this.confidence;
+	// }
+
 	// TODO: UML ADD
 	public boolean isConfidenceBelowThreshold() {
 		return this.confidence < CONFIDENCE_THRESHHOLD;
 	}
-	
+
 	// TODO: UML ADD
 	public boolean isConfidenceAboveThreshold() {
 		return this.confidence >= CONFIDENCE_THRESHHOLD;
