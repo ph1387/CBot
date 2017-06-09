@@ -71,8 +71,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 				// closest enemy Unit in it's confidence range.
 				Vector generalizedTargetVector = this.vecUTP.clone();
 				generalizedTargetVector.normalize();
-				generalizedTargetVector.dirX *= INFLUENCE_INITIAL;
-				generalizedTargetVector.dirY *= INFLUENCE_INITIAL;
+				generalizedTargetVector.setDirX(generalizedTargetVector.getDirX() * INFLUENCE_INITIAL);
+				generalizedTargetVector.setDirY(generalizedTargetVector.getDirY() * INFLUENCE_INITIAL);
 
 				// Update the direction of the generalized Vector based on
 				// various
@@ -91,8 +91,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 				// Use the Vector's end-Position as retreat-Position.
 				if (possibleRetreatVector != null) {
 					this.generatedTempRetreatPosition = new Position(
-							possibleRetreatVector.getX() + (int) (possibleRetreatVector.dirX),
-							possibleRetreatVector.getY() + (int) (possibleRetreatVector.dirY));
+							possibleRetreatVector.getX() + (int) (possibleRetreatVector.getDirX()),
+							possibleRetreatVector.getY() + (int) (possibleRetreatVector.getDirY()));
 
 					precondtionsMet = true;
 				}
@@ -142,8 +142,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 
 					if (vecUnitToChokePoint.length() > 0.) {
 						vecUnitToChokePoint.normalize();
-						targetVector.dirX += vecUnitToChokePoint.dirX * INFLUENCE_CHOKEPOINT;
-						targetVector.dirY += vecUnitToChokePoint.dirY * INFLUENCE_CHOKEPOINT;
+						targetVector.setDirX(targetVector.getDirX() + vecUnitToChokePoint.getDirX() * INFLUENCE_CHOKEPOINT);
+						targetVector.setDirY(targetVector.getDirY() + vecUnitToChokePoint.getDirY() * INFLUENCE_CHOKEPOINT);
 					}
 				}
 			}
@@ -199,8 +199,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 
 			if (retreatVectorFromUnit.length() > 0.) {
 				retreatVectorFromUnit.normalize();
-				targetVector.dirX += retreatVectorFromUnit.dirX * INFLUENCE_ENEMIES;
-				targetVector.dirY += retreatVectorFromUnit.dirY * INFLUENCE_ENEMIES;
+				targetVector.setDirX(targetVector.getDirX() + retreatVectorFromUnit.getDirX() * INFLUENCE_ENEMIES);
+				targetVector.setDirY(targetVector.getDirY() + retreatVectorFromUnit.getDirY() * INFLUENCE_ENEMIES);
 			}
 		}
 	}
@@ -228,8 +228,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 
 			if (vecToBaseLocation.length() > 0.) {
 				vecToBaseLocation.normalize();
-				targetVector.dirX += vecToBaseLocation.dirX * INFLUENCE_BASE;
-				targetVector.dirY += vecToBaseLocation.dirY * INFLUENCE_BASE;
+				targetVector.setDirX(targetVector.getDirX() + vecToBaseLocation.getDirX() * INFLUENCE_BASE);
+				targetVector.setDirY(targetVector.getDirY() + vecToBaseLocation.getDirY() * INFLUENCE_BASE);
 			}
 		}
 	}
@@ -258,8 +258,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 
 			if (vecToStrongestUnitArea.length() > 0.) {
 				vecToStrongestUnitArea.normalize();
-				targetVector.dirX += vecToStrongestUnitArea.dirX * INFLUENCE_COMPANIONS;
-				targetVector.dirY += vecToStrongestUnitArea.dirY * INFLUENCE_COMPANIONS;
+				targetVector.setDirX(targetVector.getDirX() + vecToStrongestUnitArea.getDirX() * INFLUENCE_COMPANIONS);
+				targetVector.setDirY(targetVector.getDirY() + vecToStrongestUnitArea.getDirY() * INFLUENCE_COMPANIONS);
 			}
 		}
 	}
@@ -305,7 +305,7 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 		// found, which caused the Unit to simply abort the retreat Action and
 		// stand on one Point waiting for the enemy to kill it.
 		if (currentPolygon.findIntersections(vecLeft).isEmpty() && ((PlayerUnit) goapUnit).getUnit()
-				.hasPath(new Position(vecLeft.getX() + (int) (vecLeft.dirX), vecLeft.getY() + (int) (vecLeft.dirY)))) {
+				.hasPath(new Position(vecLeft.getX() + (int) (vecLeft.getDirX()), vecLeft.getY() + (int) (vecLeft.getDirY())))) {
 			possibleRetreatVector = vecLeft; // OR vecRight, does not matter
 		} else if (nearestChoke != null) {
 			boolean tryFindingPath = true;
@@ -329,10 +329,10 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 				List<Pair<Vector, Point>> intersectionsVecRight = currentPolygon.findIntersections(vecRight);
 
 				// Determine the end-Points of the Vectors.
-				Position vecLeftEndPosition = new Position(vecLeft.getX() + (int) (vecLeft.dirX),
-						vecLeft.getY() + (int) (vecLeft.dirY));
-				Position vecRightEndPosition = new Position(vecRight.getX() + (int) (vecRight.dirX),
-						vecRight.getY() + (int) (vecRight.dirY));
+				Position vecLeftEndPosition = new Position(vecLeft.getX() + (int) (vecLeft.getDirX()),
+						vecLeft.getY() + (int) (vecLeft.getDirY()));
+				Position vecRightEndPosition = new Position(vecRight.getX() + (int) (vecRight.getDirX()),
+						vecRight.getY() + (int) (vecRight.getDirY()));
 
 				// The Unit prefers to go left. Also test if the found
 				// intersections belong to a ChokePoint, which the Unit can move
@@ -377,8 +377,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 	 *         not.
 	 */
 	private boolean isEndPositionBlockedByNeutralOrBuilding(Vector vector) {
-		Position endPositionVec = new Position(vector.getX() + (int) (vector.dirX),
-				vector.getY() + (int) (vector.dirY));
+		Position endPositionVec = new Position(vector.getX() + (int) (vector.getDirX()),
+				vector.getY() + (int) (vector.getDirY()));
 		List<Unit> endTilePositionVecRightUnits = Core.getInstance().getGame()
 				.getUnitsOnTile(endPositionVec.toTilePosition());
 		boolean blocked = false;

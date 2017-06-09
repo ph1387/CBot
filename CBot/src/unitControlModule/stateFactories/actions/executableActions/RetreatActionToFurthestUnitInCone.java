@@ -58,10 +58,10 @@ public class RetreatActionToFurthestUnitInCone extends RetreatActionGeneralSuper
 		// TODO: DEBUG INFO
 		// Cone in front of the Unit
 		bwapi.Unit unit = ((PlayerUnit) goapUnit).getUnit();
-		Position rotatedLVecEndPos = new Position(vecUTPRotatedL.getX() + (int) (vecUTPRotatedL.dirX),
-				vecUTPRotatedL.getY() + (int) (vecUTPRotatedL.dirY));
-		Position rotatedRVecEndPos = new Position(vecUTPRotatedR.getX() + (int) (vecUTPRotatedR.dirX),
-				vecUTPRotatedR.getY() + (int) (vecUTPRotatedR.dirY));
+		Position rotatedLVecEndPos = new Position(this.vecUTPRotatedL.getX() + (int) (this.vecUTPRotatedL.getDirX()),
+				this.vecUTPRotatedL.getY() + (int) (this.vecUTPRotatedL.getDirY()));
+		Position rotatedRVecEndPos = new Position(this.vecUTPRotatedR.getX() + (int) (this.vecUTPRotatedR.getDirX()),
+				this.vecUTPRotatedR.getY() + (int) (this.vecUTPRotatedR.getDirY()));
 		Core.getInstance().getGame().drawLineMap(unit.getPosition(), rotatedLVecEndPos, new Color(255, 0, 0));
 		Core.getInstance().getGame().drawLineMap(unit.getPosition(), rotatedRVecEndPos, new Color(0, 255, 0));
 		// Core.getInstance().getGame().drawTextMap(rotatedLVecEndPos,
@@ -84,8 +84,8 @@ public class RetreatActionToFurthestUnitInCone extends RetreatActionGeneralSuper
 		// actual alpha value.
 		// vecRotatedL -> Rotated Vector left
 		// vecRotatedR -> Rotated Vector right
-		Vector rotatedL = new Vector(this.vecUTP.getX(), this.vecUTP.getY(), this.vecUTP.dirX, this.vecUTP.dirY);
-		Vector rotatedR = new Vector(this.vecUTP.getX(), this.vecUTP.getY(), this.vecUTP.dirX, this.vecUTP.dirY);
+		Vector rotatedL = new Vector(this.vecUTP.getX(), this.vecUTP.getY(), this.vecUTP.getDirX(), this.vecUTP.getDirY());
+		Vector rotatedR = new Vector(this.vecUTP.getX(), this.vecUTP.getY(), this.vecUTP.getDirX(), this.vecUTP.getDirY());
 		rotatedL.rotateLeftDEG(alphaActual);
 		rotatedR.rotateRightDEG(alphaActual);
 

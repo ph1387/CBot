@@ -134,8 +134,8 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 			// TODO: DEBUG INFO
 			// Targeted retreat-Position (Vector Unit -> TargetPosition)
 			bwapi.Unit unit = ((PlayerUnit) goapUnit).getUnit();
-			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
-					vecUTP.getY() + (int) (vecUTP.dirY));
+			Position targetEndPosition = new Position(vecUTP.getX() + (int) (vecUTP.getDirX()),
+					vecUTP.getY() + (int) (vecUTP.getDirY()));
 			Core.getInstance().getGame().drawLineMap(unit.getPosition(), targetEndPosition, new Color(255, 255, 255));
 		}
 		return success;
@@ -206,11 +206,11 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		// combined with the rangeMultiplier to receive a representation of
 		// the distance between the enemyUnit and the currentUnit based on
 		// their distance to another.
-		int tPosX = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.dirX);
-		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.dirY);
+		int tPosX = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.getDirX());
+		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.getDirY());
 
-		return new Vector(incomingVector.getX() + (int) (incomingVector.dirX),
-				incomingVector.getY() + (int) (incomingVector.dirY), tPosX, tPosY); // TODO:
+		return new Vector(incomingVector.getX() + (int) (incomingVector.getDirX()),
+				incomingVector.getY() + (int) (incomingVector.getDirY()), tPosX, tPosY); // TODO:
 																					// WIP
 																					// BUGFIX
 																					// HARD!!!

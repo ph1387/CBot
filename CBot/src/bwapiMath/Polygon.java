@@ -255,8 +255,8 @@ public class Polygon {
 	public List<Pair<Vector, Point>> findIntersections(Vector testVector) {
 		List<Pair<Vector, Point>> intersections = new ArrayList<>();
 		PathIterator pathIterator = this.polygon.getPathIterator(null);
-		Line2D testLine = new Line2D.Double(testVector.x, testVector.y, testVector.x + testVector.dirX,
-				testVector.y + testVector.dirY);
+		Line2D testLine = new Line2D.Double(testVector.x, testVector.y, testVector.x + testVector.getDirX(),
+				testVector.y + testVector.getDirY());
 		boolean atEnd = false;
 
 		// Define the storage of the received coordinates
@@ -394,10 +394,10 @@ public class Polygon {
 
 		// Find the middle of the edge.
 		vecToNextPoint.normalize();
-		Vector vecToMiddlePoint = new Vector(vecToNextPoint.x, vecToNextPoint.y, vecToNextPoint.dirX * vecLengthHalf,
-				vecToNextPoint.dirY * vecLengthHalf);
-		Point middlePoint = new Point((int) (vecToMiddlePoint.x + vecToMiddlePoint.dirX),
-				(int) (vecToMiddlePoint.y + vecToMiddlePoint.dirY), Point.Type.POSITION);
+		Vector vecToMiddlePoint = new Vector(vecToNextPoint.x, vecToNextPoint.y, vecToNextPoint.getDirX() * vecLengthHalf,
+				vecToNextPoint.getDirY() * vecLengthHalf);
+		Point middlePoint = new Point((int) (vecToMiddlePoint.x + vecToMiddlePoint.getDirX()),
+				(int) (vecToMiddlePoint.y + vecToMiddlePoint.getDirY()), Point.Type.POSITION);
 		Vector vecToEndPoint = new Vector(middlePoint.x, middlePoint.y, endPoint.x - middlePoint.x,
 				endPoint.y - middlePoint.y);
 

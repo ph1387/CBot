@@ -58,8 +58,8 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 				// Generate a Vector from the normalized Vector to the found
 				// Unit with a fixed length.
 				usedVector = new Vector(vecToUnit.getX(), vecToUnit.getY(),
-						(int) (vecToUnit.dirX * MIN_PIXELDISTANCE_TO_UNIT),
-						(int) (vecToUnit.dirY * MIN_PIXELDISTANCE_TO_UNIT));
+						(int) (vecToUnit.getDirX() * MIN_PIXELDISTANCE_TO_UNIT),
+						(int) (vecToUnit.getDirY() * MIN_PIXELDISTANCE_TO_UNIT));
 			}
 
 			// Generate a new temporary retreat Position for the Unit with a
@@ -318,8 +318,8 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 */
 	private Integer generateStepVerticesDirection(Vector vector, List<Point> vertices,
 			Pair<Integer, Integer> previousAndNextIndices) {
-		Position vecUTPEndPosition = new Position((int) (vector.getX() + vector.dirX),
-				(int) (vector.getY() + vector.dirY));
+		Position vecUTPEndPosition = new Position((int) (vector.getX() + vector.getDirX()),
+				(int) (vector.getY() + vector.getDirY()));
 		Integer stepVerticesDirection = null;
 		Integer previousVertexIndex = this.verifyIndexSize(previousAndNextIndices.first - MIN_VERTEX_OFFSET, vertices);
 		Integer nextVertexIndex = this.verifyIndexSize(previousAndNextIndices.second + MIN_VERTEX_OFFSET, vertices);
@@ -451,10 +451,10 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 			// TODO: DEBUG INFO
 			// Display vectors and generated temp. retreat Positions
 			Core.getInstance().getGame().drawLineMap(vecToNextPoint.getX(), vecToNextPoint.getY(),
-					(int) (vecToNextPoint.getX() + vecToNextPoint.dirX),
-					(int) (vecToNextPoint.getY() + vecToNextPoint.dirY), new Color(255, 255, 0));
-			Core.getInstance().getGame().drawCircleMap((int) (vecToNextPoint.getX() + vecToNextPoint.dirX),
-					(int) (vecToNextPoint.getY() + vecToNextPoint.dirY), 5, new Color(255, 0, 0), true);
+					(int) (vecToNextPoint.getX() + vecToNextPoint.getDirX()),
+					(int) (vecToNextPoint.getY() + vecToNextPoint.getDirY()), new Color(255, 255, 0));
+			Core.getInstance().getGame().drawCircleMap((int) (vecToNextPoint.getX() + vecToNextPoint.getDirX()),
+					(int) (vecToNextPoint.getY() + vecToNextPoint.getDirY()), 5, new Color(255, 0, 0), true);
 		}
 
 		// Do NOT forget to return the calculated Vector!
@@ -563,12 +563,12 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 
 			// Move the target Position inside the Polygon.
 			vecToLastPoint.rotateLeftDEG(iterationCounter * turningDegrees);
-			rotatedPosition = new Position((int) (vecToLastPoint.getX() + vecToLastPoint.dirX * stepMultiplier),
-					(int) (vecToLastPoint.getY() + vecToLastPoint.dirY * stepMultiplier));
+			rotatedPosition = new Position((int) (vecToLastPoint.getX() + vecToLastPoint.getDirX() * stepMultiplier),
+					(int) (vecToLastPoint.getY() + vecToLastPoint.getDirY() * stepMultiplier));
 			if (!region.getPolygon().isInside(rotatedPosition)) {
 				vecToLastPoint.rotateRightDEG(2 * iterationCounter * turningDegrees);
-				rotatedPosition = new Position((int) (vecToLastPoint.getX() + vecToLastPoint.dirX * stepMultiplier),
-						(int) (vecToLastPoint.getY() + vecToLastPoint.dirY * stepMultiplier));
+				rotatedPosition = new Position((int) (vecToLastPoint.getX() + vecToLastPoint.getDirX() * stepMultiplier),
+						(int) (vecToLastPoint.getY() + vecToLastPoint.getDirY() * stepMultiplier));
 
 				if (!region.getPolygon().isInside(rotatedPosition)) {
 					foundPossiblePoint = false;
@@ -593,8 +593,8 @@ public class RetreatActionToOwnGatheringPoint extends RetreatActionGeneralSuperc
 	 *         accessible or not.
 	 */
 	private boolean retreatToVectorEndPosition(Vector vecUTP) {
-		Position targetVecPosition = new Position(vecUTP.getX() + (int) (vecUTP.dirX),
-				vecUTP.getY() + (int) (vecUTP.dirY));
+		Position targetVecPosition = new Position(vecUTP.getX() + (int) (vecUTP.getDirX()),
+				vecUTP.getY() + (int) (vecUTP.getDirY()));
 		boolean returnValue = true;
 
 		if (this.isInsideMap(targetVecPosition)) {
