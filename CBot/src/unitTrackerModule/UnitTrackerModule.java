@@ -22,7 +22,10 @@ import informationStorage.UnitTrackerInformation;
  *
  */
 public class UnitTrackerModule {
-
+	// TODO: UML ADD
+	private static final double SHIELD_MULTIPLIER = 1.2;
+	// TODO: UML ADD
+	private static final double HEALTH_MULTIPLIER = 1.1;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
 	// Tracking information
@@ -210,7 +213,7 @@ public class UnitTrackerModule {
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			if (unit.isCompleted() && unit.getType().airWeapon() != null
 					&& unit.getType().airWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles, unit.getType(),
+				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles, this.generateUnitMultiplier(unit),
 						unit.getType().airWeapon());
 			}
 		}
@@ -230,7 +233,7 @@ public class UnitTrackerModule {
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			if (unit.isCompleted() && unit.getType().groundWeapon() != null
 					&& unit.getType().groundWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles, unit.getType(),
+				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles, this.generateUnitMultiplier(unit),
 						unit.getType().groundWeapon());
 			}
 		}
@@ -249,18 +252,28 @@ public class UnitTrackerModule {
 
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
-			if (enemyUnit.getUnitType().airWeapon() != null && enemyUnit.getUnitType().airWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
-						enemyUnit.getUnitType(), enemyUnit.getUnitType().airWeapon());
+			if (enemyUnit.getUnitType().airWeapon() != null && enemyUnit.getUnitType().airWeapon().damageAmount() > 0 && enemyUnit.getUnit().isCompleted()) {
+				if(enemyUnit.getUnit() != null) {
+					this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
+							this.generateUnitMultiplier(enemyUnit.getUnit()), enemyUnit.getUnitType().airWeapon());
+				} else {
+					this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
+							this.generateEnemyUnitMultiplier(enemyUnit), enemyUnit.getUnitType().airWeapon());
+				}
 			}
 		}
 
 		// Buildings
 		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
 			if (enemyBuilding.getUnitType().airWeapon() != null
-					&& enemyBuilding.getUnitType().airWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-						enemyBuilding.getUnitType(), enemyBuilding.getUnitType().airWeapon());
+					&& enemyBuilding.getUnitType().airWeapon().damageAmount() > 0 && enemyBuilding.getUnit().isCompleted()) {
+				if(enemyBuilding.getUnit() != null) {
+					this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+							this.generateUnitMultiplier(enemyBuilding.getUnit()), enemyBuilding.getUnitType().airWeapon());
+				} else {
+					this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+							this.generateEnemyUnitMultiplier(enemyBuilding), enemyBuilding.getUnitType().airWeapon());
+				}
 			}
 		}
 		return valueTiles;
@@ -279,23 +292,63 @@ public class UnitTrackerModule {
 		// Units
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
 			if (enemyUnit.getUnitType().groundWeapon() != null
-					&& enemyUnit.getUnitType().groundWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
-						enemyUnit.getUnitType(), enemyUnit.getUnitType().groundWeapon());
+					&& enemyUnit.getUnitType().groundWeapon().damageAmount() > 0 && enemyUnit.getUnit().isCompleted()) {
+				if(enemyUnit.getUnit() != null) {
+					this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
+							this.generateUnitMultiplier(enemyUnit.getUnit()), enemyUnit.getUnitType().groundWeapon());
+				} else {
+					this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
+							this.generateEnemyUnitMultiplier(enemyUnit), enemyUnit.getUnitType().groundWeapon());
+				}
 			}
 		}
 
 		// Buildings
 		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
 			if (enemyBuilding.getUnitType().groundWeapon() != null
-					&& enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-						enemyBuilding.getUnitType(), enemyBuilding.getUnitType().groundWeapon());
+					&& enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0 && enemyBuilding.getUnit().isCompleted()) {
+				if(enemyBuilding.getUnit() != null) {
+					this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+							this.generateUnitMultiplier(enemyBuilding.getUnit()), enemyBuilding.getUnitType().groundWeapon());
+				} else {
+					this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+							this.generateEnemyUnitMultiplier(enemyBuilding), enemyBuilding.getUnitType().groundWeapon());
+				}
 			}
 		}
 		return valueTiles;
 	}
 
+	// TODO: UML ADD
+	/**
+	 * Function for generating a multiplier for an EnemyUnit. This includes all kinds of information like types, shields or life.
+	 * @param enemyUnit the EnemyUnit for which a multiplier is being created.
+	 * @return a multiplier for an EnemyUnit which resembles it's strength.
+	 */
+	private double generateEnemyUnitMultiplier(EnemyUnit enemyUnit) {
+		double multiplier = Double.valueOf(enemyUnit.getUnitType().maxHitPoints()) / 2.;
+		
+		if(enemyUnit.getUnitType().maxShields() > 0) {
+			multiplier *=  Double.valueOf(enemyUnit.getUnitType().maxShields()) / 2.;
+		}
+		return multiplier;
+	}
+	
+	/**
+	 * Function for generating a multiplier for an Unit. This includes all kinds of information like types, shields or life.
+	 * @param playerUnit the Unit for which a multiplier is being created.
+	 * @return a multiplier for an Unit which resembles it's strength.
+	 */
+	private double generateUnitMultiplier(Unit unit) {
+		double multiplier = HEALTH_MULTIPLIER * Double.valueOf(unit.getHitPoints()) / Double.valueOf(unit.getType().maxHitPoints());
+		
+		if(unit.getType().maxShields() > 0) {
+			multiplier *= SHIELD_MULTIPLIER * (Double.valueOf(unit.getShields()) / Double.valueOf(unit.getType().maxShields()));
+		}
+		return multiplier;
+	}
+	
+	// TODO: UML CHANGE PARAMETERS
 	// TODO: Possible Change: Simplify function call
 	/**
 	 * Function for adding a units strength to the corresponding
@@ -312,7 +365,7 @@ public class UnitTrackerModule {
 	 *            the WeaponType of the Unit.
 	 */
 	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, HashMap<TilePosition, Integer> valueTiles,
-			UnitType unitType, WeaponType weaponType) {
+			double unitSpecificMultiplier, WeaponType weaponType) {
 		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange())
 				/ Double.valueOf(Core.getInstance().getTileSize()));
 
@@ -329,7 +382,7 @@ public class UnitTrackerModule {
 									// the number, the stronger the effect of a
 									// shorter range is.
 
-		double multiplier = new Double(generalMultiplier * weaponType.damageAmount() * weaponType.damageFactor())
+		double multiplier = new Double(generalMultiplier * weaponType.damageAmount() * weaponType.damageFactor() * unitSpecificMultiplier)
 				/ new Double(8 * Math.pow(maxAttackTileRange, 2) * Math.sin(1.));
 
 		for (int i = -maxAttackTileRange; i <= maxAttackTileRange; i++) {
