@@ -275,35 +275,6 @@ public class Polygon {
 		while (!atEnd) {
 			// Stop the loop when the end Polygon is closed
 			atEnd = (pathIterator.currentSegment(currentCoords) == PathIterator.SEG_CLOSE);
-
-//			// TODO: WIP CHANGE TO ONLY USING OWN VECTOR CLASSES
-//			Point start, end;
-//			
-//			// Differentiate between the last and the other vertices of the
-//			// Polygon.
-//			if(atEnd) {
-//				start = new Point((int) currentCoords[0], (int) currentCoords[1], Point.Type.POSITION);
-//				end = new Point((int) startingCoords[0], (int) startingCoords[1], Point.Type.POSITION);
-//			} else {
-//				start = new Point((int) prevCoords[0], (int) prevCoords[1], Point.Type.POSITION);
-//				end = new Point((int) currentCoords[0], (int) currentCoords[1], Point.Type.POSITION);
-//			}
-//			Vector currentSegmentVec = new Vector(start.getX(), start.getY(), end.getX() - start.getX(), end.getY() - start.getY());
-//			Point intersection = currentSegmentVec.getIntersection(testVector);
-//			
-//			// All conditions have to apply for the intersection to count.
-//			if(intersection != null) {
-//				// The multiplier for both Vectors has to be in between 0. and 1. for the intersection to be directly on the line / boundary.
-//				Double segmentNeededMultiplier = currentSegmentVec.getNeededMultiplier(intersection);
-//				Double testVectorNeededMultiplier = testVector.getNeededMultiplier(intersection);
-//				boolean boundaryMultiplierMet = (segmentNeededMultiplier != null) && (segmentNeededMultiplier >= 0. && segmentNeededMultiplier < 1.);
-//				boolean testVectorMultiplierMet = (testVectorNeededMultiplier != null) && (testVectorNeededMultiplier >= 0. && testVectorNeededMultiplier < 1.);
-//			
-//				if(boundaryMultiplierMet && testVectorMultiplierMet) {
-//					intersections.add(new Pair<Vector, Point>(currentSegmentVec, intersection));
-//				}
-//			}
-			
 			Line2D.Double polyLine;
 
 			// Differentiate between the last and the other vertices of the

@@ -1,5 +1,5 @@
-/unitControlModule/
-/core/
 /bwapiMath/
+/unitControlModule/
 /unitTrackerModule/
-/buildingOrderModule/
+/informationStorage/
+/core/

@@ -10,7 +10,6 @@ public class Vector extends Point {
 
 	private final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
 	private final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
-	// TODO: UML VISIBILITY CHANGES
 	private double dirX = 0., dirY = 0.;
 
 	public Vector(int x, int y) {
@@ -228,19 +227,19 @@ public class Vector extends Point {
 	}
 	
 	// ------------------------------ Getter / Setter
-	// TODO: UML ADD
+
 	public double getDirX() {
 		return dirX;
 	}
-	// TODO: UML ADD
+	
 	public void setDirX(double dirX) {
 		this.dirX = dirX;
 	}
-	// TODO: UML ADD
+	
 	public double getDirY() {
 		return dirY;
 	}
-	// TODO: UML ADD
+
 	public void setDirY(double dirY) {
 		this.dirY = dirY;
 	}

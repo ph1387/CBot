@@ -153,8 +153,7 @@ public class Display {
 	
 	private static void showPolygons() {
 
-		// TODO: WIP
-		// TODO: REMOVE DEBUG
+		// TODO: REMOVE DEBUG WIP
 		int boundaryCount = CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries().size();
 		int stepSize = 0xFFFFFF / boundaryCount;
 		int currentCount = 1;

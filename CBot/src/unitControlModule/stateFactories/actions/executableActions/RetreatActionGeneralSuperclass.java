@@ -210,10 +210,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.getDirY());
 
 		return new Vector(incomingVector.getX() + (int) (incomingVector.getDirX()),
-				incomingVector.getY() + (int) (incomingVector.getDirY()), tPosX, tPosY); // TODO:
-																					// WIP
-																					// BUGFIX
-																					// HARD!!!
+				incomingVector.getY() + (int) (incomingVector.getDirY()), tPosX, tPosY);
 	}
 
 	/**

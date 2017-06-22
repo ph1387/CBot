@@ -271,7 +271,7 @@ public abstract class PlayerUnitWorker extends PlayerUnit {
 			this.informationStorage.getWorkerConfig().getBuildingQueue().add(this.assignedBuildingType);
 			this.freeResources();
 
-			// TODO: REMOVE extra Information
+			// TODO: DEBUG INFO
 			System.out.println("Queued again: " + this.unit + " " + this.assignedBuildingType);
 		} else {
 			this.constructingFlag = false;

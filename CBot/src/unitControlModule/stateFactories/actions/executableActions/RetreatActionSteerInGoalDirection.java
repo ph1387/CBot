@@ -31,13 +31,13 @@ import unitControlModule.unitWrappers.PlayerUnit;
  *
  */
 public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuperclass {
-	private static final double TOTAL_RETREAT_DISTANCE = 64;
+	private static final double TOTAL_RETREAT_DISTANCE = 96;
 	private static final int TURN_RADIUS = 10;
 
 	// Different influence sources for Vector calculations. Higher numbers
 	// indicate a larger impact in the specific sector.
-	private static final double INFLUENCE_INITIAL = 0.1;
-	private static final double INFLUENCE_CHOKEPOINT = 2.4;
+	private static final double INFLUENCE_INITIAL = 1.2;
+	private static final double INFLUENCE_CHOKEPOINT = 5.7;
 	private static final double INFLUENCE_ENEMIES = 0.9;
 	private static final double INFLUENCE_BASE = 0.3;
 	private static final double INFLUENCE_COMPANIONS = 1.2;
@@ -66,25 +66,23 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 
 				// Use a generalized Vector which combines all direction-Vectors
 				// from all sources influencing the Unit. This generalized
-				// Vector is
-				// the retreat Vector emerging from the Unit in regards to the
-				// closest enemy Unit in it's confidence range.
+				// Vector is the retreat Vector emerging from the Unit in
+				// regards to the closest enemy Unit in it's confidence range.
 				Vector generalizedTargetVector = this.vecUTP.clone();
 				generalizedTargetVector.normalize();
 				generalizedTargetVector.setDirX(generalizedTargetVector.getDirX() * INFLUENCE_INITIAL);
 				generalizedTargetVector.setDirY(generalizedTargetVector.getDirY() * INFLUENCE_INITIAL);
 
 				// Update the direction of the generalized Vector based on
-				// various
-				// influences.
+				// various influences.
 				this.changeVecBaseOnChokePoints(generalizedTargetVector, goapUnit, matchingRegionPolygonPair);
 				this.changeVecBasedOnEnemies(generalizedTargetVector, goapUnit);
 				this.changeVecBasedOnStartingLocation(generalizedTargetVector, goapUnit);
 				this.changeVecBasedOnStrongestPlayerArea(generalizedTargetVector, goapUnit);
 
 				// Use the generalized Vector to find a valid retreat Position
-				// using
-				// the previously generalized Vector as main steering direction.
+				// using the previously generalized Vector as main steering
+				// direction.
 				Vector possibleRetreatVector = this.generateSteeringRetreatVector(goapUnit, generalizedTargetVector,
 						currentPolygon, nearestChoke);
 
@@ -126,13 +124,16 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 	private void changeVecBaseOnChokePoints(Vector targetVector, IGoapUnit goapUnit,
 			Pair<Region, Polygon> matchingRegionPolygonPair) {
 		try {
+			Region regionToFallBackTo = ((PlayerUnit) goapUnit).getInformationStorage().getMapInfo()
+					.getReversedRegionAccessOrder()
+					.get(BWTA.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition()));
+
 			// Only change the Vectors direction if the Unit is not currently
 			// inside the Player's starting region since this would cause the
 			// Unit to uncontrollably circle around the closest ChokePoint.
-			if (!BWTA.getStartLocation(Core.getInstance().getPlayer()).getRegion().getPolygon()
-					.isInside(((PlayerUnit) goapUnit).getUnit().getPosition())) {
-				Chokepoint closestChoke = this.findClosestChokePointToStartingLocation(goapUnit,
-						matchingRegionPolygonPair.first.getChokepoints());
+			if (regionToFallBackTo != null) {
+				Chokepoint closestChoke = this.findChokePointToRetreatTo(goapUnit, matchingRegionPolygonPair,
+						regionToFallBackTo);
 
 				if (closestChoke != null) {
 					Unit unit = ((PlayerUnit) goapUnit).getUnit();
@@ -142,40 +143,46 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 
 					if (vecUnitToChokePoint.length() > 0.) {
 						vecUnitToChokePoint.normalize();
-						targetVector.setDirX(targetVector.getDirX() + vecUnitToChokePoint.getDirX() * INFLUENCE_CHOKEPOINT);
-						targetVector.setDirY(targetVector.getDirY() + vecUnitToChokePoint.getDirY() * INFLUENCE_CHOKEPOINT);
+						targetVector
+								.setDirX(targetVector.getDirX() + vecUnitToChokePoint.getDirX() * INFLUENCE_CHOKEPOINT);
+						targetVector
+								.setDirY(targetVector.getDirY() + vecUnitToChokePoint.getDirY() * INFLUENCE_CHOKEPOINT);
 					}
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	// TODO: UML NAME CHANGE
 	/**
-	 * Function for determining the closest ChokePoint towards the Player's
-	 * starting location from a given List of ChokePoints.
+	 * Function for determining the ChokePoint which the Unit must travel to to
+	 * get closer towards the Player's starting location.
 	 * 
 	 * @param goapUnit
-	 *            the Unit to which the farthest ChokePoint is being chosen.
-	 * @param chokePoints
-	 *            the List of ChokePoints from which the closest one towards the
-	 *            Player's starting location is being chosen.
-	 * @return the ChokePoint from the List of given ChokePoints that has the
-	 *         smallest distance to the Player's starting location.
+	 *            the Unit that is going to retreat.
+	 * @param matchingRegionPolygonPair
+	 *            a Pair of the Region and Polygon that the Unit is currently
+	 *            in.
+	 * @param regionToFallBackTo
+	 *            the next Region the Unit has to travel to in order to move
+	 *            towards the Player's starting location.
+	 * @return the ChokePoint from the List of given ChokePoints that leads
+	 *         towards the Player's starting location.
 	 */
-	private Chokepoint findClosestChokePointToStartingLocation(IGoapUnit goapUnit, List<Chokepoint> chokePoints) {
-		Chokepoint closestChoke = null;
-		TilePosition startingLocation = Core.getInstance().getPlayer().getStartLocation();
+	private Chokepoint findChokePointToRetreatTo(IGoapUnit goapUnit, Pair<Region, Polygon> matchingRegionPolygonPair,
+			Region regionToFallBackTo) {
+		Chokepoint retreatChokePoint = null;
 
-		for (Chokepoint chokePoint : chokePoints) {
-			if (closestChoke == null
-					|| startingLocation.toPosition().getApproxDistance(chokePoint.getCenter()) < startingLocation
-							.toPosition().getApproxDistance(closestChoke.getCenter())) {
-				closestChoke = chokePoint;
+		for (Chokepoint chokePoint : matchingRegionPolygonPair.first.getChokepoints()) {
+			if (chokePoint.getRegions().first.equals(regionToFallBackTo)
+					|| chokePoint.getRegions().second.equals(regionToFallBackTo)) {
+				retreatChokePoint = chokePoint;
+				break;
 			}
 		}
-		return closestChoke;
+
+		return retreatChokePoint;
 	}
 
 	/**
@@ -304,8 +311,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 		// The "hasPath" test is only used because some intersections were not
 		// found, which caused the Unit to simply abort the retreat Action and
 		// stand on one Point waiting for the enemy to kill it.
-		if (currentPolygon.findIntersections(vecLeft).isEmpty() && ((PlayerUnit) goapUnit).getUnit()
-				.hasPath(new Position(vecLeft.getX() + (int) (vecLeft.getDirX()), vecLeft.getY() + (int) (vecLeft.getDirY())))) {
+		if (currentPolygon.findIntersections(vecLeft).isEmpty() && ((PlayerUnit) goapUnit).getUnit().hasPath(
+				new Position(vecLeft.getX() + (int) (vecLeft.getDirX()), vecLeft.getY() + (int) (vecLeft.getDirY())))) {
 			possibleRetreatVector = vecLeft; // OR vecRight, does not matter
 		} else if (nearestChoke != null) {
 			boolean tryFindingPath = true;
