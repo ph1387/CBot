@@ -9,7 +9,9 @@ import bwapi.Pair;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
+import bwapiMath.Point;
 import bwapiMath.Polygon;
+import bwapiMath.Vector;
 import bwta.Region;
 
 /**
@@ -23,7 +25,7 @@ public class Display {
 	private static int lineHeight = Core.getInstance().getLineheight();
 	private static int offsetLeft = Core.getInstance().getOffsetLeft();
 	private static int tileSize = Core.getInstance().getTileSize();
-	
+
 	// Map information visualization
 	private static boolean enableMapPolygons = true;
 	private static boolean enableMapContendedTilePositions = false;
@@ -112,11 +114,11 @@ public class Display {
 		showTime(game, offsetLeft, lineHeight);
 		showAPM(game, offsetLeft, lineHeight * 2);
 		showFPS(game, offsetLeft, lineHeight * 3);
-		
-		if(enableMapContendedTilePositions) {
+
+		if (enableMapContendedTilePositions) {
 			showContendedTilePositions();
 		}
-		if(enableMapPolygons) {
+		if (enableMapPolygons) {
 			showPolygons();
 		}
 	}
@@ -150,7 +152,7 @@ public class Display {
 		String text = "FPS: " + game.getFPS();
 		game.drawTextScreen(offsetX, offsetY, text);
 	}
-	
+
 	private static void showPolygons() {
 
 		// TODO: REMOVE DEBUG WIP
@@ -163,25 +165,146 @@ public class Display {
 			int currentB = 0b000000000000000011111111 & (stepSize * currentCount);
 			currentR = currentR >> 16;
 			currentG = currentG >> 8;
-			
-			pair.second.drawOnMap(new Color(currentR, currentG, currentB), polygonVertexRadius);
+
+			drawPolygon(pair.second, new Color(currentR, currentG, currentB), polygonVertexRadius);
 			currentCount++;
 		}
-		
+
 		// Map boundaries
-//		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
-//			pair.second.drawOnMap(mapBoundariesColor, polygonVertexRadius);
-//		}
-		
+		// for (Pair<Region, Polygon> pair :
+		// CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries())
+		// {
+		// drawPolygon(pair.second, mapBoundariesColor, polygonVertexRadius);
+		// }
+
 		// Custom Polygons
 		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getReservedSpace()) {
-			polygon.drawOnMap(reservedSpaceColor, polygonVertexRadius);
+			drawPolygon(polygon, reservedSpaceColor, polygonVertexRadius);
 		}
 	}
 
 	private static void showContendedTilePositions() {
-		for (TilePosition tilePosition : CBot.getInstance().getInformationStorage().getMapInfo().getTilePositionContenders()) {
+		for (TilePosition tilePosition : CBot.getInstance().getInformationStorage().getMapInfo()
+				.getTilePositionContenders()) {
 			drawTileFilled(tilePosition.getX(), tilePosition.getY(), 1, 1, contendedTilePositionColor);
 		}
+	}
+
+	/**
+	 * Convenience function.
+	 * 
+	 * @param polygon
+	 *            the Polygon that is being drawn.
+	 * @param color
+	 *            the Color that is used to represent the Polygon.
+	 * @param vertexRadius
+	 *            the radius of the ellipses symbolizing the different vertices.
+	 * @see #drawOnMap(Color, int, boolean)
+	 */
+	public static void drawPolygon(Polygon polygon, Color color, int vertexRadius) {
+		drawPolygon(polygon, color, vertexRadius, false);
+	}
+
+	/**
+	 * Function for drawing a Polygon on the ingame map.
+	 *
+	 * @param polygon
+	 *            the Polygon that is being drawn.
+	 * @param color
+	 *            the Color that is used to represent the Polygon.
+	 * @param vertexRadius
+	 *            the radius of the ellipses symbolizing the different vertices.
+	 * @param verticesFilled
+	 *            show the ellipses either empty or filled.
+	 */
+	public static void drawPolygon(Polygon polygon, Color color, int vertexRadius, boolean verticesFilled) {
+		Game game = Core.getInstance().getGame();
+
+		// Vertices
+		for (Point point : polygon.getVertices()) {
+			drawPoint(point, color, vertexRadius);
+		}
+
+		// Edges
+		for (int i = 0; i < polygon.getVertices().size(); i++) {
+			// Connect the last vertex with the first one
+			if (i == polygon.getVertices().size() - 1) {
+				game.drawLineMap(polygon.getVertices().get(i).toPosition(), polygon.getVertices().get(0).toPosition(),
+						color);
+			} else {
+				game.drawLineMap(polygon.getVertices().get(i).toPosition(),
+						polygon.getVertices().get(i + 1).toPosition(), color);
+			}
+		}
+	}
+
+	/**
+	 * Convenience function.
+	 * 
+	 * @param vector
+	 *            the Vector that is being drawn
+	 * @param color
+	 *            he Color that is used to represent the Vector.
+	 */
+	public static void drawVector(Vector vector, Color color) {
+		drawVector(vector, color, false, 0);
+	}
+
+	/**
+	 * Function for drawing a Vector on the ingame map.
+	 * 
+	 * @param vector
+	 *            the Vector that is being drawn
+	 * @param color
+	 *            he Color that is used to represent the Vector.
+	 * @param endsShown
+	 *            if true then the beginning and end of the Vector are being
+	 *            represented as Points on the map.
+	 * @param radius
+	 *            the radius of the Points being shown.
+	 */
+	public static void drawVector(Vector vector, Color color, boolean endsShown, int radius) {
+		Game game = Core.getInstance().getGame();
+
+		game.drawLineMap(vector.getX(), vector.getY(), vector.getX() + (int) vector.getDirX(),
+				vector.getY() + (int) vector.getDirY(), color);
+
+		// Draw the beginning and the end of the Vector as well.
+		if (endsShown) {
+			drawPoint(new Point(vector.getX(), vector.getY(), Point.Type.POSITION), color, radius);
+			drawPoint(new Point(vector.getX() + (int) vector.getDirX(), vector.getY() + (int) vector.getDirY(),
+					Point.Type.POSITION), color, radius);
+		}
+	}
+
+	/**
+	 * Convenience function.
+	 * 
+	 * @param point
+	 *            the Point that is being drawn
+	 * @param color
+	 *            he Color that is used to represent the Vector.
+	 * @param radius
+	 *            the radius of the Point being drawn.
+	 */
+	public static void drawPoint(Point point, Color color, int radius) {
+		drawPoint(point, color, radius, false);
+	}
+
+	/**
+	 * Function for drawing a Point on the ingame map.
+	 * 
+	 * @param point
+	 *            the Point that is being drawn
+	 * @param color
+	 *            he Color that is used to represent the Vector.
+	 * @param radius
+	 *            the radius of the Point being drawn.
+	 * @param filled
+	 *            if true then the Point being drawn will be shown as a filled
+	 *            Point.
+	 */
+	public static void drawPoint(Point point, Color color, int radius, boolean filled) {
+		Core.getInstance().getGame().drawEllipseMap(point.toPosition(), radius, radius, color, filled);
 	}
 }

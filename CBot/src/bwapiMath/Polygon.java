@@ -78,48 +78,6 @@ public class Polygon {
 	}
 
 	/**
-	 * Convenience function.
-	 * 
-	 * @param color
-	 *            the Color that is used to represent the Polygon.
-	 * @param vertexRadius
-	 *            the radius of the ellipses symbolizing the different vertices.
-	 * @see #drawOnMap(Color, int, boolean)
-	 */
-	public void drawOnMap(Color color, int vertexRadius) {
-		this.drawOnMap(color, vertexRadius, false);
-	}
-
-	/**
-	 * Function for drawing the Polygon on the ingame map.
-	 * 
-	 * @param color
-	 *            the Color that is used to represent the Polygon.
-	 * @param vertexRadius
-	 *            the radius of the ellipses symbolizing the different vertices.
-	 * @param verticesFilled
-	 *            show the ellipses either empty or filled.
-	 */
-	public void drawOnMap(Color color, int vertexRadius, boolean verticesFilled) {
-		Game game = Core.getInstance().getGame();
-
-		// Vertices
-		for (Point point : this.vertices) {
-			game.drawEllipseMap(point.toPosition(), vertexRadius, vertexRadius, color, verticesFilled);
-		}
-
-		// Edges
-		for (int i = 0; i < this.vertices.size(); i++) {
-			// Connect the last vertex with the first one
-			if (i == vertices.size() - 1) {
-				game.drawLineMap(this.vertices.get(i).toPosition(), this.vertices.get(0).toPosition(), color);
-			} else {
-				game.drawLineMap(this.vertices.get(i).toPosition(), this.vertices.get(i + 1).toPosition(), color);
-			}
-		}
-	}
-
-	/**
 	 * Function for calculating all TilePositions that are currently being
 	 * covered by the Polygon itself. This <b>requires</b> the Polygon to use
 	 * Positions as its Points. TilePositions yield no usable result!
