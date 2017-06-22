@@ -11,6 +11,7 @@ public class Vector extends Point {
 	private final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
 	private final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
 	private double dirX = 0., dirY = 0.;
+	private double length = 0.;
 
 	public Vector(int x, int y) {
 		super(x, y, Type.NONE);
@@ -21,6 +22,7 @@ public class Vector extends Point {
 
 		this.dirX = dirX;
 		this.dirY = dirY;
+		this.updateLength();
 	}
 
 	// -------------------- Functions
@@ -53,8 +55,10 @@ public class Vector extends Point {
 	public void rotateLeftRAD(double alpha) {
 		double newDirX = this.dirX * Math.cos(alpha) + this.dirY * Math.sin(alpha);
 		double newDirY = -1. * this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha);
+		
 		this.dirX = newDirX;
 		this.dirY = newDirY;
+		this.updateLength();
 	}
 
 	/**
@@ -75,12 +79,27 @@ public class Vector extends Point {
 	public void rotateRightRAD(double alpha) {
 		double newDirX = this.dirX * Math.cos(alpha) - this.dirY * Math.sin(alpha);
 		double newDirY = this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha);
+		
 		this.dirX = newDirX;
 		this.dirY = newDirY;
+		this.updateLength();
 	}
 
+	/**
+	 * Function for retrieving the length of the Vector.
+	 * @return the length of the Vector.
+	 */
 	public double length() {
-		return Math.sqrt(Math.pow(this.dirX, 2) + Math.pow(this.dirY, 2));
+		return this.length;
+	}
+	
+	/**
+	 * Function for updating the stored length of the Vector. This is necessary
+	 * since calculating it over and over again would create unnecessary cpu
+	 * work.
+	 */
+	private void updateLength() {
+		this.length = Math.sqrt(Math.pow(this.dirX, 2) + Math.pow(this.dirY, 2));
 	}
 
 	/**
@@ -182,8 +201,10 @@ public class Vector extends Point {
 	public void normalize() {
 		double newDirX = (1. / this.length()) * this.dirX;
 		double newDirY = (1. / this.length()) * this.dirY;
+		
 		this.dirX = newDirX;
 		this.dirY = newDirY;
+		this.updateLength();
 	}
 
 	/**
@@ -197,6 +218,7 @@ public class Vector extends Point {
 		
 		this.dirX *= length;
 		this.dirY *= length;
+		this.updateLength();
 	}
 
 	/**
@@ -223,7 +245,7 @@ public class Vector extends Point {
 	 * @return the angle of this Vector to another given one in <b>degrees</b>.
 	 */
 	public double getAngleToVector(Vector vectorB) {
-		return Math.toDegrees(Math.acos(this.getScalarProduct(vectorB) / (this.length() * vectorB.length())));
+		return Math.toDegrees(Math.acos(this.getScalarProduct(vectorB) / (this.length * vectorB.length())));
 	}
 	
 	// ------------------------------ Getter / Setter
@@ -234,6 +256,8 @@ public class Vector extends Point {
 	
 	public void setDirX(double dirX) {
 		this.dirX = dirX;
+		
+		this.updateLength();
 	}
 	
 	public double getDirY() {
@@ -242,5 +266,7 @@ public class Vector extends Point {
 
 	public void setDirY(double dirY) {
 		this.dirY = dirY;
+		
+		this.updateLength();
 	}
 }
