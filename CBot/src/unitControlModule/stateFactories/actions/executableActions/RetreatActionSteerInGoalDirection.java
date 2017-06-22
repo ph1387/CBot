@@ -173,12 +173,19 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 	private Chokepoint findChokePointToRetreatTo(IGoapUnit goapUnit, Pair<Region, Polygon> matchingRegionPolygonPair,
 			Region regionToFallBackTo) {
 		Chokepoint retreatChokePoint = null;
+		Position centerPlayerStartingRegion = BWTA
+				.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition()).getCenter();
 
 		for (Chokepoint chokePoint : matchingRegionPolygonPair.first.getChokepoints()) {
 			if (chokePoint.getRegions().first.equals(regionToFallBackTo)
 					|| chokePoint.getRegions().second.equals(regionToFallBackTo)) {
-				retreatChokePoint = chokePoint;
-				break;
+				// The Region might be connected to the other Region by two
+				// separate ChokePoints. The closest one towards the Player's
+				// starting location is being chosen.
+				if (retreatChokePoint == null || retreatChokePoint.getDistance(centerPlayerStartingRegion) > chokePoint
+						.getDistance(centerPlayerStartingRegion)) {
+					retreatChokePoint = chokePoint;
+				}
 			}
 		}
 
