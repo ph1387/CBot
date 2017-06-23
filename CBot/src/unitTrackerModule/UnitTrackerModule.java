@@ -26,6 +26,9 @@ public class UnitTrackerModule {
 	private static final double HEALTH_MULTIPLIER = 1.1;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
+	private static boolean enablePlayerStrength = true;
+	private static boolean enableEnemyStrength = true;
+	
 	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
@@ -56,8 +59,12 @@ public class UnitTrackerModule {
 		// air forces of the enemy and the player. Player has to the shown
 		// first, since the enemy list might be empty which would result in none
 		// of them being shown.
-		UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
-		UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
+		if(enablePlayerStrength) {
+			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
+		}
+		if(enableEnemyStrength) {
+			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
+		}
 	}
 
 	/**

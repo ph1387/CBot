@@ -52,7 +52,7 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected Unit closestEnemyUnitInConfidenceRange;
 	protected int closestEnemyUnitInConfidenceRangeReactCounter = 0;
 	protected double confidence = 1.;
-	protected int extraConfidencePixelRangeToClosestUnits = 16;
+	protected int extraConfidencePixelRangeToClosestUnits = 32;
 	protected double confidenceDefault = 0.75;
 
 	// Factories and Objects needed for an accurate representation of the Units
