@@ -42,6 +42,12 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 	private static final double INFLUENCE_BASE = 0.3;
 	private static final double INFLUENCE_COMPANIONS = 1.2;
 
+	// Index that is used while steering towards a ChokePoint. The index implies
+	// the path TilePosition count to the ChokePoint's center that must be met
+	// for using the path with the element at the provided index towards the
+	// ChokePoint rather than the general Vector towards the center.
+	private static final int CHOKE_POINT_PATH_INDEX = 4;
+
 	/**
 	 * @param target
 	 *            type: Unit
@@ -137,10 +143,33 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 
 				if (closestChoke != null) {
 					Unit unit = ((PlayerUnit) goapUnit).getUnit();
-					Vector vecUnitToChokePoint = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
-							closestChoke.getCenter().getX() - unit.getPosition().getX(),
-							closestChoke.getCenter().getY() - unit.getPosition().getY());
 
+					// Get the shortest Path from the Unit to the ChokePoint.
+					List<TilePosition> shortestPath = BWTA.getShortestPath(unit.getTilePosition(),
+							closestChoke.getCenter().toTilePosition());
+					Vector vecUnitToChokePoint = null;
+
+					// Use the first TilePosition as direction for moving the
+					// Unit to the ChokePoint. This is necessary since
+					// generating a Vector directly towards the ChokePoint would
+					// cause the Unit to move uncontrollably in some cases where
+					// it is "trapped" in between two sides of the Polygon and
+					// therefore moves left, right, left, right, ...
+					if (shortestPath.size() > CHOKE_POINT_PATH_INDEX) {
+						Position firstStep = shortestPath.get(CHOKE_POINT_PATH_INDEX).toPosition();
+						vecUnitToChokePoint = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
+								firstStep.getX() - unit.getPosition().getX(),
+								firstStep.getY() - unit.getPosition().getY());
+					}
+					// Generate a Vector leading directly towards the
+					// ChokePoint.
+					else {
+						vecUnitToChokePoint = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
+								closestChoke.getCenter().getX() - unit.getPosition().getX(),
+								closestChoke.getCenter().getY() - unit.getPosition().getY());
+					}
+
+					// Apply the influence to the targeted Vector.
 					if (vecUnitToChokePoint.length() > 0.) {
 						vecUnitToChokePoint.normalize();
 						targetVector
@@ -211,6 +240,7 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 			Vector retreatVectorFromUnit = this
 					.projectVectorOntoMaxLength(this.generateVectorFromEnemyToUnit(goapUnit, unit));
 
+			// Apply the influence to the targeted Vector.
 			if (retreatVectorFromUnit.length() > 0.) {
 				retreatVectorFromUnit.normalize();
 				targetVector.setDirX(targetVector.getDirX() + retreatVectorFromUnit.getDirX() * INFLUENCE_ENEMIES);
@@ -240,6 +270,7 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 					playerStartingLocation.toPosition().getX() - unit.getPosition().getX(),
 					playerStartingLocation.toPosition().getY() - unit.getPosition().getY());
 
+			// Apply the influence to the targeted Vector.
 			if (vecToBaseLocation.length() > 0.) {
 				vecToBaseLocation.normalize();
 				targetVector.setDirX(targetVector.getDirX() + vecToBaseLocation.getDirX() * INFLUENCE_BASE);
@@ -270,6 +301,7 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 					unitWithStrongestArea.getPosition().getX() - unit.getPosition().getX(),
 					unitWithStrongestArea.getPosition().getY() - unit.getPosition().getY());
 
+			// Apply the influence to the targeted Vector.
 			if (vecToStrongestUnitArea.length() > 0.) {
 				vecToStrongestUnitArea.normalize();
 				targetVector.setDirX(targetVector.getDirX() + vecToStrongestUnitArea.getDirX() * INFLUENCE_COMPANIONS);
