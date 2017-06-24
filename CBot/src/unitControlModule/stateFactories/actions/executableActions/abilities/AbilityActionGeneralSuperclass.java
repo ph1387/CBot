@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.actions.executableActions.abilities;
 
 import bwapi.TechType;
 import core.Core;
+import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -28,6 +29,8 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 	public AbilityActionGeneralSuperclass(Object target) {
 		super(target);
 
+		this.addPrecondition(new GoapState(0, "canUseAbilities", true));
+		
 		this.ability = this.defineType();
 	}
 

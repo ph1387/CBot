@@ -196,7 +196,9 @@ public abstract class PlayerUnit extends GoapUnit {
 	/**
 	 * Function for updating the confidence of the Unit which determines if it
 	 * attacks an enemy Unit / building, retreats to another player Unit or
-	 * takes a completely different action.
+	 * takes a completely different action. <br>
+	 * <b>Note:</b> Some classes might override the method. Whenever changes are
+	 * made at this point make sure to apply them to all subclasses as well.
 	 */
 	protected void updateConfidence() {
 		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyStrengths();
@@ -495,9 +497,9 @@ public abstract class PlayerUnit extends GoapUnit {
 	public boolean isConfidenceAboveThreshold() {
 		return this.confidence >= CONFIDENCE_THRESHHOLD;
 	}
-	
+
 	// ------------------------------ Getter / Setter
-	
+
 	public Unit getUnit() {
 		return this.unit;
 	}

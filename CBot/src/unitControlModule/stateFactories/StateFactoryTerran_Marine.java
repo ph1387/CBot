@@ -3,20 +3,24 @@ package unitControlModule.stateFactories;
 import java.util.HashSet;
 
 import javaGOAP.GoapAction;
+import javaGOAP.GoapState;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Marine;
 import unitControlModule.stateFactories.updater.ActionUpdaterTerran_Marine;
 import unitControlModule.stateFactories.updater.Updater;
+import unitControlModule.stateFactories.updater.WorldStateUpdaterAbilityUsingUnitsTerran_Marine;
+import unitControlModule.stateFactories.worldStates.UnitWorldStateAbilityUsingUnitsTerran_Marine;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 // TODO: UML ADD
 /**
  * StateFactoryTerran_Marine.java --- A StateFactory used for generating all
  * necessary Objects for the Terran_Marine.
+ * 
  * @author P H - 23.06.2017
  *
  */
 public class StateFactoryTerran_Marine extends StateFactoryDefault {
-	
+
 	// -------------------- Functions
 
 	@Override
@@ -27,5 +31,17 @@ public class StateFactoryTerran_Marine extends StateFactoryDefault {
 	@Override
 	public Updater getMatchingActionUpdater(PlayerUnit playerUnit) {
 		return new ActionUpdaterTerran_Marine(playerUnit);
+	}
+
+	// TODO: UML ADD
+	@Override
+	public HashSet<GoapState> generateWorldState() {
+		return new UnitWorldStateAbilityUsingUnitsTerran_Marine();
+	}
+
+	// TODO: UML ADD
+	@Override
+	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
+		return new WorldStateUpdaterAbilityUsingUnitsTerran_Marine(playerUnit);
 	}
 }

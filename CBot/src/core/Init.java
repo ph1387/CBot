@@ -47,14 +47,14 @@ public class Init {
 
 			// TODO: WIP: Disable on Custom Maps!
 			// Add all default contended TilePositions.
-			informationStorage.getMapInfo().getTilePositionContenders()
-					.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
-							.generateDefaultContendedTilePositions());
+//			informationStorage.getMapInfo().getTilePositionContenders()
+//					.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
+//							.generateDefaultContendedTilePositions());
 
 			// Create the reversed Region access order. Reversed means that any
 			// Unit in a Region has access to the information to which Region it
 			// has to move to get to the Player's starting location.
-			informationStorage.getMapInfo().setReversedRegionAccessOrder(generateReversedRegionAccessOrder());
+//			informationStorage.getMapInfo().setReversedRegionAccessOrder(generateReversedRegionAccessOrder());
 
 			// Add all BWTA-Polygons to the collection of Polygons in the
 			// InformationStorage.

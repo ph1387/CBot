@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions.executableActions.abilities;
 
 import bwapi.TechType;
+import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -14,10 +15,14 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class AbilityActionTerranMarine_StimPack extends AbilityActionTechTargetNone {
 
-	private static final int MIN_HEALTH = 20;
+	// Since the ability costs health make sure the Unit has enough hit points
+	// left to either escape or fight!
+	private static final int MIN_HEALTH = 30;
 
 	public AbilityActionTerranMarine_StimPack(Object target) {
 		super(target);
+
+		this.addPrecondition(new GoapState(0, "canUseStimPack", true));
 	}
 
 	// -------------------- Functions
@@ -32,8 +37,7 @@ public class AbilityActionTerranMarine_StimPack extends AbilityActionTechTargetN
 		boolean isHealthMatched = ((PlayerUnit) goapUnit).getUnit().getHitPoints() > MIN_HEALTH;
 		boolean isEnemyNear = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().isEmpty();
 		boolean isNotStimmed = !((PlayerUnit) goapUnit).getUnit().isStimmed();
-		boolean isConfident = ((PlayerUnit) goapUnit).isConfidenceAboveThreshold();
 
-		return isHealthMatched && isEnemyNear && isNotStimmed && isConfident;
+		return isHealthMatched && isEnemyNear && isNotStimmed;
 	}
 }
