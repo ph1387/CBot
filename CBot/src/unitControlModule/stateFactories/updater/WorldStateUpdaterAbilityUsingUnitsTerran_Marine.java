@@ -1,6 +1,5 @@
 package unitControlModule.stateFactories.updater;
 
-import bwapi.Unit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -12,8 +11,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class WorldStateUpdaterAbilityUsingUnitsTerran_Marine extends WorldStateUpdaterAbilityUsingUnits {
 
-	private static final int EXTRA_GROUND_WEAPON_RANGE = 32;
-
 	public WorldStateUpdaterAbilityUsingUnitsTerran_Marine(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
@@ -22,15 +19,10 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Marine extends WorldStateU
 
 	@Override
 	protected void updateAbilitiyWorldState(PlayerUnit playerUnit) {
-		Unit closestEnemy = playerUnit.getClosestEnemyUnitInConfidenceRange();
-
-		// Only enable the StimPack if the Unit is in range of the enemies
-		// ground weapon.
-		if (closestEnemy != null && playerUnit.isNearPosition(closestEnemy.getTargetPosition(),
-				closestEnemy.getType().groundWeapon().maxRange() + EXTRA_GROUND_WEAPON_RANGE)) {
-			this.changeWorldStateEffect("canUseStimPack", true);
+		if(playerUnit.getUnit().isStimmed()) {
+			this.changeWorldStateEffect("isStimmed", true);
 		} else {
-			this.changeWorldStateEffect("canUseStimPack", false);
+			this.changeWorldStateEffect("isStimmed", false);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions.executableActions.abilities;
 
 import bwapi.TechType;
+import bwapi.Unit;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -17,6 +18,8 @@ public class AbilityActionTerranMarine_StimPack extends AbilityActionTechTargetN
 	// Since the ability costs health make sure the Unit has enough hit points
 	// left to either escape or fight!
 	private static final int MIN_HEALTH = 30;
+	// TODO: UML ADD
+	private static final int EXTRA_GROUND_WEAPON_RANGE = 32;
 
 	/**
 	 * @param target
@@ -25,7 +28,7 @@ public class AbilityActionTerranMarine_StimPack extends AbilityActionTechTargetN
 	public AbilityActionTerranMarine_StimPack(Object target) {
 		super(target);
 
-		this.addPrecondition(new GoapState(0, "canUseStimPack", true));
+		this.addEffect(new GoapState(0, "isStimmed", true));
 	}
 
 	// -------------------- Functions
@@ -37,10 +40,21 @@ public class AbilityActionTerranMarine_StimPack extends AbilityActionTechTargetN
 
 	@Override
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
+		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
+		Unit closestEnemy = playerUnit.getClosestEnemyUnitInConfidenceRange();
+		
 		boolean isHealthMatched = ((PlayerUnit) goapUnit).getUnit().getHitPoints() > MIN_HEALTH;
 		boolean isEnemyNear = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().isEmpty();
 		boolean isNotStimmed = !((PlayerUnit) goapUnit).getUnit().isStimmed();
+		boolean isAllowedToStim = false;
+		
+		// Only enable the StimPack if the Unit is in range of the enemies
+		// ground weapon.
+		if (closestEnemy != null && playerUnit.isNearPosition(closestEnemy.getTargetPosition(),
+				closestEnemy.getType().groundWeapon().maxRange() + EXTRA_GROUND_WEAPON_RANGE)) {
+			isAllowedToStim = true;
+		}
 
-		return isHealthMatched && isEnemyNear && isNotStimmed;
+		return isAllowedToStim && isHealthMatched && isEnemyNear && isNotStimmed;
 	}
 }

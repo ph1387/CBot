@@ -40,6 +40,8 @@ public class PlayerUnitTerran_Marine extends PlayerUnit {
 		double enemyStrengthTotal = playerEnemyStrengths.second;
 		int lifeAddtionStimEffect = 0;
 
+		// Custom addition to the default implementation since being stimmed
+		// decreases the health but increases the possible damage output.
 		if (this.unit.isStimmed()) {
 			lifeAddtionStimEffect = 10;
 		}
