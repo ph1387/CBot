@@ -3,9 +3,12 @@ package unitControlModule.stateFactories;
 import java.util.HashSet;
 
 import javaGOAP.GoapAction;
+import javaGOAP.GoapState;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_SiegeTank;
 import unitControlModule.stateFactories.updater.ActionUpdaterTerran_SiegeTank;
 import unitControlModule.stateFactories.updater.Updater;
+import unitControlModule.stateFactories.updater.WorldStateUpdaterAbilityUsingUnitsTerran_SiegeTank;
+import unitControlModule.stateFactories.worldStates.UnitWorldStateAbilityUsingUnitsTerran_SiegeTank;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -27,5 +30,15 @@ public class StateFactoryTerran_SiegeTank extends StateFactoryDefault {
 	@Override
 	public Updater getMatchingActionUpdater(PlayerUnit playerUnit) {
 		return new ActionUpdaterTerran_SiegeTank(playerUnit);
+	}
+
+	@Override
+	public HashSet<GoapState> generateWorldState() {
+		return new UnitWorldStateAbilityUsingUnitsTerran_SiegeTank();
+	}
+
+	@Override
+	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
+		return new WorldStateUpdaterAbilityUsingUnitsTerran_SiegeTank(playerUnit);
 	}
 }

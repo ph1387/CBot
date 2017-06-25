@@ -14,14 +14,16 @@ import informationStorage.InformationStorage;
 import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
+import unitControlModule.unitWrappers.RemoveAgentEvent;
 
+// TODO: UML ADD INTERFACE
 /**
  * UnitControlModule.java --- Module for controlling the Player's units.
  * 
  * @author P H - 29.01.2017
  *
  */
-public class UnitControlModule {
+public class UnitControlModule implements RemoveAgentEvent {
 
 	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
 	private HashSet<PlayerBuilding> buildings = new HashSet<PlayerBuilding>();
@@ -94,9 +96,14 @@ public class UnitControlModule {
 				// Differentiate between buildings and normal Units
 				if (unit.getType().isBuilding()) {
 					// TODO: Possible Change: Move to factory
+					// TODO: Possible Change: Add Listener like below!
 					this.buildings.add(new PlayerBuilding(unit, this.informationStorage));
 				} else {
-					this.agents.add(GoapAgentFactory.createAgent(unit, this.informationStorage));
+					GoapAgent agent = GoapAgentFactory.createAgent(unit, this.informationStorage);
+					
+					this.agents.add(agent);
+					
+					((PlayerUnit) agent.getAssignedGoapUnit()).addAgentRemoveListener(this);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -322,4 +329,16 @@ public class UnitControlModule {
 
 	// ------------------------------ Getter / Setter
 
+	// ------------------------------ Eventlisteners
+	
+	@Override
+	public void removeAgent(PlayerUnit sender) {
+		for (GoapAgent goapAgent : this.agents) {
+			if(((PlayerUnit) goapAgent.getAssignedGoapUnit()).equals(sender)) {
+				this.removeUnitFromUnitControl(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
+
+				break;
+			}
+		}
+	}
 }

@@ -79,6 +79,10 @@ public abstract class PlayerUnit extends GoapUnit {
 	public ConfidenceRangeStates currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
 	public ConfidenceState currentConfidenceState = ConfidenceState.UNDER_THRESHOLD;
 
+	// Listeners for removing the corresponding Agent from the collection of
+	// active Agents.
+	private List<Object> agentRemoveListeners = new ArrayList<Object>();
+
 	/**
 	 * @param unit
 	 *            the unit the class wraps around.
@@ -518,5 +522,28 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public InformationStorage getInformationStorage() {
 		return informationStorage;
+	}
+
+	// ------------------------------ Events
+
+	public synchronized void addAgentRemoveListener(Object listener) {
+		this.agentRemoveListeners.add(listener);
+	}
+
+	public synchronized void removeAgentRemoveListener(Object listener) {
+		this.agentRemoveListeners.remove(listener);
+	}
+
+	protected synchronized void dispatchRemoveAgentEvent() {
+		for (Object listener : this.agentRemoveListeners) {
+			((RemoveAgentEvent) listener).removeAgent(this);
+		}
+	}
+
+	/**
+	 * Function for triggering the Event for removing the associated Agent.
+	 */
+	public void removeCorrespondingAgent() {
+		this.dispatchRemoveAgentEvent();
 	}
 }

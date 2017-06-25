@@ -4,7 +4,6 @@ import bwapi.Unit;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityActionTechTargetUnit.java --- Action for performing an ability on
  * another Unit.

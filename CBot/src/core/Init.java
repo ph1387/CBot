@@ -109,7 +109,7 @@ public class Init {
 		HashMap<Region, Integer> regionMappedToIndex = generateRegionIndexHashMap();
 		DirectedGraphList directedGraph = new DirectedGraphList(regionMappedToIndex.size());
 
-		// TODO: REMOVE DEBUG
+		// TODO: DEBUG INFO
 		System.out.println(regionMappedToIndex.size() + " Regions added to the connection graph.");
 
 		// Add missing edges based on the map's ChokePoints.

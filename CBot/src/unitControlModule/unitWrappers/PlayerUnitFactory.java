@@ -18,6 +18,10 @@ public class PlayerUnitFactory {
 		return new PlayerUnitTerran_SiegeTank(unit, informationStorage);
 	}
 	
+	public static PlayerUnit createSiegeTankSiegeMode(Unit unit, InformationStorage informationStorage) {
+		return new PlayerUnitTerran_SiegeTank_SiegeMode(unit, informationStorage);
+	}
+	
 	public static PlayerUnit createMarine(Unit unit, InformationStorage informationStorage) {
 		return new PlayerUnitTerran_Marine(unit, informationStorage);
 	}

@@ -5,7 +5,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityActionTerranMarine_StimPack.java --- The StimPack ability of a
  * Terran_Marine.
@@ -19,6 +18,10 @@ public class AbilityActionTerranMarine_StimPack extends AbilityActionTechTargetN
 	// left to either escape or fight!
 	private static final int MIN_HEALTH = 30;
 
+	/**
+	 * @param target
+	 *            type: Null
+	 */
 	public AbilityActionTerranMarine_StimPack(Object target) {
 		super(target);
 

@@ -46,6 +46,9 @@ public class GoapAgentFactory {
 		case "Terran_Siege_Tank_Tank_Mode":
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createSiegeTank(unit, informationStorage));
 			break;
+		case "Terran_Siege_Tank_Siege_Mode":
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createSiegeTankSiegeMode(unit, informationStorage));
+			break;
 		case "Terran_SCV":
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createSCV(unit, informationStorage));
 			break;

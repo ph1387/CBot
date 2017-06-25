@@ -24,6 +24,7 @@ public class AttackMoveAction extends BaseAction {
 		this.addEffect(new GoapState(0, "destroyUnit", true));
 		this.addPrecondition(new GoapState(0, "enemyKnown", true));
 		this.addPrecondition(new GoapState(0, "allowFighting", true));
+		this.addPrecondition(new GoapState(0, "canMove", true));
 	}
 
 	// -------------------- Functions

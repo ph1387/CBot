@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.actions;
 
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranMarine_StimPack;
 
-// TODO: UML ADD
 /**
  * AvailableActionsTerran_Marine.java --- HashSet containing all Terran_Marine
  * Actions.

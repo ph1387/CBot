@@ -27,6 +27,7 @@ public class GatherAction extends BaseAction {
 		super(target);
 
 		this.addPrecondition(new GoapState(0, "allowGathering", true));
+		this.addPrecondition(new GoapState(0, "canMove", true));
 	}
 
 	// -------------------- Functions

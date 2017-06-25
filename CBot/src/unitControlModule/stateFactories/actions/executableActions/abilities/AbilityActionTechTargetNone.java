@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.actions.executableActions.abilities;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityActionTechTargetNone.java --- Action for simply performing an ability
  * without any specific target.
@@ -18,7 +17,11 @@ public abstract class AbilityActionTechTargetNone extends AbilityActionGeneralSu
 	 *            type: Null
 	 */
 	public AbilityActionTechTargetNone(Object target) {
-		super(target);
+		// super(target);
+		// 0 is passed to the constructor of the superclass since passing null
+		// would cause an error message to be shown in the console even though
+		// this behavior is intended.
+		super(0);
 	}
 
 	// -------------------- Functions

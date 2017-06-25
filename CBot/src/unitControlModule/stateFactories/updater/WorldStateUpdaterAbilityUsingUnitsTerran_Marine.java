@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.updater;
 import bwapi.Unit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * WorldStateUpdaterAbilityUsingUnitsTerran_Marine.java --- WorldState updater
  * for Terran_Marine WorldStates.

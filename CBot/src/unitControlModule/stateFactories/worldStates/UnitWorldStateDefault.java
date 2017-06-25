@@ -20,5 +20,6 @@ public class UnitWorldStateDefault extends HashSet<GoapState> {
 		this.add(new GoapState(1, "unitsInSight", false));
 		this.add(new GoapState(1, "isScout", true));
 		this.add(new GoapState(1, "allowFighting", true));
+		this.add(new GoapState(1, "canMove", true));
 	}
 }

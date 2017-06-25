@@ -25,7 +25,6 @@ public class PlayerUnitTerran_Marine extends PlayerUnit {
 		return new StateFactoryTerran_Marine();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Overridden since Marines use an ability called StimPack, which
 	 * effectively reduces their health but significantly improves their

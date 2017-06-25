@@ -4,7 +4,6 @@ import bwapi.Position;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityActionTechTargetPosition.java --- Action for performing an ability on
  * a Position.

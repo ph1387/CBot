@@ -5,9 +5,7 @@ import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
-import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityActionGeneralSuperclass.java --- Superclass for all abilities of all
  * Races and Units.
@@ -30,7 +28,7 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 		super(target);
 
 		this.addPrecondition(new GoapState(0, "canUseAbilities", true));
-		
+
 		this.ability = this.defineType();
 	}
 

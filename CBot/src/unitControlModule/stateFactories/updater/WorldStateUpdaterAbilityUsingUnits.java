@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.updater;
 import unitControlModule.stateFactories.worldStates.UnitWorldStateAbilityUsingUnits;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * WorldStateUpdaterAbilityUsingUnits.java --- Updater for updating a
  * {@link UnitWorldStateAbilityUsingUnits} instance.

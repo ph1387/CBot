@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.worldStates;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * UnitWorldStateAbilityUsingUnits.java --- WorldState for all Units using
  * abilities.

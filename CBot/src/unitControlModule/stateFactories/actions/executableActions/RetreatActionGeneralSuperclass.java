@@ -57,6 +57,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 		this.addEffect(new GoapState(0, "retreatFromUnit", true));
 		this.addPrecondition(new GoapState(0, "enemyKnown", true));
+		this.addPrecondition(new GoapState(0, "canMove", true));
 	}
 
 	// -------------------- Functions

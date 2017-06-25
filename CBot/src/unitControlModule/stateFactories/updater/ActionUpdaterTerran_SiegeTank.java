@@ -1,9 +1,7 @@
 package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_SiegeTank;
-import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionToFurthestUnitInCone;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionToOwnGatheringPoint;
+import unitControlModule.stateFactories.actions.executableActions.AttackUnitActionTerran_SiegeTank_Bombard;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 
@@ -22,4 +20,10 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 
 	// -------------------- Functions
 
+	@Override
+	public void update(PlayerUnit playerUnit) {
+		super.update(playerUnit);
+		
+		((AttackUnitActionTerran_SiegeTank_Bombard) this.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+	}
 }

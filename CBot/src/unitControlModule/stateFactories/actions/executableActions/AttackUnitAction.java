@@ -7,17 +7,19 @@ import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * AttackUnitAction.java --- An attack action for attacking a single unit.
+ * 
  * @author P H - 09.02.2017
  *
  */
 public class AttackUnitAction extends BaseAction {
 
 	/**
-	 * @param target type: Unit
+	 * @param target
+	 *            type: Unit
 	 */
 	public AttackUnitAction(Object target) {
 		super(target);
-		
+
 		this.addEffect(new GoapState(0, "destroyUnit", true));
 		this.addPrecondition(new GoapState(0, "enemyKnown", true));
 		this.addPrecondition(new GoapState(0, "unitsInRange", true));
@@ -26,20 +28,20 @@ public class AttackUnitAction extends BaseAction {
 	}
 
 	// -------------------- Functions
-	
+
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
 		boolean isEnemyDead = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().contains(this.target);
 		boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
-		
+
 		return isEnemyDead || isConfidenceLow;
 	}
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
-		
-		if(this.actionChangeTrigger) {
+
+		if (this.actionChangeTrigger) {
 			success = ((PlayerUnit) goapUnit).getUnit().attack(((Unit) this.target));
 		}
 
@@ -48,7 +50,7 @@ public class AttackUnitAction extends BaseAction {
 
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
-		return 0;
+		return 10;
 	}
 
 	@Override
@@ -73,6 +75,6 @@ public class AttackUnitAction extends BaseAction {
 
 	@Override
 	protected void resetSpecific() {
-		
+
 	}
 }
