@@ -25,7 +25,7 @@ public class ActionUpdaterTerran_Marine extends ActionUpdaterDefault {
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
 		
-		// TODO: WIP ONLY DO ONCE!
+		// TODO: Possible Change: Only perform once.
 		((AbilityActionTerranMarine_StimPack) this.getActionFromInstance(AbilityActionTerranMarine_StimPack.class)).setTarget(this.playerUnit);
 		
 		if(this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {

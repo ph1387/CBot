@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_SiegeTank_SiegeMode;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitActionTerran_SiegeTank_Bombard;
+import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranSiegeTank_TankMode;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -21,8 +22,9 @@ public class ActionUpdaterTerran_SiegeTank_SiegeMode extends ActionUpdaterGenera
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		((AttackUnitActionTerran_SiegeTank_Bombard) this
-				.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class))
-						.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+		// TODO: Possible Change: Only perform once.
+		((AbilityActionTerranSiegeTank_TankMode) this.getActionFromInstance(AbilityActionTerranSiegeTank_TankMode.class)).setTarget(this.playerUnit);
+		
+		((AttackUnitActionTerran_SiegeTank_Bombard) this.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 	}
 }
