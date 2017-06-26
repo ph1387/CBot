@@ -1,5 +1,7 @@
 package unitControlModule.stateFactories.actions;
 
+import unitControlModule.stateFactories.actions.executableActions.AttackUnitActionTerran_Marine_Stimmed;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirectionTerran_Marine_Stimmed;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranMarine_StimPack;
 
 /**
@@ -13,5 +15,7 @@ public class AvailableActionsTerran_Marine extends AvailableActionsDefault {
 
 	public AvailableActionsTerran_Marine() {
 		this.add(new AbilityActionTerranMarine_StimPack(null));
+		this.add(new AttackUnitActionTerran_Marine_Stimmed(null));
+		this.add(new RetreatActionSteerInGoalDirectionTerran_Marine_Stimmed(null));
 	}
 }

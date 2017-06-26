@@ -16,7 +16,6 @@ import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.RemoveAgentEvent;
 
-// TODO: UML ADD INTERFACE
 /**
  * UnitControlModule.java --- Module for controlling the Player's units.
  * 

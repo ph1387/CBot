@@ -12,6 +12,7 @@ import javaGOAP.GoapState;
 public class UnitWorldStateAbilityUsingUnitsTerran_Marine extends UnitWorldStateAbilityUsingUnits {
 
 	public UnitWorldStateAbilityUsingUnitsTerran_Marine() {
-		this.add(new GoapState(0, "canUseStimPack", false));
+		this.add(new GoapState(0, "isStimmed", false));
+		this.add(new GoapState(0, "mayUseStimPack", false));
 	}
 }
