@@ -57,5 +57,17 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("isScout", false);
 			this.changeWorldStateEffect("allowGathering", true);
 		}
+		
+		// Update the carrying states of the worker Unit.
+		if(playerUnit.getUnit().isCarryingMinerals()) {
+			this.changeWorldStateEffect("isCarryingMinerals", true);
+		} else {
+			this.changeWorldStateEffect("isCarryingMinerals", false);
+		}
+		if(playerUnit.getUnit().isCarryingGas()) {
+			this.changeWorldStateEffect("isCarryingGas", true);
+		} else {
+			this.changeWorldStateEffect("isCarryingGas", false);
+		}
 	}
 }

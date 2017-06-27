@@ -1,8 +1,12 @@
 package unitControlModule.stateFactories.actions;
 
+import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.ConstructBuildingAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherGasAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.ScoutBaseLocationWorkerAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.UnloadGasAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.UnloadMineralsAction;
 
 /**
  * AvailableActionsWorker.java --- HashSet containing all worker Unit Actions.
@@ -16,5 +20,12 @@ public class AvailableActionsWorker extends AvailableActionsDefault {
 		this.add(new GatherMineralsAction(null));
 		this.add(new GatherGasAction(null));
 		this.add(new ConstructBuildingAction(null));
+		this.add(new UnloadMineralsAction(null));
+		this.add(new UnloadGasAction(null));
+	}
+	
+	@Override
+	protected GoapAction defineScoutingAction() {
+		return new ScoutBaseLocationWorkerAction(null);
 	}
 }

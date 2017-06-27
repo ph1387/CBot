@@ -5,6 +5,9 @@ import unitControlModule.stateFactories.actions.executableActions.worker.Constru
 import unitControlModule.stateFactories.actions.executableActions.worker.ConstructionJob;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherGasAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.ScoutBaseLocationWorkerAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.UnloadGasAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.UnloadMineralsAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
@@ -27,6 +30,10 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
 		
+		// TODO: Possible Change: Only perform once.
+		((UnloadMineralsAction) this.getActionFromInstance(UnloadMineralsAction.class)).setTarget(this.playerUnit);
+		((UnloadGasAction) this.getActionFromInstance(UnloadGasAction.class)).setTarget(this.playerUnit);
+		
 		((GatherMineralsAction) this.getActionFromInstance(GatherMineralsAction.class)).setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeMineralField());
 		((GatherGasAction) this.getActionFromInstance(GatherGasAction.class)).setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeGasSource());
 		
@@ -38,5 +45,10 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 				((ConstructionJob) (((ConstructBuildingAction) this.getActionFromInstance(ConstructBuildingAction.class)).getTarget())).setBuilding(((PlayerUnitWorker) playerUnit).getAssignedBuildingType());
 			}
 		}
+	}
+	
+	@Override
+	protected void baselocationScoutingConfiguration() {
+		((ScoutBaseLocationWorkerAction) this.getActionFromInstance(ScoutBaseLocationWorkerAction.class)).setTarget(findClosestReachableBasePosition());
 	}
 }

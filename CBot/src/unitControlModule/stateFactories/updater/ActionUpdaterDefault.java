@@ -71,12 +71,20 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 	
 	
 	/**
+	 * Function for configuring the associated scouting function of the Unit. Since the type of scouting action might differ from Unit to Unit a special function is needed to handle these cases.
+	 */
+	protected void baselocationScoutingConfiguration() {
+		((ScoutBaseLocationAction) this.getActionFromInstance(ScoutBaseLocationAction.class)).setTarget(findClosestReachableBasePosition());
+	}
+	
+	/**
 	 * If no enemy buildings are are being known of the Bot has to search for
 	 * them. Find the closest BaseLocation with a timeStamp:
 	 * <p>
 	 * currentTime - timeStamp >= timePassed
+	 * @return the closest reachable base Position with a matching timeStamp.
 	 */
-	protected void baselocationScoutingConfiguration() {
+	protected Position findClosestReachableBasePosition() {
 		Position closestReachableBasePosition = null;
 
 		for (BaseLocation location : BWTA.getBaseLocations()) {
@@ -93,7 +101,6 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 				}
 			}
 		}
-		
-		((ScoutBaseLocationAction) this.getActionFromInstance(ScoutBaseLocationAction.class)).setTarget(closestReachableBasePosition);
+		return closestReachableBasePosition;
 	}
 }

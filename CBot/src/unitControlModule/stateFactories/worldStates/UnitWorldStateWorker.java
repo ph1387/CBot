@@ -11,9 +11,11 @@ import javaGOAP.GoapState;
 public class UnitWorldStateWorker extends UnitWorldStateDefault {
 
 	public UnitWorldStateWorker() {
-		this.add(new GoapState(1, "gatheringMinerals", false));
-		this.add(new GoapState(1, "gatheringGas", false));
-		this.add(new GoapState(1, "constructing", false));
-		this.add(new GoapState(1, "allowGathering", true));
+		this.add(new GoapState(0, "gatheringMinerals", false));
+		this.add(new GoapState(0, "gatheringGas", false));
+		this.add(new GoapState(0, "constructing", false));
+		this.add(new GoapState(0, "allowGathering", true));
+		this.add(new GoapState(0, "isCarryingMinerals", false));
+		this.add(new GoapState(0, "isCarryingGas", false));
 	}
 }

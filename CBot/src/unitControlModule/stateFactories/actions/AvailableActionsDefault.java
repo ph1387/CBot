@@ -6,8 +6,6 @@ import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirection;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionToFurthestUnitInCone;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionToOwnGatheringPoint;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 
 /**
@@ -20,11 +18,21 @@ import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocat
 public class AvailableActionsDefault extends HashSet<GoapAction> {
 
 	public AvailableActionsDefault() {
-		this.add(new ScoutBaseLocationAction(null));
+		this.add(this.defineScoutingAction());
 		this.add(new AttackMoveAction(null));
 		this.add(new AttackUnitAction(null));
-//		this.add(new RetreatActionToFurthestUnitInCone(null));
-//		this.add(new RetreatActionToOwnGatheringPoint(null));
+		// this.add(new RetreatActionToFurthestUnitInCone(null));
+		// this.add(new RetreatActionToOwnGatheringPoint(null));
 		this.add(new RetreatActionSteerInGoalDirection(null));
+	}
+
+	/**
+	 * Function for defining a scouting action for the Unit. These might differ
+	 * from one another. Therefore a function is needed.
+	 * 
+	 * @return a GoapAction which defines a scouting action.
+	 */
+	protected GoapAction defineScoutingAction() {
+		return new ScoutBaseLocationAction(null);
 	}
 }

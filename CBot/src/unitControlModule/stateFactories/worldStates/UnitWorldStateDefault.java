@@ -13,13 +13,13 @@ import javaGOAP.GoapState;
 public class UnitWorldStateDefault extends HashSet<GoapState> {
 
 	public UnitWorldStateDefault() {
-		this.add(new GoapState(1, "enemyKnown", false));
-		this.add(new GoapState(1, "destroyUnit", false));
-		this.add(new GoapState(1, "retreatFromUnit", false));
-		this.add(new GoapState(1, "unitsInRange", false));
-		this.add(new GoapState(1, "unitsInSight", false));
-		this.add(new GoapState(1, "isScout", true));
-		this.add(new GoapState(1, "allowFighting", true));
-		this.add(new GoapState(1, "canMove", true));
+		this.add(new GoapState(0, "enemyKnown", false));
+		this.add(new GoapState(0, "destroyUnit", false));
+		this.add(new GoapState(0, "retreatFromUnit", false));
+		this.add(new GoapState(0, "unitsInRange", false));
+		this.add(new GoapState(0, "unitsInSight", false));
+		this.add(new GoapState(0, "isScout", true));
+		this.add(new GoapState(0, "allowFighting", true));
+		this.add(new GoapState(0, "canMove", true));
 	}
 }

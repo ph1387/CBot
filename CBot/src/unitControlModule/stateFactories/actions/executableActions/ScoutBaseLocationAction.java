@@ -43,7 +43,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
-		return 0;
+		return 10;
 	}
 
 	@Override

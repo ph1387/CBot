@@ -46,6 +46,8 @@ public class ConstructBuildingAction extends BaseAction {
 
 		this.addEffect(new GoapState(0, "constructing", true));
 		this.addPrecondition(new GoapState(0, "canMove", true));
+		this.addPrecondition(new GoapState(0, "isCarryingMinerals", false));
+		this.addPrecondition(new GoapState(0, "isCarryingGas", false));
 
 		this.buildLocationFactory = new BuildLocationFactory();
 	}
