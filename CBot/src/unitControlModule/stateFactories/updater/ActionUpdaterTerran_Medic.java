@@ -20,6 +20,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		
+
 	}
 }

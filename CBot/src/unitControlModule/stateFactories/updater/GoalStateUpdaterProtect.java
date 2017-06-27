@@ -22,7 +22,5 @@ public class GoalStateUpdaterProtect extends GoalStateUpdaterDefault {
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
-		
-		
 	}
 }

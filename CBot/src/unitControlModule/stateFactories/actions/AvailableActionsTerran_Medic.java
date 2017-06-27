@@ -1,10 +1,5 @@
 package unitControlModule.stateFactories.actions;
 
-import java.util.HashSet;
-
-import javaGOAP.GoapAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirection;
-
 // TODO: UML ADD
 /**
  * AvailableActionsTerran_Medic.java --- HashSet containing all Terran_Medic
@@ -13,9 +8,9 @@ import unitControlModule.stateFactories.actions.executableActions.RetreatActionS
  * @author P H - 27.06.2017
  *
  */
-public class AvailableActionsTerran_Medic extends HashSet<GoapAction> {
+public class AvailableActionsTerran_Medic extends AvailableActionsGeneral {
 
 	public AvailableActionsTerran_Medic() {
-		this.add(new RetreatActionSteerInGoalDirection(null));
+		// TODO: WIP ADD
 	}
 }

@@ -36,6 +36,8 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
+		super.update(playerUnit);
+		
 		if(this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_MISSING) {
 			this.baselocationScoutingConfiguration();
 		} else {
@@ -44,7 +46,6 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 			((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 //			((RetreatActionToFurthestUnitInCone) this.getActionFromInstance(RetreatActionToFurthestUnitInCone.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 //			((RetreatActionToOwnGatheringPoint) this.getActionFromInstance(RetreatActionToOwnGatheringPoint.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
-			((RetreatActionSteerInGoalDirection) this.getActionFromInstance(RetreatActionSteerInGoalDirection.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 		}
 	}
 
