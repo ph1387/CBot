@@ -342,7 +342,7 @@ public class UnitTrackerModule {
 		double multiplier = Double.valueOf(enemyUnit.getUnitType().maxHitPoints()) / 2.;
 
 		if (enemyUnit.getUnitType().maxShields() > 0) {
-			multiplier *= Double.valueOf(enemyUnit.getUnitType().maxShields()) / 2.;
+			multiplier += Double.valueOf(enemyUnit.getUnitType().maxShields()) / 2.;
 		}
 		return multiplier;
 	}
@@ -360,7 +360,7 @@ public class UnitTrackerModule {
 				/ Double.valueOf(unit.getType().maxHitPoints());
 
 		if (unit.getType().maxShields() > 0) {
-			multiplier *= SHIELD_MULTIPLIER
+			multiplier += SHIELD_MULTIPLIER
 					* (Double.valueOf(unit.getShields()) / Double.valueOf(unit.getType().maxShields()));
 		}
 		return multiplier;
