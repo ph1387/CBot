@@ -40,6 +40,9 @@ public class GoapAgentFactory {
 		case "Terran_Marine":
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createMarine(unit, informationStorage));
 			break;
+		case "Terran_Firebat":
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createFirebat(unit, informationStorage));
+			break;
 		case "Terran_Vulture":
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createVulture(unit, informationStorage));
 			break;
