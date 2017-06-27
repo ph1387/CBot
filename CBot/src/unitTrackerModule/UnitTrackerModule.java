@@ -7,7 +7,6 @@ import java.util.List;
 import bwapi.Game;
 import bwapi.TilePosition;
 import bwapi.Unit;
-import bwapi.UnitType;
 import bwapi.WeaponType;
 import core.Core;
 import informationStorage.InformationStorage;
@@ -24,6 +23,7 @@ import informationStorage.UnitTrackerInformation;
 public class UnitTrackerModule {
 	private static final double SHIELD_MULTIPLIER = 1.2;
 	private static final double HEALTH_MULTIPLIER = 1.1;
+	private static final double FLAT_DPS_MULTIPLIER = 100.;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
 	private static boolean enablePlayerStrength = true;
@@ -400,10 +400,11 @@ public class UnitTrackerModule {
 									// number can be inserted here. The bigger
 									// the number, the stronger the effect of a
 									// shorter range is.
+		
+		// The dps multiplier for each Unit.
+		double dpsMultiplier = FLAT_DPS_MULTIPLIER * new Double(weaponType.damageAmount() * weaponType.damageFactor()) / new Double(weaponType.damageCooldown());
 
-		double multiplier = new Double(
-				generalMultiplier * weaponType.damageAmount() * weaponType.damageFactor() * unitSpecificMultiplier)
-				/ new Double(8 * Math.pow(maxAttackTileRange, 2) * Math.sin(1.));
+		double multiplier = new Double(generalMultiplier * dpsMultiplier * unitSpecificMultiplier) / new Double(8 * Math.pow(maxAttackTileRange, 2) * Math.sin(1.));
 
 		for (int i = -maxAttackTileRange; i <= maxAttackTileRange; i++) {
 			for (int j = -maxAttackTileRange; j <= maxAttackTileRange; j++) {
