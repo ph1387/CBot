@@ -27,21 +27,25 @@ public class SteeringOperationStrongestPlayerArea extends BaseSteeringOperation 
 
 	@Override
 	public void applySteeringForce(Vector targetVector, Double intensity) {
-		Unit unitWithStrongestArea = RetreatActionGeneralSuperclass.getUnitWithGreatestTileStrengths(
-				RetreatActionGeneralSuperclass.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit, MINIMUM_SEARCH_RANGE), goapUnit);
-
-		if (unitWithStrongestArea != null && unitWithStrongestArea != ((PlayerUnit) goapUnit).getUnit()) {
-			Unit unit = ((PlayerUnit) goapUnit).getUnit();
-			Vector vecToStrongestUnitArea = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
-					unitWithStrongestArea.getPosition().getX() - unit.getPosition().getX(),
-					unitWithStrongestArea.getPosition().getY() - unit.getPosition().getY());
-
-			// Apply the influence to the targeted Vector.
-			if (vecToStrongestUnitArea.length() > 0.) {
-				vecToStrongestUnitArea.normalize();
-				targetVector.setDirX(targetVector.getDirX() + vecToStrongestUnitArea.getDirX() * intensity);
-				targetVector.setDirY(targetVector.getDirY() + vecToStrongestUnitArea.getDirY() * intensity);
+		try {
+			Unit unitWithStrongestArea = RetreatActionGeneralSuperclass.getUnitWithGreatestTileStrengths(
+					RetreatActionGeneralSuperclass.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit, MINIMUM_SEARCH_RANGE), goapUnit);
+		
+			if (unitWithStrongestArea != null && unitWithStrongestArea != ((PlayerUnit) goapUnit).getUnit()) {
+				Unit unit = ((PlayerUnit) goapUnit).getUnit();
+				Vector vecToStrongestUnitArea = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
+						unitWithStrongestArea.getPosition().getX() - unit.getPosition().getX(),
+						unitWithStrongestArea.getPosition().getY() - unit.getPosition().getY());
+		
+				// Apply the influence to the targeted Vector.
+				if (vecToStrongestUnitArea.length() > 0.) {
+					vecToStrongestUnitArea.normalize();
+					targetVector.setDirX(targetVector.getDirX() + vecToStrongestUnitArea.getDirX() * intensity);
+					targetVector.setDirY(targetVector.getDirY() + vecToStrongestUnitArea.getDirY() * intensity);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -24,27 +24,31 @@ public class SteeringOperationEnemiesInConfidenceRange extends BaseSteeringOpera
 
 	@Override
 	public void applySteeringForce(Vector targetVector, Double intensity) {
-		HashSet<Unit> enemiesInConfidenceRange = ((PlayerUnit) goapUnit).getAllEnemyUnitsInConfidenceRange();
-
-		for (Unit unit : enemiesInConfidenceRange) {
-			PlayerUnit playerUnit = (PlayerUnit) goapUnit;
-
-			// uPos -> Unit Position, ePos -> Enemy Position
-			int uPosX = playerUnit.getUnit().getPosition().getX();
-			int uPosY = playerUnit.getUnit().getPosition().getY();
-			int ePosX = unit.getPosition().getX();
-			int ePosY = unit.getPosition().getY();
-
-			// Generate a Vector starting from the goapUnit itself with the
-			// direction Vector from the enemy Unit to the goapUnit applied.
-			Vector retreatVectorFromUnit = new Vector(uPosX, uPosY, uPosX - ePosX, uPosY - ePosY);
-
-			// Apply the influence to the targeted Vector.
-			if (retreatVectorFromUnit.length() > 0.) {
-				retreatVectorFromUnit.normalize();
-				targetVector.setDirX(targetVector.getDirX() + retreatVectorFromUnit.getDirX() * intensity);
-				targetVector.setDirY(targetVector.getDirY() + retreatVectorFromUnit.getDirY() * intensity);
+		try {
+			HashSet<Unit> enemiesInConfidenceRange = ((PlayerUnit) goapUnit).getAllEnemyUnitsInConfidenceRange();
+	
+			for (Unit unit : enemiesInConfidenceRange) {
+				PlayerUnit playerUnit = (PlayerUnit) goapUnit;
+	
+				// uPos -> Unit Position, ePos -> Enemy Position
+				int uPosX = playerUnit.getUnit().getPosition().getX();
+				int uPosY = playerUnit.getUnit().getPosition().getY();
+				int ePosX = unit.getPosition().getX();
+				int ePosY = unit.getPosition().getY();
+	
+				// Generate a Vector starting from the goapUnit itself with the
+				// direction Vector from the enemy Unit to the goapUnit applied.
+				Vector retreatVectorFromUnit = new Vector(uPosX, uPosY, uPosX - ePosX, uPosY - ePosY);
+	
+				// Apply the influence to the targeted Vector.
+				if (retreatVectorFromUnit.length() > 0.) {
+					retreatVectorFromUnit.normalize();
+					targetVector.setDirX(targetVector.getDirX() + retreatVectorFromUnit.getDirX() * intensity);
+					targetVector.setDirY(targetVector.getDirY() + retreatVectorFromUnit.getDirY() * intensity);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

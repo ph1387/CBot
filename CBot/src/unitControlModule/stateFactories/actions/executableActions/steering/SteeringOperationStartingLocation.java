@@ -24,20 +24,24 @@ public class SteeringOperationStartingLocation extends BaseSteeringOperation {
 
 	@Override
 	public void applySteeringForce(Vector targetVector, Double intensity) {
-		TilePosition playerStartingLocation = Core.getInstance().getPlayer().getStartLocation();
-
-		if (playerStartingLocation != null) {
-			Unit unit = ((PlayerUnit) goapUnit).getUnit();
-			Vector vecToBaseLocation = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
-					playerStartingLocation.toPosition().getX() - unit.getPosition().getX(),
-					playerStartingLocation.toPosition().getY() - unit.getPosition().getY());
-
-			// Apply the influence to the targeted Vector.
-			if (vecToBaseLocation.length() > 0.) {
-				vecToBaseLocation.normalize();
-				targetVector.setDirX(targetVector.getDirX() + vecToBaseLocation.getDirX() * intensity);
-				targetVector.setDirY(targetVector.getDirY() + vecToBaseLocation.getDirY() * intensity);
+		try {
+			TilePosition playerStartingLocation = Core.getInstance().getPlayer().getStartLocation();
+	
+			if (playerStartingLocation != null) {
+				Unit unit = ((PlayerUnit) goapUnit).getUnit();
+				Vector vecToBaseLocation = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
+						playerStartingLocation.toPosition().getX() - unit.getPosition().getX(),
+						playerStartingLocation.toPosition().getY() - unit.getPosition().getY());
+	
+				// Apply the influence to the targeted Vector.
+				if (vecToBaseLocation.length() > 0.) {
+					vecToBaseLocation.normalize();
+					targetVector.setDirX(targetVector.getDirX() + vecToBaseLocation.getDirX() * intensity);
+					targetVector.setDirY(targetVector.getDirY() + vecToBaseLocation.getDirY() * intensity);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
