@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.updater;
 
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInBioUnitDirectionTerran_Medic;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -17,8 +18,11 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 	// -------------------- Functions
 
+	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		// TODO: WIP DO NOT CALL SUPER.UPDATE, IMPLEMENT OWN RETREAT FUNCTIONALITY!
+		if(this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
+			((RetreatActionSteerInBioUnitDirectionTerran_Medic) this.getActionFromInstance(RetreatActionSteerInBioUnitDirectionTerran_Medic.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+		}
 	}
 }

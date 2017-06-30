@@ -3,7 +3,7 @@ package unitControlModule.stateFactories.actions;
 import java.util.HashSet;
 
 import javaGOAP.GoapAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirection;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInRetreatVectorDirection;
 
 /**
  * AvailableActionsGeneral.java --- Top most HashSet containing Actions which
@@ -16,7 +16,7 @@ import unitControlModule.stateFactories.actions.executableActions.RetreatActionS
 public abstract class AvailableActionsGeneral extends HashSet<GoapAction> {
 
 	public AvailableActionsGeneral() {
-		this.add(new RetreatActionSteerInGoalDirection(null));
+		this.add(new RetreatActionSteerInRetreatVectorDirection(null));
 	}
 
 	// -------------------- Functions

@@ -43,6 +43,9 @@ public class GoapAgentFactory {
 		case "Terran_Firebat":
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createFirebat(unit, informationStorage));
 			break;
+		case "Terran_Medic":
+			agent = new DefaultGoapAgent(PlayerUnitFactory.createMedic(unit, informationStorage));
+			break;
 		case "Terran_Vulture":
 			agent = new DefaultGoapAgent(PlayerUnitFactory.createVulture(unit, informationStorage));
 			break;

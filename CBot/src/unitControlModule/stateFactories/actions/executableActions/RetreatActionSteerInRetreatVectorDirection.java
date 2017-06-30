@@ -16,6 +16,7 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationStrongestPlayerArea;
 import unitControlModule.unitWrappers.PlayerUnit;
 
+// TODO: UML RENAME
 /**
  * RetreatActionSteerInGoalDirection.java --- A Retreat Action with which a
  * PlayerUnit (!) moves away from an enemy. This Action's retreat Path has a
@@ -29,7 +30,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 05.06.2017
  *
  */
-public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuperclass {
+public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGeneralSuperclass {
 
 	private static final double TOTAL_RETREAT_DISTANCE = 96;
 	private static final int TURN_RADIUS = 10;
@@ -49,7 +50,7 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 	 * @param target
 	 *            type: Unit
 	 */
-	public RetreatActionSteerInGoalDirection(Object target) {
+	public RetreatActionSteerInRetreatVectorDirection(Object target) {
 		super(target);
 	}
 
@@ -71,24 +72,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 				Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(
 						((PlayerUnit) goapUnit).getUnit().getPosition());
 				Polygon currentPolygon = matchingRegionPolygonPair.second;
-
-				// Use a generalized Vector which combines all direction-Vectors
-				// from all sources influencing the Unit. This generalized
-				// Vector is the retreat Vector emerging from the Unit in
-				// regards to the closest enemy Unit in it's confidence range.
-				Vector generalizedTargetVector = this.vecUTP.clone();
-				generalizedTargetVector.normalize();
-				generalizedTargetVector.setDirX(generalizedTargetVector.getDirX() * INFLUENCE_INITIAL);
-				generalizedTargetVector.setDirY(generalizedTargetVector.getDirY() * INFLUENCE_INITIAL);
-
-				// Update the direction of the generalized Vector based on
-				// various influences.
-				((SteeringOperationChokePoints) this.steeringChokePoints)
-						.setPolygonPairUnitIsIn(matchingRegionPolygonPair);
-				this.steeringChokePoints.applySteeringForce(generalizedTargetVector, INFLUENCE_CHOKEPOINT);
-				this.steeringEnemiesInConfidenceRange.applySteeringForce(generalizedTargetVector, INFLUENCE_ENEMIES);
-				this.steeringStartingLocation.applySteeringForce(generalizedTargetVector, INFLUENCE_BASE);
-				this.steeringStrongestPlayerArea.applySteeringForce(generalizedTargetVector, INFLUENCE_COMPANIONS);
+				Vector generalizedTargetVector = this.generateGeneralizedRetreatVector(goapUnit,
+						matchingRegionPolygonPair);
 
 				// Use the generalized Vector to find a valid retreat Position
 				// using the previously generalized Vector as main steering
@@ -114,6 +99,39 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 		}
 
 		return precondtionsMet;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Use a generalized Vector which combines all direction-Vectors from all
+	 * sources influencing the Unit. This generalized Vector is the retreat
+	 * Vector emerging from the Unit in regards to the closest enemy Unit in
+	 * it's confidence range.
+	 * 
+	 * @param goapUnit
+	 *            the executing Unit.
+	 * @param regionPolygonPairUnitIsIn
+	 *            the Pair of Region and Polygon the Unit is currently inside
+	 *            of.
+	 * @return a Vector containing all direction Vectors influencing this Unit.
+	 */
+	protected Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit,
+			Pair<Region, Polygon> regionPolygonPairUnitIsIn) {
+		Vector generalizedTargetVector = this.vecUTP.clone();
+
+		generalizedTargetVector.normalize();
+		generalizedTargetVector.setDirX(generalizedTargetVector.getDirX() * INFLUENCE_INITIAL);
+		generalizedTargetVector.setDirY(generalizedTargetVector.getDirY() * INFLUENCE_INITIAL);
+
+		// Update the direction of the generalized Vector based on
+		// various influences.
+		((SteeringOperationChokePoints) this.steeringChokePoints).setPolygonPairUnitIsIn(regionPolygonPairUnitIsIn);
+		this.steeringChokePoints.applySteeringForce(generalizedTargetVector, INFLUENCE_CHOKEPOINT);
+		this.steeringEnemiesInConfidenceRange.applySteeringForce(generalizedTargetVector, INFLUENCE_ENEMIES);
+		this.steeringStartingLocation.applySteeringForce(generalizedTargetVector, INFLUENCE_BASE);
+		this.steeringStrongestPlayerArea.applySteeringForce(generalizedTargetVector, INFLUENCE_COMPANIONS);
+
+		return generalizedTargetVector;
 	}
 
 	/**

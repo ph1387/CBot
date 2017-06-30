@@ -1,7 +1,7 @@
 package unitControlModule.stateFactories.updater;
 
 import javaGOAP.GoapAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirection;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInRetreatVectorDirection;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -26,7 +26,7 @@ public abstract class ActionUpdaterGeneral implements Updater {
 		// retreating Action a Unit can perform. If another one is desired, this
 		// function needs to be overwritten.
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
-			((RetreatActionSteerInGoalDirection) this.getActionFromInstance(RetreatActionSteerInGoalDirection.class))
+			((RetreatActionSteerInRetreatVectorDirection) this.getActionFromInstance(RetreatActionSteerInRetreatVectorDirection.class))
 					.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 		}
 	}

@@ -16,6 +16,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class SteeringOperationStrongestPlayerArea extends BaseSteeringOperation {
 
+	// TODO: UML ADD
+	private static final int MINIMUM_SEARCH_RANGE = 200;
+	
 	public SteeringOperationStrongestPlayerArea(IGoapUnit goapUnit) {
 		super(goapUnit);
 	}
@@ -25,7 +28,7 @@ public class SteeringOperationStrongestPlayerArea extends BaseSteeringOperation 
 	@Override
 	public void applySteeringForce(Vector targetVector, Double intensity) {
 		Unit unitWithStrongestArea = RetreatActionGeneralSuperclass.getUnitWithGreatestTileStrengths(
-				RetreatActionGeneralSuperclass.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit), goapUnit);
+				RetreatActionGeneralSuperclass.getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit, MINIMUM_SEARCH_RANGE), goapUnit);
 
 		if (unitWithStrongestArea != null && unitWithStrongestArea != ((PlayerUnit) goapUnit).getUnit()) {
 			Unit unit = ((PlayerUnit) goapUnit).getUnit();

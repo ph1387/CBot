@@ -5,7 +5,7 @@ import java.util.HashSet;
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirection;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInRetreatVectorDirection;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 
 /**
@@ -23,7 +23,7 @@ public class AvailableActionsDefault extends HashSet<GoapAction> {
 		this.add(new AttackUnitAction(null));
 		// this.add(new RetreatActionToFurthestUnitInCone(null));
 		// this.add(new RetreatActionToOwnGatheringPoint(null));
-		this.add(new RetreatActionSteerInGoalDirection(null));
+		this.add(new RetreatActionSteerInRetreatVectorDirection(null));
 	}
 
 	/**

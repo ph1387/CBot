@@ -1,5 +1,7 @@
 package unitControlModule.stateFactories.actions;
 
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInBioUnitDirectionTerran_Medic;
+
 /**
  * AvailableActionsTerran_Medic.java --- HashSet containing all Terran_Medic
  * Actions.
@@ -10,6 +12,6 @@ package unitControlModule.stateFactories.actions;
 public class AvailableActionsTerran_Medic extends AvailableActionsGeneral {
 
 	public AvailableActionsTerran_Medic() {
-		// TODO: WIP ADD
+		this.add(new RetreatActionSteerInBioUnitDirectionTerran_Medic(null));
 	}
 }

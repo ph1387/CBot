@@ -2,7 +2,7 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Marine;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitActionTerran_Marine_Stimmed;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirectionTerran_Marine_Stimmed;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranMarine_StimPack;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -30,7 +30,7 @@ public class ActionUpdaterTerran_Marine extends ActionUpdaterDefault {
 		
 		if(this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
 			((AttackUnitActionTerran_Marine_Stimmed) this.getActionFromInstance(AttackUnitActionTerran_Marine_Stimmed.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
-			((RetreatActionSteerInGoalDirectionTerran_Marine_Stimmed) this.getActionFromInstance(RetreatActionSteerInGoalDirectionTerran_Marine_Stimmed.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+			((RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed) this.getActionFromInstance(RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 		}
 	}
 }

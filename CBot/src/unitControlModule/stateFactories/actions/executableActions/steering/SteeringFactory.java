@@ -13,7 +13,6 @@ import core.Core;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * SteeringFactory.java --- Factory for generating the final version of a
  * steering Vector. The factory consists of various functions of which the main
