@@ -14,7 +14,6 @@ import unitControlModule.stateFactories.updater.WorldStateUpdaterAbilityUsingUni
 import unitControlModule.stateFactories.worldStates.UnitWorldStateAbilityUsingUnitsTerran_Medic;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * StateFactoryTerran_Medic.java --- A StateFactory used for generating all
  * necessary Objects for the Terran_Medic.

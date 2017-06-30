@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.goals;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * UnitGoalStateProtect.java --- GoalState containing goals regarding the
  * protection of the Player's own Units. Mostly used for supporting Units.

@@ -5,7 +5,6 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_Medic;
 
-// TODO: UML ADD
 /**
  * PlayerUnitTerran_Medic.java --- Terran_Medic Class. Used for healing
  * Bio-Units on the map like Terran_Marines and Terran_Firebats.

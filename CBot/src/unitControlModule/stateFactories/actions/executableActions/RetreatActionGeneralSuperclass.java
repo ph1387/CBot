@@ -221,7 +221,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	 *            the Position that is being checked.
 	 * @return the Region and the Polygon that the Position is located in.
 	 */
-	protected static Pair<Region, Polygon> findBoundariesPositionIsIn(Position position) {
+	public static Pair<Region, Polygon> findBoundariesPositionIsIn(Position position) {
 		Pair<Region, Polygon> matchingRegionPolygonPair = null;
 
 		// Search for the Pair of Regions and Polygons that includes the Unit's
@@ -245,7 +245,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	 * @return a HashSet containing all Units in a range around the given
 	 *         PlayerUnit with at least minimum distance to it.
 	 */
-	protected static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit goapUnit) {
+	public static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit goapUnit) {
 		HashSet<Unit> unitsTooClose = new HashSet<Unit>();
 		HashSet<Unit> unitsInRange = new HashSet<Unit>();
 		int iterationCounter = 1;
@@ -287,7 +287,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	 *            the currently executing IGoapUnit.
 	 * @return the Unit with the greatest sum of strengths at its TilePosition.
 	 */
-	protected static Unit getUnitWithGreatestTileStrengths(HashSet<Unit> units, IGoapUnit goapUnit) {
+	public static Unit getUnitWithGreatestTileStrengths(HashSet<Unit> units, IGoapUnit goapUnit) {
 		Unit bestUnit = null;
 		int bestUnitStrengthTotal = 0;
 

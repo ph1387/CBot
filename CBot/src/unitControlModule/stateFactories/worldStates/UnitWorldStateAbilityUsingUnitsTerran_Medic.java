@@ -1,6 +1,5 @@
 package unitControlModule.stateFactories.worldStates;
 
-// TODO: UML ADD
 /**
  * UnitWorldStateAbilityUsingUnitsTerran_Medic.java --- WorldState for a
  * Terran_Medic using its corresponding abilities.

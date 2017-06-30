@@ -26,7 +26,6 @@ public class PlayerUnitFactory {
 		return new PlayerUnitTerran_Marine(unit, informationStorage);
 	}
 	
-	// TODO: UML ADD
 	public static PlayerUnit createFirebat(Unit unit, InformationStorage informationStorage) {
 		return new PlayerUnitTerran_Firebat(unit, informationStorage);
 	}

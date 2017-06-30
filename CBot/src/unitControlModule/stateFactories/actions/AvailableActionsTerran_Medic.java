@@ -1,6 +1,5 @@
 package unitControlModule.stateFactories.actions;
 
-// TODO: UML ADD
 /**
  * AvailableActionsTerran_Medic.java --- HashSet containing all Terran_Medic
  * Actions.

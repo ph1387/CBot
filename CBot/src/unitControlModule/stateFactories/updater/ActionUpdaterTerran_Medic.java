@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterTerran_Medic.java --- Updater for updating an
  * {@link AvailableActionsTerran_Medic} instance.
@@ -20,6 +19,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-
+		// TODO: WIP DO NOT CALL SUPER.UPDATE, IMPLEMENT OWN RETREAT FUNCTIONALITY!
 	}
 }

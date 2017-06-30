@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.unitWrappers.PlayerUnit;
 
-//TODO: UML ADD
 /**
  * WorldStateUpdaterAbilityUsingUnitsTerran_Medic.java ---WorldState updater for
  * Terran_Medic WorldStates.

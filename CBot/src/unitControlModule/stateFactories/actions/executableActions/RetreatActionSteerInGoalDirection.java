@@ -1,11 +1,9 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
-import java.util.HashSet;
 import java.util.List;
 
 import bwapi.Pair;
 import bwapi.Position;
-import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapiMath.Point;
 import bwapiMath.Polygon;
@@ -15,6 +13,11 @@ import bwta.Chokepoint;
 import bwta.Region;
 import core.Core;
 import javaGOAP.IGoapUnit;
+import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperation;
+import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationChokePoints;
+import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationEnemiesInConfidenceRange;
+import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationStartingLocation;
+import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationStrongestPlayerArea;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -42,11 +45,8 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 	private static final double INFLUENCE_BASE = 0.3;
 	private static final double INFLUENCE_COMPANIONS = 1.2;
 
-	// Index that is used while steering towards a ChokePoint. The index implies
-	// the path TilePosition count to the ChokePoint's center that must be met
-	// for using the path with the element at the provided index towards the
-	// ChokePoint rather than the general Vector towards the center.
-	private static final int CHOKE_POINT_PATH_INDEX = 4;
+	private SteeringOperation steeringChokePoints, steeringEnemiesInConfidenceRange, steeringStartingLocation,
+			steeringStrongestPlayerArea;
 
 	/**
 	 * @param target
@@ -61,6 +61,11 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 	@Override
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
 		boolean precondtionsMet = false;
+
+		// Instantiate the different SteeringOperations that are being used.
+		if (this.steeringChokePoints == null) {
+			this.instantiateSteeringOperations(goapUnit);
+		}
 
 		try {
 			// Position missing -> Action not performed yet.
@@ -81,11 +86,12 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 
 				// Update the direction of the generalized Vector based on
 				// various influences.
-				this.changeVecBaseOnChokePoints(generalizedTargetVector, goapUnit, matchingRegionPolygonPair);
-				this.changeVecBasedOnEnemies(generalizedTargetVector, goapUnit);
-				this.changeVecBasedOnStartingLocation(generalizedTargetVector, goapUnit);
-				this.changeVecBasedOnStrongestPlayerArea(generalizedTargetVector, goapUnit);
-
+				((SteeringOperationChokePoints) this.steeringChokePoints).setPolygonPairUnitIsIn(matchingRegionPolygonPair);
+				this.steeringChokePoints.applySteeringForce(generalizedTargetVector, INFLUENCE_CHOKEPOINT);
+				this.steeringEnemiesInConfidenceRange.applySteeringForce(generalizedTargetVector, INFLUENCE_ENEMIES);
+				this.steeringStartingLocation.applySteeringForce(generalizedTargetVector, INFLUENCE_BASE);
+				this.steeringStrongestPlayerArea.applySteeringForce(generalizedTargetVector, INFLUENCE_COMPANIONS);
+				
 				// Use the generalized Vector to find a valid retreat Position
 				// using the previously generalized Vector as main steering
 				// direction.
@@ -113,201 +119,17 @@ public class RetreatActionSteerInGoalDirection extends RetreatActionGeneralSuper
 	}
 
 	/**
-	 * Function for changing a given Vector's direction properties based on a
-	 * ChokePoint's direction towards the Unit itself. This direction is a
-	 * Vector which gets normalized whilst multiplying its direction properties
-	 * with predefined values.
-	 * 
-	 * @param targetVector
-	 *            the Vector whose direction properties are going to be changed.
-	 * @param goapUnit
-	 *            the Unit from which the Vector pointing towards the ChokePoint
-	 *            is starting at.
-	 * @param matchingRegionPolygonPair
-	 *            a Pair of the Region and Polygon that the Unit is currently
-	 *            in.
-	 */
-	private void changeVecBaseOnChokePoints(Vector targetVector, IGoapUnit goapUnit,
-			Pair<Region, Polygon> matchingRegionPolygonPair) {
-		try {
-			Region regionToFallBackTo = ((PlayerUnit) goapUnit).getInformationStorage().getMapInfo()
-					.getReversedRegionAccessOrder()
-					.get(BWTA.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition()));
-
-			// Only change the Vectors direction if the Unit is not currently
-			// inside the Player's starting region since this would cause the
-			// Unit to uncontrollably circle around the closest ChokePoint.
-			if (regionToFallBackTo != null) {
-				Chokepoint closestChoke = this.findChokePointToRetreatTo(goapUnit, matchingRegionPolygonPair,
-						regionToFallBackTo);
-
-				if (closestChoke != null) {
-					Unit unit = ((PlayerUnit) goapUnit).getUnit();
-
-					// Get the shortest Path from the Unit to the ChokePoint.
-					List<TilePosition> shortestPath = BWTA.getShortestPath(unit.getTilePosition(),
-							closestChoke.getCenter().toTilePosition());
-					Vector vecUnitToChokePoint = null;
-
-					// Use the first TilePosition as direction for moving the
-					// Unit to the ChokePoint. This is necessary since
-					// generating a Vector directly towards the ChokePoint would
-					// cause the Unit to move uncontrollably in some cases where
-					// it is "trapped" in between two sides of the Polygon and
-					// therefore moves left, right, left, right, ...
-					if (shortestPath.size() > CHOKE_POINT_PATH_INDEX) {
-						Position firstStep = shortestPath.get(CHOKE_POINT_PATH_INDEX).toPosition();
-						vecUnitToChokePoint = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
-								firstStep.getX() - unit.getPosition().getX(),
-								firstStep.getY() - unit.getPosition().getY());
-					}
-					// Generate a Vector leading directly towards the
-					// ChokePoint.
-					else {
-						vecUnitToChokePoint = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
-								closestChoke.getCenter().getX() - unit.getPosition().getX(),
-								closestChoke.getCenter().getY() - unit.getPosition().getY());
-					}
-
-					// Apply the influence to the targeted Vector.
-					if (vecUnitToChokePoint.length() > 0.) {
-						vecUnitToChokePoint.normalize();
-						targetVector
-								.setDirX(targetVector.getDirX() + vecUnitToChokePoint.getDirX() * INFLUENCE_CHOKEPOINT);
-						targetVector
-								.setDirY(targetVector.getDirY() + vecUnitToChokePoint.getDirY() * INFLUENCE_CHOKEPOINT);
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Function for determining the ChokePoint which the Unit must travel to to
-	 * get closer towards the Player's starting location.
+	 * Function used for instantiating all SteertingOperations that are being
+	 * used by the Action itself.
 	 * 
 	 * @param goapUnit
-	 *            the Unit that is going to retreat.
-	 * @param matchingRegionPolygonPair
-	 *            a Pair of the Region and Polygon that the Unit is currently
-	 *            in.
-	 * @param regionToFallBackTo
-	 *            the next Region the Unit has to travel to in order to move
-	 *            towards the Player's starting location.
-	 * @return the ChokePoint from the List of given ChokePoints that leads
-	 *         towards the Player's starting location.
+	 *            the Unit that is executing the Action.
 	 */
-	private Chokepoint findChokePointToRetreatTo(IGoapUnit goapUnit, Pair<Region, Polygon> matchingRegionPolygonPair,
-			Region regionToFallBackTo) {
-		Chokepoint retreatChokePoint = null;
-		Position centerPlayerStartingRegion = BWTA
-				.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition()).getCenter();
-
-		for (Chokepoint chokePoint : matchingRegionPolygonPair.first.getChokepoints()) {
-			if (chokePoint.getRegions().first.equals(regionToFallBackTo)
-					|| chokePoint.getRegions().second.equals(regionToFallBackTo)) {
-				// The Region might be connected to the other Region by two
-				// separate ChokePoints. The closest one towards the Player's
-				// starting location is being chosen.
-				if (retreatChokePoint == null || retreatChokePoint.getDistance(centerPlayerStartingRegion) > chokePoint
-						.getDistance(centerPlayerStartingRegion)) {
-					retreatChokePoint = chokePoint;
-				}
-			}
-		}
-
-		return retreatChokePoint;
-	}
-
-	/**
-	 * Function for changing a given Vector's direction properties based on
-	 * enemies direction towards the Unit itself. This direction is a Vector
-	 * which gets normalized whilst multiplying its direction properties with
-	 * predefined values.
-	 * 
-	 * @param targetVector
-	 *            the Vector whose direction properties are going to be changed.
-	 * @param goapUnit
-	 *            the Unit from which the Vector pointing towards the enemies is
-	 *            starting at.
-	 */
-	private void changeVecBasedOnEnemies(Vector targetVector, IGoapUnit goapUnit) {
-		HashSet<Unit> enemiesInConfidenceRange = ((PlayerUnit) goapUnit).getAllEnemyUnitsInConfidenceRange();
-
-		for (Unit unit : enemiesInConfidenceRange) {
-			Vector retreatVectorFromUnit = this
-					.projectVectorOntoMaxLength(this.generateVectorFromEnemyToUnit(goapUnit, unit));
-
-			// Apply the influence to the targeted Vector.
-			if (retreatVectorFromUnit.length() > 0.) {
-				retreatVectorFromUnit.normalize();
-				targetVector.setDirX(targetVector.getDirX() + retreatVectorFromUnit.getDirX() * INFLUENCE_ENEMIES);
-				targetVector.setDirY(targetVector.getDirY() + retreatVectorFromUnit.getDirY() * INFLUENCE_ENEMIES);
-			}
-		}
-	}
-
-	/**
-	 * Function for changing a given Vector's direction properties based on the
-	 * Player's starting location direction towards the Unit itself. This
-	 * direction is a Vector which gets normalized whilst multiplying its
-	 * direction properties with predefined values.
-	 * 
-	 * @param targetVector
-	 *            the Vector whose direction properties are going to be changed.
-	 * @param goapUnit
-	 *            the Unit from which the Vector pointing towards the Player's
-	 *            starting location is starting at.
-	 */
-	private void changeVecBasedOnStartingLocation(Vector targetVector, IGoapUnit goapUnit) {
-		TilePosition playerStartingLocation = Core.getInstance().getPlayer().getStartLocation();
-
-		if (playerStartingLocation != null) {
-			Unit unit = ((PlayerUnit) goapUnit).getUnit();
-			Vector vecToBaseLocation = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
-					playerStartingLocation.toPosition().getX() - unit.getPosition().getX(),
-					playerStartingLocation.toPosition().getY() - unit.getPosition().getY());
-
-			// Apply the influence to the targeted Vector.
-			if (vecToBaseLocation.length() > 0.) {
-				vecToBaseLocation.normalize();
-				targetVector.setDirX(targetVector.getDirX() + vecToBaseLocation.getDirX() * INFLUENCE_BASE);
-				targetVector.setDirY(targetVector.getDirY() + vecToBaseLocation.getDirY() * INFLUENCE_BASE);
-			}
-		}
-	}
-
-	/**
-	 * Function for changing a given Vector's direction properties based on the
-	 * Player Unit with the "strongest" area around it towards the Unit itself.
-	 * This direction is a Vector which gets normalized whilst multiplying its
-	 * direction properties with predefined values.
-	 * 
-	 * @param targetVector
-	 *            the Vector whose direction properties are going to be changed.
-	 * @param goapUnit
-	 *            the Unit from which the Vector pointing towards the
-	 *            "strongest" area around a Unit is starting at.
-	 */
-	private void changeVecBasedOnStrongestPlayerArea(Vector targetVector, IGoapUnit goapUnit) {
-		Unit unitWithStrongestArea = getUnitWithGreatestTileStrengths(
-				getPlayerUnitsInIncreasingRange((PlayerUnit) goapUnit), goapUnit);
-
-		if (unitWithStrongestArea != null && unitWithStrongestArea != ((PlayerUnit) goapUnit).getUnit()) {
-			Unit unit = ((PlayerUnit) goapUnit).getUnit();
-			Vector vecToStrongestUnitArea = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
-					unitWithStrongestArea.getPosition().getX() - unit.getPosition().getX(),
-					unitWithStrongestArea.getPosition().getY() - unit.getPosition().getY());
-
-			// Apply the influence to the targeted Vector.
-			if (vecToStrongestUnitArea.length() > 0.) {
-				vecToStrongestUnitArea.normalize();
-				targetVector.setDirX(targetVector.getDirX() + vecToStrongestUnitArea.getDirX() * INFLUENCE_COMPANIONS);
-				targetVector.setDirY(targetVector.getDirY() + vecToStrongestUnitArea.getDirY() * INFLUENCE_COMPANIONS);
-			}
-		}
+	private void instantiateSteeringOperations(IGoapUnit goapUnit) {
+		this.steeringChokePoints = new SteeringOperationChokePoints(goapUnit);
+		this.steeringEnemiesInConfidenceRange = new SteeringOperationEnemiesInConfidenceRange(goapUnit);
+		this.steeringStartingLocation = new SteeringOperationStartingLocation(goapUnit);
+		this.steeringStrongestPlayerArea = new SteeringOperationStrongestPlayerArea(goapUnit);
 	}
 
 	/**

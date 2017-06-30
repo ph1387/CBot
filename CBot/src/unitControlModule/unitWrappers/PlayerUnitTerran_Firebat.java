@@ -3,7 +3,6 @@ package unitControlModule.unitWrappers;
 import bwapi.Unit;
 import informationStorage.InformationStorage;
 
-// TODO: UML ADD
 /**
  * PlayerUnitTerran_Firebat.java --- Terran_Firebat Class. This Class is an
  * extension of the basic {@link PlayerUnitTerran_Marine} since most if not all

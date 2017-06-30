@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.updater;
 import unitControlModule.stateFactories.goals.UnitGoalStateProtect;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * GoalStateUpdaterProtect.java --- Updater for updating a
  * {@link UnitGoalStateProtect} instance.

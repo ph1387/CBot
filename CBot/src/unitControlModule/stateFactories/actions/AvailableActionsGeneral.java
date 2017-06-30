@@ -5,7 +5,6 @@ import java.util.HashSet;
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInGoalDirection;
 
-// TODO: UML ADD IMPORTANT CHANGE!
 /**
  * AvailableActionsGeneral.java --- Top most HashSet containing Actions which
  * are shared by all Units. Also provides some basic functions for removing

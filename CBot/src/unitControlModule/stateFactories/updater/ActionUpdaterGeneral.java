@@ -20,15 +20,17 @@ public abstract class ActionUpdaterGeneral implements Updater {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		// Update the retreating action of the Unit.
-		if(this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
-			((RetreatActionSteerInGoalDirection) this.getActionFromInstance(RetreatActionSteerInGoalDirection.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+		// Update the retreating action of the Unit. This is the default
+		// retreating Action a Unit can perform. If another one is desired, this
+		// function needs to be overwritten.
+		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
+			((RetreatActionSteerInGoalDirection) this.getActionFromInstance(RetreatActionSteerInGoalDirection.class))
+					.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 		}
 	}
-	
+
 	/**
 	 * Get the GoapAction from the availableActions HashSet that is an instance
 	 * of the specific class.
