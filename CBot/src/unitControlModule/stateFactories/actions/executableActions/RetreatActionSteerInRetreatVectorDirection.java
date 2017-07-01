@@ -102,6 +102,7 @@ public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGen
 	}
 
 	// TODO: UML ADD
+	// TODO: WIP ADD INTERFACE FOR ALL IMPLEMENTING CLASSES
 	/**
 	 * Use a generalized Vector which combines all direction-Vectors from all
 	 * sources influencing the Unit. This generalized Vector is the retreat
@@ -119,6 +120,7 @@ public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGen
 			Pair<Region, Polygon> regionPolygonPairUnitIsIn) {
 		Vector generalizedTargetVector = this.vecUTP.clone();
 
+		// Configure the initial Vector.
 		generalizedTargetVector.normalize();
 		generalizedTargetVector.setDirX(generalizedTargetVector.getDirX() * INFLUENCE_INITIAL);
 		generalizedTargetVector.setDirY(generalizedTargetVector.getDirY() * INFLUENCE_INITIAL);

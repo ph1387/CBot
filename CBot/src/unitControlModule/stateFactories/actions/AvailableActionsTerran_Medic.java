@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.actions;
 
+import unitControlModule.stateFactories.actions.executableActions.ProtectMoveActionSteerTowardsClosestDamagedUnit;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInBioUnitDirectionTerran_Medic;
 
 /**
@@ -13,5 +14,6 @@ public class AvailableActionsTerran_Medic extends AvailableActionsGeneral {
 
 	public AvailableActionsTerran_Medic() {
 		this.add(new RetreatActionSteerInBioUnitDirectionTerran_Medic(null));
+		this.add(new ProtectMoveActionSteerTowardsClosestDamagedUnit(null));
 	}
 }

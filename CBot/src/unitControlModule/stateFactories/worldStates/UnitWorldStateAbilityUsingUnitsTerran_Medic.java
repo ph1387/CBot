@@ -1,5 +1,7 @@
 package unitControlModule.stateFactories.worldStates;
 
+import javaGOAP.GoapState;
+
 /**
  * UnitWorldStateAbilityUsingUnitsTerran_Medic.java --- WorldState for a
  * Terran_Medic using its corresponding abilities.
@@ -9,6 +11,8 @@ package unitControlModule.stateFactories.worldStates;
 public class UnitWorldStateAbilityUsingUnitsTerran_Medic extends UnitWorldStateAbilityUsingUnits {
 	
 	public UnitWorldStateAbilityUsingUnitsTerran_Medic() {
-		// TODO: WIP ADD
+		this.add(new GoapState(0, "isNearSupportableUnit", false));
+		this.add(new GoapState(0, "isNearHealableUnit", false));
+		this.add(new GoapState(0, "healing", false));
 	}
 }
