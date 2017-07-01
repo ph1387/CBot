@@ -8,6 +8,7 @@ import unitControlModule.stateFactories.actions.executableActions.ProtectMoveAct
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInBioUnitDirectionTerran_Medic;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranMedic_Heal;
 import unitControlModule.unitWrappers.PlayerUnit;
+import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
 /**
  * ActionUpdaterTerran_Medic.java --- Updater for updating an
@@ -37,28 +38,8 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		// Get all Units that are missing health.
 		for (Unit unit : core.Core.getInstance().getPlayer().getUnits()) {
 			if (unit != playerUnit.getUnit() && unit.getHitPoints() < unit.getType().maxHitPoints()) {
-				boolean isBioUnit = false;
-
-				// Unit is a Bio-Unit.
-				switch (unit.getType().toString()) {
-				case "Terran_SCV ":
-					isBioUnit = true;
-					break;
-				case "Terran_Marine":
-					isBioUnit = true;
-					break;
-				case "Terran_Firebat":
-					isBioUnit = true;
-					break;
-				case "Terran_Medic":
-					isBioUnit = true;
-					break;
-				case "Terran_Ghost":
-					isBioUnit = true;
-					break;
-				}
-
-				if (isBioUnit) {
+				// Add the Unit to the possible Units if the Terran_Medic can heal it.
+				if (((PlayerUnitTerran_Medic) playerUnit).isHealableUnit(unit)) {
 					possibleUnits.add(unit);
 				}
 			}

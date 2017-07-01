@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.updater;
 
 import bwapi.Unit;
 import unitControlModule.unitWrappers.PlayerUnit;
+import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
 /**
  * WorldStateUpdaterAbilityUsingUnitsTerran_Medic.java ---WorldState updater for
@@ -35,30 +36,19 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUp
 		// Find a Unit around the currently executing one that is missing
 		// health and is supportable by the Terran_Medic.
 		for (Unit unit : playerUnit.getAllPlayerUnitsInRange(RANGE_TO_UNITS)) {
-			// Unit is a Bio-Unit..
-			switch (unit.getType().toString()) {
-			case "Terran_SCV ":
-				supportableUnitNear = true;
-				break;
-			case "Terran_Marine":
-				supportableUnitNear = true;
-				break;
-			case "Terran_Firebat":
-				supportableUnitNear = true;
-				break;
-			case "Terran_Medic":
-				supportableUnitNear = true;
-				break;
-			case "Terran_Ghost":
-				supportableUnitNear = true;
-				break;
-			}
+			boolean isSupportable = ((PlayerUnitTerran_Medic) playerUnit).isHealableUnit(unit);
 
-			// Health missing.
-			if (supportableUnitNear && !healableUnitNear && unit.getHitPoints() < unit.getType().maxHitPoints()) {
+			// The Unit is one of the supportable ones.
+			if(!supportableUnitNear && isSupportable) {
+				supportableUnitNear = true;
+			}
+			
+			// The Unit is supportable and missing health.
+			if (!healableUnitNear && isSupportable && unit.getHitPoints() < unit.getType().maxHitPoints()) {
 				healableUnitNear = true;
 			}
 
+			// Break the loop if both conditions applied.
 			if (supportableUnitNear && healableUnitNear) {
 				break;
 			}

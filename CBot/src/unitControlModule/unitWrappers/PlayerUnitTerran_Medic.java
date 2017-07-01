@@ -24,4 +24,39 @@ public class PlayerUnitTerran_Medic extends PlayerUnit {
 	protected StateFactory createFactory() {
 		return new StateFactoryTerran_Medic();
 	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if a specific Unit is a supportable Bio-Unit that
+	 * the Medic can heal.
+	 * 
+	 * @param unit
+	 *            the Unit that will be tested / is targeted.
+	 * @return true or false depending if the Terran_Medic is able to heal the
+	 *         provided Unit.
+	 */
+	public boolean isHealableUnit(Unit unit) {
+		boolean isBioUnit = false;
+
+		// Unit is a Bio-Unit.
+		switch (unit.getType().toString()) {
+		case "Terran_SCV ":
+			isBioUnit = true;
+			break;
+		case "Terran_Marine":
+			isBioUnit = true;
+			break;
+		case "Terran_Firebat":
+			isBioUnit = true;
+			break;
+		case "Terran_Medic":
+			isBioUnit = true;
+			break;
+		case "Terran_Ghost":
+			isBioUnit = true;
+			break;
+		}
+
+		return isBioUnit;
+	}
 }
