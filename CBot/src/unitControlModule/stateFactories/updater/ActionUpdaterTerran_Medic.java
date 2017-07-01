@@ -6,6 +6,7 @@ import bwapi.Unit;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.actions.executableActions.ProtectMoveActionSteerTowardsClosestDamagedUnit;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInBioUnitDirectionTerran_Medic;
+import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranMedic_Heal;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -66,5 +67,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		// Find the closest one of the Units missing health to heal it.
 		closestUnit = BaseAction.getClosestUnit(possibleUnits, playerUnit.getUnit());
 		((ProtectMoveActionSteerTowardsClosestDamagedUnit) this.getActionFromInstance(ProtectMoveActionSteerTowardsClosestDamagedUnit.class)).setTarget(closestUnit);
+		((AbilityActionTerranMedic_Heal) this.getActionFromInstance(AbilityActionTerranMedic_Heal.class)).setTarget(closestUnit);
 	}
 }

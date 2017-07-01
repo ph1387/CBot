@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.actions;
 
 import unitControlModule.stateFactories.actions.executableActions.ProtectMoveActionSteerTowardsClosestDamagedUnit;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInBioUnitDirectionTerran_Medic;
+import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranMedic_Heal;
 
 /**
  * AvailableActionsTerran_Medic.java --- HashSet containing all Terran_Medic
@@ -15,5 +16,6 @@ public class AvailableActionsTerran_Medic extends AvailableActionsGeneral {
 	public AvailableActionsTerran_Medic() {
 		this.add(new RetreatActionSteerInBioUnitDirectionTerran_Medic(null));
 		this.add(new ProtectMoveActionSteerTowardsClosestDamagedUnit(null));
+		this.add(new AbilityActionTerranMedic_Heal(null));
 	}
 }
