@@ -31,14 +31,19 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		Unit closestUnit = null;
 
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
-			((RetreatActionSteerInBioUnitDirectionTerran_Medic) this.getActionFromInstance(RetreatActionSteerInBioUnitDirectionTerran_Medic.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+			Unit closesEnemytUnit = this.playerUnit.getClosestEnemyUnitInConfidenceRange();
+			
+			// The player Unit has to be in range of the enemy Unit's ground weapon to be in danger.
+			if(closesEnemytUnit != null && closesEnemytUnit.isInWeaponRange(this.playerUnit.getUnit())) {
+				((RetreatActionSteerInBioUnitDirectionTerran_Medic) this.getActionFromInstance(RetreatActionSteerInBioUnitDirectionTerran_Medic.class)).setTarget(closestUnit);
+			}
 		}
 
 		// Get all Units that are missing health.
 		for (Unit unit : core.Core.getInstance().getPlayer().getUnits()) {
 			if (unit != playerUnit.getUnit() && unit.getHitPoints() < unit.getType().maxHitPoints()) {
 				// Add the Unit to the possible Units if the Terran_Medic can heal it.
-				if (((PlayerUnitTerran_Medic) playerUnit).isHealableUnit(unit)) {
+				if (PlayerUnitTerran_Medic.isHealableUnit(unit)) {
 					possibleUnits.add(unit);
 				}
 			}
