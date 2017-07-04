@@ -27,6 +27,8 @@ public abstract class BaseAction extends GoapAction {
 	private static final int EXPAND_MULTIPLIER_MAX = 5;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 	private static final int DEFAULT_SEARCH_STEP_DISTANCE = 200;
+	// TODO: UML ADD
+	private static final int DEFAULT_MIND_DISTANCE = 128;
 
 	protected static HashMap<PlayerUnit, BaseAction> currentlyExecutingActions = new HashMap<>();
 
@@ -133,7 +135,7 @@ public abstract class BaseAction extends GoapAction {
 	 *         PlayerUnit.
 	 */
 	public static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit playerUnit) {
-		return getPlayerUnitsInIncreasingRange(playerUnit, 0, DEFAULT_SEARCH_STEP_DISTANCE, null);
+		return getPlayerUnitsInIncreasingRange(playerUnit, DEFAULT_MIND_DISTANCE, DEFAULT_SEARCH_STEP_DISTANCE, null);
 	}
 
 	/**
@@ -147,7 +149,7 @@ public abstract class BaseAction extends GoapAction {
 	 *         PlayerUnit.
 	 */
 	public static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit playerUnit, double stepDistance) {
-		return getPlayerUnitsInIncreasingRange(playerUnit, 0, stepDistance, null);
+		return getPlayerUnitsInIncreasingRange(playerUnit, DEFAULT_MIND_DISTANCE, stepDistance, null);
 	}
 
 	/**
@@ -164,7 +166,7 @@ public abstract class BaseAction extends GoapAction {
 	 */
 	public static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit playerUnit, double stepDistance,
 			PlayerUnitSearchCondition condition) {
-		return getPlayerUnitsInIncreasingRange(playerUnit, 0, stepDistance, condition);
+		return getPlayerUnitsInIncreasingRange(playerUnit, DEFAULT_MIND_DISTANCE, stepDistance, condition);
 	}
 
 	/**
@@ -179,7 +181,7 @@ public abstract class BaseAction extends GoapAction {
 	 */
 	public static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit playerUnit,
 			PlayerUnitSearchCondition condition) {
-		return getPlayerUnitsInIncreasingRange(playerUnit, 0, DEFAULT_SEARCH_STEP_DISTANCE, condition);
+		return getPlayerUnitsInIncreasingRange(playerUnit, DEFAULT_MIND_DISTANCE, DEFAULT_SEARCH_STEP_DISTANCE, condition);
 	}
 
 	/**
