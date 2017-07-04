@@ -5,13 +5,14 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
+//TODO: UML SUPERCLASS + FUNCTIONS
 /**
  * AttackUnitAction.java --- An attack action for attacking a single unit.
  * 
  * @author P H - 09.02.2017
  *
  */
-public class AttackUnitAction extends BaseAction {
+public class AttackUnitAction extends AttackActionGeneralSuperclass {
 
 	/**
 	 * @param target
@@ -20,21 +21,17 @@ public class AttackUnitAction extends BaseAction {
 	public AttackUnitAction(Object target) {
 		super(target);
 
-		this.addEffect(new GoapState(0, "destroyUnit", true));
-		this.addPrecondition(new GoapState(0, "enemyKnown", true));
 		this.addPrecondition(new GoapState(0, "unitsInRange", true));
 		this.addPrecondition(new GoapState(0, "unitsInSight", true));
-		this.addPrecondition(new GoapState(0, "allowFighting", true));
 	}
 
 	// -------------------- Functions
 
 	@Override
-	protected boolean isDone(IGoapUnit goapUnit) {
+	protected boolean isSpecificDone(IGoapUnit goapUnit) {
 		boolean isEnemyDead = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().contains(this.target);
-		boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
 
-		return isEnemyDead || isConfidenceLow;
+		return isEnemyDead;
 	}
 
 	@Override
@@ -49,32 +46,8 @@ public class AttackUnitAction extends BaseAction {
 	}
 
 	@Override
-	protected float generateBaseCost(IGoapUnit goapUnit) {
-		return 10;
+	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
+		return ((PlayerUnit) goapUnit).getUnit().canAttack((Unit) this.target);
 	}
 
-	@Override
-	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
-		return 0;
-	}
-
-	@Override
-	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		return (this.target != null && ((PlayerUnit) goapUnit).getUnit().canAttack((Unit) this.target));
-	}
-
-	@Override
-	protected boolean requiresInRange(IGoapUnit goapUnit) {
-		return false;
-	}
-
-	@Override
-	protected boolean isInRange(IGoapUnit goapUnit) {
-		return false;
-	}
-
-	@Override
-	protected void resetSpecific() {
-
-	}
 }
