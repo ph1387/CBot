@@ -24,11 +24,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public abstract class BaseAction extends GoapAction {
 
-	// TODO: UML ADD
 	private static final int EXPAND_MULTIPLIER_MAX = 5;
-	// TODO: UML ADD
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
-	// TODO: UML ADD
 	private static final int DEFAULT_SEARCH_STEP_DISTANCE = 200;
 
 	protected static HashMap<PlayerUnit, BaseAction> currentlyExecutingActions = new HashMap<>();
@@ -123,12 +120,10 @@ public abstract class BaseAction extends GoapAction {
 		return matchingRegionPolygonPair;
 	}
 
-	// TODO: UML ADD
 	protected interface PlayerUnitSearchCondition {
 		public boolean isConditionMet(PlayerUnit playerUnit, Unit testingUnit);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -140,8 +135,7 @@ public abstract class BaseAction extends GoapAction {
 	public static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit playerUnit) {
 		return getPlayerUnitsInIncreasingRange(playerUnit, 0, DEFAULT_SEARCH_STEP_DISTANCE, null);
 	}
-	
-	// TODO: UML ADD
+
 	/**
 	 * Convenience function.
 	 * 
@@ -155,8 +149,7 @@ public abstract class BaseAction extends GoapAction {
 	public static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit playerUnit, double stepDistance) {
 		return getPlayerUnitsInIncreasingRange(playerUnit, 0, stepDistance, null);
 	}
-	
-	// TODO: UML ADD
+
 	/**
 	 * Convenience function.
 	 * 
@@ -174,7 +167,6 @@ public abstract class BaseAction extends GoapAction {
 		return getPlayerUnitsInIncreasingRange(playerUnit, 0, stepDistance, condition);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -190,7 +182,6 @@ public abstract class BaseAction extends GoapAction {
 		return getPlayerUnitsInIncreasingRange(playerUnit, 0, DEFAULT_SEARCH_STEP_DISTANCE, condition);
 	}
 
-	// TODO: UML PARAMS CHANGE
 	/**
 	 * Function for retrieving all Units in an increasing range around the given
 	 * PlayerUnit. The range at which the Units are searched for increases
@@ -297,7 +288,6 @@ public abstract class BaseAction extends GoapAction {
 		return bestUnit;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the closest Unit in an iterable collection.
 	 * 

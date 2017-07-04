@@ -5,7 +5,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityActionTerranMedic_Heal.java --- The Heal ability of a Terran_Medic.
  * 
@@ -38,7 +37,6 @@ public class AbilityActionTerranMedic_Heal extends AbilityActionTechTargetUnit {
 		return ((PlayerUnit) goapUnit).getUnit().getEnergy() > 0;
 	}
 	
-	// TODO: UML ADD
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
 		return 1;

@@ -21,19 +21,11 @@ import unitControlModule.unitWrappers.PlayerUnit;
  *
  */
 public abstract class RetreatActionGeneralSuperclass extends BaseAction {
-	// TODO: UML REMOVE
-//	private static final int EXPAND_MULTIPLIER_MAX = 5;
-	// TODO: UML REMOVE
-//	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 
 	// Has to be smaller than MIN_PIXELDISTANCE_TO_UNIT!
 	// -> isDone() condition! v
 	private static final int DIST_TO_GATHERING_POINT = Core.getInstance().getTileSize();
 	protected static final int TILE_RADIUS_NEAR = 1;
-	// TODO: UML REMOVE
-//	protected static final int MIN_PIXELDISTANCE_TO_UNIT = 320; // 240
-	// TODO: UML REMOVE
-//	protected static final int MAX_PIXELDISTANCE_TO_UNIT = 20 * Core.getInstance().getTileSize(); // 15
 
 	protected static HashSet<Position> gatheringPoints = new HashSet<Position>();
 
@@ -212,113 +204,6 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		return new Vector(incomingVector.getX() + (int) (incomingVector.getDirX()),
 				incomingVector.getY() + (int) (incomingVector.getDirY()), tPosX, tPosY);
 	}
-
-	// TODO: UML REMOVE
-//	/**
-//	 * Function for finding the Polygon that the Position is in.
-//	 * 
-//	 * @param position
-//	 *            the Position that is being checked.
-//	 * @return the Region and the Polygon that the Position is located in.
-//	 */
-//	public static Pair<Region, Polygon> findBoundariesPositionIsIn(Position position) {
-//		Pair<Region, Polygon> matchingRegionPolygonPair = null;
-//
-//		// Search for the Pair of Regions and Polygons that includes the Unit's
-//		// Position.
-//		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
-//			if (pair.first.getPolygon().isInside(position)) {
-//				matchingRegionPolygonPair = pair;
-//				break;
-//			}
-//		}
-//		return matchingRegionPolygonPair;
-//	}
-
-	// TODO: UML REMOVE
-//	/**
-//	 * Function for retrieving all Units in an increasing range around the given
-//	 * PlayerUnit. The range at which the Units are searched for increases
-//	 * stepwise until Units are found or the preset maximum is reached.
-//	 * 
-//	 * @param goapUnit
-//	 *            the PlayerUnit that the search is based around.
-//	 * @return a HashSet containing all Units in a range around the given
-//	 *         PlayerUnit with at least minimum distance to it.
-//	 */
-//	public static HashSet<Unit> getPlayerUnitsInIncreasingRange(PlayerUnit goapUnit) {
-//		HashSet<Unit> unitsTooClose = new HashSet<Unit>();
-//		HashSet<Unit> unitsInRange = new HashSet<Unit>();
-//		int iterationCounter = 1;
-//
-//		// Increase range until a Unit is found or the threshold is reached.
-//		while (unitsInRange.isEmpty() && iterationCounter <= EXPAND_MULTIPLIER_MAX) {
-//			HashSet<Unit> foundUnits = goapUnit
-//					.getAllPlayerUnitsInRange((int) (iterationCounter * MAX_PIXELDISTANCE_TO_UNIT));
-//			HashSet<Unit> unitsToBeRemoved = new HashSet<Unit>();
-//
-//			// Test all found Units, a Unit has to have a minimum distance to
-//			// the PlayerUnit.
-//			for (Unit unit : foundUnits) {
-//				if (!unitsTooClose.contains(unit)
-//						&& goapUnit.getUnit().getDistance(unit.getPosition()) < MIN_PIXELDISTANCE_TO_UNIT) {
-//					unitsToBeRemoved.add(unit);
-//					unitsTooClose.add(unit);
-//				}
-//			}
-//
-//			for (Unit unit : unitsToBeRemoved) {
-//				foundUnits.remove(unit);
-//			}
-//
-//			unitsInRange.addAll(foundUnits);
-//			iterationCounter++;
-//		}
-//		return unitsInRange;
-//	}
-
-	// TODO: UML REMOVE
-//	/**
-//	 * Function for retrieving the Unit with the greatest sum of strengths
-//	 * around the units TilePosition.
-//	 * 
-//	 * @param units
-//	 *            a HashSet containing all units which are going to be cycled
-//	 *            through.
-//	 * @param goapUnit
-//	 *            the currently executing IGoapUnit.
-//	 * @return the Unit with the greatest sum of strengths at its TilePosition.
-//	 */
-//	public static Unit getUnitWithGreatestTileStrengths(HashSet<Unit> units, IGoapUnit goapUnit) {
-//		Unit bestUnit = null;
-//		int bestUnitStrengthTotal = 0;
-//
-//		// Iterate over the Units and over their TilePositions in a specific
-//		// radius.
-//		for (Unit unit : units) {
-//			int currentStrengths = 0;
-//
-//			for (int i = -TILE_RADIUS_AROUND_UNITS_SEARCH; i <= TILE_RADIUS_AROUND_UNITS_SEARCH; i++) {
-//				for (int j = -TILE_RADIUS_AROUND_UNITS_SEARCH; j <= TILE_RADIUS_AROUND_UNITS_SEARCH; j++) {
-//
-//					// TODO: Possible Change: AirStrength Implementation
-//					Integer value = ((PlayerUnit) goapUnit).getInformationStorage().getTrackerInfo()
-//							.getPlayerGroundAttackTilePositions().get(new TilePosition(
-//									unit.getTilePosition().getX() + i, unit.getTilePosition().getY() + j));
-//
-//					if (value != null) {
-//						currentStrengths += value;
-//					}
-//				}
-//			}
-//
-//			if (bestUnit == null || currentStrengths > bestUnitStrengthTotal) {
-//				bestUnit = unit;
-//				bestUnitStrengthTotal = currentStrengths;
-//			}
-//		}
-//		return bestUnit;
-//	}
 
 	@Override
 	protected boolean requiresInRange(IGoapUnit goapUnit) {

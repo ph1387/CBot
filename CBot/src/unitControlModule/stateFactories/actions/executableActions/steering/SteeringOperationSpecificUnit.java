@@ -6,7 +6,6 @@ import bwapiMath.Vector;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * SteeringOperationSpecificUnit.java --- SteeringOperation which targets a
  * specific Unit on the map.

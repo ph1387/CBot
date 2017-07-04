@@ -15,7 +15,6 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationEnemiesInConfidenceRange;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * ProtectMoveActionGeneralSuperclass.java --- Superclass for all Actions
  * involving customized protected steering towards certain Units. These kind of
@@ -26,9 +25,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 01.07.2017
  *
  */
-public class ProtectMoveActionGeneralSuperclass extends BaseAction {
+public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction implements SteeringVectorGenerator {
 
-	protected static final int TURN_RADIUS = 10;
+	private static final int TURN_RADIUS = 10;
 	private static final double INFLUENCE_INITIAL = 5.0;
 	private static final double INFLUENCE_ENEMIES = 1.0;
 	
@@ -93,7 +92,6 @@ public class ProtectMoveActionGeneralSuperclass extends BaseAction {
 		return success;
 	}
 	
-	// TODO: WIP ADD INTERFACE FOR ALL IMPLEMENTING CLASSES
 	/**
 	 * Use a generalized Vector which combines all direction-Vectors from all
 	 * sources influencing the Unit. This generalized Vector is the retreat
@@ -107,7 +105,7 @@ public class ProtectMoveActionGeneralSuperclass extends BaseAction {
 	 *            of.
 	 * @return a Vector containing all direction Vectors influencing this Unit.
 	 */
-	protected Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit, Pair<Region, Polygon> regionPolygonPairUnitIsIn) {
+	public Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit, Pair<Region, Polygon> regionPolygonPairUnitIsIn) {
 		Unit unit = ((PlayerUnit) goapUnit).getUnit();
 		Unit targetUnit = (Unit) this.target;
 		Vector vecToTarget = new Vector(unit.getPosition().getX(), unit.getPosition().getY(), targetUnit.getPosition().getX() - unit.getPosition().getX(), targetUnit.getPosition().getY() - unit.getPosition().getY());

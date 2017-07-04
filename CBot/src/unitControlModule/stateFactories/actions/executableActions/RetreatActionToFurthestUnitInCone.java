@@ -8,7 +8,6 @@ import core.Core;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML COMPLETLY REMOVE!
 /**
  * RetreatAction_ToNearestUnit.java --- An action with which a PlayerUnit (!)
  * can retreat to another Unit which is located inside a cone in front of the

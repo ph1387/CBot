@@ -16,7 +16,6 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationStrongestPlayerArea;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML RENAME
 /**
  * RetreatActionSteerInGoalDirection.java --- A Retreat Action with which a
  * PlayerUnit (!) moves away from an enemy. This Action's retreat Path has a
@@ -30,7 +29,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 05.06.2017
  *
  */
-public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGeneralSuperclass {
+public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGeneralSuperclass implements SteeringVectorGenerator {
 
 	private static final double TOTAL_RETREAT_DISTANCE = 96;
 	private static final int TURN_RADIUS = 10;
@@ -101,8 +100,6 @@ public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGen
 		return precondtionsMet;
 	}
 
-	// TODO: UML ADD
-	// TODO: WIP ADD INTERFACE FOR ALL IMPLEMENTING CLASSES
 	/**
 	 * Use a generalized Vector which combines all direction-Vectors from all
 	 * sources influencing the Unit. This generalized Vector is the retreat
@@ -116,7 +113,7 @@ public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGen
 	 *            of.
 	 * @return a Vector containing all direction Vectors influencing this Unit.
 	 */
-	protected Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit,
+	public Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit,
 			Pair<Region, Polygon> regionPolygonPairUnitIsIn) {
 		Vector generalizedTargetVector = this.vecUTP.clone();
 

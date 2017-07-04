@@ -13,7 +13,6 @@ import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
  */
 public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUpdaterAbilityUsingUnits {
 
-	// TODO: UML ADD
 	// Has to be larger than the minimum distance at which the protect Action is
 	// finished. This is needed to safely move from one state to another.
 	// NOTICE:
@@ -36,7 +35,7 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUp
 		// Find a Unit around the currently executing one that is missing
 		// health and is supportable by the Terran_Medic.
 		for (Unit unit : playerUnit.getAllPlayerUnitsInRange(RANGE_TO_UNITS)) {
-			boolean isSupportable = ((PlayerUnitTerran_Medic) playerUnit).isHealableUnit(unit);
+			boolean isSupportable = PlayerUnitTerran_Medic.isHealableUnit(unit);
 
 			// The Unit is one of the supportable ones.
 			if(!supportableUnitNear && isSupportable) {

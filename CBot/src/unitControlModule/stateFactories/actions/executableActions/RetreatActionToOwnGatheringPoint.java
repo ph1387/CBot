@@ -17,7 +17,6 @@ import core.Core;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-//TODO: UML COMPLETLY REMOVE!
 /**
  * RetreatAction_ToOwnGatheringPoint.java --- An action with which a PlayerUnit
  * (!) retreats to a self created gathering point.

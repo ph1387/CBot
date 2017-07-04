@@ -30,7 +30,6 @@ public class PlayerUnitFactory {
 		return new PlayerUnitTerran_Firebat(unit, informationStorage);
 	}
 	
-	// TODO: UML ADD
 	public static PlayerUnit createMedic(Unit unit, InformationStorage informationStorage) {
 		return new PlayerUnitTerran_Medic(unit, informationStorage);
 	}

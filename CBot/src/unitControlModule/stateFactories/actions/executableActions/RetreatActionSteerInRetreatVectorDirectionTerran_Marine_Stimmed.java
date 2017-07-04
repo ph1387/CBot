@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.actions.executableActions;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 
-//TODO: UML RENAME
 /**
  * RetreatActionSteerInGoalDirectionTerran_Marine_Stimmed.java --- Improved
  * RetreatAction for a Terran_Marine that is able to use a StimPack.

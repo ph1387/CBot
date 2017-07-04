@@ -25,7 +25,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		HashSet<Unit> possibleUnits = new HashSet<>();

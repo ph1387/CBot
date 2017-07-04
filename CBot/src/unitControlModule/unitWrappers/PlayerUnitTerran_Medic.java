@@ -25,9 +25,8 @@ public class PlayerUnitTerran_Medic extends PlayerUnit {
 		return new StateFactoryTerran_Medic();
 	}
 
-	// TODO: UML ADD
 	/**
-	 * Function for testing if a specific Unit is a supportable Bio-Unit that
+	 * Function for testing if a specific Unit is a supportable (Bio-) Unit that
 	 * the Medic can heal.
 	 * 
 	 * @param unit
@@ -35,7 +34,7 @@ public class PlayerUnitTerran_Medic extends PlayerUnit {
 	 * @return true or false depending if the Terran_Medic is able to heal the
 	 *         provided Unit.
 	 */
-	public boolean isHealableUnit(Unit unit) {
+	public static boolean isHealableUnit(Unit unit) {
 		boolean isBioUnit = false;
 
 		// Unit is a Bio-Unit.

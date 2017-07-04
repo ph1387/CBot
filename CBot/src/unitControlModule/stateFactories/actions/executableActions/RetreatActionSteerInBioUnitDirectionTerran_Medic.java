@@ -9,8 +9,8 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperation;
 import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationSpecificUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
+import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
-// TODO: UML ADD
 /**
  * RetreatActionSteerInBioUnitDirectionTerran_Medic.java --- A Retreat Action
  * with which a PlayerUnit (!) moves towards a friendly Bio-Unit like Firebats
@@ -25,27 +25,7 @@ public class RetreatActionSteerInBioUnitDirectionTerran_Medic extends RetreatAct
 
 		@Override
 		public boolean isConditionMet(PlayerUnit playerUnit, Unit testingUnit) {
-			boolean success = false;
-
-			switch (testingUnit.getType().toString()) {
-			case "Terran_SCV ":
-				success = true;
-				break;
-			case "Terran_Marine":
-				success = true;
-				break;
-			case "Terran_Firebat":
-				success = true;
-				break;
-			case "Terran_Medic":
-				success = true;
-				break;
-			case "Terran_Ghost":
-				success = true;
-				break;
-			}
-
-			return success;
+			return PlayerUnitTerran_Medic.isHealableUnit(testingUnit);
 		}
 	}
 
@@ -64,9 +44,8 @@ public class RetreatActionSteerInBioUnitDirectionTerran_Medic extends RetreatAct
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
-	protected Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit,
+	public Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit,
 			Pair<Region, Polygon> regionPolygonPairUnitIsIn) {
 		Vector previouslyCalculatedVector = super.generateGeneralizedRetreatVector(goapUnit, regionPolygonPairUnitIsIn);
 		Unit closestPossibleBioUnit = getClosestUnit(
