@@ -150,7 +150,7 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).getUnit().getDistance((Unit) this.target) <= this.minPixelDistanceToTarget;
+		return this.target == null || ((PlayerUnit) goapUnit).getUnit().getDistance((Unit) this.target) <= this.minPixelDistanceToTarget;
 	}
 
 	@Override
