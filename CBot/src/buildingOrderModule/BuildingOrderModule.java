@@ -3,24 +3,22 @@ package buildingOrderModule;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import buildingOrderModule.buildActionManagers.BuildActionManagerFactory;
 import buildingOrderModule.simulator.ActionType;
-import buildingOrderModule.simulator.Node;
 import buildingOrderModule.simulator.Simulator;
+import buildingOrderModule.simulator.SimulatorThread;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Barracks;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Factory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
-import buildingOrderModule.stateFactories.actions.executableActions.ManagerBaseAction;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
-import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueDefault;
 import bwapi.*;
 import core.Core;
 import informationStorage.InformationStorage;
 import javaGOAP.DefaultGoapAgent;
-import javaGOAP.GoapAction;
 import javaGOAP.GoapAgent;
 
 /**
@@ -41,31 +39,20 @@ public class BuildingOrderModule {
 
 	private InformationStorage informationStorage;
 	
-	
-	
-	
-	// TODO: WIP
 	// TODO: UML ADD
 	private Simulator simulator;
 	// Simulation frequency:
+	// TODO: UML ADD
 	private Integer lastSimulationTimeStampFrames = null;
+	// TODO: UML ADD
 	private int nextSimulationTimeStampDifferenceFrames = 1000;
-	// Simulation values:
-	private int simulationFrameStep = 300;
-	private int simulationStepAmount = 5;
-	private UnitType simulationWorkerType = Core.getInstance().getPlayer().getRace().getWorker();
-	private int simulationIdleScorePenalty = 10;
-	private int simulationConsecutiveActionsBonus = 10;
-	private boolean simulationAllowIdle = true;
-	private HashMap<UnitType, Integer> simulationUnitsFree;
-	private HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> simulationUnitsWorking;
-	
-	
-	
-	
-	
-	
 
+	// Multithreading for the building order simulation.
+	// TODO: UML ADD
+	private ConcurrentLinkedQueue<ArrayList<ActionType>> generatedActionTypeSequences = new ConcurrentLinkedQueue<>();
+	// TODO: UML ADD
+	private Thread simulationThread;
+	
 	public BuildingOrderModule(InformationStorage informationStorage) {
 		this.informationStorage = informationStorage;
 		this.buildingAgent = new DefaultGoapAgent(
@@ -124,62 +111,11 @@ public class BuildingOrderModule {
 			}
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
 			// TODO: WIP
-			if(this.lastSimulationTimeStampFrames == null || Core.getInstance().getGame().getFrameCount() >= this.lastSimulationTimeStampFrames + this.nextSimulationTimeStampDifferenceFrames) {
-				int currentMinerals = Core.getInstance().getPlayer().minerals();
-				int currentGas = Core.getInstance().getPlayer().gas();
-				int currentFrameTimeStamp = Core.getInstance().getGame().getFrameCount();
-				this.lastSimulationTimeStampFrames = currentFrameTimeStamp;
-				
-				// Fill the HashMaps with the current information regarding the Units.
-				this.simulationUnitsFree = new HashMap<>();
-				this.simulationUnitsWorking = new HashMap<>();
-				
-				
-				long start = System.nanoTime();
-				
-				
-				// Iterate through all Player Units and add the information towards the HashMaps.
-				for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-					// Differentiate between building and other Units.
-					if(unit.getType().isBuilding() && !unit.isBeingConstructed() && unit.getType() != Core.getInstance().getPlayer().getRace().getRefinery()) {
-						if(unit.isTraining()) {
-							this.addUnitWorking(unit.getType(), currentFrameTimeStamp + unit.getRemainingTrainTime());
-						} else {
-							this.addUnitFree(unit.getType());
-						}
-					} else {
-						// Differentiate between workers and other Units.
-						if(unit.getType().isWorker()) {
-							// TODO: Possible Change: Make non Terran specific.
-							if(unit.isConstructing() && unit.getBuildUnit() != null) {
-								this.addUnitWorking(unit.getType(), currentFrameTimeStamp + unit.getBuildUnit().getRemainingBuildTime());
-							} else {
-								this.addUnitFree(unit.getType());
-							}
-						} else {
-							this.addUnitFree(unit.getType());
-						}
-					}
-				}
-				
-				
-				// TODO: WIP
-				ArrayList<ActionType> actions = this.simulator.simulate(currentFrameTimeStamp, this.simulationFrameStep, this.simulationStepAmount, currentMinerals, currentGas, this.simulationUnitsFree, this.simulationUnitsWorking, this.simulationWorkerType, this.simulationIdleScorePenalty, this.simulationConsecutiveActionsBonus, this.simulationAllowIdle);
-				
-				// TODO: WIP REMOVE
-				System.out.println("Time taken: " + ((double) (System.nanoTime() - start) / 1000000) + "ms");
+			if(!this.generatedActionTypeSequences.isEmpty()) {
+				this.actOnSimulationThreadResult();
 			}
-			
-			
+			this.updateSimulationThread();
 			
 			
 			
@@ -220,20 +156,89 @@ public class BuildingOrderModule {
 	
 	
 	
+	// TODO: UML ADD
+	private void actOnSimulationThreadResult() {
+		
+		
+		// TODO: WIP
+		System.out.println("\nACT ON RESULT:");
+		
+		ArrayList<ActionType> generatedResult = this.generatedActionTypeSequences.poll();
+		
+		for (ActionType actionType : generatedResult) {
+			System.out.println("  - " + actionType.getClass().getSimpleName());
+		}
+		
+		
+	}
 	
 	// TODO: UML ADD
-	private void addUnitFree(UnitType unitType) {
-		if(this.simulationUnitsFree.get(unitType) == null) {
-			this.simulationUnitsFree.put(unitType, 1);
-		} else {
-			this.simulationUnitsFree.put(unitType, this.simulationUnitsFree.get(unitType) + 1);
+	private void updateSimulationThread() {
+		// A certain time has to pass before a simulation is being started.
+		if(this.lastSimulationTimeStampFrames == null || Core.getInstance().getGame().getFrameCount() >= this.lastSimulationTimeStampFrames + this.nextSimulationTimeStampDifferenceFrames) {
+			// The previous SimulatorThread must have finished before a new one can be started.
+			if(this.simulationThread == null || this.simulationThread.getState() == Thread.State.TERMINATED) {
+				// Extract all currently relevant information.
+				int currentMinerals = Core.getInstance().getPlayer().minerals();
+				int currentGas = Core.getInstance().getPlayer().gas();
+				UnitType workerType = Core.getInstance().getPlayer().getRace().getWorker();
+				int currentFrameTimeStamp = Core.getInstance().getGame().getFrameCount();
+				this.lastSimulationTimeStampFrames = currentFrameTimeStamp;
+				
+				// Fill the HashMaps with the current information regarding the Units.
+				HashMap<UnitType, Integer> simulationUnitsFree = new HashMap<>();
+				HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> simulationUnitsWorking = new HashMap<>();
+				
+				extractFreeAndWorkingUnits(simulationUnitsFree, simulationUnitsWorking, currentFrameTimeStamp);
+				
+				// Start a new Thread with the provided information.
+				this.simulationThread = new SimulatorThread(this.simulator, this.generatedActionTypeSequences, workerType, simulationUnitsFree, simulationUnitsWorking, currentMinerals, currentGas, currentFrameTimeStamp);
+				this.simulationThread.start();
+			}
 		}
 	}
 	
-	private void addUnitWorking(UnitType unitType, int finishingTimeStamp) {
-		if(this.simulationUnitsWorking.get(unitType) == null) {
-			this.simulationUnitsWorking.put(unitType, new ArrayList<Pair<UnitType, Integer>>());
+	// TODO: UML ADD
+	private static void extractFreeAndWorkingUnits(HashMap<UnitType, Integer> simulationUnitsFree, HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> simulationUnitsWorking, int currentFrameTimeStamp) {
+		// Iterate through all Player Units and add the information towards the HashMaps.
+		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+			// Differentiate between building and other Units.
+			if(unit.getType().isBuilding() && !unit.isBeingConstructed() && unit.getType() != Core.getInstance().getPlayer().getRace().getRefinery()) {
+				if(unit.isTraining()) {
+					addUnitWorking(simulationUnitsWorking, unit.getType(), currentFrameTimeStamp + unit.getRemainingTrainTime());
+				} else {
+					addUnitFree(simulationUnitsFree, unit.getType());
+				}
+			} else {
+				// Differentiate between workers and other Units.
+				if(unit.getType().isWorker()) {
+					// TODO: Possible Change: Make non Terran specific.
+					if(unit.isConstructing() && unit.getBuildUnit() != null) {
+						addUnitWorking(simulationUnitsWorking, unit.getType(), currentFrameTimeStamp + unit.getBuildUnit().getRemainingBuildTime());
+					} else {
+						addUnitFree(simulationUnitsFree, unit.getType());
+					}
+				} else {
+					addUnitFree(simulationUnitsFree, unit.getType());
+				}
+			}
 		}
-		this.simulationUnitsWorking.get(unitType).add(new Pair<>(unitType, finishingTimeStamp));
+	}
+	
+	// TODO: UML ADD
+	private static void addUnitFree(HashMap<UnitType, Integer> simulationUnitsFree, UnitType unitType) {
+		if(simulationUnitsFree.get(unitType) == null) {
+			simulationUnitsFree.put(unitType, 1);
+		} else {
+			simulationUnitsFree.put(unitType, simulationUnitsFree.get(unitType) + 1);
+		}
+	}
+	
+	// TODO: UML ADD
+	private static void addUnitWorking(HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> simulationUnitsWorking, UnitType unitType, int finishingTimeStamp) {
+		if(simulationUnitsWorking.get(unitType) == null) {
+			simulationUnitsWorking.put(unitType, new ArrayList<Pair<UnitType, Integer>>());
+		}
+		simulationUnitsWorking.get(unitType).add(new Pair<>(unitType, finishingTimeStamp));
 	}
 }
