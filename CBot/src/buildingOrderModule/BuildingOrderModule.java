@@ -173,10 +173,9 @@ public class BuildingOrderModule {
 				
 				
 				// TODO: WIP
-				Node n = this.simulator.simulate(currentFrameTimeStamp, this.simulationFrameStep, this.simulationStepAmount, currentMinerals, currentGas, this.simulationUnitsFree, this.simulationUnitsWorking, this.simulationWorkerType, this.simulationIdleScorePenalty, this.simulationConsecutiveActionsBonus, this.simulationAllowIdle);
+				ArrayList<ActionType> actions = this.simulator.simulate(currentFrameTimeStamp, this.simulationFrameStep, this.simulationStepAmount, currentMinerals, currentGas, this.simulationUnitsFree, this.simulationUnitsWorking, this.simulationWorkerType, this.simulationIdleScorePenalty, this.simulationConsecutiveActionsBonus, this.simulationAllowIdle);
 				
 				// TODO: WIP REMOVE
-				System.out.println(n.getScore());
 				System.out.println("Time taken: " + ((double) (System.nanoTime() - start) / 1000000) + "ms");
 			}
 			

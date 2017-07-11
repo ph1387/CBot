@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
@@ -71,7 +72,8 @@ public class Simulator {
 
 	// -------------------- Functions
 
-	// TODO: Needed Change: Return ActionSequences not Node since super Nodes are being worked on again.
+	// TODO: Needed Change: Return ActionSequences not Node since super Nodes
+	// are being worked on again.
 	// TODO: Possible Change: Make generic for further use.
 	/**
 	 * Function for performing a simulation based on available ActionTypes and
@@ -116,12 +118,12 @@ public class Simulator {
 	 * @param allowIdle
 	 *            true or false depending if the creation of idle Nodes (not
 	 *            taking any Actions) in the tree is allowed or not.
-	 * @return the best resulting Node of the tree with the highest score and
-	 *         therefore the best sequence of Actions.
+	 * @return the best sequence of Actions of the tree with the highest score.
 	 */
-	public Node simulate(int currentFrameTimeStamp, int frameStep, int stepAmount, int currentMinerals, int currentGas,
-			HashMap<UnitType, Integer> unitsFree, HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> unitsWorking,
-			UnitType workerType, int idleScorePenalty, int consecutiveActionsBonus, boolean allowIdle) {
+	public ArrayList<ActionType> simulate(int currentFrameTimeStamp, int frameStep, int stepAmount, int currentMinerals,
+			int currentGas, HashMap<UnitType, Integer> unitsFree,
+			HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> unitsWorking, UnitType workerType,
+			int idleScorePenalty, int consecutiveActionsBonus, boolean allowIdle) {
 		// Create the root and save it.
 		Node root = this.createRoot(currentMinerals, currentGas, currentFrameTimeStamp, unitsFree, unitsWorking);
 		this.currentLayerNodes.add(root);
@@ -188,60 +190,70 @@ public class Simulator {
 			this.currentLayerNodes = newLayerNodes;
 		}
 
-		
-		
-		
-		
-		
-		
-		// TODO: WIP REMOVE
-		System.out.println("Total Node count: " + this.currentLayerNodes.size());
-		System.out.println("Nodes with highest Score:");
-		System.out.println(" - " + this.currentLayerNodes.first() + " " + this.currentLayerNodes.first().getScore()
-				+ " Resources: " + this.currentLayerNodes.first().getCurrentMinerals());
-		System.out.println("Simulated best building order:");
+		// Extract the best sequence of ActionTypes from the root of the tree
+		// towards the Node with the highest score in the current layer.
+		ArrayList<ActionType> bestActionTypeSequence = this.extractActionTypeSequence(this.currentLayerNodes.first());
+
+		// Return all Nodes to the NodeFactory.
+		this.currentLayerNodes.clear();
+
+		// Return the sequence of ActionTypes with the highest score.
+		return bestActionTypeSequence;
+	}
+
+	/**
+	 * Function for extracting the sequence of ActionTypes from a Node and the
+	 * path starting at the root towards it.
+	 * 
+	 * @param node
+	 *            the Node to which the ActionType sequence will be extracted.
+	 * @return the sequence of ActionTypes that were taken along the path to and
+	 *         at the provided Node. The smaller the index, the earlier the
+	 *         Action was taken.
+	 */
+	private ArrayList<ActionType> extractActionTypeSequence(Node node) {
+		ArrayList<ActionType> actionTypeSequence = new ArrayList<>();
+		List<Node> branch = this.extractPathFromRootToNode(node);
+
+		// Extract the ActionTypes in each Node.
+		for (Node currentNode : branch) {
+			// TODO: WIP REMOVE
+			System.out.println(" Node Score: " + currentNode.getScore());
+
+			if (!currentNode.getChosenActions().isEmpty()) {
+				// TODO: WIP REMOVE
+				System.out.println(" Sequence start:");
+
+				for (ActionType actionType : currentNode.getChosenActions()) {
+					System.out.println("  - " + actionType.getClass().getSimpleName());
+					actionTypeSequence.add(actionType);
+				}
+			}
+		}
+
+		return actionTypeSequence;
+	}
+
+	/**
+	 * Function for extracting the path from the root of a / the tree towards a
+	 * provided Node.
+	 * 
+	 * @param node
+	 *            the target Node to which the path will be generated.
+	 * @return an List with the root at index 0 and the provided target Node at
+	 *         index List.length - 1.
+	 */
+	private List<Node> extractPathFromRootToNode(Node node) {
 		ArrayList<Node> branch = new ArrayList<>();
-		Node currentLeafNode = this.currentLayerNodes.first();
+		Node currentLeafNode = node;
+
+		// Move down the tree until the root is hit.
 		while (currentLeafNode != null) {
 			branch.add(0, currentLeafNode);
 			currentLeafNode = currentLeafNode.getPreviousNode();
 		}
-		boolean isRoot = true;
-		for (Node node : branch) {
-			System.out.println(" Node Score: " + node.getScore());
 
-			if (!node.getChosenActions().isEmpty()) {
-				System.out.println(" Sequence start:");
-
-				for (ActionType actionType : node.getChosenActions()) {
-					System.out.println("  - " + actionType.getClass().getSimpleName());
-				}
-			} else {
-				if (isRoot) {
-					System.out.println(" Root");
-					isRoot = false;
-				} else {
-					System.out.println(" Sequence empty");
-				}
-			}
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		// Return nearly all Nodes to the NodeFactory.
-		Node bestNode = this.currentLayerNodes.first();
-		this.currentLayerNodes.clear();
-
-		// Return the Node with the highest score. The Node is not transformed
-		// since the timeStamps that mark the start and end of the ActionTypes
-		// must be preserved or the starter of the simulation does only know
-		// that a certain Action must be taken, but not WHEN!
-		return bestNode;
+		return branch;
 	}
 
 	/**
@@ -343,13 +355,6 @@ public class Simulator {
 				if (pairToRemove != null) {
 					node.getUnitsFree().put(pair.first, node.getUnitsFree().get(pair.first) + 1);
 					node.getUnitsWorking().get(pair.first).remove(pairToRemove);
-					
-					
-					
-					
-					if(pair.first == UnitType.Terran_Command_Center) {
-						System.out.println("Timestamp finished: " + pair.second);
-					}
 				}
 			}
 		}
