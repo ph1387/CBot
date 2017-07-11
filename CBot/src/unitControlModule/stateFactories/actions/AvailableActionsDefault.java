@@ -21,8 +21,6 @@ public class AvailableActionsDefault extends HashSet<GoapAction> {
 		this.add(this.defineScoutingAction());
 		this.add(new AttackMoveAction(null));
 		this.add(new AttackUnitAction(null));
-		// this.add(new RetreatActionToFurthestUnitInCone(null));
-		// this.add(new RetreatActionToOwnGatheringPoint(null));
 		this.add(new RetreatActionSteerInRetreatVectorDirection(null));
 	}
 

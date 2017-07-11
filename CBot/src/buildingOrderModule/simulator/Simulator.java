@@ -174,7 +174,7 @@ public class Simulator {
 
 					// If the Node is not added to the collection of Nodes then
 					// make it available again.
-					if (!newLayerNodes.add(nodeToAdd)) {
+					if (newLayerNodes.contains(nodeToAdd) || !newLayerNodes.add(nodeToAdd)) {
 						this.nodeFactory.markNodeAsAvailable(nodeToAdd);
 					}
 
@@ -188,6 +188,51 @@ public class Simulator {
 			this.currentLayerNodes = newLayerNodes;
 		}
 
+		
+		
+		
+		
+		
+		
+		// TODO: WIP REMOVE
+		System.out.println("Total Node count: " + this.currentLayerNodes.size());
+		System.out.println("Nodes with highest Score:");
+		System.out.println(" - " + this.currentLayerNodes.first() + " " + this.currentLayerNodes.first().getScore()
+				+ " Resources: " + this.currentLayerNodes.first().getCurrentMinerals());
+		System.out.println("Simulated best building order:");
+		ArrayList<Node> branch = new ArrayList<>();
+		Node currentLeafNode = this.currentLayerNodes.first();
+		while (currentLeafNode != null) {
+			branch.add(0, currentLeafNode);
+			currentLeafNode = currentLeafNode.getPreviousNode();
+		}
+		boolean isRoot = true;
+		for (Node node : branch) {
+			System.out.println(" Node Score: " + node.getScore());
+
+			if (!node.getChosenActions().isEmpty()) {
+				System.out.println(" Sequence start:");
+
+				for (ActionType actionType : node.getChosenActions()) {
+					System.out.println("  - " + actionType.getClass().getSimpleName());
+				}
+			} else {
+				if (isRoot) {
+					System.out.println(" Root");
+					isRoot = false;
+				} else {
+					System.out.println(" Sequence empty");
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
 		// Return nearly all Nodes to the NodeFactory.
 		Node bestNode = this.currentLayerNodes.first();
 		this.currentLayerNodes.clear();
@@ -298,6 +343,13 @@ public class Simulator {
 				if (pairToRemove != null) {
 					node.getUnitsFree().put(pair.first, node.getUnitsFree().get(pair.first) + 1);
 					node.getUnitsWorking().get(pair.first).remove(pairToRemove);
+					
+					
+					
+					
+					if(pair.first == UnitType.Terran_Command_Center) {
+						System.out.println("Timestamp finished: " + pair.second);
+					}
 				}
 			}
 		}

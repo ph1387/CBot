@@ -3,6 +3,7 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import bwapi.UnitType;
 import core.Core;
 
+//TODO: UML ADD
 /**
  * ConstructActionCenter.java --- Action for constructing a race specific center
  * building.
@@ -26,4 +27,5 @@ public class ConstructActionCenter extends ConstructBaseAction {
 	protected UnitType defineType() {
 		return Core.getInstance().getPlayer().getRace().getCenter();
 	}
+	
 }

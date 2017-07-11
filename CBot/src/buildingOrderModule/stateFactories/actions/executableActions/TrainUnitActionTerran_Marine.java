@@ -2,6 +2,7 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 
 import bwapi.UnitType;
 
+// TODO: UML ADD
 /**
  * TrainUnitActionTerran_Marine.java --- Class for training a Terran_Marine.
  * 
@@ -23,5 +24,11 @@ public class TrainUnitActionTerran_Marine extends TrainUnitBaseAction {
 	@Override
 	protected UnitType defineType() {
 		return UnitType.Terran_Marine;
+	}
+
+	// TODO: UML ADD FF
+	@Override
+	public UnitType defineRequiredUnitType() {
+		return UnitType.Terran_Barracks;
 	}
 }

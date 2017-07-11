@@ -2,6 +2,7 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 
 import bwapi.UnitType;
 
+// TODO: UML ADD
 /**
  * TrainUnitActionTerran_SiegeTank.java --- Action for training a
  * Terran_SiegeTank.
@@ -25,4 +26,11 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 	protected UnitType defineType() {
 		return UnitType.Terran_Siege_Tank_Tank_Mode;
 	}
+
+	// TODO: UML ADD FF
+	@Override
+	public UnitType defineRequiredUnitType() {
+		return UnitType.Terran_Machine_Shop;
+	}
+	
 }

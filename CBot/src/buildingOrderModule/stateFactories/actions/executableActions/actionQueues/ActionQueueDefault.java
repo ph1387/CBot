@@ -76,4 +76,11 @@ public abstract class ActionQueueDefault extends ManagerBaseAction {
 
 		this.index = 0;
 	}
+	
+	// ------------------------------ Getter / Setter
+	
+	// TODO: UML ADD
+	public List<ManagerBaseAction> getActionQueue() {
+		return actionQueue;
+	}
 }

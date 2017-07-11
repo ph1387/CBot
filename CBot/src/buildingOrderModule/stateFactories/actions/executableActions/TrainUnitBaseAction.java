@@ -1,19 +1,21 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.simulator.ActionType;
 import bwapi.Unit;
 import bwapi.UnitType;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 
+// TODO: UML ADD
 /**
  * TrainUnitBaseAction.java --- Superclass for all Unit training actions.
  * 
  * @author P H - 29.04.2017
  *
  */
-public abstract class TrainUnitBaseAction extends ManagerBaseAction {
+public abstract class TrainUnitBaseAction extends ManagerBaseAction implements ActionType {
 
 	protected UnitType type;
 
@@ -97,5 +99,40 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 		}
 
 		return count;
+	}
+	
+	
+	
+	
+	
+	// TODO: UML ADD FF
+	@Override
+	public int defineScore() {
+		return this.defineResultUnitType().mineralPrice() + this.defineResultUnitType().gasPrice();
+	}
+
+	@Override
+	public int defineMineralCost() {
+		return this.defineResultUnitType().mineralPrice();
+	}
+
+	@Override
+	public int defineGasCost() {
+		return this.defineResultUnitType().gasPrice();
+	}
+
+	@Override
+	public int defineCompletionTime() {
+		return this.defineResultUnitType().buildTime();
+	}
+
+	@Override
+	public void execute() {
+		
+	}
+	
+	@Override
+	public UnitType defineResultUnitType() {
+		return this.defineType();
 	}
 }

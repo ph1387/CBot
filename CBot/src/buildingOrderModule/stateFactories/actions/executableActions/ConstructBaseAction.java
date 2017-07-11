@@ -1,19 +1,21 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.simulator.ActionType;
 import bwapi.TechType;
 import bwapi.UnitType;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 
+// TODO: UML ADD
 /**
  * ConstructBaseAction.java --- Superclass for all construction actions.
  * 
  * @author P H - 30.04.2017
  *
  */
-public abstract class ConstructBaseAction extends ManagerBaseAction {
+public abstract class ConstructBaseAction extends ManagerBaseAction implements ActionType {
 
 	protected UnitType type;
 
@@ -68,4 +70,46 @@ public abstract class ConstructBaseAction extends ManagerBaseAction {
 	protected int defineBaseCost() {
 		return this.type.buildTime() + this.type.mineralPrice() + this.type.gasPrice();
 	}
+	
+
+	
+	
+	
+	
+	// TODO: UML ADD FF
+	@Override
+	public int defineScore() {
+		return this.defineResultUnitType().mineralPrice() + this.defineResultUnitType().gasPrice();
+	}
+
+	@Override
+	public int defineMineralCost() {
+		return this.defineResultUnitType().mineralPrice();
+	}
+
+	@Override
+	public int defineGasCost() {
+		return this.defineResultUnitType().gasPrice();
+	}
+
+	@Override
+	public int defineCompletionTime() {
+		return this.defineResultUnitType().buildTime();
+	}
+
+	@Override
+	public void execute() {
+		
+	}
+	
+	@Override
+	public UnitType defineResultUnitType() {
+		return this.defineType();
+	}
+	
+	@Override
+	public UnitType defineRequiredUnitType() {
+		return Core.getInstance().getPlayer().getRace().getWorker();
+	}
+	
 }

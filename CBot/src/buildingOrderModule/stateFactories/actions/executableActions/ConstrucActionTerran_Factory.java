@@ -2,6 +2,7 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 
 import bwapi.UnitType;
 
+//TODO: UML ADD
 /**
  * ConstrucActionTerran_Factory.java --- Construction action for a
  * Terran_Factory Unit.
@@ -25,4 +26,5 @@ public class ConstrucActionTerran_Factory extends ConstructBaseAction {
 	protected UnitType defineType() {
 		return UnitType.Terran_Factory;
 	}
+	
 }
