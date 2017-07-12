@@ -25,22 +25,22 @@ public class SimulatorThread extends Thread {
 	// Simulation values:
 	private int simulationFrameStep = 300;
 	private int simulationStepAmount = 5;
-	private UnitType simulationWorkerType;
+	private TypeWrapper simulationWorkerType;
 	private int simulationIdleScorePenalty = 10;
 	private int simulationConsecutiveActionsBonus = 10;
 	private boolean simulationAllowIdle = true;
 
 	// Changing values:
-	private HashMap<UnitType, Integer> simulationUnitsFree;
-	private HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> simulationUnitsWorking;
+	private HashMap<TypeWrapper, Integer> simulationUnitsFree;
+	private HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationUnitsWorking;
 	private int currentMinerals;
 	private int currentGas;
 	private int currentFrameTimeStamp;
 
 	public SimulatorThread(Simulator simulator,
-			ConcurrentLinkedQueue<ArrayList<ActionType>> generatedActionTypeSequences, UnitType simulationWorkerType,
-			HashMap<UnitType, Integer> simulationUnitsFree,
-			HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> simulationUnitsWorking, int currentMinerals,
+			ConcurrentLinkedQueue<ArrayList<ActionType>> generatedActionTypeSequences, TypeWrapper simulationWorkerType,
+			HashMap<TypeWrapper, Integer> simulationUnitsFree,
+			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationUnitsWorking, int currentMinerals,
 			int currentGas, int currentFrameTimeStamp) {
 		this.simulator = simulator;
 		this.generatedActionTypeSequences = generatedActionTypeSequences;

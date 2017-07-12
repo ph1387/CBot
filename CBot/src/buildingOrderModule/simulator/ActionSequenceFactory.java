@@ -60,8 +60,8 @@ public class ActionSequenceFactory {
 	public void markNodeAsAvailable(ActionSequence sequence) {
 		sequence.setGasCost(0);
 		sequence.setMineralCost(0);
-		sequence.getUnitsFree().clear();
-		sequence.getOccupiedUnitTimes().clear();
+		sequence.getTypesFree().clear();
+		sequence.getOccupiedTypeTimes().clear();
 		sequence.getActionTypeSequence().clear();
 
 		this.availableSequences.add(sequence);

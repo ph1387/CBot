@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 import core.Core;
 
@@ -30,8 +31,8 @@ public class TrainUnitActionWorker extends TrainUnitBaseAction {
 
 	// TODO: UML ADD FF
 	@Override
-	public UnitType defineRequiredUnitType() {
-		return Core.getInstance().getPlayer().getRace().getCenter();
+	public TypeWrapper defineRequiredType() {
+		return TypeWrapper.generateFrom(Core.getInstance().getPlayer().getRace().getCenter());
 	}
 
 }

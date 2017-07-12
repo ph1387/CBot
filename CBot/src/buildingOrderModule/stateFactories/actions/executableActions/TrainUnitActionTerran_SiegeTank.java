@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
 // TODO: UML ADD
@@ -29,8 +30,8 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 
 	// TODO: UML ADD FF
 	@Override
-	public UnitType defineRequiredUnitType() {
-		return UnitType.Terran_Machine_Shop;
+	public TypeWrapper defineRequiredType() {
+		return TypeWrapper.generateFrom(UnitType.Terran_Machine_Shop);
 	}
 	
 }

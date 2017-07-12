@@ -3,6 +3,7 @@ package core;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
+import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Game;
 import bwapi.Mirror;
 import bwapi.Pair;
@@ -40,6 +41,9 @@ public class Init {
 			Game game = mirror.getGame();
 
 			Core.getInstance().setMirror(mirror);
+			
+			// Initialize the TypeWrapper types for the Simulator.
+			TypeWrapper.init();
 
 			// Use BWTA to analyze map
 			BWTA.readMap();

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import bwapi.Pair;
-import bwapi.UnitType;
 
 // TODO: UML ADD
 /**
@@ -17,8 +16,8 @@ import bwapi.UnitType;
 
 public class Node implements Comparable<Node> {
 
-	private HashMap<UnitType, Integer> unitsFree = new HashMap<>();
-	private HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> unitsWorking = new HashMap<>();
+	private HashMap<TypeWrapper, Integer> typesFree = new HashMap<>();
+	private HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking = new HashMap<>();
 	private ArrayList<ActionType> chosenActions = new ArrayList<>();
 	private int currentMinerals = 0;
 	private int currentGas = 0;
@@ -76,20 +75,20 @@ public class Node implements Comparable<Node> {
 
 	// ------------------------------ Getter / Setter
 
-	public HashMap<UnitType, Integer> getUnitsFree() {
-		return unitsFree;
+	public HashMap<TypeWrapper, Integer> getTypesFree() {
+		return typesFree;
 	}
 
-	public void setUnitsFree(HashMap<UnitType, Integer> unitsFree) {
-		this.unitsFree = unitsFree;
+	public void setTypesFree(HashMap<TypeWrapper, Integer> unitsFree) {
+		this.typesFree = unitsFree;
 	}
 
-	public HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> getUnitsWorking() {
-		return unitsWorking;
+	public HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> getTypesWorking() {
+		return typesWorking;
 	}
 
-	public void setUnitsWorking(HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> unitsWorking) {
-		this.unitsWorking = unitsWorking;
+	public void setTypesWorking(HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> unitsWorking) {
+		this.typesWorking = unitsWorking;
 	}
 
 	public ArrayList<ActionType> getChosenActions() {
@@ -145,7 +144,7 @@ public class Node implements Comparable<Node> {
 	}
 
 	public void setInfluenceMinerals(double influenceMinerals) {
-		this.influenceMinerals = influenceMinerals;
+		Node.influenceMinerals = influenceMinerals;
 	}
 
 	public double getInfluenceGas() {
@@ -153,6 +152,6 @@ public class Node implements Comparable<Node> {
 	}
 
 	public void setInfluenceGas(double influenceGas) {
-		this.influenceGas = influenceGas;
+		Node.influenceGas = influenceGas;
 	}
 }

@@ -2,6 +2,7 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.simulator.ActionType;
+import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.TechType;
 import bwapi.UnitType;
 import core.Core;
@@ -79,37 +80,32 @@ public abstract class ConstructBaseAction extends ManagerBaseAction implements A
 	// TODO: UML ADD FF
 	@Override
 	public int defineScore() {
-		return this.defineResultUnitType().mineralPrice() + this.defineResultUnitType().gasPrice();
+		return this.defineResultType().getUnitType().mineralPrice() + this.defineResultType().getUnitType().gasPrice();
 	}
 
 	@Override
 	public int defineMineralCost() {
-		return this.defineResultUnitType().mineralPrice();
+		return this.defineResultType().getUnitType().mineralPrice();
 	}
 
 	@Override
 	public int defineGasCost() {
-		return this.defineResultUnitType().gasPrice();
+		return this.defineResultType().getUnitType().gasPrice();
 	}
 
 	@Override
 	public int defineCompletionTime() {
-		return this.defineResultUnitType().buildTime();
+		return this.defineResultType().getUnitType().buildTime();
 	}
 
 	@Override
-	public void execute() {
-		
+	public TypeWrapper defineResultType() {
+		return TypeWrapper.generateFrom(this.defineType());
 	}
 	
 	@Override
-	public UnitType defineResultUnitType() {
-		return this.defineType();
-	}
-	
-	@Override
-	public UnitType defineRequiredUnitType() {
-		return Core.getInstance().getPlayer().getRace().getWorker();
+	public TypeWrapper defineRequiredType() {
+		return TypeWrapper.generateFrom(Core.getInstance().getPlayer().getRace().getWorker());
 	}
 	
 }

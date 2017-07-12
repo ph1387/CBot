@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import bwapi.Pair;
-import bwapi.UnitType;
 
 // TODO: UML ADD
 /**
  * ActionSequence.java --- A sequence of {@link ActionType}s that can / will be
  * executed. This class contains extra information like the combined mineral and
  * gas costs of these actions being taken. Also this class contains the
- * information regarding the availability and occupation of certain UnitTypes
+ * information regarding the availability and occupation of certain Types
  * that are required to perform the stored actions.
  * 
  * @author P H - 06.07.2017
@@ -23,14 +22,14 @@ public class ActionSequence {
 	private int mineralCost = 0;
 	private int gasCost = 0;
 	// Key: The UnitType of that is being considered.
-	// Value: The amount of the UnitType that is free / available to receive
+	// Value: The amount of the Type that is free / available to receive
 	// orders.
-	private HashMap<UnitType, Integer> UnitsFree = new HashMap<>();
-	// Key: The creating UnitType.
-	// Value: A List of Pairs of UnitTypes that are being created by the key
-	// UnitType.
+	private HashMap<TypeWrapper, Integer> typesFree = new HashMap<>();
+	// Key: The creating Type.
+	// Value: A List of Pairs of Types that are being created by the key
+	// Type.
 	// ---> Pair: "What" is "When" finished.
-	private HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> occupiedUnitTimes = new HashMap<>();
+	private HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> occupiedTypeTimes = new HashMap<>();
 
 	public ActionSequence() {
 
@@ -64,19 +63,19 @@ public class ActionSequence {
 		this.gasCost = gasCost;
 	}
 
-	public HashMap<UnitType, Integer> getUnitsFree() {
-		return UnitsFree;
+	public HashMap<TypeWrapper, Integer> getTypesFree() {
+		return typesFree;
 	}
 
-	public void setUnitsFree(HashMap<UnitType, Integer> unitsFree) {
-		UnitsFree = unitsFree;
+	public void setTypesFree(HashMap<TypeWrapper, Integer> unitsFree) {
+		typesFree = unitsFree;
 	}
 
-	public HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> getOccupiedUnitTimes() {
-		return occupiedUnitTimes;
+	public HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> getOccupiedTypeTimes() {
+		return occupiedTypeTimes;
 	}
 
-	public void setOccupiedUnits(HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> occupiedUnits) {
-		this.occupiedUnitTimes = occupiedUnits;
+	public void setOccupiedTypeTimes(HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> occupiedUnits) {
+		this.occupiedTypeTimes = occupiedUnits;
 	}
 }

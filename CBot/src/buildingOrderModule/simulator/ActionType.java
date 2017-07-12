@@ -1,7 +1,5 @@
 package buildingOrderModule.simulator;
 
-import bwapi.UnitType;
-
 // TODO: UML ADD
 /**
  * ActionType.java --- The interface on which the Simulator performs its
@@ -14,15 +12,15 @@ public interface ActionType {
 
 	/**
 	 *
-	 * @return the UnitType that is required for performing the Action.
+	 * @return the Type that is required for performing the Action.
 	 */
-	public UnitType defineRequiredUnitType();
+	public TypeWrapper defineRequiredType();
 
 	/**
 	 *
-	 * @return the UnitType that this Action is producing.
+	 * @return the Type that this Action is producing.
 	 */
-	public UnitType defineResultUnitType();
+	public TypeWrapper defineResultType();
 
 	/**
 	 *
@@ -48,8 +46,4 @@ public interface ActionType {
 	 */
 	public int defineCompletionTime();
 
-	/**
-	 * Function for executing the Action.
-	 */
-	public void execute();
 }

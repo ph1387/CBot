@@ -11,13 +11,12 @@ import java.util.TreeSet;
 import java.util.function.BiConsumer;
 
 import bwapi.Pair;
-import bwapi.UnitType;
 
 // TODO: UML ADD
 /**
  * Simulator.java --- A Simulator for simulating the future possibilities of
- * provided actions with a collection of available / free Units and busy /
- * occupied ones.
+ * provided actions with a collection of available / free (Unit-) Types and busy
+ * / occupied ones.
  * 
  * @author P H - 05.07.2017
  *
@@ -78,14 +77,14 @@ public class Simulator {
 	/**
 	 * Function for performing a simulation based on available ActionTypes and
 	 * provided resources (minerals and gas) as well as a record of available
-	 * and occupied / busy Units. This simulation generates a tree with each
-	 * layer representing an iteration / certain step in the time line with a
-	 * predefined step size. The number of possible Nodes each Node of the
+	 * and occupied / busy TypeWrappers. This simulation generates a tree with
+	 * each layer representing an iteration / certain step in the time line with
+	 * a predefined step size. The number of possible Nodes each Node of the
 	 * previous layer can produce depends on the number of available ActionTypes
-	 * as well as the available / free Units since the Actions require a free
+	 * as well as the available / free Types since the Actions require a free
 	 * type of Unit to be able to be executed and therefore taken in
 	 * consideration. This simulation is quite expensive since it takes various
-	 * factors like the availability of certain Units and the different
+	 * factors like the availability of certain Types and the different
 	 * permutations of all possible ActionType sequences in consideration to
 	 * produce the "optimal" result at the end of the simulation. These results
 	 * may vary since the frame step size and the amount of steps being taken
@@ -101,13 +100,13 @@ public class Simulator {
 	 *            the current amount of available minerals.
 	 * @param currentGas
 	 *            the current amount of available gas.
-	 * @param unitsFree
-	 *            the currently available Units in form of a HashMap: Key =
-	 *            Type, Integer = Amount of free Units.
-	 * @param unitsWorking
-	 *            the currently occupied Units in form of a HashMap: Key = Type,
-	 *            ArrayList = Pairs of resulting UnitTypes and the time stamp at
-	 *            which they are finished.
+	 * @param typesFree
+	 *            the currently available Types in form of a HashMap: Key =
+	 *            Type, Integer = Amount of free Types.
+	 * @param typesWorking
+	 *            the currently occupied Types in form of a HashMap: Key = Type,
+	 *            ArrayList = Pairs of resulting TypeWrappers and the time stamp
+	 *            at which they are finished.
 	 * @param workerType
 	 *            the type of worker that is responsible for gathering minerals
 	 *            and gas.
@@ -121,11 +120,11 @@ public class Simulator {
 	 * @return the best sequence of Actions of the tree with the highest score.
 	 */
 	public ArrayList<ActionType> simulate(int currentFrameTimeStamp, int frameStep, int stepAmount, int currentMinerals,
-			int currentGas, HashMap<UnitType, Integer> unitsFree,
-			HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> unitsWorking, UnitType workerType,
+			int currentGas, HashMap<TypeWrapper, Integer> typesFree,
+			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking, TypeWrapper workerType,
 			int idleScorePenalty, int consecutiveActionsBonus, boolean allowIdle) {
 		// Create the root and save it.
-		Node root = this.createRoot(currentMinerals, currentGas, currentFrameTimeStamp, unitsFree, unitsWorking);
+		Node root = this.createRoot(currentMinerals, currentGas, currentFrameTimeStamp, typesFree, typesWorking);
 		this.currentLayerNodes.add(root);
 		this.nodes.add(root);
 
@@ -143,7 +142,7 @@ public class Simulator {
 			TreeSet<Node> newLayerNodes = new TreeSet<Node>();
 
 			// Simulated resource gathering:
-			int simulatedMineralGain = this.generateSimulatedMineralGain(unitsFree, unitsWorking, workerType,
+			int simulatedMineralGain = this.generateSimulatedMineralGain(typesFree, typesWorking, workerType,
 					frameStep);
 			int simulatedGasGain = (int) (frameStep * this.gasPerFrame);
 
@@ -269,21 +268,23 @@ public class Simulator {
 	 * @param currentFrameTimeStamp
 	 *            the TimeStamp in frames that the root is starting at.
 	 * @param unitsFree
-	 *            the currently available Units that can perform actions.
-	 * @param unitsWorking
-	 *            the currently unavailable Units that are busy working.
+	 *            the currently available Types that can perform actions.
+	 * @param typesWorking
+	 *            the currently unavailable Types that are busy working /
+	 *            occupied.
 	 * @return a Node that the Simulator can use as root for a generated tree.
 	 */
 	private Node createRoot(int currentMinerals, int currentGas, int currentFrameTimeStamp,
-			HashMap<UnitType, Integer> unitsFree, HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> unitsWorking) {
+			HashMap<TypeWrapper, Integer> unitsFree,
+			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking) {
 		// Create the root of the tree.
 		Node root = this.nodeFactory.receiveNode();
 
 		root.setCurrentMinerals(currentMinerals);
 		root.setCurrentGas(currentGas);
 		root.setFrameTimeStamp(currentFrameTimeStamp);
-		root.setUnitsFree(unitsFree);
-		root.setUnitsWorking(unitsWorking);
+		root.setTypesFree(unitsFree);
+		root.setTypesWorking(typesWorking);
 
 		return root;
 	}
@@ -293,9 +294,9 @@ public class Simulator {
 	 * to produce in the simulated time.
 	 * 
 	 * @param unitsFree
-	 *            the currently available Units.
-	 * @param unitsWorking
-	 *            the currently unavailable / busy Units.
+	 *            the currently available Types.
+	 * @param typesWorking
+	 *            the currently unavailable / busy Types.
 	 * @param workerType
 	 *            the type that represents the worker in the simulation and
 	 *            therefore gathers resources.
@@ -303,16 +304,17 @@ public class Simulator {
 	 *            the amount of frames the Simulator takes at one time.
 	 * @return the amount of minerals the specified worker Units are gathering.
 	 */
-	private int generateSimulatedMineralGain(HashMap<UnitType, Integer> unitsFree,
-			HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>> unitsWorking, UnitType workerType, int frameStep) {
+	private int generateSimulatedMineralGain(HashMap<TypeWrapper, Integer> unitsFree,
+			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking, TypeWrapper workerType,
+			int frameStep) {
 		// Count all workers. This is not completely accurate since workers can
 		// not collect
 		int totalWorkerCount = 0;
 		if (unitsFree.get(workerType) != null) {
 			totalWorkerCount += unitsFree.get(workerType);
 		}
-		if (unitsWorking.get(workerType) != null) {
-			totalWorkerCount += unitsWorking.get(workerType).size();
+		if (typesWorking.get(workerType) != null) {
+			totalWorkerCount += typesWorking.get(workerType).size();
 		}
 
 		return (int) (frameStep * (this.mineralsPerFrame * totalWorkerCount));
@@ -331,21 +333,21 @@ public class Simulator {
 	 */
 	private void tryFreeingFinishedActions(Collection<Node> nodes, int simulatedFrameTimeStamp) {
 		for (Node node : nodes) {
-			// Free any finished simulated Units from their work if the
+			// Free any finished simulated Types from their work if the
 			// timeStamp of their actions lies in the past.
-			ArrayList<Pair<UnitType, Integer>> unitsToFree = this.findFinishedSimulatedUnits(node,
+			ArrayList<Pair<TypeWrapper, Integer>> unitsToFree = this.findFinishedSimulatedUnits(node,
 					simulatedFrameTimeStamp);
 
 			// Free the simulated Units from their task and add the newly
 			// created ones to the List of available Units.
-			// Pair.first = UnitType that creates something.
+			// Pair.first = Type that creates something.
 			// Pair.second = TimeStamp of the thing created.
-			for (Pair<UnitType, Integer> pair : unitsToFree) {
-				Pair<UnitType, Integer> pairToRemove = null;
+			for (Pair<TypeWrapper, Integer> pair : unitsToFree) {
+				Pair<TypeWrapper, Integer> pairToRemove = null;
 
 				// Find the Pair with the specified timeStamp in all the
 				// possible Pairs.
-				for (Pair<UnitType, Integer> possiblePair : node.getUnitsWorking().get(pair.first)) {
+				for (Pair<TypeWrapper, Integer> possiblePair : node.getTypesWorking().get(pair.first)) {
 					if (possiblePair.second.equals(pair.second)) {
 						pairToRemove = possiblePair;
 
@@ -355,8 +357,8 @@ public class Simulator {
 
 				// If the Pair was found, remove it from the ongoing Actions.
 				if (pairToRemove != null) {
-					node.getUnitsFree().put(pair.first, node.getUnitsFree().get(pair.first) + 1);
-					node.getUnitsWorking().get(pair.first).remove(pairToRemove);
+					node.getTypesFree().put(pair.first, node.getTypesFree().get(pair.first) + 1);
+					node.getTypesWorking().get(pair.first).remove(pairToRemove);
 				}
 			}
 		}
@@ -370,34 +372,34 @@ public class Simulator {
 	 *            the Node whose ActionType completion times are being checked.
 	 * @param simulatedFrameTimeStamp
 	 *            the amount of frames the Simulator skips in one single step.
-	 * @return a ArrayList of Pairs. These Pairs contain the finished types of
-	 *         Units and the corresponding time stamps. Latter is required for
+	 * @return a ArrayList of Pairs. These Pairs contain the finished types and
+	 *         the corresponding time stamps. Latter is required for
 	 *         identification. </br>
 	 *         </br>
-	 *         Pair.first = UnitType that creates something.</br>
+	 *         Pair.first = Type that creates something.</br>
 	 *         Pair.second = TimeStamp of the thing created.
 	 */
-	private ArrayList<Pair<UnitType, Integer>> findFinishedSimulatedUnits(final Node node,
+	private ArrayList<Pair<TypeWrapper, Integer>> findFinishedSimulatedUnits(final Node node,
 			final int simulatedFrameTimeStamp) {
-		// Pair.first = UnitType that creates something.
+		// Pair.first = Type that creates something.
 		// Pair.second = TimeStamp of the thing created.
-		final ArrayList<Pair<UnitType, Integer>> unitsToFree = new ArrayList<>();
+		final ArrayList<Pair<TypeWrapper, Integer>> unitsToFree = new ArrayList<>();
 
-		node.getUnitsWorking().forEach(new BiConsumer<UnitType, ArrayList<Pair<UnitType, Integer>>>() {
+		node.getTypesWorking().forEach(new BiConsumer<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>>() {
 
 			@Override
-			public void accept(UnitType unitType, ArrayList<Pair<UnitType, Integer>> list) {
-				for (Pair<UnitType, Integer> pair : list) {
-					// Extract all UnitTypes whose actions are finished.
+			public void accept(TypeWrapper typeWrapper, ArrayList<Pair<TypeWrapper, Integer>> list) {
+				for (Pair<TypeWrapper, Integer> pair : list) {
+					// Extract all Types whose actions are finished.
 					if (pair.second <= simulatedFrameTimeStamp) {
-						unitsToFree.add(new Pair<>(unitType, pair.second));
+						unitsToFree.add(new Pair<>(typeWrapper, pair.second));
 
-						// Add the finished UnitType to the other available
-						// UnitTypes.
-						if (node.getUnitsFree().get(pair.first) == null) {
-							node.getUnitsFree().put(pair.first, 0);
+						// Add the finished Types to the other available
+						// Types.
+						if (node.getTypesFree().get(pair.first) == null) {
+							node.getTypesFree().put(pair.first, 0);
 						} else {
-							node.getUnitsFree().put(pair.first, node.getUnitsFree().get(pair.first) + 1);
+							node.getTypesFree().put(pair.first, node.getTypesFree().get(pair.first) + 1);
 						}
 					}
 				}
@@ -451,8 +453,8 @@ public class Simulator {
 
 		// Transfer the occupied and free Units to the new Node.
 		// TODO: WIP ALSO DO A DEEP CLONE
-		newNode.setUnitsWorking(new HashMap<>(parentNode.getUnitsWorking()));
-		newNode.setUnitsFree(new HashMap<>(parentNode.getUnitsFree()));
+		newNode.setTypesWorking(new HashMap<>(parentNode.getTypesWorking()));
+		newNode.setTypesFree(new HashMap<>(parentNode.getTypesFree()));
 
 		return newNode;
 	}
@@ -496,8 +498,8 @@ public class Simulator {
 				+ (newNode.getChosenActions().size() * consecutiveActionsBonus));
 
 		// Transfer the occupied and free Units to the new Node.
-		newNode.setUnitsWorking(new HashMap<>(sequence.getOccupiedUnitTimes()));
-		newNode.setUnitsFree(new HashMap<>(sequence.getUnitsFree()));
+		newNode.setTypesWorking(new HashMap<>(sequence.getOccupiedTypeTimes()));
+		newNode.setTypesFree(new HashMap<>(sequence.getTypesFree()));
 
 		return newNode;
 	}
@@ -526,8 +528,8 @@ public class Simulator {
 		// state of the Node and add them to the Queue of ActionType sequences
 		// that are being processed.
 		for (ActionType actionType : this.actionTypes) {
-			if (currentNode.getUnitsFree().get(actionType.defineRequiredUnitType()) != null
-					&& currentNode.getUnitsFree().get(actionType.defineRequiredUnitType()) > 0
+			if (currentNode.getTypesFree().get(actionType.defineRequiredType()) != null
+					&& currentNode.getTypesFree().get(actionType.defineRequiredType()) > 0
 					&& currentNode.getCurrentMinerals() >= actionType.defineMineralCost()
 					&& currentNode.getCurrentGas() >= actionType.defineGasCost()) {
 				workingSets.add(this.generateNewActionSequence(currentNode, actionType, simulatedTimeStamp));
@@ -590,35 +592,35 @@ public class Simulator {
 		actionSequence.setGasCost(actionType.defineGasCost());
 
 		// Completion time and free Units.
-		actionSequence.setOccupiedUnits(new HashMap<UnitType, ArrayList<Pair<UnitType, Integer>>>());
-		node.getUnitsWorking().forEach(new BiConsumer<UnitType, ArrayList<Pair<UnitType, Integer>>>() {
+		actionSequence.setOccupiedTypeTimes(new HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>>());
+		node.getTypesWorking().forEach(new BiConsumer<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>>() {
 
 			@Override
-			public void accept(UnitType unitType, ArrayList<Pair<UnitType, Integer>> list) {
-				// Create a new List for the UnitType.
-				if (actionSequence.getOccupiedUnitTimes().get(unitType) == null) {
-					actionSequence.getOccupiedUnitTimes().put(unitType, new ArrayList<Pair<UnitType, Integer>>());
+			public void accept(TypeWrapper typeWrapper, ArrayList<Pair<TypeWrapper, Integer>> list) {
+				// Create a new List for the Type.
+				if (actionSequence.getOccupiedTypeTimes().get(typeWrapper) == null) {
+					actionSequence.getOccupiedTypeTimes().put(typeWrapper, new ArrayList<Pair<TypeWrapper, Integer>>());
 				}
 
-				ArrayList<Pair<UnitType, Integer>> occupiedUnitsList = actionSequence.getOccupiedUnitTimes()
-						.get(unitType);
+				ArrayList<Pair<TypeWrapper, Integer>> occupiedUnitsList = actionSequence.getOccupiedTypeTimes()
+						.get(typeWrapper);
 
 				// Insert each Pair from the given List into the newly created
 				// one.
-				for (Pair<UnitType, Integer> pair : list) {
+				for (Pair<TypeWrapper, Integer> pair : list) {
 					occupiedUnitsList.add(pair);
 				}
 			}
 		});
-		if (actionSequence.getOccupiedUnitTimes().get(actionType.defineRequiredUnitType()) == null) {
-			actionSequence.getOccupiedUnitTimes().put(actionType.defineRequiredUnitType(),
-					new ArrayList<Pair<UnitType, Integer>>());
+		if (actionSequence.getOccupiedTypeTimes().get(actionType.defineRequiredType()) == null) {
+			actionSequence.getOccupiedTypeTimes().put(actionType.defineRequiredType(),
+					new ArrayList<Pair<TypeWrapper, Integer>>());
 		}
-		actionSequence.getOccupiedUnitTimes().get(actionType.defineRequiredUnitType()).add(
-				new Pair<>(actionType.defineResultUnitType(), simulatedTimeStamp + actionType.defineCompletionTime()));
-		actionSequence.setUnitsFree(new HashMap<>(node.getUnitsFree()));
-		actionSequence.getUnitsFree().put(actionType.defineRequiredUnitType(),
-				node.getUnitsFree().get(actionType.defineRequiredUnitType()) - 1);
+		actionSequence.getOccupiedTypeTimes().get(actionType.defineRequiredType())
+				.add(new Pair<>(actionType.defineResultType(), simulatedTimeStamp + actionType.defineCompletionTime()));
+		actionSequence.setTypesFree(new HashMap<>(node.getTypesFree()));
+		actionSequence.getTypesFree().put(actionType.defineRequiredType(),
+				node.getTypesFree().get(actionType.defineRequiredType()) - 1);
 
 		return actionSequence;
 	}
@@ -658,12 +660,12 @@ public class Simulator {
 	private boolean tryFinilizingNewActionSequencePermutation(ActionSequence baseActionSequence,
 			ActionType additionalActionType, Node currentNode, int simulatedTimeStamp,
 			Queue<ActionSequence> actionSequenceStorage) {
-		// The ActionType's costs as well as the UnitType that this action
+		// The ActionType's costs as well as the Type that this action
 		// relies on must be available.
 		int combinedMineralCosts = baseActionSequence.getMineralCost() + additionalActionType.defineMineralCost();
 		int combinedGasCosts = baseActionSequence.getGasCost() + additionalActionType.defineGasCost();
-		boolean unitsFree = baseActionSequence.getUnitsFree().get(additionalActionType.defineRequiredUnitType()) != null
-				&& baseActionSequence.getUnitsFree().get(additionalActionType.defineRequiredUnitType()) > 0;
+		boolean unitsFree = baseActionSequence.getTypesFree().get(additionalActionType.defineRequiredType()) != null
+				&& baseActionSequence.getTypesFree().get(additionalActionType.defineRequiredType()) > 0;
 		boolean permutationFinal = true;
 
 		if (currentNode.getCurrentMinerals() >= combinedMineralCosts && currentNode.getCurrentGas() >= combinedGasCosts
@@ -821,7 +823,7 @@ public class Simulator {
 	private void extendActionSequence(final ActionSequence receiverActionSequence,
 			ActionSequence transferActionSequence, ActionType addedActionType, int combinedMineralCosts,
 			int combinedGasCosts, int simulatedTimeStamp) {
-		// Costs and UnitType requirements of these Actions.
+		// Costs and Type requirements of these Actions.
 		receiverActionSequence.setMineralCost(combinedMineralCosts);
 		receiverActionSequence.setGasCost(combinedGasCosts);
 
@@ -831,38 +833,38 @@ public class Simulator {
 		// Lists directly would cause the new sequences to use the same Lists as
 		// storage.
 		// => Problem!
-		transferActionSequence.getOccupiedUnitTimes()
-				.forEach(new BiConsumer<UnitType, ArrayList<Pair<UnitType, Integer>>>() {
+		transferActionSequence.getOccupiedTypeTimes()
+				.forEach(new BiConsumer<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>>() {
 
 					@Override
-					public void accept(UnitType unitType, ArrayList<Pair<UnitType, Integer>> list) {
+					public void accept(TypeWrapper typeWrapper, ArrayList<Pair<TypeWrapper, Integer>> list) {
 						// Create a new List if necessary.
-						if (receiverActionSequence.getOccupiedUnitTimes().get(unitType) == null) {
-							receiverActionSequence.getOccupiedUnitTimes().put(unitType,
-									new ArrayList<Pair<UnitType, Integer>>());
+						if (receiverActionSequence.getOccupiedTypeTimes().get(typeWrapper) == null) {
+							receiverActionSequence.getOccupiedTypeTimes().put(typeWrapper,
+									new ArrayList<Pair<TypeWrapper, Integer>>());
 						}
 
-						ArrayList<Pair<UnitType, Integer>> occupations = receiverActionSequence.getOccupiedUnitTimes()
-								.get(unitType);
+						ArrayList<Pair<TypeWrapper, Integer>> occupations = receiverActionSequence
+								.getOccupiedTypeTimes().get(typeWrapper);
 
 						// Copy the reference for each Pair into the newly
 						// created List.
-						for (Pair<UnitType, Integer> pair : list) {
+						for (Pair<TypeWrapper, Integer> pair : list) {
 							occupations.add(pair);
 						}
 					}
 				});
 
 		// Create a new List if necessary.
-		if (receiverActionSequence.getOccupiedUnitTimes().get(addedActionType.defineRequiredUnitType()) == null) {
-			receiverActionSequence.getOccupiedUnitTimes().put(addedActionType.defineRequiredUnitType(),
-					new ArrayList<Pair<UnitType, Integer>>());
+		if (receiverActionSequence.getOccupiedTypeTimes().get(addedActionType.defineRequiredType()) == null) {
+			receiverActionSequence.getOccupiedTypeTimes().put(addedActionType.defineRequiredType(),
+					new ArrayList<Pair<TypeWrapper, Integer>>());
 		}
-		receiverActionSequence.getOccupiedUnitTimes().get(addedActionType.defineRequiredUnitType()).add(new Pair<>(
-				addedActionType.defineResultUnitType(), simulatedTimeStamp + addedActionType.defineCompletionTime()));
-		receiverActionSequence.setUnitsFree(new HashMap<>(transferActionSequence.getUnitsFree()));
-		receiverActionSequence.getUnitsFree().put(addedActionType.defineRequiredUnitType(),
-				receiverActionSequence.getUnitsFree().get(addedActionType.defineRequiredUnitType()) - 1);
+		receiverActionSequence.getOccupiedTypeTimes().get(addedActionType.defineRequiredType()).add(new Pair<>(
+				addedActionType.defineResultType(), simulatedTimeStamp + addedActionType.defineCompletionTime()));
+		receiverActionSequence.setTypesFree(new HashMap<>(transferActionSequence.getTypesFree()));
+		receiverActionSequence.getTypesFree().put(addedActionType.defineRequiredType(),
+				receiverActionSequence.getTypesFree().get(addedActionType.defineRequiredType()) - 1);
 	}
 
 	// ------------------------------ Getter / Setter

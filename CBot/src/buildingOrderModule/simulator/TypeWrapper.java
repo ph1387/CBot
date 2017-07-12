@@ -56,7 +56,30 @@ public class TypeWrapper {
 	private boolean isUpgradeType = false;
 	private boolean isTechType = false;
 
-	public TypeWrapper() {
+	public TypeWrapper(UnitType unitType) {
+		this.unitType = unitType;
+		this.isUnitType = true;
+	}
+
+	public TypeWrapper(UpgradeType upgradeType) {
+		this.upgradeType = upgradeType;
+		this.isUpgradeType = true;
+	}
+
+	public TypeWrapper(TechType techType) {
+		this.techType = techType;
+		this.isTechType = true;
+	}
+
+	// -------------------- Functions
+
+	/**
+	 * Function for initializing all wrapper types. </br>
+	 * <b>NOTE:</b></br>
+	 * This Function <b>MUST</b> be called at least once if the wrapper is used
+	 * for simulations!
+	 */
+	public static void init() {
 		// Insert specific types into the different HashMaps:
 		// UnitType wrappers:
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Barracks, UnitType_Terran_Barracks);
@@ -76,26 +99,6 @@ public class TypeWrapper {
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Stim_Packs, TechType_Stim_Packs);
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Tank_Siege_Mode, TechType_Tank_Siege_Mode);
 	}
-
-	public TypeWrapper(UnitType unitType) {
-		super();
-		this.unitType = unitType;
-		this.isUnitType = true;
-	}
-
-	public TypeWrapper(UpgradeType upgradeType) {
-		super();
-		this.upgradeType = upgradeType;
-		this.isUpgradeType = true;
-	}
-
-	public TypeWrapper(TechType techType) {
-		super();
-		this.techType = techType;
-		this.isTechType = true;
-	}
-
-	// -------------------- Functions
 
 	/**
 	 * Function for transforming a UnitType into the corresponding TypeWrapper.
@@ -171,27 +174,42 @@ public class TypeWrapper {
 
 	// ------------------------------ Getter / Setter
 
-	public UnitType getUnitType() throws TypeWrapperException {
-		if (this.isUnitType) {
-			return this.unitType;
-		} else {
-			throw this.generateTypeWrapperException("UnitType");
+	public UnitType getUnitType() {
+		try {
+			if (this.isUnitType) {
+				return this.unitType;
+			} else {
+				throw this.generateTypeWrapperException("UnitType");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
-	public UpgradeType getUpgradeType() throws TypeWrapperException {
-		if (this.isUpgradeType) {
-			return this.upgradeType;
-		} else {
-			throw this.generateTypeWrapperException("UpgradeType");
+	public UpgradeType getUpgradeType() {
+		try {
+			if (this.isUpgradeType) {
+				return this.upgradeType;
+			} else {
+				throw this.generateTypeWrapperException("UpgradeType");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
-	public TechType getTechType() throws TypeWrapperException {
-		if (this.isTechType) {
-			return this.techType;
-		} else {
-			throw this.generateTypeWrapperException("TechType");
+	public TechType getTechType() {
+		try {
+			if (this.isTechType) {
+				return this.techType;
+			} else {
+				throw this.generateTypeWrapperException("TechType");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
