@@ -1,6 +1,8 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.simulator.ActionType;
+import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
@@ -13,7 +15,7 @@ import javaGOAP.IGoapUnit;
  * @author P H - 29.04.2017
  *
  */
-public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExtension {
+public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExtension implements ActionType {
 
 	/**
 	 * Anonymous inner class for the precondition check.
@@ -75,5 +77,39 @@ public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExt
 	@Override
 	protected PreconditionChecker definePreconditionChecker() {
 		return new CustomPreconditionChecker(this);
+	}
+	
+	// TODO: UML ADD FF
+	@Override
+	public int defineScore() {
+		return this.defineType().mineralPrice() + this.defineType().gasPrice();
+	}
+
+	@Override
+	public int defineMineralCost() {
+		return this.defineType().mineralPrice();
+	}
+
+	@Override
+	public int defineGasCost() {
+		return this.defineType().gasPrice();
+	}
+
+	@Override
+	public int defineCompletionTime() {
+		return this.defineType().upgradeTime();
+	}
+
+	@Override
+	public TypeWrapper defineResultType() {
+		return TypeWrapper.generateFrom(this.defineType());
+	}
+	
+	@Override
+	public TypeWrapper defineRequiredType() {
+		// TODO: Possible Change: WhatUpgrades() might be the appropriate function!
+		// TODO: WIP REMOVE
+		System.out.println(this.defineType().whatsRequired() + " " + this.defineType().whatUpgrades());
+		return TypeWrapper.generateFrom(this.defineType().whatsRequired());
 	}
 }

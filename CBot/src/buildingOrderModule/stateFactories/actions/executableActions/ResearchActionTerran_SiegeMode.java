@@ -25,4 +25,5 @@ public class ResearchActionTerran_SiegeMode extends ResearchBaseAction {
 	protected TechType defineType() {
 		return TechType.Tank_Siege_Mode;
 	}
+	
 }

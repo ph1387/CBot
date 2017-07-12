@@ -109,22 +109,22 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction implements A
 	// TODO: UML ADD FF
 	@Override
 	public int defineScore() {
-		return this.defineResultType().getUnitType().mineralPrice() + this.defineResultType().getUnitType().gasPrice();
+		return this.defineType().mineralPrice() + this.defineType().gasPrice();
 	}
 
 	@Override
 	public int defineMineralCost() {
-		return this.defineResultType().getUnitType().mineralPrice();
+		return this.defineType().mineralPrice();
 	}
 
 	@Override
 	public int defineGasCost() {
-		return this.defineResultType().getUnitType().gasPrice();
+		return this.defineType().gasPrice();
 	}
 
 	@Override
 	public int defineCompletionTime() {
-		return this.defineResultType().getUnitType().buildTime();
+		return this.defineType().buildTime();
 	}
 
 	@Override

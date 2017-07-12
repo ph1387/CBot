@@ -1,6 +1,8 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.simulator.ActionType;
+import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Unit;
 import bwapi.UnitType;
 import javaGOAP.IGoapUnit;
@@ -11,7 +13,7 @@ import javaGOAP.IGoapUnit;
  * @author P H - 29.04.2017
  *
  */
-public abstract class BuildAddonBaseAction extends ManagerBaseActionPreconditionExtension {
+public abstract class BuildAddonBaseAction extends ManagerBaseActionPreconditionExtension implements ActionType {
 
 	/**
 	 * Anonymous inner class for the precondition check.
@@ -71,4 +73,33 @@ public abstract class BuildAddonBaseAction extends ManagerBaseActionPrecondition
 	protected PreconditionChecker definePreconditionChecker() {
 		return new CustomPreconditionChecker(this);
 	}
+	
+	
+	
+	// TODO: UML ADD FF
+	@Override
+	public int defineScore() {
+		return this.defineType().mineralPrice() + this.defineType().gasPrice();
+	}
+
+	@Override
+	public int defineMineralCost() {
+		return this.defineType().mineralPrice();
+	}
+
+	@Override
+	public int defineGasCost() {
+		return this.defineType().gasPrice();
+	}
+
+	@Override
+	public int defineCompletionTime() {
+		return this.defineType().buildTime();
+	}
+
+	@Override
+	public TypeWrapper defineResultType() {
+		return TypeWrapper.generateFrom(this.defineType());
+	}
+
 }

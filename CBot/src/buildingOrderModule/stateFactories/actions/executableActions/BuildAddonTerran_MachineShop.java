@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
 /**
@@ -24,5 +25,11 @@ public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
 	@Override
 	protected UnitType defineType() {
 		return UnitType.Terran_Machine_Shop;
+	}
+	
+	// TODO: UML ADD
+	@Override
+	public TypeWrapper defineRequiredType() {
+		return TypeWrapper.generateFrom(UnitType.Terran_Factory);
 	}
 }

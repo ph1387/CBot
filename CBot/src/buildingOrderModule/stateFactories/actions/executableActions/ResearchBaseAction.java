@@ -1,19 +1,22 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.simulator.ActionType;
+import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
 import core.Core;
 import javaGOAP.IGoapUnit;
 
+// TODO: UML ADD
 /**
  * ResearchBaseAction.java --- Superclass for all research related actions.
  * 
  * @author P H - 29.04.2017
  *
  */
-public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionExtension {
+public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionExtension implements ActionType {
 
 	/**
 	 * Anonymous inner class for the precondition check.
@@ -72,5 +75,42 @@ public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionEx
 	@Override
 	protected PreconditionChecker definePreconditionChecker() {
 		return new CustomPreconditionChecker(this);
+	}
+	
+
+
+	
+	
+	
+	
+	// TODO: UML ADD FF
+	@Override
+	public int defineScore() {
+		return this.defineType().mineralPrice() + this.defineType().gasPrice();
+	}
+
+	@Override
+	public int defineMineralCost() {
+		return this.defineType().mineralPrice();
+	}
+
+	@Override
+	public int defineGasCost() {
+		return this.defineType().gasPrice();
+	}
+
+	@Override
+	public int defineCompletionTime() {
+		return this.defineType().researchTime();
+	}
+
+	@Override
+	public TypeWrapper defineResultType() {
+		return TypeWrapper.generateFrom(this.defineType());
+	}
+	
+	@Override
+	public TypeWrapper defineRequiredType() {
+		return TypeWrapper.generateFrom(this.defineType().whatResearches());
 	}
 }
