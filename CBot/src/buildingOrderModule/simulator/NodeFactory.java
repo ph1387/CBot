@@ -1,5 +1,6 @@
 package buildingOrderModule.simulator;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -60,5 +61,18 @@ public class NodeFactory {
 	 */
 	public void markNodeAsAvailable(Node node) {
 		this.availableNodes.add(node);
+	}
+
+	/**
+	 * Function for returning a collection of Node instances making them
+	 * available for other receivers again.
+	 * 
+	 * @param nodes
+	 *            the Nodes that can be used by other classes.
+	 */
+	public void markNodesAsAvailable(Collection<Node> nodes) {
+		for (Node node : nodes) {
+			this.markNodeAsAvailable(node);
+		}
 	}
 }

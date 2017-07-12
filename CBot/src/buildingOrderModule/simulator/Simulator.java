@@ -195,7 +195,9 @@ public class Simulator {
 		ArrayList<ActionType> bestActionTypeSequence = this.extractActionTypeSequence(this.currentLayerNodes.first());
 
 		// Return all Nodes to the NodeFactory.
+		this.nodeFactory.markNodesAsAvailable(this.nodes);
 		this.currentLayerNodes.clear();
+		this.nodes.clear();
 
 		// Return the sequence of ActionTypes with the highest score.
 		return bestActionTypeSequence;
