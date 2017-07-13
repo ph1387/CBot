@@ -10,9 +10,11 @@ import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.simulator.Simulator;
 import buildingOrderModule.simulator.SimulatorThread;
 import buildingOrderModule.simulator.TypeWrapper;
+import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Barracks;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Factory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
+import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
@@ -83,12 +85,20 @@ public class BuildingOrderModule {
 			ActionType trainMarine = new TrainUnitActionTerran_Marine(null);
 			ActionType trainSiegeTank = new TrainUnitActionTerran_SiegeTank(null);
 			
+			ActionType constructMachineShop = new BuildAddonTerran_MachineShop(null);
+			
+			ActionType researchSiegeMode = new ResearchActionTerran_SiegeMode(null);
+			
 			actionTypes.add(constructBarracks);
 			actionTypes.add(constructFactory);
 			actionTypes.add(constructCenter);
 			actionTypes.add(trainWorker);
 			actionTypes.add(trainMarine);
 			actionTypes.add(trainSiegeTank);
+			
+			actionTypes.add(constructMachineShop);
+			
+			actionTypes.add(researchSiegeMode);
 			
 			this.simulator = new Simulator(actionTypes);
 		} catch (Exception e) {

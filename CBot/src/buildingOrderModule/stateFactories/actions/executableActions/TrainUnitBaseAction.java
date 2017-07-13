@@ -102,31 +102,31 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction implements A
 		return count;
 	}
 	
-	
-	
-	
-	
-	// TODO: UML ADD FF
+	// TODO: UML ADD
 	@Override
 	public int defineScore() {
 		return this.defineType().mineralPrice() + this.defineType().gasPrice();
 	}
-
+	
+	// TODO: UML ADD 
 	@Override
 	public int defineMineralCost() {
 		return this.defineType().mineralPrice();
 	}
-
+	
+	// TODO: UML ADD 
 	@Override
 	public int defineGasCost() {
 		return this.defineType().gasPrice();
 	}
-
+	
+	// TODO: UML ADD 
 	@Override
 	public int defineCompletionTime() {
 		return this.defineType().buildTime();
 	}
-
+	
+	// TODO: UML ADD 
 	@Override
 	public TypeWrapper defineResultType() {
 		return TypeWrapper.generateFrom(this.defineType());

@@ -77,40 +77,40 @@ public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionEx
 		return new CustomPreconditionChecker(this);
 	}
 	
-
-
-	
-	
-	
-	
-	// TODO: UML ADD FF
+	// TODO: UML ADD
 	@Override
 	public int defineScore() {
 		return this.defineType().mineralPrice() + this.defineType().gasPrice();
 	}
-
+	
+	// TODO: UML ADD
 	@Override
 	public int defineMineralCost() {
 		return this.defineType().mineralPrice();
 	}
-
+	
+	// TODO: UML ADD
 	@Override
 	public int defineGasCost() {
 		return this.defineType().gasPrice();
 	}
-
+	
+	// TODO: UML ADD
 	@Override
 	public int defineCompletionTime() {
 		return this.defineType().researchTime();
 	}
-
+	
+	// TODO: UML ADD
 	@Override
 	public TypeWrapper defineResultType() {
 		return TypeWrapper.generateFrom(this.defineType());
 	}
 	
+	// TODO: UML ADD
 	@Override
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(this.defineType().whatResearches());
 	}
+	
 }
