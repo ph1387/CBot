@@ -42,6 +42,8 @@ public class Simulator {
 
 	// Available Actions = Units, Buildings, Technologies etc.
 	private HashSet<ActionType> actionTypes;
+	// The amount each ActionType may be used in the simulation.
+	private HashMap<ActionType, Integer> maxActionTypesOccurrences;
 
 	/**
 	 * @param actionTypes
@@ -71,8 +73,6 @@ public class Simulator {
 
 	// -------------------- Functions
 
-	// TODO: Needed Change: Return ActionSequences not Node since super Nodes
-	// are being worked on again.
 	// TODO: Possible Change: Make generic for further use.
 	/**
 	 * Function for performing a simulation based on available ActionTypes and
@@ -127,6 +127,9 @@ public class Simulator {
 		Node root = this.createRoot(currentMinerals, currentGas, currentFrameTimeStamp, typesFree, typesWorking);
 		this.currentLayerNodes.add(root);
 		this.nodes.add(root);
+
+		// Extract the maximum number of occurrences of each ActionType.
+		this.maxActionTypesOccurrences = this.extractMaxActionTypeOccurences();
 
 		// Each iteration a new layer is formed. Each layer simulates a state in
 		// the future:
@@ -200,6 +203,32 @@ public class Simulator {
 
 		// Return the sequence of ActionTypes with the highest score.
 		return bestActionTypeSequence;
+	}
+
+	/**
+	 * Function for extracting the maximum number of times a ActionType may
+	 * appear in a complete simulation iteration. This means a specific
+	 * ActionType can not appear more than the specified number of times in a
+	 * finished ActionType sequence.
+	 * 
+	 * @return a HashMap containing the maximum number of times (Value) a
+	 *         ActionType (Key) may appear. If a value can be added indefinitely
+	 *         the HashMap does contain Integer.MAX_VALUE as stored value.
+	 */
+	private HashMap<ActionType, Integer> extractMaxActionTypeOccurences() {
+		HashMap<ActionType, Integer> occurrences = new HashMap<>();
+
+		// Extract the maximum number of times each ActionType may be added to a
+		// sequence.
+		for (ActionType actionType : this.actionTypes) {
+			// Differentiate between a set amount of times and undefined.
+			if (actionType.defineMaxSimulationOccurrences() >= 0) {
+				occurrences.put(actionType, actionType.defineMaxSimulationOccurrences());
+			} else {
+				occurrences.put(actionType, Integer.MAX_VALUE);
+			}
+		}
+		return occurrences;
 	}
 
 	/**
@@ -285,6 +314,11 @@ public class Simulator {
 		root.setFrameTimeStamp(currentFrameTimeStamp);
 		root.setTypesFree(unitsFree);
 		root.setTypesWorking(typesWorking);
+
+		// Set the occurrence to 0 for all defined ActionTypes.
+		for (ActionType actionType : this.actionTypes) {
+			root.getActionTypeOccurrences().put(actionType, 0);
+		}
 
 		return root;
 	}
@@ -451,10 +485,13 @@ public class Simulator {
 		// the end.
 		newNode.setScore(parentNode.getScore() - ((stepAmount - iterationCount) * idleScorePenalty));
 
-		// Transfer the occupied and free Units to the new Node.
+		// Transfer the occupied and free Types to the new Node.
 		// TODO: WIP ALSO DO A DEEP CLONE
 		newNode.setTypesWorking(new HashMap<>(parentNode.getTypesWorking()));
 		newNode.setTypesFree(new HashMap<>(parentNode.getTypesFree()));
+
+		// Transfer the counter for each ActionType to the new Node.
+		newNode.setActionTypeOccurrences(new HashMap<>(parentNode.getActionTypeOccurrences()));
 
 		return newNode;
 	}
@@ -497,9 +534,17 @@ public class Simulator {
 		newNode.setScore(parentNode.getScore() + newNode.generateScoreOfActions()
 				+ (newNode.getChosenActions().size() * consecutiveActionsBonus));
 
-		// Transfer the occupied and free Units to the new Node.
+		// Transfer the occupied and free Types to the new Node.
 		newNode.setTypesWorking(new HashMap<>(sequence.getOccupiedTypeTimes()));
 		newNode.setTypesFree(new HashMap<>(sequence.getTypesFree()));
+
+		// Transfer the counter for each ActionType to the new Node.
+		newNode.setActionTypeOccurrences(new HashMap<>(parentNode.getActionTypeOccurrences()));
+
+		// Increase the counter for each used ActionType in the HashMap.
+		for (ActionType actionType : sequence.getActionTypeSequence()) {
+			newNode.getActionTypeOccurrences().put(actionType, newNode.getActionTypeOccurrences().get(actionType) + 1);
+		}
 
 		return newNode;
 	}
@@ -524,45 +569,64 @@ public class Simulator {
 		HashSet<ActionType> possibleActionTypes = new HashSet<>();
 		Queue<ActionSequence> workingSets = new LinkedList<>();
 
-		// Find the ActionTypes that are actually executable with the current
+		// Find the ActionTypes that are actually usable with the current
 		// state of the Node and add them to the Queue of ActionType sequences
 		// that are being processed.
+		this.findUsableActionTypes(currentNode, simulatedTimeStamp, possibleActionTypes, workingSets);
+
+		// Work on the Queue of ActionType sequences until all executable
+		// permutations are found.
+		this.findAllPossibleActionTypeCombinations(currentNode, simulatedTimeStamp, possibleActionTypes, workingSets,
+				actionSequences);
+
+		return actionSequences;
+	}
+
+	/**
+	 * Function for finding the initial ActionTypes that can be executed. These
+	 * ActionTypes are one by one transformed into a ActionSequence and then
+	 * added to the Queue of ActionSequences to be worked on. Also each
+	 * ActionType which can be executed at the current moment (-> Simulated Node
+	 * timeStamp and state in the future) is added to a Set of executable
+	 * ActionTypes for later use.
+	 * 
+	 * @param currentNode
+	 *            the Node against whose state all possible ActionTypes are
+	 *            checked.
+	 * @param simulatedTimeStamp
+	 *            the timeStamp in the simulated future in frames.
+	 * @param possibleActionTypes
+	 *            the Set to which all ActionTypes are added whose execution is
+	 *            possible.
+	 * @param workingSets
+	 *            the Queue to which the initial ActionSequences are added.
+	 */
+	private void findUsableActionTypes(Node currentNode, int simulatedTimeStamp,
+			HashSet<ActionType> possibleActionTypes, Queue<ActionSequence> workingSets) {
 		for (ActionType actionType : this.actionTypes) {
+			// Costs and preconditions must apply before adding the ActionType
+			// towards the already existing sequence of Actions.
 			if (currentNode.getTypesFree().get(actionType.defineRequiredType()) != null
 					&& currentNode.getTypesFree().get(actionType.defineRequiredType()) > 0
 					&& currentNode.getCurrentMinerals() >= actionType.defineMineralCost()
 					&& currentNode.getCurrentGas() >= actionType.defineGasCost()) {
-				workingSets.add(this.generateNewActionSequence(currentNode, actionType, simulatedTimeStamp));
+				// Since each ActionType may only be used a certain amount in a
+				// complete path along the tree (number of following Nodes) the
+				// total number of ActionTypes used for this particular
+				// (parent-) Node are being compared. Only ActionTypes below the
+				// threshold may be used.
+				boolean belowThreshold = currentNode.getActionTypeOccurrences()
+						.get(actionType) < this.maxActionTypesOccurrences.get(actionType);
 
-				// Save the ActionType for later -> Saves time looking up
-				// Actions!
-				possibleActionTypes.add(actionType);
+				if (belowThreshold) {
+					workingSets.add(this.generateNewActionSequence(currentNode, actionType, simulatedTimeStamp));
+
+					// Save the ActionType for later -> Saves time looking up
+					// Actions!
+					possibleActionTypes.add(actionType);
+				}
 			}
 		}
-
-		// Work on the Queue of ActionType sequences until all executable
-		// permutations are found.
-		while (!workingSets.isEmpty()) {
-			ActionSequence currentActionSequence = workingSets.poll();
-			boolean permutationFinished = true;
-
-			// Find all other ActionTypes that are executable in combination
-			// with the current sequence. If none are found (permutationFinished
-			// = true) then the permutation is final and can not be split /
-			// combined any further.
-			for (ActionType actionType : possibleActionTypes) {
-				permutationFinished = this.tryFinilizingNewActionSequencePermutation(currentActionSequence, actionType,
-						currentNode, simulatedTimeStamp, workingSets);
-			}
-
-			// The sequence could not be modified -> final version was found and
-			// is a valid permutation.
-			if (permutationFinished) {
-				actionSequences.add(currentActionSequence);
-			}
-		}
-
-		return actionSequences;
 	}
 
 	/**
@@ -626,6 +690,73 @@ public class Simulator {
 	}
 
 	/**
+	 * Function for finding all combinations of ActionTypes that can be
+	 * performed together from the specified Node. The finished products are
+	 * stored in the provided Set.
+	 * 
+	 * @param currentNode
+	 *            the Node against whose state all possible ActionTypes are
+	 *            checked.
+	 * @param simulatedTimeStamp
+	 *            the timeStamp in the simulated future in frames.
+	 * @param possibleActionTypes
+	 *            the Set from which all possible ActionTypes are received. This
+	 *            ensures that only possible Actions are being considered for
+	 *            the addition to any existing ActionSequences.
+	 * @param workingSets
+	 *            the Queue from which the initial ActionSequences are received
+	 *            and all operations are being performed on. The Queue is empty
+	 *            after calling this function.
+	 * @param actionSequences
+	 *            the Set of all finished ActionSequences that can be performed
+	 *            from the current Node. This includes all combinations of
+	 *            possible / executable ActionTypes that were provided.
+	 */
+	private void findAllPossibleActionTypeCombinations(Node currentNode, int simulatedTimeStamp,
+			HashSet<ActionType> possibleActionTypes, Queue<ActionSequence> workingSets,
+			HashSet<ActionSequence> actionSequences) {
+		while (!workingSets.isEmpty()) {
+			ActionSequence currentActionSequence = workingSets.poll();
+			boolean permutationFinished = true;
+
+			// Find all other ActionTypes that are executable in combination
+			// with the current sequence. If none are found (permutationFinished
+			// = true) then the permutation is final and can not be split /
+			// combined any further.
+			for (ActionType actionType : possibleActionTypes) {
+				// Like above each ActionType may be used only a certain amount
+				// of times. Count the number of times the ActionType was
+				// already added again and compare that amount with the set
+				// threshold.
+				int appearanceCount = 0;
+
+				// Count the appearances for the specific ActionType.
+				for (ActionType countingActionType : currentActionSequence.getActionTypeSequence()) {
+					if (countingActionType == actionType) {
+						appearanceCount++;
+					}
+				}
+
+				// Count below threshold.
+				if (appearanceCount < this.maxActionTypesOccurrences.get(actionType)) {
+					permutationFinished = this.tryFinalizingNewActionSequencePermutation(currentActionSequence,
+							actionType, currentNode, simulatedTimeStamp, workingSets);
+				}
+				// Threshold for ActionType reached -> Sequence finished.
+				else {
+					permutationFinished = true;
+				}
+			}
+
+			// The sequence could not be modified -> final version was found and
+			// is a valid permutation.
+			if (permutationFinished) {
+				actionSequences.add(currentActionSequence);
+			}
+		}
+	}
+
+	/**
 	 * Function for testing if a permutation of ActionTypes already exists in a
 	 * provided Queue of sequences ((1, 2) == (2, 1) => {1, 2}). Therefore this
 	 * function takes an already existing ActionSequence as well as another
@@ -657,7 +788,7 @@ public class Simulator {
 	 *         is final and false if the ActionType could be added to the
 	 *         ActionSequence.
 	 */
-	private boolean tryFinilizingNewActionSequencePermutation(ActionSequence baseActionSequence,
+	private boolean tryFinalizingNewActionSequencePermutation(ActionSequence baseActionSequence,
 			ActionType additionalActionType, Node currentNode, int simulatedTimeStamp,
 			Queue<ActionSequence> actionSequenceStorage) {
 		// The ActionType's costs as well as the Type that this action
@@ -868,5 +999,9 @@ public class Simulator {
 	}
 
 	// ------------------------------ Getter / Setter
+
+	public void setActionTypes(HashSet<ActionType> actionTypes) {
+		this.actionTypes = actionTypes;
+	}
 
 }

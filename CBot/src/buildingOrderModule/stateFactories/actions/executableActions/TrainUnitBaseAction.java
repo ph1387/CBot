@@ -131,4 +131,11 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction implements A
 	public TypeWrapper defineResultType() {
 		return TypeWrapper.generateFrom(this.defineType());
 	}
+	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return -1;
+	}
+	
 }

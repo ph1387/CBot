@@ -18,6 +18,7 @@ public class Node implements Comparable<Node> {
 
 	private HashMap<TypeWrapper, Integer> typesFree = new HashMap<>();
 	private HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking = new HashMap<>();
+	private HashMap<ActionType, Integer> actionTypeOccurrences = new HashMap<>();
 	private ArrayList<ActionType> chosenActions = new ArrayList<>();
 	private int currentMinerals = 0;
 	private int currentGas = 0;
@@ -89,6 +90,14 @@ public class Node implements Comparable<Node> {
 
 	public void setTypesWorking(HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> unitsWorking) {
 		this.typesWorking = unitsWorking;
+	}
+	
+	public HashMap<ActionType, Integer> getActionTypeOccurrences() {
+		return actionTypeOccurrences;
+	}
+
+	public void setActionTypeOccurrences(HashMap<ActionType, Integer> actionTypeOccurrences) {
+		this.actionTypeOccurrences = actionTypeOccurrences;
 	}
 
 	public ArrayList<ActionType> getChosenActions() {

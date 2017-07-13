@@ -108,4 +108,10 @@ public abstract class ConstructBaseAction extends ManagerBaseAction implements A
 		return TypeWrapper.generateFrom(Core.getInstance().getPlayer().getRace().getWorker());
 	}
 	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return -1;
+	}
+	
 }

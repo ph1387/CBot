@@ -118,4 +118,10 @@ public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExt
 		return TypeWrapper.generateFrom(this.defineType().whatsRequired());
 	}
 	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return -1;
+	}
+	
 }

@@ -46,4 +46,12 @@ public interface ActionType {
 	 */
 	public int defineCompletionTime();
 
+	/**
+	 *
+	 * @return the maximum number of times the ActionType may occur in a
+	 *         complete simulation cycle. -1 counts as undefined and therefore
+	 *         the ActionType may be added as desired.
+	 */
+	public int defineMaxSimulationOccurrences();
+
 }

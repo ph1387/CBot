@@ -112,5 +112,11 @@ public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionEx
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(this.defineType().whatResearches());
 	}
+
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return -1;
+	}
 	
 }
