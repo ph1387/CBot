@@ -19,13 +19,16 @@ public abstract class ActionQueueDefault extends ManagerBaseAction {
 	protected List<ManagerBaseAction> actionQueue = new ArrayList<>();
 	protected int index = 0;
 
+	/**
+	 * @param target
+	 *            type: Integer, the amount of times Queue will be iterated
+	 *            through.
+	 */
 	public ActionQueueDefault(Object target) {
 		super(target);
 
 		this.addEffect(new GoapState(0, "buildOrderAllowed", false));
-		this.addEffect(new GoapState(0, "startingBuildOrderNeeded", false));
 		this.addPrecondition(new GoapState(0, "buildOrderAllowed", true));
-		this.addPrecondition(new GoapState(0, "startingBuildOrderNeeded", true));
 	}
 
 	// -------------------- Functions
@@ -76,9 +79,9 @@ public abstract class ActionQueueDefault extends ManagerBaseAction {
 
 		this.index = 0;
 	}
-	
+
 	// ------------------------------ Getter / Setter
-	
+
 	// TODO: UML ADD
 	public List<ManagerBaseAction> getActionQueue() {
 		return actionQueue;

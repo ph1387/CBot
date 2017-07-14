@@ -12,7 +12,7 @@ import javaGOAP.GoapState;
 public class ManagerGoalStateActionQueue extends ManagerGoalStateDefault {
 
 	public ManagerGoalStateActionQueue() {
-		this.add(new GoapState(10, "buildOrderAllowed", false));
-		this.add(new GoapState(10, "startingBuildOrderNeeded", false));
+		this.add(new GoapState(1, "buildOrderAllowed", false));
+		this.add(new GoapState(1, "startingBuildOrderNeeded", false));
 	}
 }

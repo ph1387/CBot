@@ -2,7 +2,7 @@ package buildingOrderModule.stateFactories.actions;
 
 import java.util.HashSet;
 
-import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueTerranRaxFE;
+import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueStartingTerranRaxFE;
 import javaGOAP.GoapAction;
 
 /**
@@ -14,6 +14,6 @@ import javaGOAP.GoapAction;
 public class AvailableActionsTerran extends HashSet<GoapAction> {
 
 	public AvailableActionsTerran() {
-		this.add(new ActionQueueTerranRaxFE(1));
+		this.add(new ActionQueueStartingTerranRaxFE(1));
 	}
 }

@@ -12,7 +12,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitAct
 import javaGOAP.GoapState;
 
 /**
- * ActionQueueTerranRaxFE.java --- Action Queue for a Terran opening:
+ * ActionQueueStartingTerranRaxFE.java --- Action Queue for a Terran opening:
  * <p>
  * <q>The 1 Barracks Fast Expand is a build which aims to create an economic
  * advantage for the Terran, without being as risky as 14 CC. It negates much of
@@ -26,9 +26,14 @@ import javaGOAP.GoapState;
  * @author P H - 30.04.2017
  *
  */
-public class ActionQueueTerranRaxFE extends ActionQueueDefault {
+public class ActionQueueStartingTerranRaxFE extends ActionQueueDefault {
 
-	public ActionQueueTerranRaxFE(Object target) {
+	/**
+	 * @param target
+	 *            type: Integer, the amount of times Queue will be iterated
+	 *            through.
+	 */
+	public ActionQueueStartingTerranRaxFE(Object target) {
 		super(target);
 
 		this.addEffect(new GoapState(0, "buildingsNeeded", false));
