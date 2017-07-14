@@ -3,8 +3,13 @@ package buildingOrderModule.stateFactories;
 import java.util.HashSet;
 import java.util.List;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.actions.AvailableActionsTerran;
 import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerran;
+import buildingOrderModule.stateFactories.updater.ActionUpdaterTerran;
+import buildingOrderModule.stateFactories.updater.GoalStateUpdaterActionQueueTerran;
+import buildingOrderModule.stateFactories.updater.Updater;
+import buildingOrderModule.stateFactories.updater.WorldStateUpdaterActionQueueTerran;
 import buildingOrderModule.stateFactories.worldStates.ManagerWorldStateActionQueueTerran;
 import javaGOAP.GoapAction;
 import javaGOAP.GoapState;
@@ -35,5 +40,18 @@ public class StateFactoryTerranBasic extends StateFactoryDefault {
 		return new AvailableActionsTerran();
 	}
 
-	// TODO: Needed Change: Action updater necessary?
+	@Override
+	public Updater getMatchingWorldStateUpdater(BuildActionManager manager) {
+		return new WorldStateUpdaterActionQueueTerran(manager);
+	}
+
+	@Override
+	public Updater getMatchingGoalStateUpdater(BuildActionManager manager) {
+		return new GoalStateUpdaterActionQueueTerran(manager);
+	}
+
+	@Override
+	public Updater getMatchingActionUpdater(BuildActionManager manager) {
+		return new ActionUpdaterTerran(manager);
+	}
 }
