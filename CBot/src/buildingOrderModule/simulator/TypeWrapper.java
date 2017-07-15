@@ -34,6 +34,8 @@ public class TypeWrapper {
 	public static final TypeWrapper UnitType_Terran_Siege_Tank_Tank_Mode = new TypeWrapper(
 			UnitType.Terran_Siege_Tank_Tank_Mode);
 	public static final TypeWrapper UnitType_Terran_Vulture = new TypeWrapper(UnitType.Terran_Vulture);
+	public static final TypeWrapper UnitType_Terran_Refinery = new TypeWrapper(UnitType.Terran_Refinery);
+	public static final TypeWrapper UnitType_Terran_Supply_Depot = new TypeWrapper(UnitType.Terran_Supply_Depot);
 
 	// UpgradeType wrappers:
 
@@ -92,6 +94,8 @@ public class TypeWrapper {
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_SCV, UnitType_Terran_SCV);
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Siege_Tank_Tank_Mode, UnitType_Terran_Siege_Tank_Tank_Mode);
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Vulture, UnitType_Terran_Vulture);
+		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Refinery, UnitType_Terran_Refinery);
+		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Supply_Depot, UnitType_Terran_Supply_Depot);
 
 		// UpgradeType wrappers:
 

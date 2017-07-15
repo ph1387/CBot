@@ -178,7 +178,7 @@ public class ActionUpdaterTerran extends ActionUpdaterGeneral {
 		// Iterate through all Player Units and add the information towards the HashMaps.
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			// Differentiate between building and other Units.
-			if(unit.getType().isBuilding() && !unit.isBeingConstructed() && unit.getType() != Core.getInstance().getPlayer().getRace().getRefinery()) {
+			if(unit.getType().isBuilding() && !unit.isBeingConstructed()) {
 				if(unit.isTraining()) {
 					addTypeWorking(simulationTypesWorking, unit.getType(), currentFrameTimeStamp + unit.getRemainingTrainTime());
 				} else {

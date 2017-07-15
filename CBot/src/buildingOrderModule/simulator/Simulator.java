@@ -147,7 +147,14 @@ public class Simulator {
 			// Simulated resource gathering:
 			int simulatedMineralGain = this.generateSimulatedMineralGain(typesFree, typesWorking, workerType,
 					frameStep);
-			int simulatedGasGain = (int) (frameStep * this.gasPerFrame);
+			int simulatedGasGain = 0;
+			// Only simulate gas gain if at least one single refinery was built
+			// before. Multiply the gas gain by the amount of refineries
+			// constructed.
+			if (typesFree.containsKey(TypeWrapper.UnitType_Terran_Refinery)) {
+				simulatedGasGain = (int) (typesFree.get(TypeWrapper.UnitType_Terran_Refinery) * frameStep
+						* this.gasPerFrame);
+			}
 
 			// Free all Units whose ActionType timeStamp lie in the past.
 			if (i != 0) {
