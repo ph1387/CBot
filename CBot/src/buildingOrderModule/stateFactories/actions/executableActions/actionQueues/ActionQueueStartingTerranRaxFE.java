@@ -26,7 +26,7 @@ import javaGOAP.GoapState;
  * @author P H - 30.04.2017
  *
  */
-public class ActionQueueStartingTerranRaxFE extends ActionQueueDefault {
+public class ActionQueueStartingTerranRaxFE extends ActionQueueStarting {
 
 	/**
 	 * @param target
@@ -35,11 +35,6 @@ public class ActionQueueStartingTerranRaxFE extends ActionQueueDefault {
 	 */
 	public ActionQueueStartingTerranRaxFE(Object target) {
 		super(target);
-
-		this.addEffect(new GoapState(0, "buildingsNeeded", false));
-		this.addEffect(new GoapState(0, "unitsNeeded", false));
-		this.addPrecondition(new GoapState(0, "buildingsNeeded", true));
-		this.addPrecondition(new GoapState(0, "unitsNeeded", true));
 
 		this.actionQueue.add(new TrainUnitActionWorker(6));
 		this.actionQueue.add(new ConstrucActionTerran_Barracks(1));

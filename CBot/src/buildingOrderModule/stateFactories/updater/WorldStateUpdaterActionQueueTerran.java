@@ -2,6 +2,7 @@ package buildingOrderModule.stateFactories.updater;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerran;
+import core.Core;
 
 // TODO: UML ADD
 /**
@@ -13,6 +14,8 @@ import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerra
  */
 public class WorldStateUpdaterActionQueueTerran extends WorldStateUpdaterActionQueue {
 
+	private boolean simuationAllowed = false;
+
 	public WorldStateUpdaterActionQueueTerran(BuildActionManager buildActionManager) {
 		super(buildActionManager);
 	}
@@ -23,7 +26,12 @@ public class WorldStateUpdaterActionQueueTerran extends WorldStateUpdaterActionQ
 	public void update(BuildActionManager manager) {
 		super.update(manager);
 
-		// TODO: ADD UPDATER
+		// Allow the use of the Simulator after a certain amount of time.
+		if (!this.simuationAllowed
+				&& Core.getInstance().getGame().getFrameCount() >= this.startingBuildingOrderNeededFrameMax) {
+			this.changeWorldStateEffect("simulationAllowed", true);
 
+			this.simuationAllowed = true;
+		}
 	}
 }

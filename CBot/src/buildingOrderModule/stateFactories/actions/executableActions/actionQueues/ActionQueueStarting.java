@@ -20,7 +20,11 @@ public class ActionQueueStarting extends ActionQueueDefault {
 	public ActionQueueStarting(Object target) {
 		super(target);
 
+		this.addEffect(new GoapState(0, "buildingsNeeded", false));
+		this.addEffect(new GoapState(0, "unitsNeeded", false));
 		this.addEffect(new GoapState(0, "startingBuildOrderNeeded", false));
+		this.addPrecondition(new GoapState(0, "buildingsNeeded", true));
+		this.addPrecondition(new GoapState(0, "unitsNeeded", true));
 		this.addPrecondition(new GoapState(0, "startingBuildOrderNeeded", true));
 	}
 

@@ -1,5 +1,7 @@
 package buildingOrderModule.stateFactories.worldStates;
 
+import javaGOAP.GoapState;
+
 /**
  * ManagerWorldStateActionQueueTerran.java --- WorldState for a Terran
  * BuildActionManager.
@@ -10,6 +12,6 @@ package buildingOrderModule.stateFactories.worldStates;
 public class ManagerWorldStateActionQueueTerran extends ManagerWorldStateActionQueue {
 
 	public ManagerWorldStateActionQueueTerran() {
-
+		this.add(new GoapState(0, "simulationAllowed", false));
 	}
 }

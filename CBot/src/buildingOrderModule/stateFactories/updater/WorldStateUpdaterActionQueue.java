@@ -2,6 +2,7 @@ package buildingOrderModule.stateFactories.updater;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.worldStates.ManagerWorldStateActionQueue;
+import core.Core;
 
 // TODO: UML ADD
 /**
@@ -13,6 +14,9 @@ import buildingOrderModule.stateFactories.worldStates.ManagerWorldStateActionQue
  */
 public class WorldStateUpdaterActionQueue extends WorldStateUpdaterDefault {
 
+	private boolean startingBuildingOrderNeeded = true;
+	protected int startingBuildingOrderNeededFrameMax = 1000;
+
 	public WorldStateUpdaterActionQueue(BuildActionManager buildActionManager) {
 		super(buildActionManager);
 	}
@@ -23,8 +27,14 @@ public class WorldStateUpdaterActionQueue extends WorldStateUpdaterDefault {
 	public void update(BuildActionManager manager) {
 		super.update(manager);
 
-		// TODO: ADD UPDATER
+		// Remove the need of a starting building order after a certain amount
+		// of time has passed.
+		if (this.startingBuildingOrderNeeded
+				&& Core.getInstance().getGame().getFrameCount() >= startingBuildingOrderNeededFrameMax) {
+			this.changeWorldStateEffect("startingBuildOrderNeeded", false);
 
+			this.startingBuildingOrderNeeded = false;
+		}
 	}
 
 }
