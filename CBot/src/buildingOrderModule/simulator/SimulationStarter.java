@@ -40,7 +40,7 @@ public class SimulationStarter {
 	public boolean isRunning() {
 		return this.simulationThread != null && this.simulationThread.isAlive();
 	}
-	
+
 	// TODO: UML ADD JAVADOC
 	public boolean runStarter(HashSet<ActionType> actionTypes, List<Unit> units, int currentMinerals, int currentGas,
 			UnitType workerUnitType, int currentFrameTimeStamp) {
@@ -49,6 +49,12 @@ public class SimulationStarter {
 		// The previous SimulatorThread must have finished before a new one can
 		// be started.
 		if (this.simulationThread == null || this.simulationThread.getState() == Thread.State.TERMINATED) {
+			// Remove the Thread from the pool of Threads that must be waited
+			// for at the end of the game.
+			if (this.simulationThread != null) {
+				core.CBot.getInstance().removeFromThreadFinishing(this.simulationThread);
+			}
+
 			this.simulator.setActionTypes(actionTypes);
 			TypeWrapper workerType = TypeWrapper.generateFrom(workerUnitType);
 
@@ -60,6 +66,7 @@ public class SimulationStarter {
 			extractFreeAndWorkingTypeWrappers(units, simulationTypesFree, simulationTypesWorking,
 					currentFrameTimeStamp);
 
+			// TODO: Possible Change: Setter instead of creating new instances.
 			// Start a new Thread with the provided information.
 			this.simulationThread = new SimulatorThread(this.simulator, this.generatedActionTypeSequences, workerType,
 					simulationTypesFree, simulationTypesWorking, currentMinerals, currentGas, currentFrameTimeStamp);
@@ -67,6 +74,10 @@ public class SimulationStarter {
 
 			// The Thread got started and no errors occurred.
 			success = true;
+
+			// Add the new Thread to the List of Threads that must be waited
+			// for.
+			core.CBot.getInstance().addToThreadFinishing(this.simulationThread);
 		}
 
 		return success;

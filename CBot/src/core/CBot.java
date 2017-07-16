@@ -1,5 +1,8 @@
 package core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import buildingOrderModule.BuildingOrderModule;
 import bwapi.BWEventListener;
 import bwapi.Game;
@@ -20,7 +23,6 @@ import unitTrackerModule.UnitTrackerModule;
  */
 public class CBot implements BWEventListener {
 	private static CBot instance;
-
 	private Mirror mirror = new Mirror();
 	private Game game;
 	private boolean started = false;
@@ -31,9 +33,12 @@ public class CBot implements BWEventListener {
 	private UnitControlModule unitControlModule;
 	private BuildingOrderModule buildingOrderModule;
 
-	// Information storage across multiple modules
+	// Information storage across multiple modules.
 	private InformationStorage informationStorage = new InformationStorage();
-	
+
+	// Threads that must be finished before shutting down the main Thread.
+	private List<Thread> finishingThreads = new ArrayList<Thread>();
+
 	private CBot() {
 
 	}
@@ -64,6 +69,43 @@ public class CBot implements BWEventListener {
 		} catch (Exception e) {
 			System.out.println("---RUN: failed---");
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Function for adding a Thread to the pool of Threads that must be waited
+	 * for when the game ends.
+	 * 
+	 * @param thread
+	 *            the Thread that must be waited for.
+	 */
+	public void addToThreadFinishing(Thread thread) {
+		this.finishingThreads.add(thread);
+	}
+
+	/**
+	 * Function for removing a Thread from the pool of Threads that must be
+	 * waited for when the game ends.
+	 * 
+	 * @param thread
+	 *            the Thread that is going to be removed.
+	 */
+	public void removeFromThreadFinishing(Thread thread) {
+		this.finishingThreads.remove(thread);
+	}
+
+	/**
+	 * Function for waiting for all stored Threads to finish. Causes the main
+	 * Thread to pause until all Threads are terminated.
+	 */
+	public void waitForAllThreads() {
+		// Wait for all stored Threads to finish.
+		for (Thread thread : this.finishingThreads) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -150,8 +192,8 @@ public class CBot implements BWEventListener {
 	}
 
 	@Override
-	public void onEnd(boolean arg0) {
-
+	public void onEnd(boolean isWinner) {
+		this.waitForAllThreads();
 	}
 
 	@Override
@@ -231,7 +273,7 @@ public class CBot implements BWEventListener {
 	public BuildingOrderModule getBuildingOrderModule() {
 		return buildingOrderModule;
 	}
-	
+
 	public InformationStorage getInformationStorage() {
 		return informationStorage;
 	}
