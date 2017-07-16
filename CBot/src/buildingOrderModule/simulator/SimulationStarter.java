@@ -37,6 +37,11 @@ public class SimulationStarter {
 	// -------------------- Functions
 
 	// TODO: UML ADD JAVADOC
+	public boolean isRunning() {
+		return this.simulationThread != null && this.simulationThread.isAlive();
+	}
+	
+	// TODO: UML ADD JAVADOC
 	public boolean runStarter(HashSet<ActionType> actionTypes, List<Unit> units, int currentMinerals, int currentGas,
 			UnitType workerUnitType, int currentFrameTimeStamp) {
 		boolean success = false;

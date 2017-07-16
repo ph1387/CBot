@@ -36,7 +36,14 @@ public class ActionUpdaterTerran extends ActionUpdaterGeneral {
 	private HashSet<ActionType> actionTypes = generateAllAvailableActionTypes();
 
 	// Simulation frequency:
+	// The max difference of the index and the size of the action Queue. When
+	// the difference is less or equal this value a new simulation Thread is
+	// started.
+	private int maxActionQueueIndexOffsetTilEnd = 2;
+	// Time stamp of the last check of the action Queue.
 	private Integer lastSimulationTimeStampFrames = null;
+	// Time difference between the checking if the action Queue was being worked
+	// on.
 	private int nextSimulationTimeStampDifferenceFrames = 1000;
 
 	// Multithreading for the building order simulation:
@@ -97,7 +104,13 @@ public class ActionUpdaterTerran extends ActionUpdaterGeneral {
 		this.updateSimulationStarter();
 	}
 
-	// TODO: UML ADD JAVADOC
+	// TODO: UML ADD
+	/**
+	 * Function for acting upon a generated action Queue by the SimulatorThread
+	 * itself. The ActionTypes are transformed into ManagerBaseActions and then
+	 * added to the existing action Queue of the ActionQueueSimulationResults
+	 * Action.
+	 */
 	private void actOnSimulationThreadResult() {
 		ActionQueueSimulationResults simulationAction = (ActionQueueSimulationResults) this
 				.getActionFromInstance(ActionQueueSimulationResults.class);
@@ -109,8 +122,8 @@ public class ActionUpdaterTerran extends ActionUpdaterGeneral {
 			transformedResult.add((ManagerBaseAction) actionType);
 		}
 
-		// Forward the transformed ActionTypes towards the Action.
-		simulationAction.setActionQueue(transformedResult);
+		// Forward the transformed ActionTypes towards the Action itself.
+		simulationAction.addToActionQueue(transformedResult);
 
 		// TODO: WIP REMOVE
 		System.out.println("\nACT ON RESULT:");
@@ -120,11 +133,42 @@ public class ActionUpdaterTerran extends ActionUpdaterGeneral {
 		System.out.println("\n");
 	}
 
-	// TODO: UML ADD JAVADOC
+	// TODO: UML ADD
+	/**
+	 * Function for updating all information regarding the SimulationStarter.
+	 * Either resetting existing action Queues of the
+	 * ActionqueueSimulationResults instance itself when no progress is being
+	 * made (fast enough) or starting a new SimulatorThread when the existing
+	 * action Queue is near its end and a new Queue is needed to further
+	 * progress into the game.
+	 */
 	private void updateSimulationStarter() {
-		// A certain time has to pass before a simulation is being started.
-		if (this.lastSimulationTimeStampFrames == null || Core.getInstance().getGame()
-				.getFrameCount() >= this.lastSimulationTimeStampFrames + this.nextSimulationTimeStampDifferenceFrames) {
+		// Check in predefined time differences if any changes in the action
+		// Queues index occurred. If this is not the case the Bot is unable to
+		// execute the Actions defined in it and therefore the action Queue must
+		// be reseted.
+		if (this.lastSimulationTimeStampFrames == null || Core.getInstance().getGame().getFrameCount()
+				- this.lastSimulationTimeStampFrames >= this.nextSimulationTimeStampDifferenceFrames) {
+			ActionQueueSimulationResults action = (ActionQueueSimulationResults) this
+					.getActionFromInstance(ActionQueueSimulationResults.class);
+			this.lastSimulationTimeStampFrames = Core.getInstance().getGame().getFrameCount();
+
+			// If changes occurred reset the flag.
+			if (action.didChangesOccurr()) {
+				action.resetChangesFlag();
+			}
+			// If no changes occurred first set the index to the maximum
+			// possible index and then call the reset function. This removes all
+			// stored actions and resets the index to 0.
+			else {
+				action.setIndex(action.getActionQueue().size() - 1);
+				action.reset();
+			}
+		}
+
+		// Check if the index of the action Queue is nearly at the end of the
+		// Queue. If it is, start a new simulation.
+		if (this.isActionQueueNearlyFinished() && !this.simulationActionStarter.isRunning()) {
 			// Extract all currently relevant information.
 			int currentFrameTimeStamp = Core.getInstance().getGame().getFrameCount();
 			int currentMinerals = Core.getInstance().getPlayer().minerals();
@@ -139,6 +183,22 @@ public class ActionUpdaterTerran extends ActionUpdaterGeneral {
 				this.lastSimulationTimeStampFrames = currentFrameTimeStamp;
 			}
 		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if the index of the action Queue of the
+	 * ActionQueueSimulationResults is nearly at the end of the action Queue.
+	 * 
+	 * @return true if the max difference of the index and the size of the
+	 *         action Queue is being met (Else false).
+	 */
+	private boolean isActionQueueNearlyFinished() {
+		ActionQueueSimulationResults action = (ActionQueueSimulationResults) this
+				.getActionFromInstance(ActionQueueSimulationResults.class);
+
+		// The index must nearly be at the end for the function to return true.
+		return action.getActionQueue().size() - action.getIndex() <= this.maxActionQueueIndexOffsetTilEnd;
 	}
 
 }
