@@ -3,6 +3,7 @@ package buildingOrderModule.stateFactories.updater;
 import java.util.HashSet;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoringDirector;
 import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.stateFactories.actions.AvailableActionsTerran;
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
@@ -61,6 +62,11 @@ public class ActionUpdaterTerran extends ActionUpdaterSimulationQueue {
 		}
 
 		return availableActionTypes;
+	}
+
+	@Override
+	protected ScoringDirector defineScoringDirector() {
+		return new ScoringDirector();
 	}
 
 }

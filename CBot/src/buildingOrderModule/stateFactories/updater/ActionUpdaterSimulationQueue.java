@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoringAction;
+import buildingOrderModule.scoringDirector.ScoringDirector;
 import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.simulator.SimulationStarter;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueue;
@@ -25,7 +27,14 @@ import core.Core;
  */
 public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral {
 
+	// The actions which are used in the simulation.
 	private HashSet<ActionType> actionTypes = this.generateAllAvailableActionTypes();
+	// Used for generating a score for each action used in the simulation. These
+	// scores must be updated to represent a valid state of the game for the
+	// simulator.
+	private ScoringDirector scoringDirector = this.defineScoringDirector();
+	// The actions that the ScoringDirector will be updating.
+	private HashSet<ScoringAction> scoringActions = this.transformAvailableActionsIntoScoringActions();
 
 	// Simulation frequency:
 	// The max difference of the index and the size of the action Queue. When
@@ -55,6 +64,30 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	 * @return a HashSet containing all available ActionTypes for simulations.
 	 */
 	protected abstract HashSet<ActionType> generateAllAvailableActionTypes();
+
+	/**
+	 * Function for defining which ScoringDirector should be used.
+	 * 
+	 * @return the ScoringDirector which will be used for updating the scores of
+	 *         all Actions used in the simulations.
+	 */
+	protected abstract ScoringDirector defineScoringDirector();
+
+	/**
+	 * Function for transforming the available actions into ScoringActions that
+	 * can be used by the ScoringDirector.
+	 * 
+	 * @return a HashSet containing all available ScoringActions for the
+	 *         ScoringDirector to be updated.
+	 */
+	private HashSet<ScoringAction> transformAvailableActionsIntoScoringActions() {
+		HashSet<ScoringAction> transformedScoringActions = new HashSet<>();
+
+		for (ActionType actionType : this.actionTypes) {
+			transformedScoringActions.add((ScoringAction) actionType);
+		}
+		return transformedScoringActions;
+	}
 
 	@Override
 	public void update(BuildActionManager manager) {
@@ -137,6 +170,9 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			int currentGas = Core.getInstance().getPlayer().gas();
 			UnitType workerUnitType = Core.getInstance().getPlayer().getRace().getWorker();
 			List<Unit> units = Core.getInstance().getPlayer().getUnits();
+
+			// Update the score of all actions being used in the simulation.
+			this.scoringDirector.update(this.scoringActions);
 
 			// Try running a simulation. If successful change the time stamp of
 			// the last simulation that was run.
