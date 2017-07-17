@@ -9,7 +9,6 @@ import buildingOrderModule.stateFactories.actions.executableActions.ResearchActi
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
-import javaGOAP.GoapState;
 
 /**
  * ActionQueueStartingTerranRaxFE.java --- Action Queue for a Terran opening:
@@ -30,7 +29,7 @@ public class ActionQueueStartingTerranRaxFE extends ActionQueueStarting {
 
 	/**
 	 * @param target
-	 *            type: Integer, the amount of times Queue will be iterated
+	 *            type: Irrelevant, because the whole Queue will be cycled
 	 *            through.
 	 */
 	public ActionQueueStartingTerranRaxFE(Object target) {

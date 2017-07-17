@@ -3,6 +3,7 @@ package buildingOrderModule.stateFactories.actions.executableActions.actionQueue
 import java.util.ArrayList;
 import java.util.List;
 
+import buildingOrderModule.stateFactories.actions.executableActions.BaseAction;
 import buildingOrderModule.stateFactories.actions.executableActions.ManagerBaseAction;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -14,14 +15,14 @@ import javaGOAP.IGoapUnit;
  * @author P H - 30.04.2017
  *
  */
-public abstract class ActionQueueDefault extends ManagerBaseAction {
+public abstract class ActionQueueDefault extends BaseAction {
 
 	protected List<ManagerBaseAction> actionQueue = new ArrayList<>();
 	protected int index = 0;
 
 	/**
 	 * @param target
-	 *            type: Integer, the amount of times Queue will be iterated
+	 *            type: Irrelevant, because the whole Queue will be cycled
 	 *            through.
 	 */
 	public ActionQueueDefault(Object target) {
@@ -46,7 +47,12 @@ public abstract class ActionQueueDefault extends ManagerBaseAction {
 		return true;
 	}
 
-	@Override
+	/**
+	 * Encapsulated function since overwriting it is easier this way (If needed).
+	 * 
+	 * @param goapUnit
+	 *            the executing Unit.
+	 */
 	protected void performSpecificAction(IGoapUnit goapUnit) {
 		// Used for resetting finished actions and incrementing the index which
 		// in return shows if the queue is finished.
@@ -75,8 +81,6 @@ public abstract class ActionQueueDefault extends ManagerBaseAction {
 
 	@Override
 	public void reset() {
-		super.reset();
-
 		this.index = 0;
 	}
 

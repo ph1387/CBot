@@ -24,7 +24,7 @@ public class ActionQueueSimulationResults extends ActionQueueDefault {
 
 	/**
 	 * @param target
-	 *            type: Integer, the amount of times Queue will be iterated
+	 *            type: Irrelevant, because the whole Queue will be cycled
 	 *            through.
 	 */
 	public ActionQueueSimulationResults(Object target) {
@@ -57,8 +57,6 @@ public class ActionQueueSimulationResults extends ActionQueueDefault {
 
 	@Override
 	public void reset() {
-		this.iterationCount = 0;
-
 		// Cycle through the stored Actions in the simulation and remove the
 		// finished ones until the index is 0 again.
 		while (this.index > 0) {
@@ -105,7 +103,7 @@ public class ActionQueueSimulationResults extends ActionQueueDefault {
 	public int getIndex() {
 		return this.index;
 	}
-	
+
 	public void setIndex(int index) {
 		this.index = index;
 	}

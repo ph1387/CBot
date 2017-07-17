@@ -1,7 +1,5 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
-import buildingOrderModule.buildActionManagers.BuildActionManager;
-import javaGOAP.GoapAction;
 import javaGOAP.IGoapUnit;
 
 /**
@@ -10,7 +8,7 @@ import javaGOAP.IGoapUnit;
  * @author P H - 28.04.2017
  *
  */
-public abstract class ManagerBaseAction extends GoapAction {
+public abstract class ManagerBaseAction extends BaseAction {
 
 	protected int iterationCount = 0;
 
@@ -24,19 +22,6 @@ public abstract class ManagerBaseAction extends GoapAction {
 	}
 
 	// -------------------- Functions
-
-	@Override
-	public boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		boolean success = true;
-
-		if (((BuildActionManager) goapUnit).getInformationStorage()
-				.getTrainingAndBuildingQueueSize() > ((BuildActionManager) goapUnit).getInformationStorage()
-						.getMaxConcurrentElements()) {
-			success = false;
-		}
-
-		return success && this.checkProceduralSpecificPrecondition(goapUnit);
-	}
 
 	/**
 	 * Function for checking a more specific precondition of any subclass.
@@ -68,28 +53,6 @@ public abstract class ManagerBaseAction extends GoapAction {
 		this.iterationCount = 0;
 	}
 
-	@Override
-	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
-		return 0;
-	}
-
-	@Override
-	protected boolean isInRange(IGoapUnit goapUnit) {
-		return false;
-	}
-
-	@Override
-	protected boolean requiresInRange(IGoapUnit goapUnit) {
-		return false;
-	}
-
 	// ------------------------------ Getter / Setter
 
-	public void setTarget(Object target) {
-		this.target = target;
-	}
-
-	public Object getTarget() {
-		return this.target;
-	}
 }

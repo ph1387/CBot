@@ -14,7 +14,7 @@ public class ActionQueueStarting extends ActionQueueDefault {
 
 	/**
 	 * @param target
-	 *            type: Integer, the amount of times Queue will be iterated
+	 *            type: Irrelevant, because the whole Queue will be cycled
 	 *            through.
 	 */
 	public ActionQueueStarting(Object target) {
