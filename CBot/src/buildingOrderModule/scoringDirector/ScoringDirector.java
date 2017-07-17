@@ -21,6 +21,9 @@ import buildingOrderModule.stateFactories.actions.executableActions.actionQueues
  */
 public class ScoringDirector {
 
+	// Base multiplier which all Actions use to generate their score.
+	private double basePointMultiplier = 100.;
+
 	// -------------------- Functions
 
 	/**
@@ -94,7 +97,7 @@ public class ScoringDirector {
 			// Divide the total sum by the number of GameStates added together
 			// to calculate the average value and set the score of the action to
 			// this value.
-			scoringAction.setScore((int) (gameStateSum / gameStateCount));
+			scoringAction.setScore((int) (this.basePointMultiplier * (gameStateSum / gameStateCount)));
 		}
 	}
 
