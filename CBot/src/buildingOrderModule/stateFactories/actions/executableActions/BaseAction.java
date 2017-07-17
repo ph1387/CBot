@@ -5,6 +5,7 @@ import javaGOAP.GoapAction;
 import javaGOAP.IGoapUnit;
 
 // TODO: UML ADD
+// TODO: UML CHECK EVERY SUBCLASS
 /**
  * BaseAction.java --- Superclass for the most basic tasks a building manager
  * may rely on as a GoapAction.

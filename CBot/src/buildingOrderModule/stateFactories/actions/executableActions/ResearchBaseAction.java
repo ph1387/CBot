@@ -1,7 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
-import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.TechType;
 import bwapi.Unit;
@@ -16,7 +15,7 @@ import javaGOAP.IGoapUnit;
  * @author P H - 29.04.2017
  *
  */
-public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionExtension implements ActionType {
+public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionExtension {
 
 	/**
 	 * Anonymous inner class for the precondition check.
@@ -77,11 +76,7 @@ public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionEx
 		return new CustomPreconditionChecker(this);
 	}
 	
-	// TODO: UML ADD
-	@Override
-	public int defineScore() {
-		return this.defineType().mineralPrice() + this.defineType().gasPrice();
-	}
+	// ------------------------------ ActionType
 	
 	// TODO: UML ADD
 	@Override
@@ -118,5 +113,5 @@ public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionEx
 	public int defineMaxSimulationOccurrences() {
 		return -1;
 	}
-	
+
 }

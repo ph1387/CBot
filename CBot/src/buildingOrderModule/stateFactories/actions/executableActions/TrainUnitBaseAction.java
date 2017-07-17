@@ -1,7 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
-import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -16,7 +15,7 @@ import javaGOAP.IGoapUnit;
  * @author P H - 29.04.2017
  *
  */
-public abstract class TrainUnitBaseAction extends ManagerBaseAction implements ActionType {
+public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 
 	protected UnitType type;
 
@@ -102,11 +101,7 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction implements A
 		return count;
 	}
 	
-	// TODO: UML ADD
-	@Override
-	public int defineScore() {
-		return this.defineType().mineralPrice() + this.defineType().gasPrice();
-	}
+	// ------------------------------ ActionType
 	
 	// TODO: UML ADD 
 	@Override
@@ -137,5 +132,5 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction implements A
 	public int defineMaxSimulationOccurrences() {
 		return -1;
 	}
-	
+
 }
