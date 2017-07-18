@@ -2,12 +2,13 @@ package buildingOrderModule.scoringDirector;
 
 // TODO: UML ADD NOT PUBLIC
 /**
- * GameStateFlying_Units.java --- A GameState focused on flying Units.
+ * GameStateFocused_Military.java --- A GameState focused on military buildings
+ * and Units.
  * 
  * @author P H - 16.07.2017
  *
  */
-class GameStateFlying_Units extends GameState {
+class GameStateFocused_Military extends GameState {
 
 	// -------------------- Functions
 

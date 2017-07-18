@@ -2,13 +2,12 @@ package buildingOrderModule.scoringDirector;
 
 // TODO: UML ADD NOT PUBLIC
 /**
- * GameStateMineral_Units.java --- A GameState focused on mineral requiring
- * Units.
+ * GameStateFocused_Upgrade.java --- A GameState focused on upgrading Units.
  * 
  * @author P H - 16.07.2017
  *
  */
-class GameStateMineral_Units extends GameState {
+class GameStateFocused_Upgrade extends GameState {
 
 	// -------------------- Functions
 

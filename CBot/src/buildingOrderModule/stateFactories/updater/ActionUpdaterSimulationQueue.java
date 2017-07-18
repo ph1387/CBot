@@ -96,7 +96,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		if (!this.generatedActionTypeSequences.isEmpty()) {
 			this.actOnSimulationThreadResult();
 		}
-		this.updateSimulationStarter();
+		this.updateSimulationStarter(manager);
 	}
 
 	// TODO: UML ADD
@@ -136,8 +136,12 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	 * made (fast enough) or starting a new SimulatorThread when the existing
 	 * action Queue is near its end and a new Queue is needed to further
 	 * progress into the game.
+	 * 
+	 * @param manager
+	 *            the BuildActionManager whose properties / Actions are going to
+	 *            be updated.
 	 */
-	private void updateSimulationStarter() {
+	private void updateSimulationStarter(BuildActionManager manager) {
 		// Check in predefined time differences if any changes in the action
 		// Queues index occurred. If this is not the case the Bot is unable to
 		// execute the Actions defined in it and therefore the action Queue must
@@ -172,7 +176,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			List<Unit> units = Core.getInstance().getPlayer().getUnits();
 
 			// Update the score of all actions being used in the simulation.
-			this.scoringDirector.update(this.scoringActions);
+			this.scoringDirector.update(this.scoringActions, manager);
 
 			// Try running a simulation. If successful change the time stamp of
 			// the last simulation that was run.

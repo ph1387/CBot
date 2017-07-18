@@ -2,12 +2,12 @@ package buildingOrderModule.scoringDirector;
 
 // TODO: UML ADD NOT PUBLIC
 /**
- * GameStateBuilding_Units.java --- A GameState focused on buildings.
+ * GameStateFocused_Expansion.java --- A GameState focused on expansion.
  * 
  * @author P H - 16.07.2017
  *
  */
-class GameStateBuilding_Units extends GameState {
+class GameStateFocused_Expansion extends GameState {
 
 	// -------------------- Functions
 

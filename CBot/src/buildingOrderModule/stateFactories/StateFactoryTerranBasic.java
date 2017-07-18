@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
-import buildingOrderModule.stateFactories.actions.AvailableActionsTerran;
+import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueueTerran;
 import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerran;
-import buildingOrderModule.stateFactories.updater.ActionUpdaterTerran;
+import buildingOrderModule.stateFactories.updater.ActionUpdaterSimulationQueueTerran;
 import buildingOrderModule.stateFactories.updater.GoalStateUpdaterActionQueueTerran;
 import buildingOrderModule.stateFactories.updater.Updater;
 import buildingOrderModule.stateFactories.updater.WorldStateUpdaterActionQueueTerran;
@@ -37,7 +37,7 @@ public class StateFactoryTerranBasic extends StateFactoryDefault {
 
 	@Override
 	public HashSet<GoapAction> generateAvailableActions() {
-		return new AvailableActionsTerran();
+		return new AvailableActionsSimulationQueueTerran();
 	}
 
 	@Override
@@ -52,6 +52,6 @@ public class StateFactoryTerranBasic extends StateFactoryDefault {
 
 	@Override
 	public Updater getMatchingActionUpdater(BuildActionManager manager) {
-		return new ActionUpdaterTerran(manager);
+		return new ActionUpdaterSimulationQueueTerran(manager);
 	}
 }

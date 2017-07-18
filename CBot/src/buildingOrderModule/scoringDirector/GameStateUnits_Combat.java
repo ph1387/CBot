@@ -2,13 +2,12 @@ package buildingOrderModule.scoringDirector;
 
 // TODO: UML ADD NOT PUBLIC
 /**
- * GameStateGas_Units.java --- A GameState focused on vaspene gas requiring
- * Units.
+ * GameStateUnits_Combat.java --- A GameState focused on training combat Units.
  * 
  * @author P H - 16.07.2017
  *
  */
-class GameStateGas_Units extends GameState {
+class GameStateUnits_Combat extends GameState {
 
 	// -------------------- Functions
 

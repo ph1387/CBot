@@ -2,12 +2,13 @@ package buildingOrderModule.scoringDirector;
 
 // TODO: UML ADD NOT PUBLIC
 /**
- * GameStateWorker_Units.java --- A GameState focused on training worker Units.
+ * GameStateUnits_Expensive.java --- A GameState focused on training / building
+ * expensive Units.
  * 
  * @author P H - 16.07.2017
  *
  */
-class GameStateWorker_Units extends GameState {
+class GameStateUnits_Expensive extends GameState {
 
 	// -------------------- Functions
 

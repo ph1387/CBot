@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bwapi.Pair;
-import bwapi.UnitType;
 
 // TODO: UML ADD
 /**
@@ -24,7 +23,7 @@ public class SimulatorThread extends Thread {
 
 	// Simulation values:
 	private int simulationFrameStep = 300;
-	private int simulationStepAmount = 5;
+	private int simulationStepAmount = 3;
 	private TypeWrapper simulationWorkerType;
 	private int simulationIdleScorePenalty = 10;
 	private int simulationConsecutiveActionsBonus = 10;

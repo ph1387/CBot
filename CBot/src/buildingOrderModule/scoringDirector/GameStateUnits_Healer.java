@@ -2,13 +2,12 @@ package buildingOrderModule.scoringDirector;
 
 // TODO: UML ADD NOT PUBLIC
 /**
- * GameStateResource_Focused.java --- A GameState focused on resource
- * collection.
+ * GameStateUnits_Healer.java --- A GameState focused on healing Units.
  * 
  * @author P H - 16.07.2017
  *
  */
-class GameStateResource_Focused extends GameState {
+class GameStateUnits_Healer extends GameState {
 
 	// -------------------- Functions
 

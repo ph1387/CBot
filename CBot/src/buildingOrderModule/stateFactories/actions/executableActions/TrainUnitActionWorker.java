@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 import core.Core;
@@ -20,6 +21,8 @@ public class TrainUnitActionWorker extends TrainUnitBaseAction {
 	 */
 	public TrainUnitActionWorker(Object target) {
 		super(target);
+		
+		this.addToGameStates(GameState.Worker_Units);
 	}
 
 	// -------------------- Functions

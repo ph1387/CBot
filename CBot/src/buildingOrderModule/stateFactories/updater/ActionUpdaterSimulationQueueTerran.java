@@ -4,8 +4,9 @@ import java.util.HashSet;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
+import buildingOrderModule.scoringDirector.ScoringDirectorTerran_Bio;
 import buildingOrderModule.simulator.ActionType;
-import buildingOrderModule.stateFactories.actions.AvailableActionsTerran;
+import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueueTerran;
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Barracks;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Factory;
@@ -17,15 +18,15 @@ import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitAct
 
 // TODO: UML ADD
 /**
- * ActionUpdaterTerran.java --- Updater for updating a
- * {@link AvailableActionsTerran} instance.
+ * ActionUpdaterSimulationQueueTerran.java --- Updater for updating a
+ * {@link AvailableActionsSimulationQueueTerran} instance.
  * 
  * @author P H - 14.07.2017
  *
  */
-public class ActionUpdaterTerran extends ActionUpdaterSimulationQueue {
+public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQueue {
 
-	public ActionUpdaterTerran(BuildActionManager buildActionManager) {
+	public ActionUpdaterSimulationQueueTerran(BuildActionManager buildActionManager) {
 		super(buildActionManager);
 	}
 
@@ -66,7 +67,7 @@ public class ActionUpdaterTerran extends ActionUpdaterSimulationQueue {
 
 	@Override
 	protected ScoringDirector defineScoringDirector() {
-		return new ScoringDirector();
+		return new ScoringDirectorTerran_Bio();
 	}
 
 }
