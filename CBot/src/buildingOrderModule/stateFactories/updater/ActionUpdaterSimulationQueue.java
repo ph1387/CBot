@@ -27,6 +27,10 @@ import core.Core;
  */
 public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral {
 
+	// The Action that is going to be updated. The reference is stored here
+	// since the Updater accesses it in multiple locations.
+	protected ActionQueueSimulationResults actionQueueSimulationResults;
+
 	// The actions which are used in the simulation.
 	private HashSet<ActionType> actionTypes = this.generateAllAvailableActionTypes();
 	// Used for generating a score for each action used in the simulation. These
@@ -91,6 +95,13 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 
 	@Override
 	public void update(BuildActionManager manager) {
+		// The initialization can not be done beforehand -> Safety reasons due
+		// to the order of possible initializations.
+		if (this.actionQueueSimulationResults == null) {
+			this.actionQueueSimulationResults = (ActionQueueSimulationResults) this
+					.getActionFromInstance(ActionQueueSimulationResults.class);
+		}
+
 		// React on any results of the simulation Thread and update it if
 		// necessary.
 		if (!this.generatedActionTypeSequences.isEmpty()) {
@@ -107,8 +118,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	 * Action.
 	 */
 	private void actOnSimulationThreadResult() {
-		ActionQueueSimulationResults simulationAction = (ActionQueueSimulationResults) this
-				.getActionFromInstance(ActionQueueSimulationResults.class);
 		ArrayList<ActionType> generatedResult = this.generatedActionTypeSequences.poll();
 		ArrayList<ManagerBaseAction> transformedResult = new ArrayList<>();
 
@@ -118,7 +127,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		}
 
 		// Forward the transformed ActionTypes towards the Action itself.
-		simulationAction.addToActionQueue(transformedResult);
+		this.actionQueueSimulationResults.addToActionQueue(transformedResult);
 
 		// TODO: WIP REMOVE
 		System.out.println("\nACT ON RESULT:");
@@ -148,20 +157,19 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		// be reseted.
 		if (this.lastSimulationTimeStampFrames == null || Core.getInstance().getGame().getFrameCount()
 				- this.lastSimulationTimeStampFrames >= this.nextSimulationTimeStampDifferenceFrames) {
-			ActionQueueSimulationResults action = (ActionQueueSimulationResults) this
-					.getActionFromInstance(ActionQueueSimulationResults.class);
 			this.lastSimulationTimeStampFrames = Core.getInstance().getGame().getFrameCount();
 
 			// If changes occurred reset the flag.
-			if (action.didChangesOccurr()) {
-				action.resetChangesFlag();
+			if (this.actionQueueSimulationResults.didChangesOccurr()) {
+				this.actionQueueSimulationResults.resetChangesFlag();
 			}
 			// If no changes occurred first set the index to the maximum
 			// possible index and then call the reset function. This removes all
 			// stored actions and resets the index to 0.
 			else {
-				action.setIndex(action.getActionQueue().size() - 1);
-				action.reset();
+				this.actionQueueSimulationResults
+						.setIndex(this.actionQueueSimulationResults.getActionQueue().size());
+				this.actionQueueSimulationResults.reset();
 			}
 		}
 
@@ -176,6 +184,8 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			List<Unit> units = Core.getInstance().getPlayer().getUnits();
 
 			// Update the score of all actions being used in the simulation.
+			this.actionTypes = this.generateAllAvailableActionTypes();
+			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 			this.scoringDirector.update(this.scoringActions, manager);
 
 			// Try running a simulation. If successful change the time stamp of
@@ -196,11 +206,9 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	 *         action Queue is being met (Else false).
 	 */
 	private boolean isActionQueueNearlyFinished() {
-		ActionQueueSimulationResults action = (ActionQueueSimulationResults) this
-				.getActionFromInstance(ActionQueueSimulationResults.class);
-
 		// The index must nearly be at the end for the function to return true.
-		return action.getActionQueue().size() - action.getIndex() <= this.maxActionQueueIndexOffsetTilEnd;
+		return this.actionQueueSimulationResults.getActionQueue().size()
+				- this.actionQueueSimulationResults.getIndex() <= this.maxActionQueueIndexOffsetTilEnd;
 	}
 
 	// ------------------------------ Getter / Setter

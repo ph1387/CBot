@@ -111,6 +111,8 @@ public abstract class ScoringDirector {
 		final Player player = Core.getInstance().getPlayer();
 
 		// Extract all necessary information from the current state of the game.
+		// This does NOT include any building Queues etc. These factors must be
+		// considered elsewhere.
 		// Units:
 		for (Unit unit : player.getUnits()) {
 			UnitType type = unit.getType();
