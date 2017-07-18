@@ -1,6 +1,7 @@
 package buildingOrderModule.stateFactories.updater;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -10,11 +11,14 @@ import buildingOrderModule.scoringDirector.ScoringAction;
 import buildingOrderModule.scoringDirector.ScoringDirector;
 import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.simulator.SimulationStarter;
+import buildingOrderModule.simulator.TypeWrapper;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueue;
 import buildingOrderModule.stateFactories.actions.executableActions.ManagerBaseAction;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
+import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
+import bwapi.UpgradeType;
 import core.Core;
 
 // TODO: UML ADD
@@ -167,8 +171,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			// possible index and then call the reset function. This removes all
 			// stored actions and resets the index to 0.
 			else {
-				this.actionQueueSimulationResults
-						.setIndex(this.actionQueueSimulationResults.getActionQueue().size());
+				this.actionQueueSimulationResults.setIndex(this.actionQueueSimulationResults.getActionQueue().size());
 				this.actionQueueSimulationResults.reset();
 			}
 		}
@@ -209,6 +212,82 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		// The index must nearly be at the end for the function to return true.
 		return this.actionQueueSimulationResults.getActionQueue().size()
 				- this.actionQueueSimulationResults.getIndex() <= this.maxActionQueueIndexOffsetTilEnd;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting all currently produces Types (TypeWrappers) from
+	 * the action Queue.
+	 * 
+	 * @return a HashMap containing all TypeWrappers that are produced in the
+	 *         action Queue of the actionQueueSimulationResults action. </br>
+	 *         Key: The produced TypeWrapper.</br>
+	 *         Value: The number of times it was found inside the action Queue.
+	 */
+	protected HashMap<TypeWrapper, Integer> extractAllProducedTypes() {
+		HashMap<TypeWrapper, Integer> usedActionTypes = new HashMap<TypeWrapper, Integer>();
+
+		if (this.actionQueueSimulationResults != null) {
+			for (ActionType actionType : this.actionQueueSimulationResults.getActionQueue()) {
+				addToTypeWrapperHashMap(usedActionTypes, actionType.defineResultType());
+			}
+		}
+
+		return usedActionTypes;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting all types that got forwarded into the
+	 * InformationStorage's Queues and convert them to their TypeWrapper
+	 * equivalent.
+	 * 
+	 * @return a HashMap containing all the types that already got forwarded to
+	 *         the InformationStorage.</br>
+	 *         Key: The forwarded type as TypeWrapper.</br>
+	 *         Value: The number of times it was found inside the Queues.
+	 */
+	protected HashMap<TypeWrapper, Integer> extractAllForwardedTypes() {
+		HashMap<TypeWrapper, Integer> forwardedActionTypes = new HashMap<TypeWrapper, Integer>();
+
+		// Training Queue:
+		for (UnitType unitType : this.buildActionManager.getInformationStorage().getTrainingQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(unitType));
+		}
+		// Upgrade Queue:
+		for (UpgradeType upgradeType : this.buildActionManager.getInformationStorage().getUpgradeQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(upgradeType));
+		}
+		// Research Queue:
+		for (TechType techType : this.buildActionManager.getInformationStorage().getResearchQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(techType));
+		}
+		// Addon Queue:
+		for (UnitType unitType : this.buildActionManager.getInformationStorage().getAddonQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(unitType));
+		}
+
+		return forwardedActionTypes;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for adding a TypeWrapper to a HashMap. If the HashMap does not
+	 * contain any previous instance of the TypeWrapper, instantiate it with 1.
+	 * Otherwise add 1 to the existing value.
+	 * 
+	 * @param hashMap
+	 *            the HashMap to which a TypeWrapper instance will be counted
+	 *            towards.
+	 * @param wrapper
+	 *            the TypeWrapper that will be added towards a HashMap.
+	 */
+	private static void addToTypeWrapperHashMap(HashMap<TypeWrapper, Integer> hashMap, TypeWrapper wrapper) {
+		if (hashMap.containsKey(wrapper)) {
+			hashMap.put(wrapper, hashMap.get(wrapper) + 1);
+		} else {
+			hashMap.put(wrapper, 1);
+		}
 	}
 
 	// ------------------------------ Getter / Setter

@@ -41,6 +41,9 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		// Get all the Types plus their amount that are currently produced and
 		// inside the action Queue. Used to prevent i.e. building two centers.
 		HashMap<TypeWrapper, Integer> usedActionTypes = this.extractAllProducedTypes();
+		// Also extract the types that are currently inside the
+		// InformationStorage Queues:
+		HashMap<TypeWrapper, Integer> forwardedActionTypes = this.extractAllForwardedTypes();
 
 		try {
 			ActionType constructBarracks = new ConstrucActionTerran_Barracks(1);
@@ -54,7 +57,8 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 
 			ActionType researchSiegeMode = new ResearchActionTerran_SiegeMode(1);
 
-			if(!usedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Command_Center)) {
+			if (!usedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Command_Center)
+					&& !forwardedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Command_Center)) {
 				availableActionTypes.add(constructCenter);
 			}
 			availableActionTypes.add(constructBarracks);
@@ -65,7 +69,8 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 
 			availableActionTypes.add(constructMachineShop);
 
-			if(!usedActionTypes.containsKey(TypeWrapper.TechType_Tank_Siege_Mode)) {
+			if (!usedActionTypes.containsKey(TypeWrapper.TechType_Tank_Siege_Mode)
+					&& !forwardedActionTypes.containsKey(TypeWrapper.TechType_Tank_Siege_Mode)) {
 				availableActionTypes.add(researchSiegeMode);
 			}
 		} catch (Exception e) {
@@ -73,32 +78,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		}
 
 		return availableActionTypes;
-	}
-
-	/**
-	 * Function for extracting all currently produces Types (TypeWrappers) from
-	 * the action Queue.
-	 * 
-	 * @return a HashMap containing all TypeWrappers that are produced in the
-	 *         action Queue of the actionQueueSimulationResults action. </br>
-	 * 		Key: The produces TypeWrapper.</br>
-	 * 		Value: The number of times it was found inside the aciton Queue.
-	 */
-	private HashMap<TypeWrapper, Integer> extractAllProducedTypes() {
-		HashMap<TypeWrapper, Integer> usedActionTypes = new HashMap<TypeWrapper, Integer>();
-
-		if (this.actionQueueSimulationResults != null) {
-			for (ActionType actionType : this.actionQueueSimulationResults.getActionQueue()) {
-				if (usedActionTypes.containsKey(actionType.defineResultType())) {
-					usedActionTypes.put(actionType.defineResultType(),
-							usedActionTypes.get(actionType.defineResultType()) + 1);
-				} else {
-					usedActionTypes.put(actionType.defineResultType(), 1);
-				}
-			}
-		}
-
-		return usedActionTypes;
 	}
 
 	@Override
