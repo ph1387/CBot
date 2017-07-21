@@ -21,11 +21,9 @@ class GameStateUnits_Gas extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(double desiredBuildingsPercent,
-			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
-			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
-			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
-			HashMap<UpgradeType, Integer> currentUpgrades) {
+	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
+			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
+			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
 		double minerals = Core.getInstance().getPlayer().minerals();
 		double gas = Core.getInstance().getPlayer().gas();
 		double totalResources = minerals + gas;

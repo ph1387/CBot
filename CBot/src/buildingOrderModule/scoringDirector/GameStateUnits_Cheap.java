@@ -34,11 +34,9 @@ class GameStateUnits_Cheap extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(double desiredBuildingsPercent,
-			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
-			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
-			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
-			HashMap<UpgradeType, Integer> currentUpgrades) {
+	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
+			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
+			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
 		int currentTimeStamp = Core.getInstance().getGame().getFrameCount();
 		// The number of times the rate is applied to the score.
 		int iterations = (int) (((double) (currentTimeStamp - this.timeStampLastScoringChange)) / this.frameDiff);

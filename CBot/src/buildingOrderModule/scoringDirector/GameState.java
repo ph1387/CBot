@@ -54,14 +54,10 @@ public abstract class GameState {
 	/**
 	 * Function for updating the current multiplier of the GameState.
 	 *
-	 * @param desiredBuildingsPercent
-	 *            the desired percentage of buildings.
-	 * @param desiredCombatUnitsPercent
-	 *            the desired percentage of combat Units.
-	 * @param desiredTechs
-	 *            the TechTypes that the manager should research.
-	 * @param desiredUpgrades
-	 *            the UpgradeTypes the manager should pursue.
+	 * @param scoringDirector
+	 *            the ScoringDirector that is going to be used for all missing
+	 *            values and information regarding the various influences the
+	 *            Bot is experiencing.
 	 * @param currentWorkerPercent
 	 *            the actual current percentage of worker Units.
 	 * @param currentBuildingsPercent
@@ -75,14 +71,11 @@ public abstract class GameState {
 	 * @param currentUpgrades
 	 *            all currently performed UpgradeTypes of the desired ones.
 	 */
-	public void updateMultiplier(double desiredBuildingsPercent,
-			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
-			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
-			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
-			HashMap<UpgradeType, Integer> currentUpgrades) {
-		this.currentScore = this.generateScore(desiredBuildingsPercent, desiredCombatUnitsPercent,
-				desiredTechs, desiredUpgrades, currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent,
-				currentUnits, currentTechs, currentUpgrades);
+	public void updateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
+			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
+			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
+		this.currentScore = this.generateScore(scoringDirector, currentWorkerPercent, currentBuildingsPercent,
+				currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
 	}
 
 	/**
@@ -90,14 +83,10 @@ public abstract class GameState {
 	 * state of the game in the are that the GameState is responsible for. This
 	 * score (For simplicity) should be between 0 and 1.
 	 * 
-	 * @param desiredBuildingsPercent
-	 *            the desired percentage of buildings.
-	 * @param desiredCombatUnitsPercent
-	 *            the desired percentage of combat Units.
-	 * @param desiredTechs
-	 *            the TechTypes that the manager should research.
-	 * @param desiredUpgrades
-	 *            the UpgradeTypes the manager should pursue.
+	 * @param scoringDirector
+	 *            the ScoringDirector that is going to be used for all missing
+	 *            values and information regarding the various influences the
+	 *            Bot is experiencing.
 	 * @param currentWorkerPercent
 	 *            the actual current percentage of worker Units.
 	 * @param currentBuildingsPercent
@@ -113,11 +102,9 @@ public abstract class GameState {
 	 * @return a score based on the provided information and the area the
 	 *         GameState is performing in.
 	 */
-	protected abstract double generateScore(double desiredBuildingsPercent,
-			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
-			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
-			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
-			HashMap<UpgradeType, Integer> currentUpgrades);
+	protected abstract double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
+			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
+			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades);
 
 	// ------------------------------ Getter / Setter
 

@@ -16,20 +16,17 @@ import bwapi.UpgradeType;
  */
 class GameStateUnits_Bio extends GameState {
 
-	private double value = 1.0;
-	
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(double desiredBuildingsPercent, double desiredCombatUnitsPercent,
-			HashSet<TechType> desiredTechs, HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent,
+	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
 			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
 			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
 		
 		// TODO: WIP REMOVE
-		System.out.println("GameState BioUnits: " + this.value);
+		System.out.println("GameState BioUnits: " + scoringDirector.defineFixedScoreUnitsBio());
 		
-		return this.value;
+		return scoringDirector.defineFixedScoreUnitsBio();
 	}
 
 }

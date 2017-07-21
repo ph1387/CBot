@@ -40,8 +40,6 @@ import core.Core;
 public abstract class ScoringDirector {
 
 	// Desired values:
-	private double desiredBuildingsPercent = this.defineDesiredBuildingsPercent();
-	private double desiredCombatUnitsPercent = this.defineDesiredCombatUnitsPercent();
 	private HashSet<TechType> desiredTechs = this.defineDesiredTechnologies();
 	private HashMap<UpgradeType, Integer> desiredUpgrades = this.defineDesiredUpgradeTypes();
 
@@ -159,9 +157,8 @@ public abstract class ScoringDirector {
 		// Using these information update all GameStates that are being
 		// provided.
 		for (GameState gameState : usedGameStates) {
-			gameState.updateMultiplier(this.desiredBuildingsPercent,
-					this.desiredCombatUnitsPercent, this.desiredTechs, this.desiredUpgrades, currentWorkerPercent,
-					currentBuildingsPercent, currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
+			gameState.updateScore(this, currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent,
+					currentUnits, currentTechs, currentUpgrades);
 		}
 	}
 
@@ -201,6 +198,34 @@ public abstract class ScoringDirector {
 	 *         pursue.
 	 */
 	protected abstract HashMap<UpgradeType, Integer> defineDesiredUpgradeTypes();
+
+	/**
+	 * Function for defining the fixed score for Bio-Units.
+	 * 
+	 * @return the score for Bio-Units.
+	 */
+	protected abstract double defineFixedScoreUnitsBio();
+
+	/**
+	 * Function for defining the fixed score for flying Units.
+	 * 
+	 * @return the score for flying Units.
+	 */
+	protected abstract double defineFixedScoreUnitsFlying();
+
+	/**
+	 * Function for defining the fixed score for healer Units.
+	 * 
+	 * @return the score for healer Units.
+	 */
+	protected abstract double defineFixedScoreUnitsHealer();
+
+	/**
+	 * Function for defining the fixed score for support Units.
+	 * 
+	 * @return the score for support Units.
+	 */
+	protected abstract double defineFixedScoreUnitsSupport();
 
 	/**
 	 * Function for updating the scores of the given ScoringActions.

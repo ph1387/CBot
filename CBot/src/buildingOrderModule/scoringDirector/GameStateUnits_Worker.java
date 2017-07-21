@@ -22,11 +22,9 @@ class GameStateUnits_Worker extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(double desiredBuildingsPercent,
-			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
-			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
-			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
-			HashMap<UpgradeType, Integer> currentUpgrades) {
+	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
+			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
+			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
 		double centers = (double) (currentUnits.get(Core.getInstance().getPlayer().getRace().getCenter()));
 		double workers = (double) (currentUnits.get(Core.getInstance().getPlayer().getRace().getWorker()));
 

@@ -48,6 +48,26 @@ public class ScoringDirectorTerran_Bio extends ScoringDirector {
 		
 		return desiredUpgradeTypes;
 	}
+
+	@Override
+	protected double defineFixedScoreUnitsBio() {
+		return 1.0;
+	}
+
+	@Override
+	protected double defineFixedScoreUnitsFlying() {
+		return 0.;
+	}
+
+	@Override
+	protected double defineFixedScoreUnitsHealer() {
+		return 1.0;
+	}
+
+	@Override
+	protected double defineFixedScoreUnitsSupport() {
+		return 1.0;
+	}
 	
 	// ------------------------------ Getter / Setter
 
