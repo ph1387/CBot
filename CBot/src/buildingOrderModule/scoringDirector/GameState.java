@@ -54,8 +54,6 @@ public abstract class GameState {
 	/**
 	 * Function for updating the current multiplier of the GameState.
 	 *
-	 * @param desiredWorkerPercent
-	 *            the desired percentage of worker Units.
 	 * @param desiredBuildingsPercent
 	 *            the desired percentage of buildings.
 	 * @param desiredCombatUnitsPercent
@@ -77,12 +75,12 @@ public abstract class GameState {
 	 * @param currentUpgrades
 	 *            all currently performed UpgradeTypes of the desired ones.
 	 */
-	public void updateMultiplier(double desiredWorkerPercent, double desiredBuildingsPercent,
+	public void updateMultiplier(double desiredBuildingsPercent,
 			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
 			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
 			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
 			HashMap<UpgradeType, Integer> currentUpgrades) {
-		this.currentScore = this.generateScore(desiredWorkerPercent, desiredBuildingsPercent, desiredCombatUnitsPercent,
+		this.currentScore = this.generateScore(desiredBuildingsPercent, desiredCombatUnitsPercent,
 				desiredTechs, desiredUpgrades, currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent,
 				currentUnits, currentTechs, currentUpgrades);
 	}
@@ -92,8 +90,6 @@ public abstract class GameState {
 	 * state of the game in the are that the GameState is responsible for. This
 	 * score (For simplicity) should be between 0 and 1.
 	 * 
-	 * @param desiredWorkerPercent
-	 *            the desired percentage of worker Units.
 	 * @param desiredBuildingsPercent
 	 *            the desired percentage of buildings.
 	 * @param desiredCombatUnitsPercent
@@ -117,7 +113,7 @@ public abstract class GameState {
 	 * @return a score based on the provided information and the area the
 	 *         GameState is performing in.
 	 */
-	protected abstract double generateScore(double desiredWorkerPercent, double desiredBuildingsPercent,
+	protected abstract double generateScore(double desiredBuildingsPercent,
 			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
 			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
 			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,

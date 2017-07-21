@@ -17,12 +17,12 @@ import core.Core;
  */
 class GameStateUnits_Worker extends GameState {
 
-	private double generalMultiplier = 2.;
+	private double generalMultiplier = 4.;
 
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(double desiredWorkerPercent, double desiredBuildingsPercent,
+	protected double generateScore(double desiredBuildingsPercent,
 			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
 			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
 			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
@@ -30,6 +30,9 @@ class GameStateUnits_Worker extends GameState {
 		double centers = (double) (currentUnits.get(Core.getInstance().getPlayer().getRace().getCenter()));
 		double workers = (double) (currentUnits.get(Core.getInstance().getPlayer().getRace().getWorker()));
 
+		// TODO: WIP REMOVE
+		System.out.println("GameState WorkerUnits: " + (this.generalMultiplier * (centers / workers)));
+		
 		return this.generalMultiplier * (centers / workers);
 	}
 

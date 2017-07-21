@@ -19,11 +19,6 @@ public class ScoringDirectorTerran_Bio extends ScoringDirector {
 	// -------------------- Functions
 
 	@Override
-	protected double defineDesiredWorkerPercent() {
-		return 0.16;
-	}
-
-	@Override
 	protected double defineDesiredBuildingsPercent() {
 		return 0.33;
 	}

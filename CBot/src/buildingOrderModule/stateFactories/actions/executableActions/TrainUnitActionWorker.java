@@ -27,6 +27,9 @@ public class TrainUnitActionWorker extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Expensive_Units);
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Gas_Units);
+		
+		this.addToGameStates(GameState.Combat_Units);
+		this.addToGameStates(GameState.Building_Units);
 	}
 
 	// -------------------- Functions

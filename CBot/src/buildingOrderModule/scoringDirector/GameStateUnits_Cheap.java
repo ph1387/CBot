@@ -34,7 +34,7 @@ class GameStateUnits_Cheap extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(double desiredWorkerPercent, double desiredBuildingsPercent,
+	protected double generateScore(double desiredBuildingsPercent,
 			double desiredCombatUnitsPercent, HashSet<TechType> desiredTechs,
 			HashMap<UpgradeType, Integer> desiredUpgrades, double currentWorkerPercent, double currentBuildingsPercent,
 			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,

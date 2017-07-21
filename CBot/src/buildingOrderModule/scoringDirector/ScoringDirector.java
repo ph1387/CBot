@@ -40,7 +40,6 @@ import core.Core;
 public abstract class ScoringDirector {
 
 	// Desired values:
-	private double desiredWorkerPercent = this.defineDesiredWorkerPercent();
 	private double desiredBuildingsPercent = this.defineDesiredBuildingsPercent();
 	private double desiredCombatUnitsPercent = this.defineDesiredCombatUnitsPercent();
 	private HashSet<TechType> desiredTechs = this.defineDesiredTechnologies();
@@ -160,23 +159,18 @@ public abstract class ScoringDirector {
 		// Using these information update all GameStates that are being
 		// provided.
 		for (GameState gameState : usedGameStates) {
-			gameState.updateMultiplier(this.desiredWorkerPercent, this.desiredBuildingsPercent,
+			gameState.updateMultiplier(this.desiredBuildingsPercent,
 					this.desiredCombatUnitsPercent, this.desiredTechs, this.desiredUpgrades, currentWorkerPercent,
 					currentBuildingsPercent, currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
 		}
 	}
 
 	/**
-	 * Function for specifying the desired percentage of workers that the Bot
-	 * should have.
-	 * 
-	 * @return the percentage of workers the Bot should try to keep.
-	 */
-	protected abstract double defineDesiredWorkerPercent();
-
-	/**
 	 * Function for specifying the desired percentage of buildings that the Bot
-	 * should have.
+	 * should have. </br>
+	 * <b>Note:</b></br>
+	 * Should not be larger than 0.5 to prevent the maximum score from exceeding
+	 * 1.0.
 	 * 
 	 * @return the percentage of buildings the Bot should try to keep.
 	 */
@@ -184,7 +178,10 @@ public abstract class ScoringDirector {
 
 	/**
 	 * Function for specifying the desired percentage of combat Units that the
-	 * Bot should have.
+	 * Bot should have. </br>
+	 * <b>Note:</b></br>
+	 * Should not be larger than 0.5 to prevent the maximum score from exceeding
+	 * 1.0.
 	 * 
 	 * @return the percentage of combat Units the Bot should try to keep.
 	 */
