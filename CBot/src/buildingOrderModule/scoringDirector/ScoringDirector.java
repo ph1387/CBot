@@ -201,7 +201,7 @@ public abstract class ScoringDirector {
 	 * Function for defining what UpgradeTypes the Bot should pursue.
 	 * 
 	 * @return the UpgradeTypes and their desired level that the Bot should
-	 *         persue.
+	 *         pursue.
 	 */
 	protected abstract HashMap<UpgradeType, Integer> defineDesiredUpgradeTypes();
 
