@@ -6,7 +6,6 @@ import java.util.HashSet;
 import bwapi.TechType;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
-import core.Core;
 
 // TODO: UML ADD NOT PUBLIC
 /**
@@ -16,45 +15,43 @@ import core.Core;
  * @author P H - 16.07.2017
  *
  */
-class GameStateUnits_Expensive extends GameState {
+class GameStateUnits_Expensive extends GameStateGradualChange {
 
-	// The score of the previous iteration. Initialized with a low value since
+	// The score of the starting iteration. Initialized with a low value since
 	// the Bot should only produce expensive Units in the mid- / endgame.
-	private double scorePrev = 0.;
-	// The maximum score that can be returned.
-	private double scoreMax = 0.5;
+	private static double ScoreStarting = 0.;
 	// The rate at which the score will change. The rate is is then applied for
 	// each X frames that passed since the last iteration.
-	private double rate = 0.1;
+	private static double Rate = 0.1;
 	// The frames after the rate is applied.
-	private double frameDiff = 2000;
-	// The time stamp of the last time the rate was applied to the score.
-	private int timeStampLastScoringChange = 0;
+	private static double FrameDiff = 2000;
+
+	// The maximum score that can be returned.
+	private double scoreMax = 0.5;
+
+	public GameStateUnits_Expensive() {
+		super(GameStateUnits_Expensive.ScoreStarting, GameStateUnits_Expensive.Rate,
+				GameStateUnits_Expensive.FrameDiff);
+	}
 
 	// -------------------- Functions
 
 	@Override
+	protected boolean canIterationRateApply(double score) {
+		return score < this.scoreMax;
+	}
+
+	// TODO: WIP REMOVE
+	@Override
 	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
 			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
 			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
-		int currentTimeStamp = Core.getInstance().getGame().getFrameCount();
-		// The number of times the rate is applied to the score.
-		int iterations = (int) (((double) (currentTimeStamp - this.timeStampLastScoringChange)) / this.frameDiff);
-
-		// At least one single iteration (Update using the rate) must be
-		// performed for the time stamp to change.
-		if (iterations > 0) {
-			for (int i = 0; i < iterations && this.scorePrev < this.scoreMax; i++) {
-				this.scorePrev += this.rate;
-			}
-
-			this.timeStampLastScoringChange = currentTimeStamp;
-		}
-
+		double value = super.generateScore(scoringDirector, currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
+			
 		// TODO: WIP REMOVE
-		System.out.println("GameState Expensive: " + this.scorePrev);
-
-		return this.scorePrev;
+		System.out.println("GameState Expensive: " + value);
+	
+		return value;
 	}
-
+	
 }
