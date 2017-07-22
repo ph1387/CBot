@@ -1,12 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
-import bwapi.TechType;
-import bwapi.UnitType;
-import bwapi.UpgradeType;
-
 // TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Cheap.java --- A GameState focused on training / building
@@ -42,10 +35,8 @@ class GameStateUnits_Cheap extends GameStateGradualChange {
 	
 	// TODO: WIP REMOVE
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
-			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
-			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
-		double value = super.generateScore(scoringDirector, currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
+	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+		double value = super.generateScore(scoringDirector, currenInformation);
 			
 		// TODO: WIP REMOVE
 		System.out.println("GameState Cheap: " + value);

@@ -1,11 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
-import bwapi.TechType;
-import bwapi.UnitType;
-import bwapi.UpgradeType;
 import core.Core;
 
 // TODO: UML ADD NOT PUBLIC
@@ -34,10 +28,9 @@ class GameStateFocused_Expansion extends GameStateGradualChangeWithReset {
 	// -------------------- Functions
 
 	@Override
-	protected boolean shouldReset(ScoringDirector scoringDirector, double currentWorkerPercent,
-			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
-			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
-		int centerCountCurrent = currentUnits.get(Core.getInstance().getPlayer().getRace().getCenter());
+	protected boolean shouldReset(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+		int centerCountCurrent = currenInformation.getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getCenter());
 		boolean reset = false;
 
 		// Reset the score after the previously stored number of centers does
@@ -61,11 +54,8 @@ class GameStateFocused_Expansion extends GameStateGradualChangeWithReset {
 
 	// TODO: WIP REMOVE
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
-			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
-			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
-		double value = super.generateScore(scoringDirector, currentWorkerPercent, currentBuildingsPercent,
-				currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
+	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+		double value = super.generateScore(scoringDirector, currenInformation);
 
 		// TODO: WIP REMOVE
 		System.out.println("GameState ExpansionFocused: " + value);

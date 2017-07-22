@@ -1,12 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
-import bwapi.TechType;
-import bwapi.UnitType;
-import bwapi.UpgradeType;
-
 // TODO: UML ADD
 /**
  * GameState.java --- Class for representing a state in the game with an
@@ -20,10 +13,7 @@ public abstract class GameState {
 
 	// States that can be used by other actions for generating their individual
 	// score:
-	public static final GameState Resource_Focused = new GameStateFocused_Resources();
-	public static final GameState Military_Focused = new GameStateFocused_Military();
 	public static final GameState Expansion_Focused = new GameStateFocused_Expansion();
-
 	public static final GameState Technology_Focused = new GameStateFocused_Technology();
 	public static final GameState Upgrade_Focused = new GameStateFocused_Upgrade();
 
@@ -58,24 +48,13 @@ public abstract class GameState {
 	 *            the ScoringDirector that is going to be used for all missing
 	 *            values and information regarding the various influences the
 	 *            Bot is experiencing.
-	 * @param currentWorkerPercent
-	 *            the actual current percentage of worker Units.
-	 * @param currentBuildingsPercent
-	 *            the actual current percentage of buildings.
-	 * @param currentCombatUnitsPercent
-	 *            the actual current percentage of combat Units.
-	 * @param currentUnits
-	 *            all current Units.
-	 * @param currentTechs
-	 *            all currently researched TechTypes of the desired ones.
-	 * @param currentUpgrades
-	 *            all currently performed UpgradeTypes of the desired ones.
+	 * @param currenInformation
+	 *            the storage instance that holds all currently important
+	 *            information regarding the state of the game and especially the
+	 *            Units of the Player.
 	 */
-	public void updateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
-			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
-			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
-		this.currentScore = this.generateScore(scoringDirector, currentWorkerPercent, currentBuildingsPercent,
-				currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
+	public void updateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+		this.currentScore = this.generateScore(scoringDirector, currenInformation);
 	}
 
 	/**
@@ -87,24 +66,15 @@ public abstract class GameState {
 	 *            the ScoringDirector that is going to be used for all missing
 	 *            values and information regarding the various influences the
 	 *            Bot is experiencing.
-	 * @param currentWorkerPercent
-	 *            the actual current percentage of worker Units.
-	 * @param currentBuildingsPercent
-	 *            the actual current percentage of buildings.
-	 * @param currentCombatUnitsPercent
-	 *            the actual current percentage of combat Units.
-	 * @param currentUnits
-	 *            all current Units.
-	 * @param currentTechs
-	 *            all currently researched TechTypes of the desired ones.
-	 * @param currentUpgrades
-	 *            all currently performed UpgradeTypes of the desired ones.
+	 * @param currenInformation
+	 *            the storage instance that holds all currently important
+	 *            information regarding the state of the game and especially the
+	 *            Units of the Player.
 	 * @return a score based on the provided information and the area the
 	 *         GameState is performing in.
 	 */
-	protected abstract double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
-			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
-			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades);
+	protected abstract double generateScore(ScoringDirector scoringDirector,
+			GameStateCurrentInformation currenInformation);
 
 	// ------------------------------ Getter / Setter
 

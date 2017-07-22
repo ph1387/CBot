@@ -155,10 +155,14 @@ public abstract class ScoringDirector {
 		currentCombatUnitsPercent = ((double) (unitCountCombat)) / ((double) (unitCountTotal));
 
 		// Using these information update all GameStates that are being
-		// provided.
+		// provided while generating an instance of the
+		// GameStateCurrentInformation that contains all these previously
+		// calculated values.
 		for (GameState gameState : usedGameStates) {
-			gameState.updateScore(this, currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent,
-					currentUnits, currentTechs, currentUpgrades);
+			gameState.updateScore(this,
+					new GameStateCurrentInformation(unitCountWorkers, unitCountBuildings, unitCountCombat,
+							currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent, currentUnits,
+							currentTechs, currentUpgrades));
 		}
 	}
 

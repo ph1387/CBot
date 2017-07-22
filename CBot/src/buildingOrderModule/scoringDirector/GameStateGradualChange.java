@@ -1,11 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
-import bwapi.TechType;
-import bwapi.UnitType;
-import bwapi.UpgradeType;
 import core.Core;
 
 // TODO: UML ADD NOT PUBLIC
@@ -47,9 +41,7 @@ abstract class GameStateGradualChange extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
-			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
-			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
+	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
 		int currentTimeStamp = Core.getInstance().getGame().getFrameCount();
 		// The number of times the rate is applied to the score.
 		int iterations = (int) (((double) (currentTimeStamp - this.timeStampLastScoringChange)) / this.frameDiff);

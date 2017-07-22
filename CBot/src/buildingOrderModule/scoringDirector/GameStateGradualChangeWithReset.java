@@ -1,12 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
-import bwapi.TechType;
-import bwapi.UnitType;
-import bwapi.UpgradeType;
-
 // TODO: UML ADD NOT PUBLIC
 /**
  * GameStateGradualChangeWithReset.java --- A Superclass for GameStates using a
@@ -35,21 +28,17 @@ abstract class GameStateGradualChangeWithReset extends GameStateGradualChange {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
-			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
-			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
+	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
 		// Reset the score to the previously specified starting score if the
 		// function returns true.
-		if (this.shouldReset(scoringDirector, currentCombatUnitsPercent, currentCombatUnitsPercent,
-				currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades)) {
+		if (this.shouldReset(scoringDirector, currenInformation)) {
 			this.scorePrev = scoreStart;
 		}
 
 		// Apply the rate towards the score if the threshold is not
 		// yet reached.
 		if (!this.isTresholdReached(this.scorePrev)) {
-			super.generateScore(scoringDirector, currentWorkerPercent, currentBuildingsPercent,
-					currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
+			super.generateScore(scoringDirector, currenInformation);
 		}
 		
 		return this.scorePrev;
@@ -68,24 +57,14 @@ abstract class GameStateGradualChangeWithReset extends GameStateGradualChange {
 	 * @param scoringDirector
 	 *            the ScoringDirector that is going to be used for determining
 	 *            if a reset of the current score is necessary.
-	 * @param currentWorkerPercent
-	 *            the actual current percentage of worker Units.
-	 * @param currentBuildingsPercent
-	 *            the actual current percentage of buildings.
-	 * @param currentCombatUnitsPercent
-	 *            the actual current percentage of combat Units.
-	 * @param currentUnits
-	 *            all current Units.
-	 * @param currentTechs
-	 *            all currently researched TechTypes of the desired ones.
-	 * @param currentUpgrades
-	 *            all currently performed UpgradeTypes of the desired ones.
+	 * @param currenInformation
+	 *            the storage instance that holds all currently important
+	 *            information regarding the state of the game and especially the
+	 *            Units of the Player.
 	 * @return true if the score should be reseted to the starting score and
 	 *         false if the score should not be reseted.
 	 */
-	protected abstract boolean shouldReset(ScoringDirector scoringDirector, double currentWorkerPercent,
-			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
-			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades);
+	protected abstract boolean shouldReset(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation);
 
 	/**
 	 * Function for determining if a certain score threshold is being reached
