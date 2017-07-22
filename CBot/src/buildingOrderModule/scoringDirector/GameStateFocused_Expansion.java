@@ -58,17 +58,18 @@ class GameStateFocused_Expansion extends GameStateGradualChangeWithReset {
 		// score and therefore the Bot is bound to build centers.
 		return false;
 	}
-	
+
 	// TODO: WIP REMOVE
 	@Override
 	protected double generateScore(ScoringDirector scoringDirector, double currentWorkerPercent,
 			double currentBuildingsPercent, double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits,
 			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
-		double value = super.generateScore(scoringDirector, currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
-		
+		double value = super.generateScore(scoringDirector, currentWorkerPercent, currentBuildingsPercent,
+				currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
+
 		// TODO: WIP REMOVE
 		System.out.println("GameState ExpansionFocused: " + value);
-		
+
 		return value;
 	}
 

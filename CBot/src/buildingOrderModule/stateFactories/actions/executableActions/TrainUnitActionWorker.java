@@ -37,6 +37,8 @@ public class TrainUnitActionWorker extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Support_Units);
 		
 		this.addToGameStates(GameState.Expansion_Focused);
+		this.addToGameStates(GameState.Upgrade_Focused);
+		this.addToGameStates(GameState.Technology_Focused);
 	}
 
 	// -------------------- Functions
