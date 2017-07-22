@@ -189,7 +189,9 @@ public abstract class ScoringDirector {
 	protected abstract double defineDesiredCombatUnitsPercent();
 
 	/**
-	 * Function for defining the TechTypes that the Bot should research.
+	 * Function for defining the TechTypes that the Bot should research.</br>
+	 * <b>Note:</b></br>
+	 * What counts are not the specified technologies but the amount of them.
 	 * 
 	 * @return the TechTypes the Bot should research.
 	 */
@@ -197,6 +199,8 @@ public abstract class ScoringDirector {
 
 	/**
 	 * Function for defining what UpgradeTypes the Bot should pursue.
+	 * <b>Note:</b></br>
+	 * What counts are not the specified upgrades but the amount of them.
 	 * 
 	 * @return the UpgradeTypes and their desired level that the Bot should
 	 *         pursue.
