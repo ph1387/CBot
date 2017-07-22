@@ -23,6 +23,9 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 
 	// The number of upgrades performed by the Bot.
 	private int upgradeCountPrev = 0;
+	// Flag signaling if all upgrades are finished (No more upgrades can be
+	// performed and therefore the score does not need to be changed).
+	private boolean upgradesFinished = false;
 
 	public GameStateFocused_Upgrade() {
 		super(ScoreStart, Rate, FrameDiff);
@@ -33,6 +36,7 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 	@Override
 	protected boolean shouldReset(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
 		int upgradeCountCurrent = this.extractTotalNumberOfUpgrades(currenInformation.getCurrentUpgrades());
+		int upgradeCountMax = this.extractTotalNumberOfUpgrades(scoringDirector.defineDesiredUpgradeTypes());
 		boolean reset = false;
 
 		// Reset the score after the previously stored number of upgrades
@@ -42,6 +46,11 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 		if (upgradeCountCurrent != this.upgradeCountPrev) {
 			this.upgradeCountPrev = upgradeCountCurrent;
 			reset = true;
+		}
+
+		// Check if all possible upgrades have been performed.
+		if (upgradeCountCurrent == upgradeCountMax && !this.upgradesFinished) {
+			this.upgradesFinished = true;
 		}
 
 		return reset;
@@ -78,8 +87,9 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 	@Override
 	protected boolean isTresholdReached(double score) {
 		// The threshold is never reached. The rate is constantly applied to the
-		// score and therefore the Bot is bound to upgrade things eventually.
-		return false;
+		// score and therefore the Bot is bound to upgrade things eventually
+		// until all possible upgrades haven been performed by the Bot.
+		return this.upgradesFinished;
 	}
 
 	// TODO: WIP REMOVE
@@ -88,7 +98,7 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 		double value = super.generateScore(scoringDirector, currenInformation);
 
 		// TODO: WIP REMOVE
-		System.out.println("GameState UpgradeFocused: " + value);
+		System.out.println("GameState UpgradeFocused: " + value + " finished: " + this.upgradesFinished);
 
 		return value;
 	}

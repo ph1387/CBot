@@ -19,6 +19,9 @@ class GameStateFocused_Technology extends GameStateGradualChangeWithReset {
 
 	// The number of technologies researched by the Bot.
 	private int techCountPrev = 0;
+	// Flag signaling if all technologies are researched (No more technologies
+	// can be researched and therefore the score does not need to be changed).
+	private boolean techsFinished = false;
 
 	public GameStateFocused_Technology() {
 		super(ScoreStart, Rate, FrameDiff);
@@ -29,6 +32,7 @@ class GameStateFocused_Technology extends GameStateGradualChangeWithReset {
 	@Override
 	protected boolean shouldReset(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
 		int techCountCurrent = currenInformation.getCurrentTechs().size();
+		int techCountMax = scoringDirector.defineDesiredTechnologies().size();
 		boolean reset = false;
 
 		// Reset the score after the previously stored number of technologies
@@ -40,6 +44,11 @@ class GameStateFocused_Technology extends GameStateGradualChangeWithReset {
 			reset = true;
 		}
 
+		// Check if all possible technologies have been researched.
+		if (techCountCurrent == techCountMax && !this.techsFinished) {
+			this.techsFinished = true;
+		}
+
 		return reset;
 	}
 
@@ -47,8 +56,8 @@ class GameStateFocused_Technology extends GameStateGradualChangeWithReset {
 	protected boolean isTresholdReached(double score) {
 		// The threshold is never reached. The rate is constantly applied to the
 		// score and therefore the Bot is bound to research technologies
-		// eventually.
-		return false;
+		// eventually until all required ones have been researched by the Bot.
+		return this.techsFinished;
 	}
 
 	// TODO: WIP REMOVE
@@ -57,7 +66,7 @@ class GameStateFocused_Technology extends GameStateGradualChangeWithReset {
 		double value = super.generateScore(scoringDirector, currenInformation);
 
 		// TODO: WIP REMOVE
-		System.out.println("GameState TechnologyFocused: " + value);
+		System.out.println("GameState TechnologyFocused: " + value + " finished: " + this.techsFinished);
 
 		return value;
 	}
