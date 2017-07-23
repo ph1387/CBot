@@ -31,6 +31,7 @@ public class ActionQueueSimulationResults extends ActionQueueDefault {
 		super(target);
 
 		this.addPrecondition(new GoapState(0, "simulationAllowed", true));
+		this.addEffect(new GoapState(0, "simulationRunning", true));
 	}
 
 	// -------------------- Functions

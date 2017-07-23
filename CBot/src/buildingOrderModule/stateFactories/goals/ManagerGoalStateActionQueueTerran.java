@@ -1,5 +1,7 @@
 package buildingOrderModule.stateFactories.goals;
 
+import javaGOAP.GoapState;
+
 /**
  * ManagerGoalStateActionQueueTerran.java --- GoalState for a Terran
  * BuildActionManager.
@@ -11,6 +13,6 @@ package buildingOrderModule.stateFactories.goals;
 public class ManagerGoalStateActionQueueTerran extends ManagerGoalStateActionQueue {
 
 	public ManagerGoalStateActionQueueTerran() {
-
+		this.add(new GoapState(1, "simulationRunning", true));
 	}
 }

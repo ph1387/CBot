@@ -13,6 +13,6 @@ public class ManagerGoalStateActionQueue extends ManagerGoalStateDefault {
 
 	public ManagerGoalStateActionQueue() {
 		this.add(new GoapState(1, "buildOrderAllowed", false));
-		this.add(new GoapState(1, "startingBuildOrderNeeded", false));
+		this.add(new GoapState(2, "startingBuildOrderNeeded", false));
 	}
 }

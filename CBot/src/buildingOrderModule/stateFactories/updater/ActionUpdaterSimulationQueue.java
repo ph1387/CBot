@@ -36,13 +36,13 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	protected ActionQueueSimulationResults actionQueueSimulationResults;
 
 	// The actions which are used in the simulation.
-	private HashSet<ActionType> actionTypes = this.generateAllAvailableActionTypes();
+	private HashSet<ActionType> actionTypes;
 	// Used for generating a score for each action used in the simulation. These
 	// scores must be updated to represent a valid state of the game for the
 	// simulator.
 	private ScoringDirector scoringDirector = this.defineScoringDirector();
 	// The actions that the ScoringDirector will be updating.
-	private HashSet<ScoringAction> scoringActions = this.transformAvailableActionsIntoScoringActions();
+	private HashSet<ScoringAction> scoringActions;
 
 	// Simulation frequency:
 	// The max difference of the index and the size of the action Queue. When
@@ -61,6 +61,9 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 
 	public ActionUpdaterSimulationQueue(BuildActionManager buildActionManager) {
 		super(buildActionManager);
+
+		this.actionTypes = this.generateAllAvailableActionTypes(buildActionManager);
+		this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 	}
 
 	// -------------------- Functions
@@ -69,9 +72,11 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	 * Function for generating all the available ActionTypes that will be used
 	 * inside the different simulations.
 	 * 
+	 * @param buildActionManager
+	 *            the manager whose actions are being extracted.
 	 * @return a HashSet containing all available ActionTypes for simulations.
 	 */
-	protected abstract HashSet<ActionType> generateAllAvailableActionTypes();
+	protected abstract HashSet<ActionType> generateAllAvailableActionTypes(BuildActionManager buildActionManager);
 
 	/**
 	 * Function for defining which ScoringDirector should be used.
@@ -187,7 +192,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			List<Unit> units = Core.getInstance().getPlayer().getUnits();
 
 			// Update the score of all actions being used in the simulation.
-			this.actionTypes = this.generateAllAvailableActionTypes();
+			this.actionTypes = this.generateAllAvailableActionTypes(manager);
 			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 			this.scoringDirector.update(this.scoringActions, manager);
 

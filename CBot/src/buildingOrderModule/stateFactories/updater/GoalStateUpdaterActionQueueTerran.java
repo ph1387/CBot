@@ -2,6 +2,7 @@ package buildingOrderModule.stateFactories.updater;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerran;
+import core.Core;
 
 // TODO: UML ADD
 /**
@@ -13,6 +14,9 @@ import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerra
  */
 public class GoalStateUpdaterActionQueueTerran extends GoalStateUpdaterActionQueue {
 
+	// The goal of the manager after a certain amount of time has passed.
+	private boolean mainGoalSimulationRunning = false;
+
 	public GoalStateUpdaterActionQueueTerran(BuildActionManager buildActionManager) {
 		super(buildActionManager);
 	}
@@ -23,8 +27,15 @@ public class GoalStateUpdaterActionQueueTerran extends GoalStateUpdaterActionQue
 	public void update(BuildActionManager manager) {
 		super.update(manager);
 
-		// TODO: WIP ADD UPDATER
+		// Force the execution of the simulation after a certain amount of time
+		// has passed.
+		if (!this.mainGoalSimulationRunning
+				&& Core.getInstance().getGame().getFrameCount() >= this.simulationFrameInit) {
+			// Swap the simulation goal with the initial starting goal.
+			this.changeGoalStateImportance("simulationRunning", 2);
 
+			this.mainGoalSimulationRunning = true;
+		}
 	}
 
 }
