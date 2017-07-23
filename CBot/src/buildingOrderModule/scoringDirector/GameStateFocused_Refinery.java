@@ -43,24 +43,19 @@ class GameStateFocused_Refinery extends GameStateGradualChangeWithReset {
 
 		if (refineryCountCurrent != null) {
 			// This is necessary since reseting is only required when the
-			// previously
-			// stored center count is higher than the count of refineries (= A
-			// refinery could be built) and the count of refineries is now equal
-			// to
-			// the number of centers (= Each center has a refinery).
+			// previously stored center count is higher than the count of
+			// refineries (= A refinery could be built) and the count of
+			// refineries is now equal to the number of centers (= Each center
+			// has a refinery).
 			if (this.centerCountPrev > this.refineryCountPrev && refineryCountCurrent.equals(this.centerCountPrev)) {
 				reset = true;
 			}
 
 			// Also reset the score if the number of current refineries is
-			// smaller
-			// than the previously stored one since this means that a refinery
-			// was
-			// destroyed. Therefore wait a moment before trying to construct a
-			// new
-			// one at maybe the same position (Enemies might be near and do not
-			// yet
-			// have destroyed the center).
+			// smaller than the previously stored one since this means that a
+			// refinery was destroyed. Therefore wait a moment before trying to
+			// construct a new one at maybe the same position (Enemies might be
+			// near and do not yet have destroyed the center).
 			if (this.refineryCountPrev < refineryCountCurrent.intValue()) {
 				reset = true;
 			}

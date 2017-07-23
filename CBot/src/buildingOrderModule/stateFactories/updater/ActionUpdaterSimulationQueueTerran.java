@@ -13,6 +13,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTe
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Barracks;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Factory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
@@ -49,6 +50,7 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 			ActionType constructBarracks = new ConstrucActionTerran_Barracks(1);
 			ActionType constructFactory = new ConstrucActionTerran_Factory(1);
 			ActionType constructCenter = new ConstructActionCenter(1);
+			ActionType constructRefinery = new ConstructActionRefinery(1);
 			ActionType trainWorker = new TrainUnitActionWorker(1);
 			ActionType trainMarine = new TrainUnitActionTerran_Marine(1);
 			ActionType trainSiegeTank = new TrainUnitActionTerran_SiegeTank(1);
@@ -60,6 +62,10 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 			if (!usedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Command_Center)
 					&& !forwardedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Command_Center)) {
 				availableActionTypes.add(constructCenter);
+			}
+			if (!usedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Refinery)
+					&& !forwardedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Refinery)) {
+				availableActionTypes.add(constructRefinery);
 			}
 			availableActionTypes.add(constructBarracks);
 			availableActionTypes.add(constructFactory);
