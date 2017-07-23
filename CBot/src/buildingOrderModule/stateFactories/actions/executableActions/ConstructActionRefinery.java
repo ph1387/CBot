@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.scoringDirector.GameState;
 import bwapi.UnitType;
 import core.Core;
 
@@ -19,6 +20,11 @@ public class ConstructActionRefinery extends ConstructBaseAction {
 
 	public ConstructActionRefinery(Object target) {
 		super(target);
+		
+		this.addToGameStates(GameState.Building_Units);
+		this.addToGameStates(GameState.Mineral_Units);
+		this.addToGameStates(GameState.Refinery_Units);
+		this.addToGameStates(GameState.Cheap_Units);
 	}
 
 	// -------------------- Functions
@@ -28,4 +34,9 @@ public class ConstructActionRefinery extends ConstructBaseAction {
 		return Core.getInstance().getPlayer().getRace().getRefinery();
 	}
 
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return 1;
+	}
+	
 }

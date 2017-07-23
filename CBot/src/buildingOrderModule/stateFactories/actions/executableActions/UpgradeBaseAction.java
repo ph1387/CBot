@@ -116,7 +116,7 @@ public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExt
 	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
-		return -1;
+		return 1;
 	}
 
 }

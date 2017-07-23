@@ -111,7 +111,7 @@ public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionEx
 	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
-		return -1;
+		return 1;
 	}
 
 }

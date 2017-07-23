@@ -19,6 +19,8 @@ public class ConstructActionSupply extends ConstructBaseAction {
 	 */
 	public ConstructActionSupply(Object target) {
 		super(target);
+		
+		// TODO: Possible Change: Add GameStates even though this will probably never be used in a simulation.
 	}
 
 	// -------------------- Functions

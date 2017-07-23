@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.scoringDirector.GameState;
 import bwapi.UnitType;
 import core.Core;
 
@@ -19,6 +20,11 @@ public class ConstructActionCenter extends ConstructBaseAction {
 	 */
 	public ConstructActionCenter(Object target) {
 		super(target);
+		
+		this.addToGameStates(GameState.Building_Units);
+		this.addToGameStates(GameState.Mineral_Units);
+		this.addToGameStates(GameState.Expansion_Focused);
+		this.addToGameStates(GameState.Expensive_Units);
 	}
 
 	// -------------------- Functions
@@ -26,6 +32,11 @@ public class ConstructActionCenter extends ConstructBaseAction {
 	@Override
 	protected UnitType defineType() {
 		return Core.getInstance().getPlayer().getRace().getCenter();
+	}
+	
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return 1;
 	}
 	
 }

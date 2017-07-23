@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.scoringDirector.GameState;
 import bwapi.TechType;
 
 /**
@@ -17,6 +18,11 @@ public class ResearchActionTerran_SiegeMode extends ResearchBaseAction {
 	 */
 	public ResearchActionTerran_SiegeMode(Object target) {
 		super(target);
+		
+		this.addToGameStates(GameState.Mineral_Units);
+		this.addToGameStates(GameState.Gas_Units);
+		this.addToGameStates(GameState.Technology_Focused);
+		this.addToGameStates(GameState.Expensive_Units);
 	}
 
 	// -------------------- Functions

@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
@@ -18,6 +19,11 @@ public class TrainUnitActionTerran_Marine extends TrainUnitBaseAction {
 	 */
 	public TrainUnitActionTerran_Marine(Object target) {
 		super(target);
+		
+		this.addToGameStates(GameState.Cheap_Units);
+		this.addToGameStates(GameState.Mineral_Units);
+		this.addToGameStates(GameState.Bio_Units);
+		this.addToGameStates(GameState.Combat_Units);
 	}
 
 	// -------------------- Functions

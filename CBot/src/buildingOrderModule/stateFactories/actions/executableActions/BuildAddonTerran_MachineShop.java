@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
@@ -18,6 +19,11 @@ public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
 	 */
 	public BuildAddonTerran_MachineShop(Object target) {
 		super(target);
+		
+		this.addToGameStates(GameState.Building_Units);
+		this.addToGameStates(GameState.Mineral_Units);
+		this.addToGameStates(GameState.Cheap_Units);
+		this.addToGameStates(GameState.Upgrade_Focused);
 	}
 
 	// -------------------- Functions
@@ -32,4 +38,11 @@ public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(UnitType.Terran_Factory);
 	}
+	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return 1;
+	}
+	
 }

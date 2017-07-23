@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
@@ -19,6 +20,11 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 	 */
 	public TrainUnitActionTerran_SiegeTank(Object target) {
 		super(target);
+		
+		this.addToGameStates(GameState.Mineral_Units);
+		this.addToGameStates(GameState.Expensive_Units);
+		this.addToGameStates(GameState.Gas_Units);
+		this.addToGameStates(GameState.Combat_Units);
 	}
 
 	// -------------------- Functions
