@@ -1,5 +1,7 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
+
 // TODO: UML ADD
 /**
  * GameState.java --- Class for representing a state in the game with an
@@ -49,13 +51,12 @@ public abstract class GameState {
 	 *            the ScoringDirector that is going to be used for all missing
 	 *            values and information regarding the various influences the
 	 *            Bot is experiencing.
-	 * @param currenInformation
-	 *            the storage instance that holds all currently important
-	 *            information regarding the state of the game and especially the
-	 *            Units of the Player.
+	 * @param manager
+	 *            the BuildActionManager that contains all important
+	 *            information.
 	 */
-	public void updateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
-		this.currentScore = this.generateScore(scoringDirector, currenInformation);
+	public void updateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
+		this.currentScore = this.generateScore(scoringDirector, manager);
 	}
 
 	/**
@@ -67,15 +68,14 @@ public abstract class GameState {
 	 *            the ScoringDirector that is going to be used for all missing
 	 *            values and information regarding the various influences the
 	 *            Bot is experiencing.
-	 * @param currenInformation
-	 *            the storage instance that holds all currently important
-	 *            information regarding the state of the game and especially the
-	 *            Units of the Player.
+	 * @param manager
+	 *            the BuildActionManager that contains all important
+	 *            information.
 	 * @return a score based on the provided information and the area the
 	 *         GameState is performing in.
 	 */
 	protected abstract double generateScore(ScoringDirector scoringDirector,
-			GameStateCurrentInformation currenInformation);
+			BuildActionManager manager);
 
 	// ------------------------------ Getter / Setter
 

@@ -1,5 +1,7 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
+
 // TODO: UML ADD NOT PUBLIC
 /**
  * GameStateFocused_Technology.java --- A GameState focused on researching
@@ -30,9 +32,9 @@ class GameStateFocused_Technology extends GameStateGradualChangeWithReset {
 	// -------------------- Functions
 
 	@Override
-	protected boolean shouldReset(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
-		int techCountCurrent = currenInformation.getCurrentTechs().size();
-		int techCountMax = scoringDirector.defineDesiredTechnologies().size();
+	protected boolean shouldReset(ScoringDirector scoringDirector, BuildActionManager manager) {
+		int techCountCurrent = manager.getCurrentGameInformation().getCurrentTechs().size();
+		int techCountMax = manager.getDesiredTechs().size();
 		boolean reset = false;
 
 		// Reset the score after the previously stored number of technologies
@@ -62,8 +64,8 @@ class GameStateFocused_Technology extends GameStateGradualChangeWithReset {
 
 	// TODO: WIP REMOVE
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
-		double value = super.generateScore(scoringDirector, currenInformation);
+	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
+		double value = super.generateScore(scoringDirector, manager);
 
 		// TODO: WIP REMOVE
 		System.out.println("GameState TechnologyFocused: " + value + " finished: " + this.techsFinished);

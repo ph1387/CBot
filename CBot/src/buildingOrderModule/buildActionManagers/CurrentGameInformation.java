@@ -1,4 +1,4 @@
-package buildingOrderModule.scoringDirector;
+package buildingOrderModule.buildActionManagers;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,15 +7,15 @@ import bwapi.TechType;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD NOT PULBIC
+// TODO: UML ADD
 /**
- * GameStateCurrentInformation.java --- Storage class for all information that
- * are currently important for updating the scores.
+ * CurrentGameInformation.java --- Storage class for all current information of
+ * the game.
  * 
  * @author P H - 22.07.2017
  *
  */
-class GameStateCurrentInformation {
+public class CurrentGameInformation {
 
 	private int currentWorkerCount;
 	private int currentBuildingCount;
@@ -49,7 +49,7 @@ class GameStateCurrentInformation {
 	 * @param currentUpgrades
 	 *            all currently performed UpgradeTypes of the desired ones.
 	 */
-	public GameStateCurrentInformation(int currentWorkerCount, int currentBuildingCount, int currentCombatUnitCount,
+	public CurrentGameInformation(int currentWorkerCount, int currentBuildingCount, int currentCombatUnitCount,
 			double currentWorkerPercent, double currentBuildingsPercent, double currentCombatUnitsPercent,
 			HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
 			HashMap<UpgradeType, Integer> currentUpgrades) {

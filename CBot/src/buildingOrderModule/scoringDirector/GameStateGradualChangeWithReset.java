@@ -1,5 +1,7 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
+
 // TODO: UML ADD NOT PUBLIC
 /**
  * GameStateGradualChangeWithReset.java --- A Superclass for GameStates using a
@@ -28,17 +30,17 @@ abstract class GameStateGradualChangeWithReset extends GameStateGradualChange {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
 		// Reset the score to the previously specified starting score if the
 		// function returns true.
-		if (this.shouldReset(scoringDirector, currenInformation)) {
+		if (this.shouldReset(scoringDirector, manager)) {
 			this.scorePrev = scoreStart;
 		}
 
 		// Apply the rate towards the score if the threshold is not
 		// yet reached.
 		if (!this.isTresholdReached(this.scorePrev)) {
-			super.generateScore(scoringDirector, currenInformation);
+			super.generateScore(scoringDirector, manager);
 		}
 		
 		return this.scorePrev;
@@ -57,14 +59,13 @@ abstract class GameStateGradualChangeWithReset extends GameStateGradualChange {
 	 * @param scoringDirector
 	 *            the ScoringDirector that is going to be used for determining
 	 *            if a reset of the current score is necessary.
-	 * @param currenInformation
-	 *            the storage instance that holds all currently important
-	 *            information regarding the state of the game and especially the
-	 *            Units of the Player.
+	 * @param manager
+	 *            the BuildActionManager that contains all important
+	 *            information.
 	 * @return true if the score should be reseted to the starting score and
 	 *         false if the score should not be reseted.
 	 */
-	protected abstract boolean shouldReset(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation);
+	protected abstract boolean shouldReset(ScoringDirector scoringDirector, BuildActionManager manager);
 
 	/**
 	 * Function for determining if a certain score threshold is being reached

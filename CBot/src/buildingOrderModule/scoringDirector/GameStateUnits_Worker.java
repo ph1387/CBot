@@ -1,5 +1,6 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
 // TODO: UML ADD NOT PUBLIC
@@ -16,13 +17,15 @@ class GameStateUnits_Worker extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
-		double centers = (double) (currenInformation.getCurrentUnits().get(Core.getInstance().getPlayer().getRace().getCenter()));
-		double workers = (double) (currenInformation.getCurrentUnits().get(Core.getInstance().getPlayer().getRace().getWorker()));
+	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
+		double centers = (double) (manager.getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getCenter()));
+		double workers = (double) (manager.getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getWorker()));
 
 		// TODO: WIP REMOVE
 		System.out.println("GameState WorkerUnits: " + (this.generalMultiplier * (centers / workers)));
-		
+
 		return this.generalMultiplier * (centers / workers);
 	}
 

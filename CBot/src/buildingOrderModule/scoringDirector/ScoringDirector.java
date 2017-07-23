@@ -1,19 +1,11 @@
 package buildingOrderModule.scoringDirector;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.function.BiConsumer;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueue;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
 import buildingOrderModule.stateFactories.updater.ActionUpdaterSimulationQueue;
-import bwapi.Player;
-import bwapi.TechType;
-import bwapi.Unit;
-import bwapi.UnitType;
-import bwapi.UpgradeType;
-import core.Core;
 
 // TODO: UML ADD
 /**
@@ -39,10 +31,6 @@ import core.Core;
  */
 public abstract class ScoringDirector {
 
-	// Desired values:
-	private HashSet<TechType> desiredTechs = this.defineDesiredTechnologies();
-	private HashMap<UpgradeType, Integer> desiredUpgrades = this.defineDesiredUpgradeTypes();
-
 	// Base multiplier which all Actions use to generate their score and ensure
 	// better / more results (No values below 1.0 are discarded).
 	private double basePointMultiplier = 10.;
@@ -60,7 +48,7 @@ public abstract class ScoringDirector {
 	 */
 	public void update(HashSet<ScoringAction> updatableActions, BuildActionManager manager) {
 		// Update the extracted GameStates
-		this.updateGameStates(this.extractUsedGameStates(updatableActions));
+		this.updateGameStates(this.extractUsedGameStates(updatableActions), manager);
 
 		// Update the scores of the actions.
 		this.updateScoringActionScores(updatableActions);
@@ -92,78 +80,15 @@ public abstract class ScoringDirector {
 	 * 
 	 * @param usedGameStates
 	 *            the HashSet of GameStates that are going to be updated.
+	 * @param manager
+	 *            the BuildActionManager that contains all important
+	 *            information.
 	 */
-	private void updateGameStates(HashSet<GameState> usedGameStates) {
-		// Actual values:
-		int unitCountTotal = 0;
-		int unitCountWorkers = 0;
-		int unitCountBuildings = 0;
-		int unitCountCombat = 0;
-		double currentWorkerPercent;
-		double currentBuildingsPercent;
-		double currentCombatUnitsPercent;
-		HashMap<UnitType, Integer> currentUnits = new HashMap<>();
-		HashSet<TechType> currentTechs = new HashSet<>();
-		final HashMap<UpgradeType, Integer> currentUpgrades = new HashMap<>();
-
-		final Player player = Core.getInstance().getPlayer();
-
-		// Extract all necessary information from the current state of the game.
-		// This does NOT include any building Queues etc. These factors must be
-		// considered elsewhere.
-		// Units:
-		for (Unit unit : player.getUnits()) {
-			UnitType type = unit.getType();
-
-			// Add the Units to a HashMap counting the individual Units
-			// themselves.
-			if (currentUnits.containsKey(type)) {
-				currentUnits.put(type, currentUnits.get(type) + 1);
-			} else {
-				currentUnits.put(type, 1);
-			}
-
-			// Count the different types of Units.
-			if (type.isWorker()) {
-				unitCountWorkers++;
-			} else if (type.isBuilding()) {
-				unitCountBuildings++;
-			} else {
-				unitCountCombat++;
-			}
-			unitCountTotal++;
-		}
-
-		// Technologies:
-		for (TechType techType : this.desiredTechs) {
-			if (player.hasResearched(techType)) {
-				currentTechs.add(techType);
-			}
-		}
-
-		// Upgrades:
-		this.desiredUpgrades.forEach(new BiConsumer<UpgradeType, Integer>() {
-
-			@Override
-			public void accept(UpgradeType upgradeType, Integer level) {
-				currentUpgrades.put(upgradeType, player.getUpgradeLevel(upgradeType));
-			}
-		});
-
-		// Calculate the percentage representation of the Units:
-		currentWorkerPercent = ((double) (unitCountWorkers)) / ((double) (unitCountTotal));
-		currentBuildingsPercent = ((double) (unitCountBuildings)) / ((double) (unitCountTotal));
-		currentCombatUnitsPercent = ((double) (unitCountCombat)) / ((double) (unitCountTotal));
-
+	private void updateGameStates(HashSet<GameState> usedGameStates, BuildActionManager manager) {
 		// Using these information update all GameStates that are being
-		// provided while generating an instance of the
-		// GameStateCurrentInformation that contains all these previously
-		// calculated values.
+		// provided.
 		for (GameState gameState : usedGameStates) {
-			gameState.updateScore(this,
-					new GameStateCurrentInformation(unitCountWorkers, unitCountBuildings, unitCountCombat,
-							currentWorkerPercent, currentBuildingsPercent, currentCombatUnitsPercent, currentUnits,
-							currentTechs, currentUpgrades));
+			gameState.updateScore(this, manager);
 		}
 	}
 
@@ -188,25 +113,6 @@ public abstract class ScoringDirector {
 	 * @return the percentage of combat Units the Bot should try to keep.
 	 */
 	protected abstract double defineDesiredCombatUnitsPercent();
-
-	/**
-	 * Function for defining the TechTypes that the Bot should research.</br>
-	 * <b>Note:</b></br>
-	 * What counts are not the specified technologies but the amount of them.
-	 * 
-	 * @return the TechTypes the Bot should research.
-	 */
-	protected abstract HashSet<TechType> defineDesiredTechnologies();
-
-	/**
-	 * Function for defining what UpgradeTypes the Bot should pursue.
-	 * <b>Note:</b></br>
-	 * What counts are not the specified upgrades but the amount of them.
-	 * 
-	 * @return the UpgradeTypes and their desired level that the Bot should
-	 *         pursue.
-	 */
-	protected abstract HashMap<UpgradeType, Integer> defineDesiredUpgradeTypes();
 
 	/**
 	 * Function for defining the fixed score for Bio-Units.

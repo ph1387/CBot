@@ -1,5 +1,6 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
 // TODO: UML ADD NOT PUBLIC
@@ -32,13 +33,13 @@ class GameStateFocused_Refinery extends GameStateGradualChangeWithReset {
 	// -------------------- Functions
 
 	@Override
-	protected boolean shouldReset(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+	protected boolean shouldReset(ScoringDirector scoringDirector, BuildActionManager manager) {
 		boolean reset = false;
 
 		// Extract the number of centers and refineries from the storage.
-		Integer centerCountCurrent = currenInformation.getCurrentUnits()
+		Integer centerCountCurrent = manager.getCurrentGameInformation().getCurrentUnits()
 				.get(Core.getInstance().getPlayer().getRace().getCenter());
-		Integer refineryCountCurrent = currenInformation.getCurrentUnits()
+		Integer refineryCountCurrent = manager.getCurrentGameInformation().getCurrentUnits()
 				.get(Core.getInstance().getPlayer().getRace().getRefinery());
 
 		if (refineryCountCurrent != null) {
@@ -81,8 +82,8 @@ class GameStateFocused_Refinery extends GameStateGradualChangeWithReset {
 
 	// TODO: WIP REMOVE
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
-		double value = super.generateScore(scoringDirector, currenInformation);
+	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
+		double value = super.generateScore(scoringDirector, manager);
 
 		// TODO: WIP REMOVE
 		System.out.println("GameState RefineryFocused: " + value);

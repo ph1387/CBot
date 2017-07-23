@@ -3,6 +3,7 @@ package buildingOrderModule.scoringDirector;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
 import bwapi.UpgradeType;
 
 // TODO: UML ADD NOT PUBLIC
@@ -34,9 +35,9 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 	// -------------------- Functions
 
 	@Override
-	protected boolean shouldReset(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
-		int upgradeCountCurrent = this.extractTotalNumberOfUpgrades(currenInformation.getCurrentUpgrades());
-		int upgradeCountMax = this.extractTotalNumberOfUpgrades(scoringDirector.defineDesiredUpgradeTypes());
+	protected boolean shouldReset(ScoringDirector scoringDirector, BuildActionManager manager) {
+		int upgradeCountCurrent = this.extractTotalNumberOfUpgrades(manager.getCurrentGameInformation().getCurrentUpgrades());
+		int upgradeCountMax = this.extractTotalNumberOfUpgrades(manager.getDesiredUpgrades());
 		boolean reset = false;
 
 		// Reset the score after the previously stored number of upgrades
@@ -94,8 +95,8 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 
 	// TODO: WIP REMOVE
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
-		double value = super.generateScore(scoringDirector, currenInformation);
+	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
+		double value = super.generateScore(scoringDirector, manager);
 
 		// TODO: WIP REMOVE
 		System.out.println("GameState UpgradeFocused: " + value + " finished: " + this.upgradesFinished);

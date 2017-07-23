@@ -1,5 +1,7 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
+
 // TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Support.java --- A GameState focused on support Units.
@@ -12,7 +14,7 @@ class GameStateUnits_Support extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
 		
 		// TODO: WIP REMOVE
 		System.out.println("GameState SupportUnits: " + scoringDirector.defineFixedScoreUnitsSupport());

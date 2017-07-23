@@ -1,5 +1,7 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
+
 // TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Building.java --- A GameState focused on buildings.
@@ -12,9 +14,10 @@ class GameStateUnits_Building extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
 		double score = scoringDirector.defineDesiredBuildingsPercent()
-				- (currenInformation.getCurrentBuildingsPercent() - scoringDirector.defineDesiredBuildingsPercent());
+				- (manager.getCurrentGameInformation().getCurrentBuildingsPercent()
+						- scoringDirector.defineDesiredBuildingsPercent());
 
 		// TODO: WIP REMOVE
 		System.out.println("GameState Buildings: " + score);

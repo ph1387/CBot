@@ -1,5 +1,6 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
 // TODO: UML ADD NOT PUBLIC
@@ -41,7 +42,7 @@ abstract class GameStateGradualChange extends GameState {
 	// -------------------- Functions
 
 	@Override
-	protected double generateScore(ScoringDirector scoringDirector, GameStateCurrentInformation currenInformation) {
+	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
 		int currentTimeStamp = Core.getInstance().getGame().getFrameCount();
 		// The number of times the rate is applied to the score.
 		int iterations = (int) (((double) (currentTimeStamp - this.timeStampLastScoringChange)) / this.frameDiff);
