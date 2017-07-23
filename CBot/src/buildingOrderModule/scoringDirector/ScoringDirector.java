@@ -43,8 +43,9 @@ public abstract class ScoringDirector {
 	private HashSet<TechType> desiredTechs = this.defineDesiredTechnologies();
 	private HashMap<UpgradeType, Integer> desiredUpgrades = this.defineDesiredUpgradeTypes();
 
-	// Base multiplier which all Actions use to generate their score.
-	private double basePointMultiplier = 1000.;
+	// Base multiplier which all Actions use to generate their score and ensure
+	// better / more results (No values below 1.0 are discarded).
+	private double basePointMultiplier = 10.;
 
 	// -------------------- Functions
 
@@ -258,8 +259,10 @@ public abstract class ScoringDirector {
 
 			// Divide the total sum by the number of GameStates added together
 			// to calculate the average value and set the score of the action to
-			// this value.
-			scoringAction.setScore((int) (this.basePointMultiplier * (gameStateSum / gameStateCount)));
+			// this value. The base multiplier is added to ensure that no scores
+			// below 1.0 are missing (Casted to int!).
+			scoringAction.setScore((int) ((double) (scoringAction.defineMineralCost() + scoringAction.defineGasCost())
+					* (gameStateSum / gameStateCount) * this.basePointMultiplier));
 		}
 	}
 

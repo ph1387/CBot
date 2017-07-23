@@ -26,4 +26,16 @@ public interface ScoringAction {
 	 *            the generated score by the ScoringDirector.
 	 */
 	public void setScore(int score);
+	
+	/**
+	 *
+	 * @return the mineral cost of this Action.
+	 */
+	public int defineMineralCost();
+
+	/**
+	 *
+	 * @return the gas cost of this Action.
+	 */
+	public int defineGasCost();
 }
