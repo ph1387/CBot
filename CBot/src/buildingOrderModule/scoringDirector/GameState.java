@@ -16,7 +16,8 @@ public abstract class GameState {
 	public static final GameState Expansion_Focused = new GameStateFocused_Expansion();
 	public static final GameState Technology_Focused = new GameStateFocused_Technology();
 	public static final GameState Upgrade_Focused = new GameStateFocused_Upgrade();
-
+	
+	public static final GameState Refinery_Units = new GameStateFocused_Refinery();
 	public static final GameState Building_Units = new GameStateUnits_Building();
 	public static final GameState Worker_Units = new GameStateUnits_Worker();
 	public static final GameState Combat_Units = new GameStateUnits_Combat();
