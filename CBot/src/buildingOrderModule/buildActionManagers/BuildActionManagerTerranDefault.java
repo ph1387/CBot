@@ -1,7 +1,7 @@
 package buildingOrderModule.buildActionManagers;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import buildingOrderModule.CommandSender;
 import buildingOrderModule.stateFactories.StateFactory;
@@ -31,8 +31,8 @@ public class BuildActionManagerTerranDefault extends BuildActionManager {
 	}
 	
 	@Override
-	protected HashSet<TechType> defineDesiredTechnologies() {
-		HashSet<TechType> desiredTechnologies = new HashSet<>();
+	protected ArrayList<TechType> defineDesiredTechnologies() {
+		ArrayList<TechType> desiredTechnologies = new ArrayList<>();
 		
 		desiredTechnologies.add(TechType.Healing);
 		desiredTechnologies.add(TechType.Stim_Packs);
@@ -42,8 +42,8 @@ public class BuildActionManagerTerranDefault extends BuildActionManager {
 	}
 
 	@Override
-	protected HashMap<UpgradeType, Integer> defineDesiredUpgradeTypes() {
-		HashMap<UpgradeType, Integer> desiredUpgradeTypes = new HashMap<>();
+	protected LinkedHashMap<UpgradeType, Integer> defineDesiredUpgradeTypes() {
+		LinkedHashMap<UpgradeType, Integer> desiredUpgradeTypes = new LinkedHashMap<>();
 		
 		desiredUpgradeTypes.put(UpgradeType.Terran_Infantry_Weapons, UpgradeType.Terran_Infantry_Weapons.maxRepeats());
 		desiredUpgradeTypes.put(UpgradeType.Terran_Infantry_Armor, UpgradeType.Terran_Infantry_Armor.maxRepeats());

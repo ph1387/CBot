@@ -61,9 +61,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 
 	public ActionUpdaterSimulationQueue(BuildActionManager buildActionManager) {
 		super(buildActionManager);
-
-		this.actionTypes = this.generateAllAvailableActionTypes(buildActionManager);
-		this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 	}
 
 	// -------------------- Functions
@@ -109,6 +106,10 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		if (this.actionQueueSimulationResults == null) {
 			this.actionQueueSimulationResults = (ActionQueueSimulationResults) this
 					.getActionFromInstance(ActionQueueSimulationResults.class);
+		}
+		if(this.actionTypes == null && this.scoringActions == null) {
+			this.actionTypes = this.generateAllAvailableActionTypes(buildActionManager);
+			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 		}
 
 		// React on any results of the simulation Thread and update it if

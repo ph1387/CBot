@@ -1,11 +1,14 @@
 package buildingOrderModule.scoringDirector;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueue;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
 import buildingOrderModule.stateFactories.updater.ActionUpdaterSimulationQueue;
+import bwapi.TechType;
+import bwapi.UpgradeType;
 
 // TODO: UML ADD
 /**
@@ -51,7 +54,7 @@ public abstract class ScoringDirector {
 		this.updateGameStates(this.extractUsedGameStates(updatableActions), manager);
 
 		// Update the scores of the actions.
-		this.updateScoringActionScores(updatableActions);
+		this.updateScoringActionScores(updatableActions, manager);
 	}
 
 	/**
@@ -147,8 +150,11 @@ public abstract class ScoringDirector {
 	 * 
 	 * @param updatableActions
 	 *            the ScoringActions whose scores are being updated.
+	 * @param manager
+	 *            the BuildActionManager whose action scores are going to be
+	 *            updated.
 	 */
-	private void updateScoringActionScores(HashSet<ScoringAction> updatableActions) {
+	private void updateScoringActionScores(HashSet<ScoringAction> updatableActions, BuildActionManager manager) {
 		for (ScoringAction scoringAction : updatableActions) {
 			double gameStateCount = scoringAction.defineUsedGameStates().size();
 			double gameStateSum = 0.;

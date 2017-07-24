@@ -1,7 +1,9 @@
 package buildingOrderModule.buildActionManagers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 
@@ -28,10 +30,10 @@ public abstract class BuildActionManager extends GoapUnit {
 
 	// TODO: UML ADD
 	// Desired values:
-	private HashSet<TechType> desiredTechs = this.defineDesiredTechnologies();
+	private ArrayList<TechType> desiredTechs = this.defineDesiredTechnologies();
 	// TODO: UML ADD
-	private HashMap<UpgradeType, Integer> desiredUpgrades = this.defineDesiredUpgradeTypes();
-	
+	private LinkedHashMap<UpgradeType, Integer> desiredUpgrades = this.defineDesiredUpgradeTypes();
+
 	private CommandSender sender;
 	private InformationStorage informationStorage;
 	// TODO: UML ADD
@@ -63,27 +65,30 @@ public abstract class BuildActionManager extends GoapUnit {
 	/**
 	 * Function for defining the TechTypes that the Bot should research.</br>
 	 * <b>Note:</b></br>
-	 * What counts are not the specified technologies but the amount of them.
+	 * The order in which the elements are inserted into the Collection
+	 * determines the order in which the technologies are most likely
+	 * researched.
 	 * 
 	 * @return the TechTypes the Bot should research.
 	 */
-	protected abstract HashSet<TechType> defineDesiredTechnologies();
+	protected abstract ArrayList<TechType> defineDesiredTechnologies();
 
 	/**
 	 * Function for defining what UpgradeTypes the Bot should pursue.
 	 * <b>Note:</b></br>
-	 * What counts are not the specified upgrades but the amount of them.
+	 * The order in which the elements are inserted into the Collection
+	 * determines the order in which the upgrades are most likely performed.
 	 * 
 	 * @return the UpgradeTypes and their desired level that the Bot should
 	 *         pursue.
 	 */
-	protected abstract HashMap<UpgradeType, Integer> defineDesiredUpgradeTypes();
-	
+	protected abstract LinkedHashMap<UpgradeType, Integer> defineDesiredUpgradeTypes();
+
 	@Override
 	public void update() {
 		// Extract the current information of the game.
 		this.currentGameInformation = this.extractCurrentGameInformation();
-		
+
 		try {
 			this.worldStateUpdater.update(this);
 			this.goalStateUpdater.update(this);
@@ -205,15 +210,15 @@ public abstract class BuildActionManager extends GoapUnit {
 	// ------------------------------ Getter / Setter
 
 	// TODO: UML ADD
-	public HashSet<TechType> getDesiredTechs() {
+	public ArrayList<TechType> getDesiredTechs() {
 		return desiredTechs;
 	}
 
 	// TODO: UML ADD
-	public HashMap<UpgradeType, Integer> getDesiredUpgrades() {
+	public LinkedHashMap<UpgradeType, Integer> getDesiredUpgrades() {
 		return desiredUpgrades;
 	}
-	
+
 	public CommandSender getSender() {
 		return this.sender;
 	}
