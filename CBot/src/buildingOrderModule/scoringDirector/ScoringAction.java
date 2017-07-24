@@ -38,4 +38,5 @@ public interface ScoringAction {
 	 * @return the gas cost of this Action.
 	 */
 	public int defineGasCost();
+	
 }
