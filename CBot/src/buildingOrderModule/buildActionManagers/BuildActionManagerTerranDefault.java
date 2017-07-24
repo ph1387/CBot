@@ -1,13 +1,8 @@
 package buildingOrderModule.buildActionManagers;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import buildingOrderModule.CommandSender;
 import buildingOrderModule.stateFactories.StateFactory;
 import buildingOrderModule.stateFactories.StateFactoryTerranBasic;
-import bwapi.TechType;
-import bwapi.UpgradeType;
 import informationStorage.InformationStorage;
 
 /**
@@ -28,27 +23,6 @@ public class BuildActionManagerTerranDefault extends BuildActionManager {
 	@Override
 	protected StateFactory createFactory() {
 		return new StateFactoryTerranBasic();
-	}
-	
-	@Override
-	protected ArrayList<TechType> defineDesiredTechnologies() {
-		ArrayList<TechType> desiredTechnologies = new ArrayList<>();
-		
-		desiredTechnologies.add(TechType.Healing);
-		desiredTechnologies.add(TechType.Stim_Packs);
-		desiredTechnologies.add(TechType.Tank_Siege_Mode);
-		
-		return desiredTechnologies;
-	}
-
-	@Override
-	protected LinkedHashMap<UpgradeType, Integer> defineDesiredUpgradeTypes() {
-		LinkedHashMap<UpgradeType, Integer> desiredUpgradeTypes = new LinkedHashMap<>();
-		
-		desiredUpgradeTypes.put(UpgradeType.Terran_Infantry_Weapons, UpgradeType.Terran_Infantry_Weapons.maxRepeats());
-		desiredUpgradeTypes.put(UpgradeType.Terran_Infantry_Armor, UpgradeType.Terran_Infantry_Armor.maxRepeats());
-		
-		return desiredUpgradeTypes;
 	}
 	
 }

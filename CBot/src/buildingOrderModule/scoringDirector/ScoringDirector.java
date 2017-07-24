@@ -271,7 +271,7 @@ public abstract class ScoringDirector {
 	 * number of positions there are. From these two values a multiplier is
 	 * generated:</br>
 	 * <ul>
-	 * <li>1-(index-1/max)</li>
+	 * <li>1-(index/max)</li>
 	 * </ul>
 	 * 
 	 * @param index
@@ -283,7 +283,7 @@ public abstract class ScoringDirector {
 	 *         produce higher values).
 	 */
 	private double generateMultiplier(double index, double max) {
-		return 1. - ((index - 1.) / max);
+		return 1. - (index / max);
 	}
 
 	// ------------------------------ Getter / Setter

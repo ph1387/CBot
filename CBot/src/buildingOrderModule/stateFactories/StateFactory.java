@@ -1,6 +1,7 @@
 package buildingOrderModule.stateFactories;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
@@ -19,10 +20,16 @@ public interface StateFactory {
 	 */
 	public List<GoapState> generateGoalState();
 
+	// TODO: UML RETURN TYPE
 	/**
-	 * @return a Object which represents the currently available Actions.
+	 * @return a Object which represents the currently available Actions. </br>
+	 *         <b>Note:</b></br>
+	 *         The return type is a LinkedHashSet due to the order of upgrades
+	 *         and technologies being important. This is the main difference in
+	 *         comparison with the
+	 *         {@link unitControlModule.stateFactories.StateFactory} class.
 	 */
-	public HashSet<GoapAction> generateAvailableActions();
+	public LinkedHashSet<GoapAction> generateAvailableActions();
 
 	/**
 	 * @param manager

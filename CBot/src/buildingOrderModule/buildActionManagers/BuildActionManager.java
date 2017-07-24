@@ -9,6 +9,8 @@ import java.util.function.BiConsumer;
 
 import buildingOrderModule.CommandSender;
 import buildingOrderModule.stateFactories.StateFactory;
+import buildingOrderModule.stateFactories.actions.executableActions.ResearchBaseAction;
+import buildingOrderModule.stateFactories.actions.executableActions.UpgradeBaseAction;
 import buildingOrderModule.stateFactories.updater.Updater;
 import bwapi.Player;
 import bwapi.TechType;
@@ -30,9 +32,9 @@ public abstract class BuildActionManager extends GoapUnit {
 
 	// TODO: UML ADD
 	// Desired values:
-	private ArrayList<TechType> desiredTechs = this.defineDesiredTechnologies();
+	private ArrayList<TechType> desiredTechs;
 	// TODO: UML ADD
-	private LinkedHashMap<UpgradeType, Integer> desiredUpgrades = this.defineDesiredUpgradeTypes();
+	private LinkedHashMap<UpgradeType, Integer> desiredUpgrades;
 
 	private CommandSender sender;
 	private InformationStorage informationStorage;
@@ -58,31 +60,61 @@ public abstract class BuildActionManager extends GoapUnit {
 		this.setWorldState(this.stateFactory.generateWorldState());
 		this.setGoalState(this.stateFactory.generateGoalState());
 		this.setAvailableActions(this.stateFactory.generateAvailableActions());
+
+		// Extract the desired TechTypes and UpgradeTypes from the available
+		// actions.
+		this.desiredTechs = this.extractDesiredTechs();
+		this.desiredUpgrades = this.extractDesiredUpgrades();
 	}
 
 	// -------------------- Functions
 
 	/**
-	 * Function for defining the TechTypes that the Bot should research.</br>
-	 * <b>Note:</b></br>
-	 * The order in which the elements are inserted into the Collection
-	 * determines the order in which the technologies are most likely
-	 * researched.
+	 * Function for defining the TechTypes that the Bot should research. These
+	 * are extracted from the available actions ordered set and are added
+	 * towards a separate ArrayList. This is necessary for an easier
+	 * understanding of how many TechTypes are going to be researched.
 	 * 
 	 * @return the TechTypes the Bot should research.
 	 */
-	protected abstract ArrayList<TechType> defineDesiredTechnologies();
+	private ArrayList<TechType> extractDesiredTechs() {
+		ArrayList<TechType> techs = new ArrayList<>();
+
+		// Extract all technologies from the available actions.
+		for (GoapAction goapAction : this.getAvailableActions()) {
+			if (goapAction instanceof ResearchBaseAction) {
+				techs.add(((ResearchBaseAction) goapAction).defineResultType().getTechType());
+			}
+		}
+
+		return techs;
+	}
 
 	/**
-	 * Function for defining what UpgradeTypes the Bot should pursue.
-	 * <b>Note:</b></br>
-	 * The order in which the elements are inserted into the Collection
-	 * determines the order in which the upgrades are most likely performed.
+	 * Function for defining what UpgradeTypes the Bot should pursue. These are
+	 * extracted from the available actions and are set to the maximum number of
+	 * iterations the specific UpgradeType can be performed. This is necessary
+	 * for an easier understanding of how many UpgradeTypes are going to be
+	 * pursued.
 	 * 
 	 * @return the UpgradeTypes and their desired level that the Bot should
 	 *         pursue.
 	 */
-	protected abstract LinkedHashMap<UpgradeType, Integer> defineDesiredUpgradeTypes();
+	private LinkedHashMap<UpgradeType, Integer> extractDesiredUpgrades() {
+		LinkedHashMap<UpgradeType, Integer> upgrades = new LinkedHashMap<>();
+
+		// Extract all upgrades from the available actions and set the desired
+		// rank to the maximum one.
+		for (GoapAction goapAction : this.getAvailableActions()) {
+			if (goapAction instanceof UpgradeBaseAction) {
+				UpgradeType upgradeType = ((UpgradeBaseAction) goapAction).defineResultType().getUpgradeType();
+
+				upgrades.put(upgradeType, upgradeType.maxRepeats());
+			}
+		}
+
+		return upgrades;
+	}
 
 	@Override
 	public void update() {

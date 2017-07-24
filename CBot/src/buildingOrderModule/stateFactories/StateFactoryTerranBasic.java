@@ -1,6 +1,7 @@
 package buildingOrderModule.stateFactories;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
@@ -36,7 +37,7 @@ public class StateFactoryTerranBasic extends StateFactoryDefault {
 	}
 
 	@Override
-	public HashSet<GoapAction> generateAvailableActions() {
+	public LinkedHashSet<GoapAction> generateAvailableActions() {
 		return new AvailableActionsSimulationQueueTerran();
 	}
 

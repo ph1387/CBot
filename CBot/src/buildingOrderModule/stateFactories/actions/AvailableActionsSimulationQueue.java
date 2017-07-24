@@ -1,11 +1,11 @@
 package buildingOrderModule.stateFactories.actions;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
 import javaGOAP.GoapAction;
 
-// TODO: UML ADD
+//TODO: UML ADD SUPERCLASS
 /**
  * AvailableActionsSimulationQueue.java --- Available Actions for all simulation
  * users.
@@ -13,7 +13,7 @@ import javaGOAP.GoapAction;
  * @author P H - 16.07.2017
  *
  */
-public class AvailableActionsSimulationQueue extends HashSet<GoapAction> {
+public class AvailableActionsSimulationQueue extends LinkedHashSet<GoapAction> {
 
 	public AvailableActionsSimulationQueue() {
 		this.add(new ActionQueueSimulationResults(1));
