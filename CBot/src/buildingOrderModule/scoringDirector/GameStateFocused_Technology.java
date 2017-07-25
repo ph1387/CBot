@@ -62,15 +62,4 @@ class GameStateFocused_Technology extends GameStateGradualChangeWithReset {
 		return this.techsFinished;
 	}
 
-	// TODO: WIP REMOVE
-	@Override
-	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		double value = super.generateScore(scoringDirector, manager);
-
-		// TODO: WIP REMOVE
-		System.out.println("GameState TechnologyFocused: " + value + " finished: " + this.techsFinished);
-
-		return value;
-	}
-
 }

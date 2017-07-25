@@ -1,7 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-import buildingOrderModule.buildActionManagers.BuildActionManager;
-
 // TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Expensive.java --- A GameState focused on training / building
@@ -34,17 +32,6 @@ class GameStateUnits_Expensive extends GameStateGradualChange {
 	@Override
 	protected boolean canIterationRateApply(double score) {
 		return score < this.scoreMax;
-	}
-
-	// TODO: WIP REMOVE
-	@Override
-	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		double value = super.generateScore(scoringDirector, manager);
-
-		// TODO: WIP REMOVE
-		System.out.println("GameState Expensive: " + value);
-
-		return value;
 	}
 
 }

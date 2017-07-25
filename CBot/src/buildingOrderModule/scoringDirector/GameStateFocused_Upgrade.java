@@ -93,15 +93,4 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 		return this.upgradesFinished;
 	}
 
-	// TODO: WIP REMOVE
-	@Override
-	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		double value = super.generateScore(scoringDirector, manager);
-
-		// TODO: WIP REMOVE
-		System.out.println("GameState UpgradeFocused: " + value + " finished: " + this.upgradesFinished);
-
-		return value;
-	}
-
 }

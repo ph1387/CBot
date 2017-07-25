@@ -15,10 +15,6 @@ class GameStateUnits_Support extends GameState {
 
 	@Override
 	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		
-		// TODO: WIP REMOVE
-		System.out.println("GameState SupportUnits: " + scoringDirector.defineFixedScoreUnitsSupport());
-		
 		return scoringDirector.defineFixedScoreUnitsSupport();
 	}
 

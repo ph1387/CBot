@@ -18,10 +18,6 @@ class GameStateUnits_Building extends GameState {
 		double score = scoringDirector.defineDesiredBuildingsPercent()
 				- (manager.getCurrentGameInformation().getCurrentBuildingsPercent()
 						- scoringDirector.defineDesiredBuildingsPercent());
-
-		// TODO: WIP REMOVE
-		System.out.println("GameState Buildings: " + score);
-
 		return score;
 	}
 

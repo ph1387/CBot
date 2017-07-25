@@ -53,15 +53,4 @@ class GameStateFocused_Expansion extends GameStateGradualChangeWithReset {
 		return false;
 	}
 
-	// TODO: WIP REMOVE
-	@Override
-	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		double value = super.generateScore(scoringDirector, manager);
-
-		// TODO: WIP REMOVE
-		System.out.println("GameState ExpansionFocused: " + value);
-
-		return value;
-	}
-
 }

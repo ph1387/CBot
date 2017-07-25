@@ -15,10 +15,6 @@ class GameStateUnits_Flying extends GameState {
 
 	@Override
 	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		
-		// TODO: WIP REMOVE
-		System.out.println("GameState FlyingUnits: " + scoringDirector.defineFixedScoreUnitsFlying());
-		
 		return scoringDirector.defineFixedScoreUnitsFlying();
 	}
 	

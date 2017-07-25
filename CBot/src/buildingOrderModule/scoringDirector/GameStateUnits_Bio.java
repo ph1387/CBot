@@ -15,10 +15,6 @@ class GameStateUnits_Bio extends GameState {
 
 	@Override
 	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		
-		// TODO: WIP REMOVE
-		System.out.println("GameState BioUnits: " + scoringDirector.defineFixedScoreUnitsBio());
-		
 		return scoringDirector.defineFixedScoreUnitsBio();
 	}
 

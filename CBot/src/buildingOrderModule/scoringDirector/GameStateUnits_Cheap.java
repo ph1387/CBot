@@ -1,7 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-import buildingOrderModule.buildActionManagers.BuildActionManager;
-
 // TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Cheap.java --- A GameState focused on training / building
@@ -35,15 +33,4 @@ class GameStateUnits_Cheap extends GameStateGradualChange {
 		return score > this.scoreMin;
 	}
 	
-	// TODO: WIP REMOVE
-	@Override
-	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		double value = super.generateScore(scoringDirector, manager);
-			
-		// TODO: WIP REMOVE
-		System.out.println("GameState Cheap: " + value);
-	
-		return value;
-	}
-
 }

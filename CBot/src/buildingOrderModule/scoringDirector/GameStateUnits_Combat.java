@@ -19,9 +19,6 @@ class GameStateUnits_Combat extends GameState {
 				- (manager.getCurrentGameInformation().getCurrentCombatUnitsPercent()
 						- scoringDirector.defineDesiredCombatUnitsPercent());
 
-		// TODO: WIP REMOVE
-		System.out.println("GameState CombatUnits: " + score);
-
 		return score;
 	}
 

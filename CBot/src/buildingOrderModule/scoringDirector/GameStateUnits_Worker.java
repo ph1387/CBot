@@ -23,9 +23,6 @@ class GameStateUnits_Worker extends GameState {
 		double workers = (double) (manager.getCurrentGameInformation().getCurrentUnits()
 				.get(Core.getInstance().getPlayer().getRace().getWorker()));
 
-		// TODO: WIP REMOVE
-		System.out.println("GameState WorkerUnits: " + (this.generalMultiplier * (centers / workers)));
-
 		return this.generalMultiplier * (centers / workers);
 	}
 

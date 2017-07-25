@@ -114,9 +114,6 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 	public void setScore(int score) {
 		synchronized (this.lockScore) {
 			this.score = score;
-
-			// TODO: WIP REMOVE
-			System.out.println("Generated Score: " + score + " | " + this.getClass().getSimpleName());
 		}
 	}
 

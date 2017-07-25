@@ -80,15 +80,4 @@ class GameStateFocused_Refinery extends GameStateGradualChangeWithReset {
 		return this.refineryCountPrev >= this.centerCountPrev;
 	}
 
-	// TODO: WIP REMOVE
-	@Override
-	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		double value = super.generateScore(scoringDirector, manager);
-
-		// TODO: WIP REMOVE
-		System.out.println("GameState RefineryFocused: " + value);
-
-		return value;
-	}
-
 }

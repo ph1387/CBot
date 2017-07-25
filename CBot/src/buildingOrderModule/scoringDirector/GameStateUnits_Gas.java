@@ -21,9 +21,6 @@ class GameStateUnits_Gas extends GameState {
 		double gas = Core.getInstance().getPlayer().gas();
 		double totalResources = minerals + gas;
 		
-		// TODO: WIP REMOVE
-		System.out.println("GameState Gas: " + gas / totalResources);
-		
 		return gas / totalResources;
 	}
 
