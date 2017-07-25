@@ -136,7 +136,7 @@ public class Display {
 			secondsString = "" + seconds;
 		}
 
-		String text = "Elapsed Time: " + minutesString + ":" + secondsString + " - " + game.elapsedTime();
+		String text = "Elapsed Time: " + minutesString + ":" + secondsString + " - " + game.elapsedTime() + " | " + game.getFrameCount();
 
 		game.drawTextScreen(offsetX, offsetY, text);
 	}

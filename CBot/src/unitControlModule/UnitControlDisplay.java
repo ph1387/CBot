@@ -22,7 +22,7 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
 public class UnitControlDisplay {
 
 	private static final int OFFSET_LEFT = Core.getInstance().getOffsetLeft();
-	private static final int OFFSET_LEFT_TOTAL = OFFSET_LEFT * 15;
+	private static final int OFFSET_LEFT_TOTAL = OFFSET_LEFT * 20;
 	private static final int LINEHEIGHT = Core.getInstance().getLineheight();
 	private static final int BAR_WIDTH = Core.getInstance().getOffsetLeft() * 5;
 	private static final Color WORKER_INFO_BAR_COLOR = new Color(255, 255, 255);
