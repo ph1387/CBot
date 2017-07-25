@@ -94,7 +94,9 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		HashSet<ScoringAction> transformedScoringActions = new HashSet<>();
 
 		for (ActionType actionType : this.actionTypes) {
-			transformedScoringActions.add((ScoringAction) actionType);
+			if(actionType instanceof ScoringAction) {
+				transformedScoringActions.add((ScoringAction) actionType);
+			}
 		}
 		return transformedScoringActions;
 	}

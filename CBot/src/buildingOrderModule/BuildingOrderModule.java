@@ -1,5 +1,6 @@
 package buildingOrderModule;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.buildActionManagers.BuildActionManagerFactory;
 import bwapi.*;
 import core.Core;
@@ -50,6 +51,9 @@ public class BuildingOrderModule {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		// Display the information on screen.
+		BuildingOrderDisplay.showInformation((BuildActionManager) (this.buildingAgent).getAssignedGoapUnit());
 	}
 
 	/**

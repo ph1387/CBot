@@ -65,7 +65,7 @@ public abstract class ScoringDirector {
 	 */
 	public void update(HashSet<ScoringAction> updatableActions, BuildActionManager manager) {
 		// Update the extracted GameStates
-		this.updateGameStates(this.extractUsedGameStates(updatableActions), manager);
+		this.updateGameStates(extractUsedGameStates(updatableActions), manager);
 
 		// Update the scores of the actions.
 		this.updateScoringActionScores(updatableActions, manager);
@@ -79,7 +79,7 @@ public abstract class ScoringDirector {
 	 *            the actions whose GameStates are being extracted.
 	 * @return a HashSet of GameStates that the provided ScoringActions use.
 	 */
-	private HashSet<GameState> extractUsedGameStates(HashSet<ScoringAction> scoringActions) {
+	private static HashSet<GameState> extractUsedGameStates(HashSet<ScoringAction> scoringActions) {
 		HashSet<GameState> usedGameStates = new HashSet<>();
 
 		for (ScoringAction scoringAction : scoringActions) {
