@@ -7,8 +7,10 @@ import java.util.List;
 import bwapi.Game;
 import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapi.UnitType;
 import bwapi.WeaponType;
 import core.Core;
+import informationStorage.CurrentGameInformation;
 import informationStorage.InformationStorage;
 import informationStorage.UnitTrackerInformation;
 
@@ -28,7 +30,7 @@ public class UnitTrackerModule {
 
 	private static boolean enablePlayerStrength = true;
 	private static boolean enableEnemyStrength = true;
-	
+
 	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
@@ -37,6 +39,17 @@ public class UnitTrackerModule {
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
+	// Current Player / Game information.
+	private int unitCountTotal;
+	private int unitCountWorkers;
+	private int unitCountBuildings;
+	private int unitCountCombat;
+	private double currentWorkerPercent;
+	private double currentBuildingsPercent;
+	private double currentCombatUnitsPercent;
+	private HashMap<UnitType, Integer> currentUnits;
+
+	// The container holding all information.
 	private InformationStorage informationStorage;
 
 	public UnitTrackerModule(InformationStorage informationStorage) {
@@ -49,6 +62,7 @@ public class UnitTrackerModule {
 	 * Used for updating all information regarding enemy Units in the game.
 	 */
 	public void update() {
+		this.updateCurrentGameInformation();
 		this.updateEnemyUnitLists();
 		this.forwardInformation();
 
@@ -59,12 +73,56 @@ public class UnitTrackerModule {
 		// air forces of the enemy and the player. Player has to the shown
 		// first, since the enemy list might be empty which would result in none
 		// of them being shown.
-		if(enablePlayerStrength) {
+		if (enablePlayerStrength) {
 			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
 		}
-		if(enableEnemyStrength) {
+		if (enableEnemyStrength) {
 			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
 		}
+	}
+
+	/**
+	 * Function for updating the shared storage instance with the current game
+	 * information like worker and combat Unit counts.
+	 */
+	private void updateCurrentGameInformation() {
+		// Reset any previous set information.
+		this.currentUnits = new HashMap<>();
+		this.unitCountWorkers = 0;
+		this.unitCountBuildings = 0;
+		this.unitCountCombat = 0;
+		this.unitCountTotal = 0;
+
+		// Extract all necessary information from the current state of the game.
+		// This does NOT include any building Queues etc. These factors must be
+		// considered elsewhere.
+		// Units:
+		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+			UnitType type = unit.getType();
+
+			// Add the Units to a HashMap counting the individual Units
+			// themselves.
+			if (this.currentUnits.containsKey(type)) {
+				this.currentUnits.put(type, this.currentUnits.get(type) + 1);
+			} else {
+				this.currentUnits.put(type, 1);
+			}
+
+			// Count the different types of Units.
+			if (type.isWorker()) {
+				this.unitCountWorkers++;
+			} else if (type.isBuilding()) {
+				this.unitCountBuildings++;
+			} else {
+				this.unitCountCombat++;
+			}
+			this.unitCountTotal++;
+		}
+
+		// Calculate the percentage representation of the Units:
+		this.currentWorkerPercent = ((double) (this.unitCountWorkers)) / ((double) (this.unitCountTotal));
+		this.currentBuildingsPercent = ((double) (this.unitCountBuildings)) / ((double) (this.unitCountTotal));
+		this.currentCombatUnitsPercent = ((double) (this.unitCountCombat)) / ((double) (this.unitCountTotal));
 	}
 
 	/**
@@ -91,6 +149,7 @@ public class UnitTrackerModule {
 	 */
 	private void forwardInformation() {
 		UnitTrackerInformation trackerInfo = this.informationStorage.getTrackerInfo();
+		CurrentGameInformation currentGameInfo = this.informationStorage.getCurrentGameInformation();
 
 		// Forward the UnitTrackerModule information.
 		trackerInfo.setPlayerAirAttackTilePositions(this.playerAirAttackTilePositions);
@@ -99,6 +158,16 @@ public class UnitTrackerModule {
 		trackerInfo.setEnemyGroundAttackTilePositions(this.enemyGroundAttackTilePositions);
 		trackerInfo.setEnemyBuildings(this.enemyBuildings);
 		trackerInfo.setEnemyUnits(this.enemyUnits);
+
+		// Forward the current Player / Game information.
+		currentGameInfo.setCurrentUnitCountTotal(this.unitCountTotal);
+		currentGameInfo.setCurrentWorkerCount(this.unitCountWorkers);
+		currentGameInfo.setCurrentBuildingCount(this.unitCountBuildings);
+		currentGameInfo.setCurrentCombatUnitCount(this.unitCountCombat);
+		currentGameInfo.setCurrentWorkerPercent(this.currentWorkerPercent);
+		currentGameInfo.setCurrentBuildingsPercent(this.currentBuildingsPercent);
+		currentGameInfo.setCurrentCombatUnitsPercent(this.currentCombatUnitsPercent);
+		currentGameInfo.setCurrentUnits(this.currentUnits);
 	}
 
 	/**
@@ -400,11 +469,13 @@ public class UnitTrackerModule {
 									// number can be inserted here. The bigger
 									// the number, the stronger the effect of a
 									// shorter range is.
-		
-		// The dps multiplier for each Unit.
-		double dpsMultiplier = FLAT_DPS_MULTIPLIER * new Double(weaponType.damageAmount() * weaponType.damageFactor()) / new Double(weaponType.damageCooldown());
 
-		double multiplier = new Double(generalMultiplier * dpsMultiplier * unitSpecificMultiplier) / new Double(8 * Math.pow(maxAttackTileRange, 2) * Math.sin(1.));
+		// The dps multiplier for each Unit.
+		double dpsMultiplier = FLAT_DPS_MULTIPLIER * new Double(weaponType.damageAmount() * weaponType.damageFactor())
+				/ new Double(weaponType.damageCooldown());
+
+		double multiplier = new Double(generalMultiplier * dpsMultiplier * unitSpecificMultiplier)
+				/ new Double(8 * Math.pow(maxAttackTileRange, 2) * Math.sin(1.));
 
 		for (int i = -maxAttackTileRange; i <= maxAttackTileRange; i++) {
 			for (int j = -maxAttackTileRange; j <= maxAttackTileRange; j++) {

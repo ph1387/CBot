@@ -1,4 +1,4 @@
-package buildingOrderModule.buildActionManagers;
+package informationStorage;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,17 +17,22 @@ import bwapi.UpgradeType;
  */
 public class CurrentGameInformation {
 
-	private int currentWorkerCount;
-	private int currentBuildingCount;
-	private int currentCombatUnitCount;
+	private int currentUnitCountTotal = 0;
+	private int currentWorkerCount = 0;
+	private int currentBuildingCount = 0;
+	private int currentCombatUnitCount = 0;
 
-	private double currentWorkerPercent;
-	private double currentBuildingsPercent;
-	private double currentCombatUnitsPercent;
+	private double currentWorkerPercent = 0.;
+	private double currentBuildingsPercent = 0.;
+	private double currentCombatUnitsPercent = 0.;
 
-	private HashMap<UnitType, Integer> currentUnits;
-	private HashSet<TechType> currentTechs;
-	private HashMap<UpgradeType, Integer> currentUpgrades;
+	private HashMap<UnitType, Integer> currentUnits = new HashMap<>();
+	private HashSet<TechType> currentTechs = new HashSet<>();
+	private HashMap<UpgradeType, Integer> currentUpgrades = new HashMap<>();
+
+	public CurrentGameInformation() {
+
+	}
 
 	/**
 	 * @param currentWorkerCount
@@ -70,40 +75,84 @@ public class CurrentGameInformation {
 
 	// ------------------------------ Getter / Setter
 
+	public int getCurrentUnitCountTotal() {
+		return currentUnitCountTotal;
+	}
+
+	public void setCurrentUnitCountTotal(int currentUnitCountTotal) {
+		this.currentUnitCountTotal = currentUnitCountTotal;
+	}
+
 	public int getCurrentWorkerCount() {
 		return currentWorkerCount;
+	}
+
+	public void setCurrentWorkerCount(int currentWorkerCount) {
+		this.currentWorkerCount = currentWorkerCount;
 	}
 
 	public int getCurrentBuildingCount() {
 		return currentBuildingCount;
 	}
 
+	public void setCurrentBuildingCount(int currentBuildingCount) {
+		this.currentBuildingCount = currentBuildingCount;
+	}
+
 	public int getCurrentCombatUnitCount() {
 		return currentCombatUnitCount;
+	}
+
+	public void setCurrentCombatUnitCount(int currentCombatUnitCount) {
+		this.currentCombatUnitCount = currentCombatUnitCount;
 	}
 
 	public double getCurrentWorkerPercent() {
 		return currentWorkerPercent;
 	}
 
+	public void setCurrentWorkerPercent(double currentWorkerPercent) {
+		this.currentWorkerPercent = currentWorkerPercent;
+	}
+
 	public double getCurrentBuildingsPercent() {
 		return currentBuildingsPercent;
+	}
+
+	public void setCurrentBuildingsPercent(double currentBuildingsPercent) {
+		this.currentBuildingsPercent = currentBuildingsPercent;
 	}
 
 	public double getCurrentCombatUnitsPercent() {
 		return currentCombatUnitsPercent;
 	}
 
+	public void setCurrentCombatUnitsPercent(double currentCombatUnitsPercent) {
+		this.currentCombatUnitsPercent = currentCombatUnitsPercent;
+	}
+
 	public HashMap<UnitType, Integer> getCurrentUnits() {
 		return currentUnits;
+	}
+
+	public void setCurrentUnits(HashMap<UnitType, Integer> currentUnits) {
+		this.currentUnits = currentUnits;
 	}
 
 	public HashSet<TechType> getCurrentTechs() {
 		return currentTechs;
 	}
 
+	public void setCurrentTechs(HashSet<TechType> currentTechs) {
+		this.currentTechs = currentTechs;
+	}
+
 	public HashMap<UpgradeType, Integer> getCurrentUpgrades() {
 		return currentUpgrades;
+	}
+
+	public void setCurrentUpgrades(HashMap<UpgradeType, Integer> currentUpgrades) {
+		this.currentUpgrades = currentUpgrades;
 	}
 
 }

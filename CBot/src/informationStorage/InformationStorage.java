@@ -33,17 +33,22 @@ public class InformationStorage {
 	
 	// Map information
 	private MapInformation mapInfo;
+	
+	// TODO: UML ADD
+	// Information regarding the Player and the current state of the game.
+	private CurrentGameInformation currentGameInformation;
 
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
-			UnitTrackerInformation trackerInfo, MapInformation mapInfo) {
+			UnitTrackerInformation trackerInfo, MapInformation mapInfo, CurrentGameInformation currentGameInformation) {
 		this.resourceReserver = resourceReserver;
 		this.workerConfig = workerConfig;
 		this.trackerInfo = trackerInfo;
 		this.mapInfo = mapInfo;
+		this.currentGameInformation = currentGameInformation;
 	}
 
 	public InformationStorage() {
-		this(new ResourceReserver(), new WorkerConfiguration(), new UnitTrackerInformation(), new MapInformation());
+		this(new ResourceReserver(), new WorkerConfiguration(), new UnitTrackerInformation(), new MapInformation(), new CurrentGameInformation());
 	}
 
 	// -------------------- Functions
@@ -114,4 +119,10 @@ public class InformationStorage {
 	public MapInformation getMapInfo() {
 		return mapInfo;
 	}
+	
+	// TODO: UML ADD
+	public CurrentGameInformation getCurrentGameInformation() {
+		return currentGameInformation;
+	}
+	
 }

@@ -14,10 +14,9 @@ import buildingOrderModule.stateFactories.actions.executableActions.UpgradeBaseA
 import buildingOrderModule.stateFactories.updater.Updater;
 import bwapi.Player;
 import bwapi.TechType;
-import bwapi.Unit;
-import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
+import informationStorage.CurrentGameInformation;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapAction;
 import javaGOAP.GoapUnit;
@@ -65,6 +64,10 @@ public abstract class BuildActionManager extends GoapUnit {
 		// actions.
 		this.desiredTechs = this.extractDesiredTechs();
 		this.desiredUpgrades = this.extractDesiredUpgrades();
+
+		// Set the reference to the CurrentGameInformation Object from the
+		// shared storage instance.
+		this.currentGameInformation = this.informationStorage.getCurrentGameInformation();
 	}
 
 	// -------------------- Functions
@@ -118,8 +121,7 @@ public abstract class BuildActionManager extends GoapUnit {
 
 	@Override
 	public void update() {
-		// Extract the current information of the game.
-		this.currentGameInformation = this.extractCurrentGameInformation();
+		this.updateCurrentGameInformation();
 
 		try {
 			this.worldStateUpdater.update(this);
@@ -132,50 +134,15 @@ public abstract class BuildActionManager extends GoapUnit {
 
 	// TODO: UML ADD
 	/**
-	 * Function for extracting all current information from the game itself.
+	 * Function for extracting all current information from the game itself
+	 * regarding the upgrades and technologies and updating the information in
+	 * the storage instance.
 	 * 
-	 * @return a Object that holds all important game information.
 	 */
-	private CurrentGameInformation extractCurrentGameInformation() {
-		// Actual values:
-		int unitCountTotal = 0;
-		int unitCountWorkers = 0;
-		int unitCountBuildings = 0;
-		int unitCountCombat = 0;
-		double currentWorkerPercent;
-		double currentBuildingsPercent;
-		double currentCombatUnitsPercent;
-		HashMap<UnitType, Integer> currentUnits = new HashMap<>();
-		HashSet<TechType> currentTechs = new HashSet<>();
+	private void updateCurrentGameInformation() {
 		final HashMap<UpgradeType, Integer> currentUpgrades = new HashMap<>();
-
 		final Player player = Core.getInstance().getPlayer();
-
-		// Extract all necessary information from the current state of the game.
-		// This does NOT include any building Queues etc. These factors must be
-		// considered elsewhere.
-		// Units:
-		for (Unit unit : player.getUnits()) {
-			UnitType type = unit.getType();
-
-			// Add the Units to a HashMap counting the individual Units
-			// themselves.
-			if (currentUnits.containsKey(type)) {
-				currentUnits.put(type, currentUnits.get(type) + 1);
-			} else {
-				currentUnits.put(type, 1);
-			}
-
-			// Count the different types of Units.
-			if (type.isWorker()) {
-				unitCountWorkers++;
-			} else if (type.isBuilding()) {
-				unitCountBuildings++;
-			} else {
-				unitCountCombat++;
-			}
-			unitCountTotal++;
-		}
+		HashSet<TechType> currentTechs = new HashSet<>();
 
 		// Technologies:
 		for (TechType techType : this.desiredTechs) {
@@ -193,13 +160,9 @@ public abstract class BuildActionManager extends GoapUnit {
 			}
 		});
 
-		// Calculate the percentage representation of the Units:
-		currentWorkerPercent = ((double) (unitCountWorkers)) / ((double) (unitCountTotal));
-		currentBuildingsPercent = ((double) (unitCountBuildings)) / ((double) (unitCountTotal));
-		currentCombatUnitsPercent = ((double) (unitCountCombat)) / ((double) (unitCountTotal));
-
-		return new CurrentGameInformation(unitCountWorkers, unitCountBuildings, unitCountCombat, currentWorkerPercent,
-				currentBuildingsPercent, currentCombatUnitsPercent, currentUnits, currentTechs, currentUpgrades);
+		// Forward the information to the storage instance.
+		this.informationStorage.getCurrentGameInformation().setCurrentTechs(currentTechs);
+		this.informationStorage.getCurrentGameInformation().setCurrentUpgrades(currentUpgrades);
 	}
 
 	/**
