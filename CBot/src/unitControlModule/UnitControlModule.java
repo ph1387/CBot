@@ -45,12 +45,11 @@ public class UnitControlModule implements RemoveAgentEvent {
 		this.addTrackedUnits();
 		this.removeTrackedUnits();
 
-		// Update Units
+		// Update Units.
 		for (GoapAgent goapAgent : this.agents) {
 
 			// TODO: DEBUG INFO
-			Display.showUnitTarget(Core.getInstance().getGame(),
-					((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
+			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
 
 			try {
 				if (((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit().exists()) {
@@ -65,7 +64,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 			}
 		}
 
-		// Update buildings
+		// Update buildings.
 		for (PlayerBuilding building : this.buildings) {
 			try {
 				if (building.getUnit().exists()) {
@@ -80,7 +79,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 			}
 		}
 
-		// Display all important information on the screen
+		// Display all important information on the screen.
 		UnitControlDisplay.showImportantInformation(this.agents, this.buildings, this.informationStorage);
 	}
 
@@ -92,16 +91,16 @@ public class UnitControlModule implements RemoveAgentEvent {
 			Unit unit = this.unitsToAdd.poll();
 
 			try {
-				// Differentiate between buildings and normal Units
+				// Differentiate between buildings and normal Units.
 				if (unit.getType().isBuilding()) {
 					// TODO: Possible Change: Move to factory
 					// TODO: Possible Change: Add Listener like below!
 					this.buildings.add(new PlayerBuilding(unit, this.informationStorage));
 				} else {
 					GoapAgent agent = GoapAgentFactory.createAgent(unit, this.informationStorage);
-					
+
 					this.agents.add(agent);
-					
+
 					((PlayerUnit) agent.getAssignedGoapUnit()).addAgentRemoveListener(this);
 				}
 			} catch (Exception e) {
@@ -118,7 +117,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 		while (!this.unitsToRemove.isEmpty()) {
 			Unit unit = this.unitsToRemove.poll();
 
-			// Differentiate between buildings and normal Units
+			// Differentiate between buildings and normal Units.
 			if (unit.getType().isBuilding()) {
 				this.removeBuilding(unit);
 			} else {
@@ -138,7 +137,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 		for (PlayerBuilding building : this.buildings) {
 			// Reference of the Unit changes!
-			// -> Unit reference here sometimes is not the saved reference
+			// -> Unit reference here sometimes is not the saved reference.
 			if (building.getUnit() == unit || building.getUnit().getPosition().equals(unit.getPosition())) {
 				matchingObject = building;
 
@@ -173,7 +172,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 			Unit u = ((PlayerUnit) agent.getAssignedGoapUnit()).getUnit();
 
 			// Reference of the Unit changes!
-			// -> Unit reference here sometimes is not the saved reference
+			// -> Unit reference here sometimes is not the saved reference.
 			if (((PlayerUnit) agent.getAssignedGoapUnit()).getUnit() == unit
 					|| u.getPosition().equals(unit.getPosition())) {
 				matchingAgent = agent;
@@ -191,7 +190,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 			}
 		}
 		// TODO: REMOVE Safety feature since it is not clear if the Unit is
-		// found
+		// found.
 		else {
 			try {
 				throw new Exception("No Matching building Unit was found!");
@@ -329,11 +328,11 @@ public class UnitControlModule implements RemoveAgentEvent {
 	// ------------------------------ Getter / Setter
 
 	// ------------------------------ Eventlisteners
-	
+
 	@Override
 	public void removeAgent(PlayerUnit sender) {
 		for (GoapAgent goapAgent : this.agents) {
-			if(((PlayerUnit) goapAgent.getAssignedGoapUnit()).equals(sender)) {
+			if (((PlayerUnit) goapAgent.getAssignedGoapUnit()).equals(sender)) {
 				this.removeUnitFromUnitControl(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
 
 				break;

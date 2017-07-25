@@ -22,20 +22,29 @@ import bwta.Region;
  *
  */
 public class Display {
-	private static int lineHeight = Core.getInstance().getLineheight();
-	private static int offsetLeft = Core.getInstance().getOffsetLeft();
-	private static int tileSize = Core.getInstance().getTileSize();
+	private static final int LINE_HEIGHT = Core.getInstance().getLineheight();
+	private static final int OFFSET_LEFT = Core.getInstance().getOffsetLeft();
+	private static final int TILE_SIZE = Core.getInstance().getTileSize();
+	private static final Game GAME = Core.getInstance().getGame();
 
-	// Map information visualization
-	private static boolean enableMapPolygons = true;
-	private static boolean enableMapContendedTilePositions = false;
-	private static Color mapBoundariesColor = new Color(255, 255, 0);
-	private static Color reservedSpaceColor = new Color(255, 128, 0);
-	private static int polygonVertexRadius = 5;
-	private static Color contendedTilePositionColor = new Color(128, 128, 0);
+	// Map information visualization.
+	private static final boolean ENABLE_MAP_POLYGONS = true;
+	private static final boolean ENABLE_MAP_CONTENDED_TILEPOSITIONS = false;
+	private static final Color MAP_BONDARIES_COLOR = new Color(255, 255, 0);
+	private static final Color RESERVED_SPACE_COLOR = new Color(255, 128, 0);
+	private static final int POLYGON_VERTEX_RADIUS = 5;
+	private static final Color CONTENDED_TILEPOSITION_COLOR = new Color(128, 128, 0);
 
-	// Displays the unit tile ingame
-	public static void showUnitTile(Game game, Unit unit, Color color) {
+	/**
+	 * Function for displaying a single Unit / draw a box around the tile the
+	 * Unit is currently on.
+	 * 
+	 * @param unit
+	 *            the Unit on whose current TilePosition a box is being drawn.
+	 * @param color
+	 *            the Color that will be used for drawing the box.
+	 */
+	public static void showUnitTile(Unit unit, Color color) {
 		int posX = unit.getTilePosition().getX();
 		int posY = unit.getTilePosition().getY();
 		int tileSizeX = 1;
@@ -50,31 +59,73 @@ public class Display {
 		drawTile(posX, posY, tileSizeX, tileSizeY, color);
 	}
 
-	// Display a box around (a) tile/-s
-	public static void drawTile(int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
-		Core.getInstance().getGame().drawBoxMap(tileX * tileSize, tileY * tileSize, (tileX + tileWidth) * tileSize,
-				(tileY + tileHeight) * tileSize, color);
+	/**
+	 * Draw a Box around one or more tiles on the map.
+	 * 
+	 * @param posX
+	 *            the X Position the box will start at (Upper left corner).
+	 * @param posY
+	 *            the Y Position the box will start at (Upper left corner).
+	 * @param tileWidth
+	 *            the width of the box in tiles.
+	 * @param tileHeight
+	 *            the height of the box in tiles.
+	 * @param color
+	 *            the Color that the box will be displayed in.
+	 */
+	public static void drawTile(int posX, int posY, int tileWidth, int tileHeight, Color color) {
+		Core.getInstance().getGame().drawBoxMap(posX * TILE_SIZE, posY * TILE_SIZE, (posX + tileWidth) * TILE_SIZE,
+				(posY + tileHeight) * TILE_SIZE, color);
 	}
 
-	// Display a filled tile on the map
-	public static void drawTileFilled(int tileX, int tileY, int tileWidth, int tileHeight, Color color) {
-		Core.getInstance().getGame().drawBoxMap(tileX * tileSize, tileY * tileSize, (tileX + tileWidth) * tileSize,
-				(tileY + tileHeight) * tileSize, color, true);
+	/**
+	 * Draw a <b>filled</b> Box around one or more tiles on the map.
+	 * 
+	 * @param posX
+	 *            the X Position the box will start at (Upper left corner).
+	 * @param posY
+	 *            the Y Position the box will start at (Upper left corner).
+	 * @param tileWidth
+	 *            the width of the box in tiles.
+	 * @param tileHeight
+	 *            the height of the box in tiles.
+	 * @param color
+	 *            the Color that the box will be displayed in.
+	 */
+	public static void drawTileFilled(int posX, int posY, int tileWidth, int tileHeight, Color color) {
+		Core.getInstance().getGame().drawBoxMap(posX * TILE_SIZE, posY * TILE_SIZE, (posX + tileWidth) * TILE_SIZE,
+				(posY + tileHeight) * TILE_SIZE, color, true);
 	}
 
-	// Display the target position of the unit
-	public static void showUnitTarget(Game game, Unit unit, Color color) {
-		game.drawLineMap(unit.getPosition(), unit.getTargetPosition(), color);
+	/**
+	 * Function for displaying the target Position of a Unit with a line towards
+	 * it.
+	 * 
+	 * @param unit
+	 *            the Unit whose target Position is being displayed.
+	 * @param color
+	 *            the Color of the line towards the Unit's target Position.
+	 */
+	public static void showUnitTarget(Unit unit, Color color) {
+		GAME.drawLineMap(unit.getPosition(), unit.getTargetPosition(), color);
 	}
 
-	public static void showUnits(Game game, List<Unit> units) {
+	/**
+	 * Function for displaying a given List of Units on the screen. This
+	 * function displays the name of the UnitType as well as the number of times
+	 * that UnitType was found inside the List.
+	 * 
+	 * @param units
+	 *            the List of Units that is going to be displayed.
+	 */
+	public static void showUnits(List<Unit> units) {
 		List<String> outputList = new ArrayList<String>();
 		List<UnitType> alreadyCountedTypes = new ArrayList<UnitType>();
 
-		// Count each unit and display the number on the left side of it
+		// Count each unit and display the number on the left side of it.
 		for (Unit unit : units) {
 			// Do not count the buildings and avoid adding the same type more
-			// than one time
+			// than one time.
 			if (!unit.getType().isBuilding() && !alreadyCountedTypes.contains(unit.getType())) {
 				int unitCounter = 0;
 
@@ -85,7 +136,7 @@ public class Display {
 					}
 				}
 
-				// Speficy the output for a symmetric list
+				// Specify the output for a symmetric list.
 				String output = "";
 				if (unitCounter < 10) {
 					output += "  ";
@@ -99,35 +150,56 @@ public class Display {
 			}
 		}
 
-		showList(game, outputList, offsetLeft, lineHeight * 5);
+		showList(outputList, OFFSET_LEFT, LINE_HEIGHT * 5);
 	}
 
-	// Display a list of strings
-	private static void showList(Game game, List<String> list, int offsetX, int offsetY) {
+	/**
+	 * Function for displaying a List of Strings on the screen.
+	 * 
+	 * @param list
+	 *            the List that is going to be displayed.
+	 * @param offsetX
+	 *            the offset to the left.
+	 * @param offsetY
+	 *            the offset to the right.
+	 */
+	private static void showList(List<String> list, int offsetX, int offsetY) {
 		for (int i = 1; i <= list.size(); i++) {
-			game.drawTextScreen(offsetX, offsetY + (lineHeight * i), list.get(i - 1));
+			GAME.drawTextScreen(offsetX, offsetY + (LINE_HEIGHT * i), list.get(i - 1));
 		}
 	}
 
-	// Wrapper for showing game information
-	public static void showGameInformation(Game game) {
-		showTime(game, offsetLeft, lineHeight);
-		showAPM(game, offsetLeft, lineHeight * 2);
-		showFPS(game, offsetLeft, lineHeight * 3);
+	/**
+	 * Wrapper function for displaying internal game information like the
+	 * elapsed time, APM or FPS.
+	 */
+	public static void showGameInformation() {
+		showTime(OFFSET_LEFT, LINE_HEIGHT);
+		showAPM(OFFSET_LEFT, LINE_HEIGHT * 2);
+		showFPS(OFFSET_LEFT, LINE_HEIGHT * 3);
 
-		if (enableMapContendedTilePositions) {
+		if (ENABLE_MAP_CONTENDED_TILEPOSITIONS) {
 			showContendedTilePositions();
 		}
-		if (enableMapPolygons) {
+		if (ENABLE_MAP_POLYGONS) {
 			showPolygons();
 		}
 	}
 
 	// Display the current time
-	private static void showTime(Game game, int offsetX, int offsetY) {
-		String minutesString = (int) Math.floor(game.elapsedTime() / 60) + "";
+	/**
+	 * Function for displaying the elapsed time. This includes the time in
+	 * minutes, seconds and frames.
+	 * 
+	 * @param offsetX
+	 *            the offset to the left.
+	 * @param offsetY
+	 *            the offset to the right.
+	 */
+	private static void showTime(int offsetX, int offsetY) {
+		String minutesString = (int) Math.floor(GAME.elapsedTime() / 60) + "";
 		String secondsString = "";
-		int seconds = (int) game.elapsedTime() % 60;
+		int seconds = (int) GAME.elapsedTime() % 60;
 
 		// Leading 0 regarding seconds
 		if (seconds < 10) {
@@ -136,23 +208,40 @@ public class Display {
 			secondsString = "" + seconds;
 		}
 
-		String text = "Elapsed Time: " + minutesString + ":" + secondsString + " - " + game.elapsedTime() + " | " + game.getFrameCount();
+		String text = "Elapsed Time: " + minutesString + ":" + secondsString + " - " + GAME.elapsedTime() + " | "
+				+ GAME.getFrameCount();
 
-		game.drawTextScreen(offsetX, offsetY, text);
+		GAME.drawTextScreen(offsetX, offsetY, text);
 	}
 
-	// Display the APM counter
-	private static void showAPM(Game game, int offsetX, int offsetY) {
-		String text = "APM: " + game.getAPM();
-		game.drawTextScreen(offsetX, offsetY, text);
+	/**
+	 * Function for displaying the current APM counter.
+	 * 
+	 * @param offsetX
+	 *            the offset to the left.
+	 * @param offsetY
+	 *            the offset to the right.
+	 */
+	private static void showAPM(int offsetX, int offsetY) {
+		GAME.drawTextScreen(offsetX, offsetY, "APM: " + GAME.getAPM());
 	}
 
-	// Display FPS
-	private static void showFPS(Game game, int offsetX, int offsetY) {
-		String text = "FPS: " + game.getFPS();
-		game.drawTextScreen(offsetX, offsetY, text);
+	/**
+	 * Function for displaying the current FPS counter.
+	 * 
+	 * @param offsetX
+	 *            the offset to the left.
+	 * @param offsetY
+	 *            the offset to the right.
+	 */
+	private static void showFPS(int offsetX, int offsetY) {
+		GAME.drawTextScreen(offsetX, offsetY, "FPS: " + GAME.getFPS());
 	}
 
+	/**
+	 * Function for displaying the polygons on the map. This includes the map's
+	 * boundaries as well as the reserved space at the starting location.
+	 */
 	private static void showPolygons() {
 
 		// TODO: REMOVE DEBUG WIP
@@ -166,27 +255,32 @@ public class Display {
 			currentR = currentR >> 16;
 			currentG = currentG >> 8;
 
-			drawPolygon(pair.second, new Color(currentR, currentG, currentB), polygonVertexRadius);
+			drawPolygon(pair.second, new Color(currentR, currentG, currentB), POLYGON_VERTEX_RADIUS);
 			currentCount++;
 		}
 
-		// Map boundaries
+		// Map boundaries:
 		// for (Pair<Region, Polygon> pair :
 		// CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries())
 		// {
 		// drawPolygon(pair.second, mapBoundariesColor, polygonVertexRadius);
 		// }
 
-		// Custom Polygons
+		// Custom Polygons:
 		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getReservedSpace()) {
-			drawPolygon(polygon, reservedSpaceColor, polygonVertexRadius);
+			drawPolygon(polygon, RESERVED_SPACE_COLOR, POLYGON_VERTEX_RADIUS);
 		}
 	}
 
+	/**
+	 * Function for displaying the contended / blocked TilePositions on the map.
+	 * These are the ones that a worker is currently trying to construct a
+	 * building on and / or is prohibited to build onto.
+	 */
 	private static void showContendedTilePositions() {
 		for (TilePosition tilePosition : CBot.getInstance().getInformationStorage().getMapInfo()
 				.getTilePositionContenders()) {
-			drawTileFilled(tilePosition.getX(), tilePosition.getY(), 1, 1, contendedTilePositionColor);
+			drawTileFilled(tilePosition.getX(), tilePosition.getY(), 1, 1, CONTENDED_TILEPOSITION_COLOR);
 		}
 	}
 
@@ -218,21 +312,19 @@ public class Display {
 	 *            show the ellipses either empty or filled.
 	 */
 	public static void drawPolygon(Polygon polygon, Color color, int vertexRadius, boolean verticesFilled) {
-		Game game = Core.getInstance().getGame();
-
-		// Vertices
+		// Vertices:
 		for (Point point : polygon.getVertices()) {
 			drawPoint(point, color, vertexRadius);
 		}
 
-		// Edges
+		// Edges:
 		for (int i = 0; i < polygon.getVertices().size(); i++) {
 			// Connect the last vertex with the first one
 			if (i == polygon.getVertices().size() - 1) {
-				game.drawLineMap(polygon.getVertices().get(i).toPosition(), polygon.getVertices().get(0).toPosition(),
+				GAME.drawLineMap(polygon.getVertices().get(i).toPosition(), polygon.getVertices().get(0).toPosition(),
 						color);
 			} else {
-				game.drawLineMap(polygon.getVertices().get(i).toPosition(),
+				GAME.drawLineMap(polygon.getVertices().get(i).toPosition(),
 						polygon.getVertices().get(i + 1).toPosition(), color);
 			}
 		}
@@ -264,9 +356,7 @@ public class Display {
 	 *            the radius of the Points being shown.
 	 */
 	public static void drawVector(Vector vector, Color color, boolean endsShown, int radius) {
-		Game game = Core.getInstance().getGame();
-
-		game.drawLineMap(vector.getX(), vector.getY(), vector.getX() + (int) vector.getDirX(),
+		GAME.drawLineMap(vector.getX(), vector.getY(), vector.getX() + (int) vector.getDirX(),
 				vector.getY() + (int) vector.getDirY(), color);
 
 		// Draw the beginning and the end of the Vector as well.
@@ -305,6 +395,6 @@ public class Display {
 	 *            Point.
 	 */
 	public static void drawPoint(Point point, Color color, int radius, boolean filled) {
-		Core.getInstance().getGame().drawEllipseMap(point.toPosition(), radius, radius, color, filled);
+		GAME.drawEllipseMap(point.toPosition(), radius, radius, color, filled);
 	}
 }
