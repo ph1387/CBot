@@ -19,6 +19,10 @@ import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
  */
 public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
+	private RetreatActionSteerInBioUnitDirectionTerran_Medic retreatActionSteerInBioUnitDirectionTerranMedic;
+	private ProtectMoveActionSteerTowardsClosestDamagedUnit protectMoveActionSteerTowardsClosesDamagedUnit;
+	private AbilityActionTerranMedic_Heal abilityActionTerranMedicHeal;
+
 	public ActionUpdaterTerran_Medic(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
@@ -32,17 +36,19 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
 			Unit closesEnemytUnit = this.playerUnit.getClosestEnemyUnitInConfidenceRange();
-			
-			// The player Unit has to be in range of the enemy Unit's ground weapon to be in danger.
-			if(closesEnemytUnit != null && closesEnemytUnit.isInWeaponRange(this.playerUnit.getUnit())) {
-				((RetreatActionSteerInBioUnitDirectionTerran_Medic) this.getActionFromInstance(RetreatActionSteerInBioUnitDirectionTerran_Medic.class)).setTarget(closestUnit);
+
+			// The player Unit has to be in range of the enemy Unit's ground
+			// weapon to be in danger.
+			if (closesEnemytUnit != null && closesEnemytUnit.isInWeaponRange(this.playerUnit.getUnit())) {
+				this.retreatActionSteerInBioUnitDirectionTerranMedic.setTarget(closestUnit);
 			}
 		}
 
 		// Get all Units that are missing health.
 		for (Unit unit : core.Core.getInstance().getPlayer().getUnits()) {
 			if (unit != playerUnit.getUnit() && unit.getHitPoints() < unit.getType().maxHitPoints()) {
-				// Add the Unit to the possible Units if the Terran_Medic can heal it.
+				// Add the Unit to the possible Units if the Terran_Medic can
+				// heal it.
 				if (PlayerUnitTerran_Medic.isHealableUnit(unit)) {
 					possibleUnits.add(unit);
 				}
@@ -51,7 +57,19 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 		// Find the closest one of the Units missing health to heal it.
 		closestUnit = BaseAction.getClosestUnit(possibleUnits, playerUnit.getUnit());
-		((ProtectMoveActionSteerTowardsClosestDamagedUnit) this.getActionFromInstance(ProtectMoveActionSteerTowardsClosestDamagedUnit.class)).setTarget(closestUnit);
-		((AbilityActionTerranMedic_Heal) this.getActionFromInstance(AbilityActionTerranMedic_Heal.class)).setTarget(closestUnit);
+		this.protectMoveActionSteerTowardsClosesDamagedUnit.setTarget(closestUnit);
+		this.abilityActionTerranMedicHeal.setTarget(closestUnit);
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+
+		this.retreatActionSteerInBioUnitDirectionTerranMedic = ((RetreatActionSteerInBioUnitDirectionTerran_Medic) this
+				.getActionFromInstance(RetreatActionSteerInBioUnitDirectionTerran_Medic.class));
+		this.protectMoveActionSteerTowardsClosesDamagedUnit = ((ProtectMoveActionSteerTowardsClosestDamagedUnit) this
+				.getActionFromInstance(ProtectMoveActionSteerTowardsClosestDamagedUnit.class));
+		this.abilityActionTerranMedicHeal = ((AbilityActionTerranMedic_Heal) this
+				.getActionFromInstance(AbilityActionTerranMedic_Heal.class));
 	}
 }

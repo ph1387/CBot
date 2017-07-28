@@ -5,7 +5,6 @@ import unitControlModule.stateFactories.actions.executableActions.AttackUnitActi
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranSiegeTank_SiegeMode;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-
 /**
  * Terran_SiegeTankActionUpdater.java --- Updater for updating an
  * {@link AvailableActionsTerran_SiegeTank} instance.
@@ -14,6 +13,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  *
  */
 public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
+
+	private AbilityActionTerranSiegeTank_SiegeMode abilityActionTerranSiegeTankSiegeMode;
+	private AttackUnitActionTerran_SiegeTank_Bombard abilityActionTerranSiegeTankBombard;
 
 	public ActionUpdaterTerran_SiegeTank(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -24,10 +26,20 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
-		
+
 		// TODO: Possible Change: Only perform once.
-		((AbilityActionTerranSiegeTank_SiegeMode) this.getActionFromInstance(AbilityActionTerranSiegeTank_SiegeMode.class)).setTarget(this.playerUnit);
-		
-		((AttackUnitActionTerran_SiegeTank_Bombard) this.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+		this.abilityActionTerranSiegeTankSiegeMode.setTarget(this.playerUnit);
+
+		this.abilityActionTerranSiegeTankBombard.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+
+		this.abilityActionTerranSiegeTankSiegeMode = ((AbilityActionTerranSiegeTank_SiegeMode) this
+				.getActionFromInstance(AbilityActionTerranSiegeTank_SiegeMode.class));
+		this.abilityActionTerranSiegeTankBombard = ((AttackUnitActionTerran_SiegeTank_Bombard) this
+				.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class));
 	}
 }

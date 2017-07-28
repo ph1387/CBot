@@ -20,12 +20,6 @@ public class WorldStateUpdaterDefault extends WorldStateUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		if(this.playerUnit.getClosestEnemyUnitInSight() == null) {
-			this.changeUnitsInSight(false);
-		} else {
-			this.changeUnitsInSight(true);
-		}
-		
 		if(this.playerUnit.getAllEnemyUnitsInWeaponRange().isEmpty()) {
 			this.changeUnitsInRange(false);
 		} else {
@@ -69,12 +63,4 @@ public class WorldStateUpdaterDefault extends WorldStateUpdaterGeneral {
 		this.changeWorldStateEffect("unitsInRange", value);
 	}
 
-	/**
-	 * Convenience function.
-	 * 
-	 * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
-	 */
-	protected void changeUnitsInSight(Object value) {
-		this.changeWorldStateEffect("unitsInSight", value);
-	}
 }

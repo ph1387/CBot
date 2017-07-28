@@ -14,6 +14,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ActionUpdaterTerran_SiegeTank_SiegeMode extends ActionUpdaterGeneral {
 
+	private AbilityActionTerranSiegeTank_TankMode abilityActionTerranSiegeTankTankMode;
+	private AttackUnitActionTerran_SiegeTank_Bombard attackUnitActionTerranSiegeTankBombard;
+
 	public ActionUpdaterTerran_SiegeTank_SiegeMode(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
@@ -23,8 +26,19 @@ public class ActionUpdaterTerran_SiegeTank_SiegeMode extends ActionUpdaterGenera
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		// TODO: Possible Change: Only perform once.
-		((AbilityActionTerranSiegeTank_TankMode) this.getActionFromInstance(AbilityActionTerranSiegeTank_TankMode.class)).setTarget(this.playerUnit);
-		
-		((AttackUnitActionTerran_SiegeTank_Bombard) this.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+		this.abilityActionTerranSiegeTankTankMode.setTarget(this.playerUnit);
+
+		this.attackUnitActionTerranSiegeTankBombard.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 	}
+
+	@Override
+	protected void init() {
+		super.init();
+
+		this.abilityActionTerranSiegeTankTankMode = ((AbilityActionTerranSiegeTank_TankMode) this
+				.getActionFromInstance(AbilityActionTerranSiegeTank_TankMode.class));
+		this.attackUnitActionTerranSiegeTankBombard = ((AttackUnitActionTerran_SiegeTank_Bombard) this
+				.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class));
+	}
+
 }

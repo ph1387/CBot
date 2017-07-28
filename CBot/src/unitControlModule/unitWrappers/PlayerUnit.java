@@ -43,7 +43,6 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected InformationStorage informationStorage;
 
 	protected Unit unit;
-	protected Unit closestEnemyUnitInSight;
 	protected Unit closestEnemyUnitInConfidenceRange;
 	protected double confidence = 1.;
 	protected int extraConfidencePixelRangeToClosestUnits = 32;
@@ -154,11 +153,8 @@ public abstract class PlayerUnit extends GoapUnit {
 	 * are known of.
 	 */
 	protected void actOnUnitsKnown() {
-		this.closestEnemyUnitInSight = this
-				.getClosestUnit(this.getAllEnemyUnitsInRange(this.unit.getType().sightRange()));
 		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
 
-		// TODO: Fixed FPS Drops
 		// Only update the following information if an enemy is in the
 		// confidence range.
 		// -> FPS boost!
@@ -273,18 +269,10 @@ public abstract class PlayerUnit extends GoapUnit {
 			this.currentRangeState = ConfidenceRangeStates.UNIT_IN_RANGE;
 			this.resetActions();
 		}
-		if (this.currentRangeState == ConfidenceRangeStates.UNIT_IN_RANGE) {
-			if (this.closestEnemyUnitInConfidenceRange == null) {
-				this.currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
-				this.resetActions();
-			} else {
-
-				// TODO: DEBUG INFO
-				// Nearest enemy Unit display.
-				Display.drawTileFilled(this.closestEnemyUnitInConfidenceRange.getTilePosition().getX(),
-						this.closestEnemyUnitInConfidenceRange.getTilePosition().getY(), 1, 1, new Color(0, 0, 255));
-
-			}
+		if (this.currentRangeState == ConfidenceRangeStates.UNIT_IN_RANGE
+				&& this.closestEnemyUnitInConfidenceRange == null) {
+			this.currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
+			this.resetActions();
 		}
 	}
 
@@ -482,10 +470,6 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public static HashMap<BaseLocation, Integer> getBaselocationsSearched() {
 		return BaselocationsSearched;
-	}
-
-	public Unit getClosestEnemyUnitInSight() {
-		return this.closestEnemyUnitInSight;
 	}
 
 	public Unit getClosestEnemyUnitInConfidenceRange() {

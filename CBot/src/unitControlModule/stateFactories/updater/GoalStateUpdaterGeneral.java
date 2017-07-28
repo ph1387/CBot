@@ -1,5 +1,7 @@
 package unitControlModule.stateFactories.updater;
 
+import java.util.HashMap;
+
 import javaGOAP.GoapState;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -12,6 +14,10 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public abstract class GoalStateUpdaterGeneral implements Updater {
 
 	protected PlayerUnit playerUnit;
+
+	// Save the references to used GoapStates inside a HashMap for future
+	// access.
+	private HashMap<String, GoapState> mappedGoalStates = new HashMap<>();
 
 	public GoalStateUpdaterGeneral(PlayerUnit playerUnit) {
 		this.playerUnit = playerUnit;
@@ -65,13 +71,24 @@ public abstract class GoalStateUpdaterGeneral implements Updater {
 	 * @return the goalState that has the given effect or null if none is found.
 	 */
 	protected GoapState getGoalFromEffect(String effect) {
-		GoapState state = null;
+		// The goal state is missing and not yet added to the HashMap.
+		if (!this.mappedGoalStates.containsKey(effect)) {
+			GoapState missingState = null;
 
-		for (GoapState goalState : this.playerUnit.getGoalState()) {
-			if (goalState.effect.equals(effect)) {
-				state = goalState;
+			// Search for the goal state.
+			for (GoapState goalState : this.playerUnit.getGoalState()) {
+				if (goalState.effect.equals(effect)) {
+					missingState = goalState;
+
+					break;
+				}
+			}
+
+			if (missingState != null) {
+				this.mappedGoalStates.put(effect, missingState);
 			}
 		}
-		return state;
+
+		return this.mappedGoalStates.get(effect);
 	}
 }

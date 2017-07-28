@@ -20,6 +20,13 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  */
 public class ActionUpdaterWorker extends ActionUpdaterDefault {
 
+	private UnloadMineralsAction unloadMineralsAction;
+	private UnloadGasAction unloadGasAction;
+	private GatherMineralsAction gatherMineralsAction;
+	private GatherGasAction gatherGasAction;
+	private ConstructBuildingAction constructBuildingAction;
+	private ScoutBaseLocationWorkerAction scoutBaseLocationWorkerAction;
+
 	public ActionUpdaterWorker(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
@@ -29,26 +36,46 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
-		
+
 		// TODO: Possible Change: Only perform once.
-		((UnloadMineralsAction) this.getActionFromInstance(UnloadMineralsAction.class)).setTarget(this.playerUnit);
-		((UnloadGasAction) this.getActionFromInstance(UnloadGasAction.class)).setTarget(this.playerUnit);
-		
-		((GatherMineralsAction) this.getActionFromInstance(GatherMineralsAction.class)).setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeMineralField());
-		((GatherGasAction) this.getActionFromInstance(GatherGasAction.class)).setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeGasSource());
-		
+		this.unloadMineralsAction.setTarget(this.playerUnit);
+		this.unloadGasAction.setTarget(this.playerUnit);
+
+		this.gatherMineralsAction.setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeMineralField());
+		this.gatherGasAction.setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeGasSource());
+
 		// Set the target once and only change its UnitType afterwards
-		if(((PlayerUnitWorker) playerUnit).getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.AWAIT_CONFIRMATION) {
-			if(((ConstructBuildingAction) this.getActionFromInstance(ConstructBuildingAction.class)).getTarget() == null) {
-				((ConstructBuildingAction) this.getActionFromInstance(ConstructBuildingAction.class)).setTarget(new ConstructionJob(((PlayerUnitWorker) playerUnit).getAssignedBuildingType(), ((PlayerUnitWorker) playerUnit).getUnit().getTilePosition()));
+		if (((PlayerUnitWorker) playerUnit)
+				.getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.AWAIT_CONFIRMATION) {
+			if (this.constructBuildingAction.getTarget() == null) {
+				this.constructBuildingAction
+						.setTarget(new ConstructionJob(((PlayerUnitWorker) playerUnit).getAssignedBuildingType(),
+								((PlayerUnitWorker) playerUnit).getUnit().getTilePosition()));
 			} else {
-				((ConstructionJob) (((ConstructBuildingAction) this.getActionFromInstance(ConstructBuildingAction.class)).getTarget())).setBuilding(((PlayerUnitWorker) playerUnit).getAssignedBuildingType());
+				((ConstructionJob) this.constructBuildingAction.getTarget())
+						.setBuilding(((PlayerUnitWorker) playerUnit).getAssignedBuildingType());
 			}
 		}
 	}
-	
+
+	@Override
+	protected void init() {
+		super.init();
+
+		this.unloadMineralsAction = ((UnloadMineralsAction) this.getActionFromInstance(UnloadMineralsAction.class));
+		this.unloadGasAction = ((UnloadGasAction) this.getActionFromInstance(UnloadGasAction.class));
+		this.gatherMineralsAction = ((GatherMineralsAction) this.getActionFromInstance(GatherMineralsAction.class));
+		this.gatherGasAction = ((GatherGasAction) this.getActionFromInstance(GatherGasAction.class));
+
+		this.constructBuildingAction = ((ConstructBuildingAction) this
+				.getActionFromInstance(ConstructBuildingAction.class));
+
+		this.scoutBaseLocationWorkerAction = ((ScoutBaseLocationWorkerAction) this
+				.getActionFromInstance(ScoutBaseLocationWorkerAction.class));
+	}
+
 	@Override
 	protected void baselocationScoutingConfiguration() {
-		((ScoutBaseLocationWorkerAction) this.getActionFromInstance(ScoutBaseLocationWorkerAction.class)).setTarget(findClosestReachableBasePosition());
+		this.scoutBaseLocationWorkerAction.setTarget(findClosestReachableBasePosition());
 	}
 }
