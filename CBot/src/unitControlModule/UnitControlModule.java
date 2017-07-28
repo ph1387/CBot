@@ -24,8 +24,14 @@ import unitControlModule.unitWrappers.RemoveAgentEvent;
  */
 public class UnitControlModule implements RemoveAgentEvent {
 
+	// The HashSet(s) is / are used for displaying the content whereas the
+	// Queue(s) is / are used for updating. Not a perfect solution due to adding
+	// and removing elements from multiple Collections but functional.
 	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
 	private HashSet<PlayerBuilding> buildings = new HashSet<PlayerBuilding>();
+	private Queue<GoapAgent> agentUpdateQueueUnits = new LinkedList<GoapAgent>();
+	private Queue<PlayerBuilding> agentUpdateQueueBuildings = new LinkedList<PlayerBuilding>();
+
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 
@@ -42,42 +48,30 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 * the game.
 	 */
 	public void update() {
-		this.addTrackedUnits();
+		this.addNewTrackedUnits();
+		this.validateStoredUnitAgents();
+		this.validateStoredBuildingAgents();
 		this.removeTrackedUnits();
 
-		// Update Units.
-		for (GoapAgent goapAgent : this.agents) {
-
-			// TODO: DEBUG INFO
-			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
-
-			try {
-				if (((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit().exists()) {
-					goapAgent.update();
-				} else {
-					this.unitsToRemove.add(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
-				}
-			} catch (Exception e) {
-				System.out.println("An Agent failed to update properly: " + goapAgent + " - Unit: "
-						+ ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
-				e.printStackTrace();
-			}
+		// Update a single GoapAgent from the currently stored ones and place
+		// him at the end of the Queue.
+		GoapAgent currentAgent = this.agentUpdateQueueUnits.poll();
+		if (currentAgent != null) {
+			currentAgent.update();
+			this.agentUpdateQueueUnits.add(currentAgent);
 		}
 
-		// Update buildings.
-		for (PlayerBuilding building : this.buildings) {
-			try {
-				if (building.getUnit().exists()) {
-					building.update();
-				} else {
-					this.unitsToRemove.add(building.getUnit());
-				}
-			} catch (Exception e) {
-				System.out.println(
-						"A Building failed to update properly: " + building + " - Unit: " + building.getUnit());
-				e.printStackTrace();
-			}
+		// Update a single PlayerBuilding from the currently stored ones and
+		// place it at the end of the Queue.
+		PlayerBuilding currentBuilding = this.agentUpdateQueueBuildings.poll();
+		if (currentBuilding != null) {
+			currentBuilding.update();
+			this.agentUpdateQueueBuildings.add(currentBuilding);
 		}
+
+		// TODO: Possible Change: Extra Queue for combat Units.
+		// TODO: Possible Change: Do not include the supply buildings in the
+		// building Queue.
 
 		// Display all important information on the screen.
 		UnitControlDisplay.showImportantInformation(this.agents, this.buildings, this.informationStorage);
@@ -86,7 +80,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 	/**
 	 * Function for adding new Units to the corresponding collections.
 	 */
-	private void addTrackedUnits() {
+	private void addNewTrackedUnits() {
 		while (!this.unitsToAdd.isEmpty()) {
 			Unit unit = this.unitsToAdd.poll();
 
@@ -95,17 +89,84 @@ public class UnitControlModule implements RemoveAgentEvent {
 				if (unit.getType().isBuilding()) {
 					// TODO: Possible Change: Move to factory
 					// TODO: Possible Change: Add Listener like below!
-					this.buildings.add(new PlayerBuilding(unit, this.informationStorage));
+					PlayerBuilding building = new PlayerBuilding(unit, this.informationStorage);
+					this.agentUpdateQueueBuildings.add(building);
+					this.buildings.add(building);
 				} else {
 					GoapAgent agent = GoapAgentFactory.createAgent(unit, this.informationStorage);
 
-					this.agents.add(agent);
-
 					((PlayerUnit) agent.getAssignedGoapUnit()).addAgentRemoveListener(this);
+					this.agentUpdateQueueUnits.add(agent);
+					this.agents.add(agent);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * Function for verifying the stored GoapAgents and especially their
+	 * associated Unit.
+	 */
+	private void validateStoredUnitAgents() {
+		HashSet<GoapAgent> failedValidations = new HashSet<>();
+
+		// Update the references to the stored Units.
+		for (GoapAgent goapAgent : this.agentUpdateQueueUnits) {
+			try {
+				// Remove any references to Units that do not exist anymore.
+				if (!((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit().exists()) {
+					failedValidations.add(goapAgent);
+				}
+			} catch (Exception e) {
+				failedValidations.add(goapAgent);
+				e.printStackTrace();
+
+				// TODO: DEBUG INFO
+				System.out.println("An Agent failed to validate properly: " + goapAgent + " - Unit: "
+						+ ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
+			}
+
+			// TODO: DEBUG INFO
+			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
+		}
+
+		// Remove the GoapAgents that failed to validate from the Queue of
+		// agents.
+		for (GoapAgent goapAgent : failedValidations) {
+			this.agentUpdateQueueUnits.remove(goapAgent);
+			this.agents.remove(goapAgent);
+		}
+	}
+
+	/**
+	 * Function for verifying the stored PlayerBuildings and especially their
+	 * associated Unit.
+	 */
+	private void validateStoredBuildingAgents() {
+		HashSet<PlayerBuilding> failedValidations = new HashSet<>();
+
+		// Update the references to the stored buildings.
+		for (PlayerBuilding building : this.agentUpdateQueueBuildings) {
+			try {
+				// Remove any references to buildings that do not exist anymore.
+				if (!building.getUnit().exists()) {
+					failedValidations.add(building);
+				}
+			} catch (Exception e) {
+				failedValidations.add(building);
+				e.printStackTrace();
+
+				// TODO: DEBUG INFO
+				System.out.println(
+						"A Building failed to update properly: " + building + " - Unit: " + building.getUnit());
+			}
+		}
+
+		for (PlayerBuilding playerBuilding : failedValidations) {
+			this.agentUpdateQueueBuildings.remove(playerBuilding);
+			this.buildings.remove(playerBuilding);
 		}
 	}
 
@@ -135,7 +196,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 	private void removeBuilding(Unit unit) {
 		PlayerBuilding matchingObject = null;
 
-		for (PlayerBuilding building : this.buildings) {
+		for (PlayerBuilding building : this.agentUpdateQueueBuildings) {
 			// Reference of the Unit changes!
 			// -> Unit reference here sometimes is not the saved reference.
 			if (building.getUnit() == unit || building.getUnit().getPosition().equals(unit.getPosition())) {
@@ -146,13 +207,14 @@ public class UnitControlModule implements RemoveAgentEvent {
 		}
 
 		if (matchingObject != null) {
+			this.agentUpdateQueueBuildings.remove(matchingObject);
 			this.buildings.remove(matchingObject);
 		}
 		// TODO: REMOVE Safety feature since it is not clear if the Unit is
-		// found
+		// found.
 		else {
 			try {
-				throw new Exception("No Matching building Unit was found!");
+				throw new Exception("No Matching Agent was found -> " + unit + " " + unit.getType());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -168,7 +230,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 	private void removeUnit(Unit unit) {
 		GoapAgent matchingAgent = null;
 
-		for (GoapAgent agent : this.agents) {
+		for (GoapAgent agent : this.agentUpdateQueueUnits) {
 			Unit u = ((PlayerUnit) agent.getAssignedGoapUnit()).getUnit();
 
 			// Reference of the Unit changes!
@@ -182,6 +244,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 		}
 
 		if (matchingAgent != null) {
+			this.agentUpdateQueueUnits.remove(matchingAgent);
 			this.agents.remove(matchingAgent);
 
 			if (unit.getType().isWorker()) {
@@ -193,7 +256,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 		// found.
 		else {
 			try {
-				throw new Exception("No Matching building Unit was found!");
+				throw new Exception("No Matching Agent was found for -> " + unit + " " + unit.getType());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -331,7 +394,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 	@Override
 	public void removeAgent(PlayerUnit sender) {
-		for (GoapAgent goapAgent : this.agents) {
+		for (GoapAgent goapAgent : this.agentUpdateQueueUnits) {
 			if (((PlayerUnit) goapAgent.getAssignedGoapUnit()).equals(sender)) {
 				this.removeUnitFromUnitControl(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
 

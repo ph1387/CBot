@@ -4,6 +4,7 @@ import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
+import core.Core;
 import informationStorage.InformationStorage;
 
 /**
@@ -16,12 +17,12 @@ import informationStorage.InformationStorage;
 public class PlayerBuilding {
 
 	protected Unit unit;
-	
+
 	protected UnitType trainedUnit;
 	protected UnitType constructedAddon;
 	protected UpgradeType builtUpgrade;
 	protected TechType researchedTech;
-	
+
 	protected boolean commandExecutable = true;
 
 	private enum State {
@@ -29,7 +30,7 @@ public class PlayerBuilding {
 	}
 
 	private State state = State.IDLE;
-	
+
 	private InformationStorage informationStorage;
 
 	public PlayerBuilding(Unit unit, InformationStorage informationStorage) {
@@ -43,37 +44,45 @@ public class PlayerBuilding {
 	 * Update-function for the building.
 	 */
 	public void update() {
-		// Initiate the different kinds of actions the building can take
-		if (this.state == State.TRAINING && !this.unit.isTraining() && this.trainedUnit != null && this.commandExecutable) {
-			this.unit.train(this.trainedUnit);
-			this.commandExecutable = false;
-		}
-		// TODO: Test all following functionalities
-		else if (this.state == State.CONSTRUCTING && !this.unit.isConstructing() && this.constructedAddon != null && this.commandExecutable) {
-			this.unit.buildAddon(this.constructedAddon);
-			this.commandExecutable = false;
-		} else if (this.state == State.UPGRADING && !this.unit.isUpgrading() && this.builtUpgrade != null && this.commandExecutable) {
-			this.unit.upgrade(this.builtUpgrade);
-			this.commandExecutable = false;
-		} else if (this.state == State.RESEARCHING && !this.unit.isResearching() && this.researchedTech != null && this.commandExecutable) {
-			this.unit.research(this.researchedTech);
-			this.commandExecutable = false;
-		}
-		// Reset all information
-		else if (this.unit.isIdle()) {
-			this.state = State.IDLE;
+		// Only perform these checks on buildings that actually can perform
+		// these. This primarily excludes buildings that provide supplies.
+		if (this.unit.getType() != Core.getInstance().getPlayer().getRace().getSupplyProvider()) {
+			// Initiate the different kinds of actions the building can take
+			if (this.state == State.TRAINING && !this.unit.isTraining() && this.trainedUnit != null
+					&& this.commandExecutable) {
+				this.unit.train(this.trainedUnit);
+				this.commandExecutable = false;
+			}
+			// TODO: Test all following functionalities
+			else if (this.state == State.CONSTRUCTING && !this.unit.isConstructing() && this.constructedAddon != null
+					&& this.commandExecutable) {
+				this.unit.buildAddon(this.constructedAddon);
+				this.commandExecutable = false;
+			} else if (this.state == State.UPGRADING && !this.unit.isUpgrading() && this.builtUpgrade != null
+					&& this.commandExecutable) {
+				this.unit.upgrade(this.builtUpgrade);
+				this.commandExecutable = false;
+			} else if (this.state == State.RESEARCHING && !this.unit.isResearching() && this.researchedTech != null
+					&& this.commandExecutable) {
+				this.unit.research(this.researchedTech);
+				this.commandExecutable = false;
+			}
+			// Reset all information
+			else if (this.unit.isIdle()) {
+				this.state = State.IDLE;
 
-			this.trainedUnit = null;
-			this.constructedAddon = null;
-			this.builtUpgrade = null;
-			this.researchedTech = null;
-			
-			this.commandExecutable = true;
-		}
+				this.trainedUnit = null;
+				this.constructedAddon = null;
+				this.builtUpgrade = null;
+				this.researchedTech = null;
 
-		// Try assigning work to the building.
-		if (this.state == State.IDLE) {
-			this.switchState();
+				this.commandExecutable = true;
+			}
+
+			// Try assigning work to the building.
+			if (this.state == State.IDLE) {
+				this.switchState();
+			}
 		}
 	}
 
@@ -127,7 +136,7 @@ public class PlayerBuilding {
 	public Unit getUnit() {
 		return unit;
 	}
-	
+
 	public UnitType getTrainedUnit() {
 		return trainedUnit;
 	}

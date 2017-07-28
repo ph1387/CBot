@@ -1,11 +1,8 @@
 package unitControlModule.stateFactories.actions;
 
-import java.util.HashSet;
-
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
-import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInRetreatVectorDirection;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 
 /**
@@ -15,13 +12,12 @@ import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocat
  * @author P H - 26.02.2017
  *
  */
-public class AvailableActionsDefault extends HashSet<GoapAction> {
+public class AvailableActionsDefault extends AvailableActionsGeneral {
 
 	public AvailableActionsDefault() {
 		this.add(this.defineScoutingAction());
 		this.add(new AttackMoveAction(null));
 		this.add(new AttackUnitAction(null));
-		this.add(new RetreatActionSteerInRetreatVectorDirection(null));
 	}
 
 	/**

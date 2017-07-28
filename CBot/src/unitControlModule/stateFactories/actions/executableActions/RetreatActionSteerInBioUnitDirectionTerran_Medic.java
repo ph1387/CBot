@@ -63,4 +63,9 @@ public class RetreatActionSteerInBioUnitDirectionTerran_Medic extends RetreatAct
 
 		return previouslyCalculatedVector;
 	}
+
+	@Override
+	protected float generateBaseCost(IGoapUnit goapUnit) {
+		return (super.generateBaseCost(goapUnit) / 2.f);
+	}
 }

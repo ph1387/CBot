@@ -1,7 +1,7 @@
 package unitControlModule;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 
 import bwapi.Color;
@@ -43,7 +43,7 @@ public class UnitControlDisplay {
 	 *            show information like training Units, added Addons, etc.
 	 * @param informationStorage object that holds all important worker and resource information.
 	 */
-	public static void showImportantInformation(HashSet<GoapAgent> agents, HashSet<PlayerBuilding> buildings, InformationStorage informationStorage) {
+	public static void showImportantInformation(Collection<GoapAgent> agents, Collection<PlayerBuilding> buildings, InformationStorage informationStorage) {
 		int currentPosY = LINEHEIGHT;
 
 		// Calculate the new y position each time a function gets called. Each
@@ -111,7 +111,7 @@ public class UnitControlDisplay {
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
-	public static int showWorkerInformation(int posX, int posY, HashSet<GoapAgent> agents) {
+	public static int showWorkerInformation(int posX, int posY, Collection<GoapAgent> agents) {
 		List<PlayerUnitWorker> workerUnits = new ArrayList<PlayerUnitWorker>();
 		int counter = 1;
 
@@ -154,7 +154,7 @@ public class UnitControlDisplay {
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
-	public static int showBuildingInformation(int posX, int posY, HashSet<PlayerBuilding> buildings) {
+	public static int showBuildingInformation(int posX, int posY, Collection<PlayerBuilding> buildings) {
 		int counter = 1;
 
 		GAME.drawTextScreen(posX, posY, "Buildings:");
