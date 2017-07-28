@@ -24,25 +24,6 @@ public class TrainUnitActionWorker extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Worker_Units);
 		this.addToGameStates(GameState.Cheap_Units);
 		this.addToGameStates(GameState.Mineral_Units);
-		
-//		this.addToGameStates(GameState.Cheap_Units);
-//		this.addToGameStates(GameState.Expensive_Units);
-//		this.addToGameStates(GameState.Mineral_Units);
-//		this.addToGameStates(GameState.Gas_Units);
-//		
-//		this.addToGameStates(GameState.Combat_Units);
-//		this.addToGameStates(GameState.Building_Units);
-//		
-//		this.addToGameStates(GameState.Bio_Units);
-//		this.addToGameStates(GameState.Flying_Units);
-//		this.addToGameStates(GameState.Healer_Units);
-//		this.addToGameStates(GameState.Support_Units);
-//		
-//		this.addToGameStates(GameState.Expansion_Focused);
-//		this.addToGameStates(GameState.Upgrade_Focused);
-//		this.addToGameStates(GameState.Technology_Focused);
-//		
-//		this.addToGameStates(GameState.Refinery_Units);
 	}
 
 	// -------------------- Functions
