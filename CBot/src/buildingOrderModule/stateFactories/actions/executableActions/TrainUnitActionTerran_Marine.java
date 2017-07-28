@@ -4,7 +4,6 @@ import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * TrainUnitActionTerran_Marine.java --- Class for training a Terran_Marine.
  * 
@@ -19,7 +18,7 @@ public class TrainUnitActionTerran_Marine extends TrainUnitBaseAction {
 	 */
 	public TrainUnitActionTerran_Marine(Object target) {
 		super(target);
-		
+
 		this.addToGameStates(GameState.Cheap_Units);
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Bio_Units);
@@ -33,7 +32,6 @@ public class TrainUnitActionTerran_Marine extends TrainUnitBaseAction {
 		return UnitType.Terran_Marine;
 	}
 
-	// TODO: UML ADD FF
 	@Override
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(UnitType.Terran_Barracks);

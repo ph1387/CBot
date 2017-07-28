@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerran;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * WorldStateUpdaterActionQueueTerran.java --- Updater for updating a
  * {@link ManagerGoalStateActionQueueTerran} instance.

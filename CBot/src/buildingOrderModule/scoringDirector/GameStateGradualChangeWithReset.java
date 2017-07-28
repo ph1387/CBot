@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateGradualChangeWithReset.java --- A Superclass for GameStates using a
  * gradual system for generating their scores while also reseting the score to a
@@ -42,7 +41,7 @@ abstract class GameStateGradualChangeWithReset extends GameStateGradualChange {
 		if (!this.isTresholdReached(this.scorePrev)) {
 			super.generateScore(scoringDirector, manager);
 		}
-		
+
 		return this.scorePrev;
 	}
 

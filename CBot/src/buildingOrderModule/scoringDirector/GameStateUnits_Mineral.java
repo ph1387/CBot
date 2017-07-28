@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Mineral.java --- A GameState focused on mineral requiring
  * Units.
@@ -20,7 +19,7 @@ class GameStateUnits_Mineral extends GameState {
 		double minerals = Core.getInstance().getPlayer().minerals();
 		double gas = Core.getInstance().getPlayer().gas();
 		double totalResources = minerals + gas;
-		
+
 		return minerals / totalResources;
 	}
 

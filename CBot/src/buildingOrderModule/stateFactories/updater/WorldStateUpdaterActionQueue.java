@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.worldStates.ManagerWorldStateActionQueue;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * WorldStateUpdaterActionQueue.java --- Updater for updating a
  * {@link ManagerWorldStateActionQueue} instance.

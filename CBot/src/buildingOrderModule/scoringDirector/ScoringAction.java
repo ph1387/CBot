@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import java.util.HashSet;
 
-// TODO: UML ADD
 /**
  * ScoringAction.java --- A Interface for all Actions that a
  * {@link ScoringDirector} will be able to update.

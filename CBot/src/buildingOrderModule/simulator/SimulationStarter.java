@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bwapi.Pair;
-import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
-import bwapi.UpgradeType;
 
-// TODO: UML ADD
 /**
  * SimulationStarter.java --- Class used for starting a simulation with the
  * currently available and provided information. The results are then added
@@ -36,12 +33,37 @@ public class SimulationStarter {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Function for testing if the simulation Thread is currently active /
+	 * running.
+	 * 
+	 * @return true if the Thread is running, false if not.
+	 */
 	public boolean isRunning() {
 		return this.simulationThread != null && this.simulationThread.isAlive();
 	}
 
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Function for starting a new simulation Thread. This function only works /
+	 * returns true if the previous Thread is finished or if none was started
+	 * before.
+	 * 
+	 * @param actionTypes
+	 *            the ActionTypes that are going to be used in the simulation.
+	 * @param units
+	 *            the Units that are going to be used in the simulation.
+	 * @param currentMinerals
+	 *            the current gas count. Defines the basis for all gas dependent
+	 *            operations.
+	 * @param currentGas
+	 *            the current mineral count. Defines the basis for all mineral
+	 *            dependent operations.
+	 * @param workerUnitType
+	 *            the UnitType that defines the worker. Different for all Races.
+	 * @param currentFrameTimeStamp
+	 *            the current time stamp in frames.
+	 * @return true if a simulation Thread was started, false if not.
+	 */
 	public boolean runStarter(HashSet<ActionType> actionTypes, List<Unit> units, int currentMinerals, int currentGas,
 			UnitType workerUnitType, int currentFrameTimeStamp) {
 		boolean success = false;
@@ -83,7 +105,20 @@ public class SimulationStarter {
 		return success;
 	}
 
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Function for splitting a List of given Units in different categories
+	 * (Free and working) as well as counting the specific types.
+	 * 
+	 * @param units
+	 *            the Units that are going to be categorized.
+	 * @param simulationTypesFree
+	 *            the HashMap to which all free Units are going to be added to.
+	 * @param simulationTypesWorking
+	 *            the HashMap to which all working Units are going to be added
+	 *            to (As well as their result type and the time stamp).
+	 * @param currentFrameTimeStamp
+	 *            the current time stamp in frames.
+	 */
 	private static void extractFreeAndWorkingTypeWrappers(List<Unit> units,
 			HashMap<TypeWrapper, Integer> simulationTypesFree,
 			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationTypesWorking,
@@ -116,22 +151,28 @@ public class SimulationStarter {
 		}
 	}
 
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Convenience function.
+	 * 
+	 * @param simulationUnitsFree
+	 *            the Collection to which the type is going to be added to.
+	 * @param unitType
+	 *            the type that is going to be added to a Collection.
+	 */
 	private static void addTypeFree(HashMap<TypeWrapper, Integer> simulationUnitsFree, UnitType unitType) {
 		addTypeFree(simulationUnitsFree, TypeWrapper.generateFrom(unitType));
 	}
 
-	// TODO: UML ADD JAVADOC
-	private static void addTypeFree(HashMap<TypeWrapper, Integer> simulationUnitsFree, UpgradeType upgradeType) {
-		addTypeFree(simulationUnitsFree, TypeWrapper.generateFrom(upgradeType));
-	}
-
-	// TODO: UML ADD JAVADOC
-	private static void addTypeFree(HashMap<TypeWrapper, Integer> simulationUnitsFree, TechType techType) {
-		addTypeFree(simulationUnitsFree, TypeWrapper.generateFrom(techType));
-	}
-
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Function for adding a type towards a HashMap of existing types. If the
+	 * type is not already present, it is initialized with 1. If it is present,
+	 * the curent value is increased by 1.
+	 * 
+	 * @param simulationUnitsFree
+	 *            the Collection to which the type is going to be added to.
+	 * @param typeWrapper
+	 *            the type that is going to be added to a Collection.
+	 */
 	private static void addTypeFree(HashMap<TypeWrapper, Integer> simulationUnitsFree, TypeWrapper typeWrapper) {
 		if (simulationUnitsFree.get(typeWrapper) == null) {
 			simulationUnitsFree.put(typeWrapper, 1);
@@ -140,28 +181,34 @@ public class SimulationStarter {
 		}
 	}
 
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Convenience function.
+	 * 
+	 * @param simulationUnitsWorking
+	 *            the Collection to which the type is going to be added to.
+	 * @param unitType
+	 *            the type that is going to be added to a Collection.
+	 * @param finishingTimeStamp
+	 *            the time stamp in frames at which the type finishes its work.
+	 */
 	private static void addTypeWorking(
 			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationUnitsWorking, UnitType unitType,
 			int finishingTimeStamp) {
 		addTypeWorking(simulationUnitsWorking, TypeWrapper.generateFrom(unitType), finishingTimeStamp);
 	}
 
-	// TODO: UML ADD JAVADOC
-	private static void addTypeWorking(
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationUnitsWorking, UpgradeType upgradeType,
-			int finishingTimeStamp) {
-		addTypeWorking(simulationUnitsWorking, TypeWrapper.generateFrom(upgradeType), finishingTimeStamp);
-	}
-
-	// TODO: UML ADD JAVADOC
-	private static void addTypeWorking(
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationUnitsWorking, TechType techType,
-			int finishingTimeStamp) {
-		addTypeWorking(simulationUnitsWorking, TypeWrapper.generateFrom(techType), finishingTimeStamp);
-	}
-
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Function for adding a type towards a HashMap of existing types. Each type
+	 * is handled separately in its own Pair (First: Result type, Second: Time
+	 * stamp of completion).
+	 * 
+	 * @param simulationUnitsWorking
+	 *            the Collection to which the type is going to be added to.
+	 * @param typeWrapper
+	 *            the type that is going to be added to a Collection.
+	 * @param finishingTimeStamp
+	 *            the time stamp in frames at which the type finishes it's work.
+	 */
 	private static void addTypeWorking(
 			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationUnitsWorking, TypeWrapper typeWrapper,
 			int finishingTimeStamp) {

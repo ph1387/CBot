@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Bio.java --- A GameState focused on bio Units.
  * 

@@ -41,7 +41,8 @@ public abstract class BuildAddonBaseAction extends ManagerBaseActionPrecondition
 	protected UnitType type;
 
 	/**
-	 * @param target type: Integer
+	 * @param target
+	 *            type: Integer
 	 */
 	public BuildAddonBaseAction(Object target) {
 		super(target);
@@ -72,37 +73,32 @@ public abstract class BuildAddonBaseAction extends ManagerBaseActionPrecondition
 	protected PreconditionChecker definePreconditionChecker() {
 		return new CustomPreconditionChecker(this);
 	}
-	
+
 	// ------------------------------ ActionType
-	
-	// TODO: UML ADD 
+
 	@Override
 	public int defineMineralCost() {
 		return this.defineType().mineralPrice();
 	}
-	
-	// TODO: UML ADD 
+
 	@Override
 	public int defineGasCost() {
 		return this.defineType().gasPrice();
 	}
-	
-	// TODO: UML ADD 
+
 	@Override
 	public int defineCompletionTime() {
 		return this.defineType().buildTime();
 	}
-	
-	// TODO: UML ADD 
+
 	@Override
 	public TypeWrapper defineResultType() {
 		return TypeWrapper.generateFrom(this.defineType());
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return -1;
 	}
-	
+
 }

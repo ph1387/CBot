@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateFocused_Expansion.java --- A GameState focused on expansion.
  * 

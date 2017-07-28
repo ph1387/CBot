@@ -176,42 +176,17 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		return new Vector(ePosX, ePosY, uPosX - ePosX, uPosY - ePosY);
 	}
 
-	// TODO: UML REMOVE + RENAME
-//	/**
-//	 * Function for generating a (retreat) Vector from an incoming provided one,
-//	 * whose end-Position is the start of the newly created Vector. The provided
-//	 * Vector is projected onto a predefined length which shortens or lengthens
-//	 * the outgoing (generated) Vector based the incoming Vector's length. The
-//	 * returned Vector's length can not be larger than the specified length.
-//	 *
-//	 * @param incomingVector
-//	 *            the Vector which is going to be projected onto a predefined
-//	 *            length.
-//	 * @return a Vector starting from the provided Vectors end-Position and has
-//	 *         a length that represents the provided Vector's length in relation
-//	 *         to the maximum possible length.
-//	 */
-//	protected Vector projectVectorOntoMaxLength(Vector incomingVector) {
-//		double vecRangeMultiplier = (this.maxDistance - incomingVector.length()) / this.maxDistance;
-//		double neededDistanceMultiplier = this.maxDistance / incomingVector.length();
-//
-//		// The direction-Vector is projected on the maxDistance and then
-//		// combined with the rangeMultiplier to receive a representation of
-//		// the distance between the enemyUnit and the currentUnit based on
-//		// their distance to another.
-//		int tPosX = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.getDirX());
-//		int tPosY = (int) (vecRangeMultiplier * neededDistanceMultiplier * incomingVector.getDirY());
-//
-//		return new Vector(incomingVector.getX() + (int) (incomingVector.getDirX()),
-//				incomingVector.getY() + (int) (incomingVector.getDirY()), tPosX, tPosY);
-//	}
-	
-	// TODO: UML ADD
 	/**
-	 * Function for generating a Vector emerging from the executing Unit with the same direction Vector as a provided incoming Vector.
-	 * @param incomingVector the Vector whose directions are projected onto the executing Unit's Position.
-	 * @param goapUnit the currently executing Unit.
-	 * @return a Vector emerging from the executing Unit's Position with the directions of a provided Vector.
+	 * Function for generating a Vector emerging from the executing Unit with
+	 * the same direction Vector as a provided incoming Vector.
+	 * 
+	 * @param incomingVector
+	 *            the Vector whose directions are projected onto the executing
+	 *            Unit's Position.
+	 * @param goapUnit
+	 *            the currently executing Unit.
+	 * @return a Vector emerging from the executing Unit's Position with the
+	 *         directions of a provided Vector.
 	 */
 	protected Vector generateVectorUnitToRetreatPosition(Vector incomingVector, IGoapUnit goapUnit) {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;

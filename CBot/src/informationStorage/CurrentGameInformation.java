@@ -7,7 +7,6 @@ import bwapi.TechType;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD
 /**
  * CurrentGameInformation.java --- Storage class for all current information of
  * the game.
@@ -35,6 +34,8 @@ public class CurrentGameInformation {
 	}
 
 	/**
+	 * @param currentUnitCountTotal
+	 *            the total number of Units the Bot controls.
 	 * @param currentWorkerCount
 	 *            the number of worker Units.
 	 * @param currentBuildingCount
@@ -54,10 +55,11 @@ public class CurrentGameInformation {
 	 * @param currentUpgrades
 	 *            all currently performed UpgradeTypes of the desired ones.
 	 */
-	public CurrentGameInformation(int currentWorkerCount, int currentBuildingCount, int currentCombatUnitCount,
-			double currentWorkerPercent, double currentBuildingsPercent, double currentCombatUnitsPercent,
-			HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
+	public CurrentGameInformation(int currentUnitCountTotal, int currentWorkerCount, int currentBuildingCount,
+			int currentCombatUnitCount, double currentWorkerPercent, double currentBuildingsPercent,
+			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
 			HashMap<UpgradeType, Integer> currentUpgrades) {
+		this.currentUnitCountTotal = currentUnitCountTotal;
 		this.currentWorkerCount = currentWorkerCount;
 		this.currentBuildingCount = currentBuildingCount;
 		this.currentCombatUnitCount = currentCombatUnitCount;

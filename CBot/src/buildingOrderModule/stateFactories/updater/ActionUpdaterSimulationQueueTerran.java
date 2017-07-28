@@ -12,7 +12,6 @@ import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueu
 import core.Core;
 import javaGOAP.GoapAction;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterSimulationQueueTerran.java --- Updater for updating a
  * {@link AvailableActionsSimulationQueueTerran} instance.

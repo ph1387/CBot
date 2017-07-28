@@ -19,7 +19,7 @@ public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
 	 */
 	public BuildAddonTerran_MachineShop(Object target) {
 		super(target);
-		
+
 		this.addToGameStates(GameState.Building_Units);
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Cheap_Units);
@@ -32,17 +32,15 @@ public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
 	protected UnitType defineType() {
 		return UnitType.Terran_Machine_Shop;
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(UnitType.Terran_Factory);
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return 1;
 	}
-	
+
 }

@@ -8,7 +8,6 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
 import javaGOAP.GoapAction;
 
-// TODO: UML ADD SUPERCLASS
 /**
  * AvailableActionsDefault.java --- Default available actions for a
  * BuildActionManager.

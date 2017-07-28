@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateFocused_Technology.java --- A GameState focused on researching
  * technologies.

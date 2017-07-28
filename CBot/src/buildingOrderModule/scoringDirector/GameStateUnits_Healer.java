@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Healer.java --- A GameState focused on healing Units.
  * 

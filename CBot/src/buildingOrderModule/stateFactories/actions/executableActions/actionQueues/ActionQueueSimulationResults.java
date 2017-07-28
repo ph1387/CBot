@@ -6,7 +6,6 @@ import buildingOrderModule.stateFactories.actions.executableActions.ManagerBaseA
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 
-// TODO: UML ADD
 /**
  * ActionQueueSimulationResults.java --- ActionQueue designed for enabling the
  * execution of simulation results within the designated BuildActionManager.

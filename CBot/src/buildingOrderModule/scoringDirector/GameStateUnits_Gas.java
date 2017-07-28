@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Gas.java --- A GameState focused on vaspene gas requiring
  * Units.

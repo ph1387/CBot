@@ -4,8 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import javaGOAP.GoapAction;
 import javaGOAP.IGoapUnit;
 
-// TODO: UML ADD
-// TODO: UML CHECK EVERY SUBCLASS
 /**
  * BaseAction.java --- Superclass for the most basic tasks a building manager
  * may rely on as a GoapAction.
@@ -37,7 +35,7 @@ public abstract class BaseAction extends GoapAction {
 
 		return success && this.checkProceduralSpecificPrecondition(goapUnit);
 	}
-	
+
 	/**
 	 * Function for checking a more specific precondition of any subclass.
 	 * 
@@ -46,7 +44,7 @@ public abstract class BaseAction extends GoapAction {
 	 * @return true or false depending if the specific preconditions are met.
 	 */
 	protected abstract boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit);
-	
+
 	@Override
 	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
 		return 0;
@@ -61,7 +59,7 @@ public abstract class BaseAction extends GoapAction {
 	protected boolean requiresInRange(IGoapUnit goapUnit) {
 		return false;
 	}
-	
+
 	// ------------------------------ Getter / Setter
 
 	public void setTarget(Object target) {
@@ -71,5 +69,5 @@ public abstract class BaseAction extends GoapAction {
 	public Object getTarget() {
 		return this.target;
 	}
-	
+
 }

@@ -3,7 +3,6 @@ package buildingOrderModule.simulator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-// TODO: UML ADD
 /**
  * ActionSequenceFactory.java --- A factory that stores and creates instances of
  * {@link ActionSequence}s. This is necessary since vast amounts of these
@@ -57,7 +56,7 @@ public class ActionSequenceFactory {
 	 * @param sequence
 	 *            the ActionSequence that can be used by other classes.
 	 */
-	public void markNodeAsAvailable(ActionSequence sequence) {
+	public void markSequenceAsAvailable(ActionSequence sequence) {
 		sequence.setGasCost(0);
 		sequence.setMineralCost(0);
 		sequence.getTypesFree().clear();

@@ -2,7 +2,6 @@ package buildingOrderModule.stateFactories.actions.executableActions.actionQueue
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * ActionQueueStarting.java --- Superclass for all ActionQueues that can be
  * executed in the beginning of a match / are starting build orders or openings.

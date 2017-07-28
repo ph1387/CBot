@@ -8,7 +8,6 @@ import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 
-// TODO: UML ADD
 /**
  * ConstructBaseAction.java --- Superclass for all construction actions.
  * 
@@ -70,40 +69,34 @@ public abstract class ConstructBaseAction extends ManagerBaseAction {
 	protected int defineBaseCost() {
 		return this.type.buildTime() + this.type.mineralPrice() + this.type.gasPrice();
 	}
-	
+
 	// ------------------------------ ActionType
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineMineralCost() {
 		return this.defineType().mineralPrice();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineGasCost() {
 		return this.defineType().gasPrice();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineCompletionTime() {
 		return this.defineType().buildTime();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public TypeWrapper defineResultType() {
 		return TypeWrapper.generateFrom(this.defineType());
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(Core.getInstance().getPlayer().getRace().getWorker());
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return -1;

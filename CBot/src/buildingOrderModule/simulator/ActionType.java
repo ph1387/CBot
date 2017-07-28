@@ -1,6 +1,5 @@
 package buildingOrderModule.simulator;
 
-// TODO: UML ADD
 /**
  * ActionType.java --- The interface on which the Simulator performs its
  * simulation. Each action that is considered must implement this Interface.

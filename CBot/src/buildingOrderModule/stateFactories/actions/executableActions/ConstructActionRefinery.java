@@ -4,7 +4,6 @@ import buildingOrderModule.scoringDirector.GameState;
 import bwapi.UnitType;
 import core.Core;
 
-//TODO: UML ADD
 /**
  * ConstructActionRefinery.java --- Action for constructing a race specific
  * refinery. <br>
@@ -20,7 +19,7 @@ public class ConstructActionRefinery extends ConstructBaseAction {
 
 	public ConstructActionRefinery(Object target) {
 		super(target);
-		
+
 		this.addToGameStates(GameState.Building_Units);
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Refinery_Units);
@@ -38,5 +37,5 @@ public class ConstructActionRefinery extends ConstructBaseAction {
 	public int defineMaxSimulationOccurrences() {
 		return 1;
 	}
-	
+
 }

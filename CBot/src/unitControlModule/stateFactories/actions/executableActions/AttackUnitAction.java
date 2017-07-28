@@ -5,7 +5,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-//TODO: UML SUPERCLASS + FUNCTIONS
 /**
  * AttackUnitAction.java --- An attack action for attacking a single unit.
  * 

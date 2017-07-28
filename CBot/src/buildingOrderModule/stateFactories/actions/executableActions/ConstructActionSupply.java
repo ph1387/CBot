@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import bwapi.UnitType;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * ConstructActionSupply.java --- Action for constructing a race specific supply
  * depot.
@@ -19,8 +18,9 @@ public class ConstructActionSupply extends ConstructBaseAction {
 	 */
 	public ConstructActionSupply(Object target) {
 		super(target);
-		
-		// TODO: Possible Change: Add GameStates even though this will probably never be used in a simulation.
+
+		// TODO: Possible Change: Add GameStates even though this will probably
+		// never be used in a simulation.
 	}
 
 	// -------------------- Functions

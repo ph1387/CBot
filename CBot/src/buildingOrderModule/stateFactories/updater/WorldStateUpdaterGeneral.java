@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.updater;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import javaGOAP.GoapState;
 
-//TODO: Needed Change: Combine with the UnitControl Updater
 /**
  * WorldStateUpdaterGeneral.java --- Superclass for updating most WorldStates.
  * 

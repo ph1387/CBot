@@ -11,7 +11,6 @@ import bwapi.Game;
 import core.Core;
 import javaGOAP.GoapAction;
 
-// TODO: UML ADD
 /**
  * BuildingOrderDisplay.java --- Display for all building order / build action
  * manager information as well as simulation and scoring results.
@@ -29,7 +28,7 @@ public class BuildingOrderDisplay {
 	// Formatter for the GameState value output.
 	private static final DecimalFormat MULTIPLY_FORMATTER = new DecimalFormat("0.00");
 	// Formatter for the score output.
-	private static final DecimalFormat SCORE_FORMAT = new DecimalFormat("00000");
+	private static final DecimalFormat SCORE_FORMATTER = new DecimalFormat("00000");
 
 	// -------------------- Functions
 
@@ -156,7 +155,7 @@ public class BuildingOrderDisplay {
 		for (GoapAction goapAction : manager.getAvailableActions()) {
 			if (goapAction instanceof ActionType) {
 				GAME.drawTextScreen(OFFSET_LEFT_TOTAL, currentPosY,
-						SCORE_FORMAT.format(((ActionType) goapAction).defineScore()) + " | "
+						SCORE_FORMATTER.format(((ActionType) goapAction).defineScore()) + " | "
 								+ goapAction.getClass().getSimpleName());
 				currentPosY += LINEHEIGHT;
 			}

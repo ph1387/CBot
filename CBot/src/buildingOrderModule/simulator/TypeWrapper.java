@@ -6,7 +6,6 @@ import bwapi.TechType;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD
 /**
  * TypeWrapper.java --- Wrapper Class for all types (UnitType, UpgradeType,
  * etc.) for the different Races in the game. This existence of this Class is

@@ -20,7 +20,6 @@ public interface StateFactory {
 	 */
 	public List<GoapState> generateGoalState();
 
-	// TODO: UML RETURN TYPE
 	/**
 	 * @return a Object which represents the currently available Actions. </br>
 	 *         <b>Note:</b></br>

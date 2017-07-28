@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bwapi.Pair;
 
-// TODO: UML ADD
 /**
  * SimulatorThread.java --- Own Thread for the Simulator to perform simulations.
  * This is necessary since these calculations can take a while.
@@ -65,7 +64,7 @@ public class SimulatorThread extends Thread {
 
 		this.generatedActionTypeSequences.add(actions);
 
-		// TODO: WIP REMOVE
+		// TODO: DEBUG INFO
 		System.out.println("Time taken: " + ((double) (System.nanoTime() - start) / 1000000) + "ms");
 	}
 

@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerran;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * GoalStateUpdaterActionQueueTerran.java --- Updater for updating a
  * {@link ManagerGoalStateActionQueueTerran} instance.
@@ -24,8 +23,8 @@ public class GoalStateUpdaterActionQueueTerran extends GoalStateUpdaterActionQue
 	// -------------------- Functions
 
 	@Override
-	public void update(BuildActionManager manager) {
-		super.update(manager);
+	public void update(BuildActionManager buildActionManager) {
+		super.update(buildActionManager);
 
 		// Force the execution of the simulation after a certain amount of time
 		// has passed.

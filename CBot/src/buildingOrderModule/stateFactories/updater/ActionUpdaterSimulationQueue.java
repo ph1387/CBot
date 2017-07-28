@@ -21,7 +21,6 @@ import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterSimulationQueue.java --- Updater for updating a
  * {@link AvailableActionsSimulationQueue} instance.
@@ -94,7 +93,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		HashSet<ScoringAction> transformedScoringActions = new HashSet<>();
 
 		for (ActionType actionType : this.actionTypes) {
-			if(actionType instanceof ScoringAction) {
+			if (actionType instanceof ScoringAction) {
 				transformedScoringActions.add((ScoringAction) actionType);
 			}
 		}
@@ -109,7 +108,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			this.actionQueueSimulationResults = (ActionQueueSimulationResults) this
 					.getActionFromInstance(ActionQueueSimulationResults.class);
 		}
-		if(this.actionTypes == null && this.scoringActions == null) {
+		if (this.actionTypes == null && this.scoringActions == null) {
 			this.actionTypes = this.generateAllAvailableActionTypes(buildActionManager);
 			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 		}
@@ -122,7 +121,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		this.updateSimulationStarter(manager);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for acting upon a generated action Queue by the SimulatorThread
 	 * itself. The ActionTypes are transformed into ManagerBaseActions and then
@@ -141,7 +139,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		// Forward the transformed ActionTypes towards the Action itself.
 		this.actionQueueSimulationResults.addToActionQueue(transformedResult);
 
-		// TODO: WIP REMOVE
+		// TODO: DEBUG INFO
 		System.out.println("\nACT ON RESULT:");
 		for (ActionType actionType : generatedResult) {
 			System.out.println("  - " + actionType.getClass().getSimpleName());
@@ -149,7 +147,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		System.out.println("\n");
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for updating all information regarding the SimulationStarter.
 	 * Either resetting existing action Queues of the
@@ -208,7 +205,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if the index of the action Queue of the
 	 * ActionQueueSimulationResults is nearly at the end of the action Queue.
@@ -222,7 +218,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 				- this.actionQueueSimulationResults.getIndex() <= this.maxActionQueueIndexOffsetTilEnd;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all currently produces Types (TypeWrappers) from
 	 * the action Queue.
@@ -244,7 +239,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		return usedActionTypes;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all types that got forwarded into the
 	 * InformationStorage's Queues and convert them to their TypeWrapper
@@ -278,7 +272,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		return forwardedActionTypes;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for adding a TypeWrapper to a HashMap. If the HashMap does not
 	 * contain any previous instance of the TypeWrapper, instantiate it with 1.

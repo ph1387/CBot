@@ -77,43 +77,34 @@ public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExt
 	protected PreconditionChecker definePreconditionChecker() {
 		return new CustomPreconditionChecker(this);
 	}
-	
+
 	// ------------------------------ ActionType
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineMineralCost() {
 		return this.defineType().mineralPrice();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineGasCost() {
 		return this.defineType().gasPrice();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineCompletionTime() {
 		return this.defineType().upgradeTime();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public TypeWrapper defineResultType() {
 		return TypeWrapper.generateFrom(this.defineType());
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public TypeWrapper defineRequiredType() {
-		// TODO: Possible Change: WhatUpgrades() might be the appropriate function!
-		// TODO: WIP REMOVE
-		System.out.println(this.defineType().whatsRequired() + " " + this.defineType().whatUpgrades());
-		return TypeWrapper.generateFrom(this.defineType().whatsRequired());
+		return TypeWrapper.generateFrom(this.defineType().whatUpgrades());
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return 1;

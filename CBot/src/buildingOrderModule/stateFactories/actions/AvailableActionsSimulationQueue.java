@@ -5,7 +5,6 @@ import java.util.LinkedHashSet;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
 import javaGOAP.GoapAction;
 
-//TODO: UML ADD SUPERCLASS
 /**
  * AvailableActionsSimulationQueue.java --- Available Actions for all simulation
  * users.

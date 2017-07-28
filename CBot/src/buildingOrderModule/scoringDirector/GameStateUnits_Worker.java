@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Worker.java --- A GameState focused on training worker Units.
  * 

@@ -7,7 +7,6 @@ import buildingOrderModule.scoringDirector.ScoringAction;
 import buildingOrderModule.simulator.ActionType;
 import javaGOAP.IGoapUnit;
 
-// TODO: UML ADD INTERFACES
 /**
  * ManagerBaseAction.java --- Superclass for BuildActionManager actions.
  * 
@@ -39,15 +38,6 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 
 	// -------------------- Functions
 
-	/**
-	 * Function for checking a more specific precondition of any subclass.
-	 * 
-	 * @param goapUnit
-	 *            the executing GoapUnit.
-	 * @return true or false depending if the specific preconditions are met.
-	 */
-	protected abstract boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit);
-
 	@Override
 	public boolean performAction(IGoapUnit goapUnit) {
 		if (this.checkProceduralPrecondition(goapUnit)) {
@@ -57,6 +47,13 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 		return true;
 	}
 
+	/**
+	 * The actual performance of the action.
+	 * 
+	 * @param goapUnit
+	 *            the executing Unit.
+	 * @return true if the action was successful, false if it failed.
+	 */
 	protected abstract void performSpecificAction(IGoapUnit goapUnit);
 
 	@Override
@@ -69,7 +66,6 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 		this.iterationCount = 0;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for adding a GameState to the Collection of used GameStates
 	 * representing the Action.
@@ -83,7 +79,6 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for removing a GameState from the Collection of used GameStates
 	 * representing the Action.
@@ -99,7 +94,6 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 
 	// ------------------------------ ActionType
 
-	// TODO: UML ADD
 	@Override
 	public int defineScore() {
 		synchronized (this.lockScore) {
@@ -109,7 +103,6 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 
 	// ------------------------------ ScoringAction
 
-	// TODO: UML ADD
 	@Override
 	public void setScore(int score) {
 		synchronized (this.lockScore) {
@@ -117,7 +110,6 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 		}
 	}
 
-	// TODO: UML ADD
 	@Override
 	public HashSet<GameState> defineUsedGameStates() {
 		synchronized (this.lockGameStates) {

@@ -8,7 +8,6 @@ import bwapi.UnitType;
 import core.Core;
 import javaGOAP.IGoapUnit;
 
-// TODO: UML ADD
 /**
  * ResearchBaseAction.java --- Superclass for all research related actions.
  * 
@@ -75,40 +74,34 @@ public abstract class ResearchBaseAction extends ManagerBaseActionPreconditionEx
 	protected PreconditionChecker definePreconditionChecker() {
 		return new CustomPreconditionChecker(this);
 	}
-	
+
 	// ------------------------------ ActionType
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineMineralCost() {
 		return this.defineType().mineralPrice();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineGasCost() {
 		return this.defineType().gasPrice();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineCompletionTime() {
 		return this.defineType().researchTime();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public TypeWrapper defineResultType() {
 		return TypeWrapper.generateFrom(this.defineType());
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(this.defineType().whatResearches());
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return 1;

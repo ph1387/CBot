@@ -1,6 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-// TODO: UML ADD
 /**
  * ScoringDirectorTerran_Bio.java --- A ScoringDirector whose goal is to score
  * Bio Units and the corresponding upgrades / technologies.
@@ -41,7 +40,7 @@ public class ScoringDirectorTerran_Bio extends ScoringDirector {
 	protected double defineFixedScoreUnitsSupport() {
 		return 1.0;
 	}
-	
+
 	// ------------------------------ Getter / Setter
 
 }

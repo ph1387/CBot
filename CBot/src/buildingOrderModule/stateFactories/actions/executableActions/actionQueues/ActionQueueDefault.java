@@ -8,7 +8,6 @@ import buildingOrderModule.stateFactories.actions.executableActions.ManagerBaseA
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 
-// TODO: UML NEW SUPERCLASS
 /**
  * ActionQueueDefault.java --- Superclass for action queues. Only provides the
  * most basic implementation of the required functions.
@@ -49,7 +48,8 @@ public abstract class ActionQueueDefault extends BaseAction {
 	}
 
 	/**
-	 * Encapsulated function since overwriting it is easier this way (If needed).
+	 * Encapsulated function since overwriting it is easier this way (If
+	 * needed).
 	 * 
 	 * @param goapUnit
 	 *            the executing Unit.
@@ -87,7 +87,6 @@ public abstract class ActionQueueDefault extends BaseAction {
 
 	// ------------------------------ Getter / Setter
 
-	// TODO: UML ADD
 	public List<ManagerBaseAction> getActionQueue() {
 		return actionQueue;
 	}

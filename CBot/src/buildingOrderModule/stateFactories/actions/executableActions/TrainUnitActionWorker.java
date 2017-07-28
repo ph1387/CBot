@@ -5,7 +5,6 @@ import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * TrainUnitActionWorker.java --- Action for training a race specific worker
  * Unit.
@@ -53,7 +52,6 @@ public class TrainUnitActionWorker extends TrainUnitBaseAction {
 		return Core.getInstance().getPlayer().getRace().getWorker();
 	}
 
-	// TODO: UML ADD FF
 	@Override
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(Core.getInstance().getPlayer().getRace().getCenter());

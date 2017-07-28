@@ -29,15 +29,12 @@ import javaGOAP.GoapUnit;
  */
 public abstract class BuildActionManager extends GoapUnit {
 
-	// TODO: UML ADD
 	// Desired values:
 	private ArrayList<TechType> desiredTechs;
-	// TODO: UML ADD
 	private LinkedHashMap<UpgradeType, Integer> desiredUpgrades;
 
 	private CommandSender sender;
 	private InformationStorage informationStorage;
-	// TODO: UML ADD
 	private CurrentGameInformation currentGameInformation;
 
 	// Factories and Objects needed for an accurate representation of the
@@ -132,7 +129,6 @@ public abstract class BuildActionManager extends GoapUnit {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all current information from the game itself
 	 * regarding the upgrades and technologies and updating the information in
@@ -204,12 +200,10 @@ public abstract class BuildActionManager extends GoapUnit {
 
 	// ------------------------------ Getter / Setter
 
-	// TODO: UML ADD
 	public ArrayList<TechType> getDesiredTechs() {
 		return desiredTechs;
 	}
 
-	// TODO: UML ADD
 	public LinkedHashMap<UpgradeType, Integer> getDesiredUpgrades() {
 		return desiredUpgrades;
 	}
@@ -222,7 +216,6 @@ public abstract class BuildActionManager extends GoapUnit {
 		return informationStorage;
 	}
 
-	// TODO: UML ADD
 	public CurrentGameInformation getCurrentGameInformation() {
 		return currentGameInformation;
 	}

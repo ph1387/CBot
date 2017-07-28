@@ -1,6 +1,5 @@
 package buildingOrderModule.scoringDirector;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Expensive.java --- A GameState focused on training / building
  * expensive Units.
@@ -12,7 +11,7 @@ class GameStateUnits_Expensive extends GameStateGradualChange {
 
 	// The score of the starting iteration. Initialized with a low value since
 	// the Bot should only produce expensive Units in the mid- / endgame.
-	private static double ScoreStarting = 0.;
+	private static double ScoreStart = 0.;
 	// The rate at which the score will change. The rate is is then applied for
 	// each X frames that passed since the last iteration.
 	private static double Rate = 0.1;
@@ -23,7 +22,7 @@ class GameStateUnits_Expensive extends GameStateGradualChange {
 	private double scoreMax = 0.5;
 
 	public GameStateUnits_Expensive() {
-		super(GameStateUnits_Expensive.ScoreStarting, GameStateUnits_Expensive.Rate,
+		super(GameStateUnits_Expensive.ScoreStart, GameStateUnits_Expensive.Rate,
 				GameStateUnits_Expensive.FrameDiff);
 	}
 

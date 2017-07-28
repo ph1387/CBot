@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateFocused_Refinery.java --- A GameState focused on the construction of
  * refineries since they are required at newly acquired base locations for

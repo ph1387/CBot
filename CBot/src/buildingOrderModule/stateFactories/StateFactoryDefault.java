@@ -36,7 +36,6 @@ public class StateFactoryDefault implements StateFactory {
 		return new ManagerGoalStateDefault();
 	}
 
-	// TODO: UML RETURN TYPE
 	@Override
 	public LinkedHashSet<GoapAction> generateAvailableActions() {
 		return new AvailableActionsDefault();

@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-// TODO: UML ADD
 /**
  * GameState.java --- Class for representing a state in the game with an
  * associated score attached to it. Each state has a score attached to it that
@@ -18,7 +17,7 @@ public abstract class GameState {
 	public static final GameState Expansion_Focused = new GameStateFocused_Expansion();
 	public static final GameState Technology_Focused = new GameStateFocused_Technology();
 	public static final GameState Upgrade_Focused = new GameStateFocused_Upgrade();
-	
+
 	public static final GameState Refinery_Units = new GameStateFocused_Refinery();
 	public static final GameState Building_Units = new GameStateUnits_Building();
 	public static final GameState Worker_Units = new GameStateUnits_Worker();
@@ -37,7 +36,6 @@ public abstract class GameState {
 	// The current score this state holds.
 	private double currentScore = 0.;
 
-	// TODO: UML ADD ~
 	GameState() {
 
 	}
@@ -74,8 +72,7 @@ public abstract class GameState {
 	 * @return a score based on the provided information and the area the
 	 *         GameState is performing in.
 	 */
-	protected abstract double generateScore(ScoringDirector scoringDirector,
-			BuildActionManager manager);
+	protected abstract double generateScore(ScoringDirector scoringDirector, BuildActionManager manager);
 
 	// ------------------------------ Getter / Setter
 

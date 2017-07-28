@@ -8,7 +8,6 @@ import unitControlModule.stateFactories.updater.ActionUpdaterTerran_Vulture;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * StateFactoryTerran_Vulture.java --- A StateFactory used for generating all
  * necessary Objects for the Terran_Vulture.

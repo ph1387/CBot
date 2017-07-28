@@ -6,7 +6,6 @@ import java.util.function.BiConsumer;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateFocused_Upgrade.java --- A GameState focused on upgrading Units.
  * 
@@ -36,7 +35,8 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 
 	@Override
 	protected boolean shouldReset(ScoringDirector scoringDirector, BuildActionManager manager) {
-		int upgradeCountCurrent = this.extractTotalNumberOfUpgrades(manager.getCurrentGameInformation().getCurrentUpgrades());
+		int upgradeCountCurrent = this
+				.extractTotalNumberOfUpgrades(manager.getCurrentGameInformation().getCurrentUpgrades());
 		int upgradeCountMax = this.extractTotalNumberOfUpgrades(manager.getDesiredUpgrades());
 		boolean reset = false;
 
@@ -57,7 +57,6 @@ class GameStateFocused_Upgrade extends GameStateGradualChangeWithReset {
 		return reset;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the total number of Upgrades a HashMap contains.
 	 * This function sums up the stored Integers and returns them.

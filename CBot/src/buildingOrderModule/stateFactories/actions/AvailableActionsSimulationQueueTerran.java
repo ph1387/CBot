@@ -12,7 +12,8 @@ import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitAct
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueStartingTerranRaxFE;
 
 /**
- * AvailableActionsSimulationQueueTerran.java --- Available actions for the Terran race.
+ * AvailableActionsSimulationQueueTerran.java --- Available actions for the
+ * Terran race.
  * 
  * @author P H - 30.04.2017
  *
@@ -21,18 +22,18 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 
 	public AvailableActionsSimulationQueueTerran() {
 		this.add(new ActionQueueStartingTerranRaxFE(1));
-		
+
 		this.add(new ConstrucActionTerran_Barracks(1));
 		this.add(new ConstrucActionTerran_Factory(1));
 		this.add(new ConstructActionCenter(1));
-		
+
 		this.add(new ConstructActionRefinery(1));
 		this.add(new TrainUnitActionWorker(1));
 		this.add(new TrainUnitActionTerran_Marine(1));
 		this.add(new TrainUnitActionTerran_SiegeTank(1));
-		
+
 		this.add(new BuildAddonTerran_MachineShop(1));
-		
+
 		this.add(new ResearchActionTerran_SiegeMode(1));
 	}
 }

@@ -1,6 +1,5 @@
 package buildingOrderModule.simulator;
 
-// TODO: UML ADD
 /**
  * TypeWrapperException.java --- Exception for the {@link TypeWrapper} Class.
  * Used for throwing an Exception when a type is requested (get...) that was not

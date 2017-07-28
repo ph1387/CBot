@@ -13,7 +13,6 @@ import buildingOrderModule.stateFactories.updater.ActionUpdaterSimulationQueue;
 import bwapi.TechType;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD
 /**
  * ScoringDirector.java --- A director that updates the scores of provided
  * ScoringActions based on the current state of the game in comparison with
@@ -43,9 +42,10 @@ public abstract class ScoringDirector {
 
 	// HashMap for all scoring multipliers that are extracted from the
 	// BuildActionManager which includes the order in which the different
-	// technologies and upgrades should be researched / performed. This order is
-	// transformed into a multiplier which can be applied to the scoring
-	// actions to affect the order in which they are chosen by the Simulator.
+	// technologies and upgrades should be researched / performed. This
+	// combination is transformed into a multiplier which can be applied to the
+	// scoring actions to affect the order in which they are chosen by the
+	// Simulator.
 	//
 	// Having a HashMap for this is helpful since the order in which these types
 	// are chosen does not change. Therefore multipliers can be stored (Dynamic

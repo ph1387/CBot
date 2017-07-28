@@ -5,7 +5,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML SUPERCLASS + FUNCTIONS
 /**
  * DestroyUnitAction.java --- An attacking action with which the unit can
  * perform an attack move to the specified target TilePosition.
@@ -29,7 +28,8 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
 	@Override
 	protected boolean isSpecificDone(IGoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).isNearTilePosition((TilePosition) this.target, 2) || !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().isEmpty();
+		return ((PlayerUnit) goapUnit).isNearTilePosition((TilePosition) this.target, 2)
+				|| !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().isEmpty();
 	}
 
 	@Override

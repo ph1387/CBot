@@ -30,11 +30,10 @@ public class InformationStorage {
 
 	// Tracking information
 	private UnitTrackerInformation trackerInfo;
-	
+
 	// Map information
 	private MapInformation mapInfo;
-	
-	// TODO: UML ADD
+
 	// Information regarding the Player and the current state of the game.
 	private CurrentGameInformation currentGameInformation;
 
@@ -48,7 +47,8 @@ public class InformationStorage {
 	}
 
 	public InformationStorage() {
-		this(new ResourceReserver(), new WorkerConfiguration(), new UnitTrackerInformation(), new MapInformation(), new CurrentGameInformation());
+		this(new ResourceReserver(), new WorkerConfiguration(), new UnitTrackerInformation(), new MapInformation(),
+				new CurrentGameInformation());
 	}
 
 	// -------------------- Functions
@@ -115,14 +115,13 @@ public class InformationStorage {
 	public UnitTrackerInformation getTrackerInfo() {
 		return trackerInfo;
 	}
-	
+
 	public MapInformation getMapInfo() {
 		return mapInfo;
 	}
-	
-	// TODO: UML ADD
+
 	public CurrentGameInformation getCurrentGameInformation() {
 		return currentGameInformation;
 	}
-	
+
 }

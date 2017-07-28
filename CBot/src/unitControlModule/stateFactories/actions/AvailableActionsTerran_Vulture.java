@@ -1,6 +1,5 @@
 package unitControlModule.stateFactories.actions;
 
-// TODO: UML ADD
 /**
  * AvailableActionsTerran_Vulture.java --- HashSet containing all Terran_Vulture
  * Actions.
@@ -11,6 +10,6 @@ package unitControlModule.stateFactories.actions;
 public class AvailableActionsTerran_Vulture extends AvailableActionsDefault {
 
 	public AvailableActionsTerran_Vulture() {
-		
+
 	}
 }

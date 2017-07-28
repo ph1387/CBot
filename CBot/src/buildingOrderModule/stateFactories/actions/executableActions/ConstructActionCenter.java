@@ -4,7 +4,6 @@ import buildingOrderModule.scoringDirector.GameState;
 import bwapi.UnitType;
 import core.Core;
 
-//TODO: UML ADD
 /**
  * ConstructActionCenter.java --- Action for constructing a race specific center
  * building.
@@ -20,7 +19,7 @@ public class ConstructActionCenter extends ConstructBaseAction {
 	 */
 	public ConstructActionCenter(Object target) {
 		super(target);
-		
+
 		this.addToGameStates(GameState.Building_Units);
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Expansion_Focused);
@@ -33,10 +32,10 @@ public class ConstructActionCenter extends ConstructBaseAction {
 	protected UnitType defineType() {
 		return Core.getInstance().getPlayer().getRace().getCenter();
 	}
-	
+
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return 1;
 	}
-	
+
 }

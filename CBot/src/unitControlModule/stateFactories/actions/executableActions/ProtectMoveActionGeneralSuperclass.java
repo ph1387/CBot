@@ -85,7 +85,6 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 			
 			this.moveEndPositionPrev = this.moveEndPosition;
 		} else {
-			// TODO: WIP IsMoving FOR ALL RETREAT ACTIONS USABLE!
 			success = ((PlayerUnit) goapUnit).getUnit().isMoving();
 		}
 		

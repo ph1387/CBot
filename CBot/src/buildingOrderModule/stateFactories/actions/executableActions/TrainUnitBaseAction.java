@@ -8,7 +8,6 @@ import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 
-// TODO: UML ADD
 /**
  * TrainUnitBaseAction.java --- Superclass for all Unit training actions.
  * 
@@ -100,34 +99,29 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 
 		return count;
 	}
-	
+
 	// ------------------------------ ActionType
-	
-	// TODO: UML ADD 
+
 	@Override
 	public int defineMineralCost() {
 		return this.defineType().mineralPrice();
 	}
-	
-	// TODO: UML ADD 
+
 	@Override
 	public int defineGasCost() {
 		return this.defineType().gasPrice();
 	}
-	
-	// TODO: UML ADD 
+
 	@Override
 	public int defineCompletionTime() {
 		return this.defineType().buildTime();
 	}
-	
-	// TODO: UML ADD 
+
 	@Override
 	public TypeWrapper defineResultType() {
 		return TypeWrapper.generateFrom(this.defineType());
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return -1;

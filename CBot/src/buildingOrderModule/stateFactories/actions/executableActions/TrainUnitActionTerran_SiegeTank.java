@@ -4,7 +4,6 @@ import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * TrainUnitActionTerran_SiegeTank.java --- Action for training a
  * Terran_SiegeTank.
@@ -20,7 +19,7 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 	 */
 	public TrainUnitActionTerran_SiegeTank(Object target) {
 		super(target);
-		
+
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Expensive_Units);
 		this.addToGameStates(GameState.Gas_Units);
@@ -34,10 +33,9 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 		return UnitType.Terran_Siege_Tank_Tank_Mode;
 	}
 
-	// TODO: UML ADD FF
 	@Override
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(UnitType.Terran_Machine_Shop);
 	}
-	
+
 }

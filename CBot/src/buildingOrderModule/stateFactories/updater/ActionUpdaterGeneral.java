@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.updater;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import javaGOAP.GoapAction;
 
-//TODO: Needed Change: Combine with the UnitControl Updater
 /**
  * ActionUpdaterGeneral.java --- Superclass for updating most AvailableActions.
  * 

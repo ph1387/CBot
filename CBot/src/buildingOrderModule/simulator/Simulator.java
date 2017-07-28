@@ -12,7 +12,6 @@ import java.util.function.BiConsumer;
 
 import bwapi.Pair;
 
-// TODO: UML ADD
 /**
  * Simulator.java --- A Simulator for simulating the future possibilities of
  * provided actions with a collection of available / free (Unit-) Types and busy
@@ -190,7 +189,7 @@ public class Simulator {
 					}
 
 					// Make the instance of the ActionSequence available again.
-					this.sequenceFactory.markNodeAsAvailable(sequence);
+					this.sequenceFactory.markSequenceAsAvailable(sequence);
 				}
 			}
 
@@ -254,11 +253,11 @@ public class Simulator {
 
 		// Extract the ActionTypes in each Node.
 		for (Node currentNode : branch) {
-			// TODO: WIP REMOVE
+			// TODO: DEBUG INFO
 			System.out.println(" Node Score: " + currentNode.getScore());
 
 			if (!currentNode.getChosenActions().isEmpty()) {
-				// TODO: WIP REMOVE
+				// TODO: DEBUG INFO
 				System.out.println(" Sequence start:");
 
 				for (ActionType actionType : currentNode.getChosenActions()) {
@@ -303,7 +302,7 @@ public class Simulator {
 	 *            the available gas in the beginning.
 	 * @param currentFrameTimeStamp
 	 *            the TimeStamp in frames that the root is starting at.
-	 * @param unitsFree
+	 * @param typesFree
 	 *            the currently available Types that can perform actions.
 	 * @param typesWorking
 	 *            the currently unavailable Types that are busy working /
@@ -311,7 +310,7 @@ public class Simulator {
 	 * @return a Node that the Simulator can use as root for a generated tree.
 	 */
 	private Node createRoot(int currentMinerals, int currentGas, int currentFrameTimeStamp,
-			HashMap<TypeWrapper, Integer> unitsFree,
+			HashMap<TypeWrapper, Integer> typesFree,
 			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking) {
 		// Create the root of the tree.
 		Node root = this.nodeFactory.receiveNode();
@@ -319,7 +318,7 @@ public class Simulator {
 		root.setCurrentMinerals(currentMinerals);
 		root.setCurrentGas(currentGas);
 		root.setFrameTimeStamp(currentFrameTimeStamp);
-		root.setTypesFree(unitsFree);
+		root.setTypesFree(typesFree);
 		root.setTypesWorking(typesWorking);
 
 		// Set the occurrence to 0 for all defined ActionTypes.
@@ -493,7 +492,6 @@ public class Simulator {
 		newNode.setScore(parentNode.getScore() - ((stepAmount - iterationCount) * idleScorePenalty));
 
 		// Transfer the occupied and free Types to the new Node.
-		// TODO: WIP ALSO DO A DEEP CLONE
 		newNode.setTypesWorking(new HashMap<>(parentNode.getTypesWorking()));
 		newNode.setTypesFree(new HashMap<>(parentNode.getTypesFree()));
 
@@ -860,7 +858,7 @@ public class Simulator {
 			} else {
 				// Free make the sequence instance available again since the
 				// combination of actions is already present.
-				this.sequenceFactory.markNodeAsAvailable(actionSequence);
+				this.sequenceFactory.markSequenceAsAvailable(actionSequence);
 			}
 		}
 

@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import bwapi.Pair;
 
-// TODO: UML ADD
 /**
  * ActionSequence.java --- A sequence of {@link ActionType}s that can / will be
  * executed. This class contains extra information like the combined mineral and

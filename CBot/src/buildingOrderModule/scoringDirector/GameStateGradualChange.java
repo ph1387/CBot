@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import core.Core;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateGradualChange.java --- A Superclass for GameStates using a gradual
  * system for generating their scores.
@@ -15,7 +14,7 @@ abstract class GameStateGradualChange extends GameState {
 
 	// The time stamp of the last time the rate was applied to the score.
 	private int timeStampLastScoringChange = 0;
-	
+
 	// The score of the previous iteration.
 	protected double scorePrev;
 	// The rate at which the score will change. The rate is is then applied for
@@ -70,9 +69,9 @@ abstract class GameStateGradualChange extends GameState {
 	 *         towards the score or not.
 	 */
 	protected abstract boolean canIterationRateApply(double score);
-	
+
 	// ------------------------------ Getter / Setter
-	
+
 	protected double getRate() {
 		return rate;
 	}

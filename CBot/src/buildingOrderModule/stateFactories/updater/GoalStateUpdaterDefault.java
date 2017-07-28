@@ -21,7 +21,5 @@ public class GoalStateUpdaterDefault extends GoalStateUpdaterGeneral {
 	@Override
 	public void update(BuildActionManager manager) {
 
-		// TODO: WIP ADD UPDATER
-
 	}
 }

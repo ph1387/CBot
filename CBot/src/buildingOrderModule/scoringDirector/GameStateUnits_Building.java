@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-// TODO: UML ADD NOT PUBLIC
 /**
  * GameStateUnits_Building.java --- A GameState focused on buildings.
  * 

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
-// TODO: UML ADD
 /**
  * NodeFactory.java --- A factory that stores and creates instances of
  * {@link Node}s. This is necessary since vast amounts of these containers are
