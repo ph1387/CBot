@@ -23,8 +23,7 @@ import informationStorage.UnitTrackerInformation;
  *
  */
 public class UnitTrackerModule {
-	private static final double SHIELD_MULTIPLIER = 1.2;
-	private static final double HEALTH_MULTIPLIER = 1.1;
+
 	private static final double FLAT_DPS_MULTIPLIER = 100.;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
@@ -433,12 +432,7 @@ public class UnitTrackerModule {
 	 * @return a multiplier for an EnemyUnit which resembles it's strength.
 	 */
 	private double generateEnemyUnitMultiplier(EnemyUnit enemyUnit) {
-		double multiplier = Double.valueOf(enemyUnit.getUnitType().maxHitPoints()) / 2.;
-
-		if (enemyUnit.getUnitType().maxShields() > 0) {
-			multiplier += Double.valueOf(enemyUnit.getUnitType().maxShields()) / 2.;
-		}
-		return multiplier;
+		return 1.;
 	}
 
 	/**
@@ -450,13 +444,18 @@ public class UnitTrackerModule {
 	 * @return a multiplier for an Unit which resembles it's strength.
 	 */
 	private double generateUnitMultiplier(Unit unit) {
-		double multiplier = HEALTH_MULTIPLIER * Double.valueOf(unit.getHitPoints())
-				/ Double.valueOf(unit.getType().maxHitPoints());
+		double multiplier;
 
+		// The Unit has a shield and therefore its value must be considered.
 		if (unit.getType().maxShields() > 0) {
-			multiplier += SHIELD_MULTIPLIER
-					* (Double.valueOf(unit.getShields()) / Double.valueOf(unit.getType().maxShields()));
+			multiplier = (double) (unit.getHitPoints() + unit.getShields())
+					/ (double) (unit.getType().maxHitPoints() + unit.getType().maxShields());
 		}
+		// The Unit has no shield and only its health matters.
+		else {
+			multiplier = (double) (unit.getHitPoints()) / (double) (unit.getType().maxHitPoints());
+		}
+
 		return multiplier;
 	}
 
