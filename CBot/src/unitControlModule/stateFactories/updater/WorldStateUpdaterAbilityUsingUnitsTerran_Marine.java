@@ -12,7 +12,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class WorldStateUpdaterAbilityUsingUnitsTerran_Marine extends WorldStateUpdaterAbilityUsingUnits {
 
-	private static final int EXTRA_GROUND_WEAPON_RANGE = 32;
+	private static final int EXTRA_GROUND_WEAPON_RANGE = 64;
 
 	public WorldStateUpdaterAbilityUsingUnitsTerran_Marine(PlayerUnit playerUnit) {
 		super(playerUnit);

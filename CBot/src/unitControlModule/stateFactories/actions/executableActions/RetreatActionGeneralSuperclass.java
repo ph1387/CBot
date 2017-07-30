@@ -22,9 +22,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
-	// Has to be smaller than MIN_PIXELDISTANCE_TO_UNIT!
-	// -> isDone() condition! v
-	private static final int DIST_TO_GATHERING_POINT = Core.getInstance().getTileSize();
+	// The distance at which isDone() returns true.
+	private static final int DIST_TO_GATHERING_POINT = 2 * Core.getInstance().getTileSize();
 	protected static final int TILE_RADIUS_NEAR = 1;
 
 	protected static HashSet<Position> gatheringPoints = new HashSet<Position>();
@@ -32,7 +31,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	protected Position generatedTempRetreatPosition = null;
 	protected Position retreatPosition = null;
 
-	// Vector related stuff
+	// Vector related stuff.
 	protected static final int ALPHA_MAX = 90;
 	protected double maxDistance = 10 * Core.getInstance().getTileSize();
 	// vecEU -> Vector(enemyUnit, playerUnit)
@@ -103,8 +102,6 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 			// gets set when performAction() gets called.
 			this.retreatPosition = this.generatedTempRetreatPosition;
 			RetreatActionGeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
-
-			success &= this.retreatPosition != null && ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
 		} else if (this.actionChangeTrigger && this.generatedTempRetreatPosition == null) {
 			success = false;
 		}
@@ -115,6 +112,11 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(),
 					this.retreatPosition, new Color(255, 255, 0));
 			Core.getInstance().getGame().drawCircleMap(this.retreatPosition.getPoint(), 5, new Color(0, 255, 0), true);
+		}
+
+		// Prevent errors by checking the retreat Position first.
+		if (this.retreatPosition != null) {
+			success &= this.retreatPosition != null && ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
 		}
 
 		return this.retreatPosition != null && success;

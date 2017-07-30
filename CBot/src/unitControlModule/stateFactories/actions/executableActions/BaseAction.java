@@ -27,7 +27,7 @@ public abstract class BaseAction extends GoapAction {
 	private static final int EXPAND_MULTIPLIER_MAX = 5;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 	private static final int DEFAULT_SEARCH_STEP_DISTANCE = 200;
-	private static final int DEFAULT_MIN_DISTANCE = 128;
+	private static final int DEFAULT_MIN_DISTANCE = 256;
 
 	protected static HashMap<PlayerUnit, BaseAction> currentlyExecutingActions = new HashMap<>();
 

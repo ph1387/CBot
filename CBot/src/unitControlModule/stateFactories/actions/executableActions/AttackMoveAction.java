@@ -28,19 +28,15 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
 	@Override
 	protected boolean isSpecificDone(IGoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).isNearTilePosition((TilePosition) this.target, 2)
+		// Either the Unit is near the target or an enemy is in weapon range and
+		// therefore can be attacked.
+		return ((PlayerUnit) goapUnit).isNearTilePosition((TilePosition) this.target, null)
 				|| !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().isEmpty();
 	}
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
-		boolean success = true;
-
-		if (this.actionChangeTrigger) {
-			success = ((PlayerUnit) goapUnit).getUnit().attack(((TilePosition) this.target).toPosition());
-		}
-
-		return success;
+		return ((PlayerUnit) goapUnit).getUnit().attack(((TilePosition) this.target).toPosition());
 	}
 
 	@Override
