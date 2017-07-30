@@ -267,7 +267,17 @@ public class UnitTrackerModule {
 		// Since units get removed, start at the end of the list (-> left
 		// shifting)
 		for (int i = unitList.size() - 1; i >= 0; i--) {
-			if (unitList.get(i).getTimestampLastSeen() + MAX_TIME_UNTIL_OUTDATED <= game.elapsedTime()) {
+			EnemyUnit enemyUnit = unitList.get(i);
+			UnitType enemyUnitType = enemyUnit.getUnitType();
+			// All buildings that have a weapon (Air OR ground) must NOT be
+			// removed since they influence the confidence of their surrounding
+			// Units.
+			boolean isNoAttackingBuilding = !(enemyUnitType.isBuilding()
+					&& ((enemyUnitType.groundWeapon() != null && enemyUnitType.groundWeapon().damageAmount() > 0)
+							|| (enemyUnitType.airWeapon() != null && enemyUnitType.airWeapon().damageAmount() > 0)));
+
+			if (isNoAttackingBuilding
+					&& enemyUnit.getTimestampLastSeen() + MAX_TIME_UNTIL_OUTDATED <= game.elapsedTime()) {
 				unitList.remove(i);
 			}
 		}
@@ -340,17 +350,25 @@ public class UnitTrackerModule {
 
 		// Buildings
 		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
-			if (enemyBuilding.getUnitType().airWeapon() != null
-					&& enemyBuilding.getUnitType().airWeapon().damageAmount() > 0
-					&& enemyBuilding.getUnit().isCompleted()) {
-				if (enemyBuilding.getUnit() != null) {
-					this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-							this.generateUnitMultiplier(enemyBuilding.getUnit()),
-							enemyBuilding.getUnitType().airWeapon());
-				} else {
-					this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-							this.generateEnemyUnitMultiplier(enemyBuilding), enemyBuilding.getUnitType().airWeapon());
+			try {
+				// Buildings must provide a air weapon.
+				if (enemyBuilding.getUnitType().airWeapon() != null
+						&& enemyBuilding.getUnitType().airWeapon().damageAmount() > 0) {
+					if (enemyBuilding.getUnit().isCompleted() && enemyBuilding.getUnit() != null) {
+						this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+								this.generateUnitMultiplier(enemyBuilding.getUnit()),
+								enemyBuilding.getUnitType().airWeapon());
+					}
+					// Since the building is currently not visible, but has a
+					// weapon, keep adding the default enemy Unit multiplier.
+					else {
+						this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+								this.generateEnemyUnitMultiplier(enemyBuilding),
+								enemyBuilding.getUnitType().airWeapon());
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return valueTiles;
@@ -382,18 +400,25 @@ public class UnitTrackerModule {
 
 		// Buildings
 		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
-			if (enemyBuilding.getUnitType().groundWeapon() != null
-					&& enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0
-					&& enemyBuilding.getUnit().isCompleted()) {
-				if (enemyBuilding.getUnit() != null) {
-					this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-							this.generateUnitMultiplier(enemyBuilding.getUnit()),
-							enemyBuilding.getUnitType().groundWeapon());
-				} else {
-					this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-							this.generateEnemyUnitMultiplier(enemyBuilding),
-							enemyBuilding.getUnitType().groundWeapon());
+			try {
+				// Buildings must provide a ground weapon.
+				if (enemyBuilding.getUnitType().groundWeapon() != null
+						&& enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0) {
+					if (enemyBuilding.getUnit().isCompleted() && enemyBuilding.getUnit() != null) {
+						this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+								this.generateUnitMultiplier(enemyBuilding.getUnit()),
+								enemyBuilding.getUnitType().groundWeapon());
+					}
+					// Since the building is currently not visible, but has a
+					// weapon, keep adding the default enemy Unit multiplier.
+					else {
+						this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
+								this.generateEnemyUnitMultiplier(enemyBuilding),
+								enemyBuilding.getUnitType().groundWeapon());
+					}
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return valueTiles;
