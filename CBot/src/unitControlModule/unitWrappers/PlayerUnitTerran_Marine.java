@@ -2,6 +2,7 @@ package unitControlModule.unitWrappers;
 
 import bwapi.Pair;
 import bwapi.Unit;
+import bwapi.UnitType;
 import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactoryTerran_Marine;
 import unitControlModule.stateFactories.StateFactory;
@@ -13,6 +14,10 @@ import unitControlModule.stateFactories.StateFactory;
  *
  */
 public class PlayerUnitTerran_Marine extends PlayerUnit {
+
+	// The value that will be added towards the medic multiplier for each medic
+	// found.
+	private double additionalMedicMultiplierValue = 0.5;
 
 	public PlayerUnitTerran_Marine(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
@@ -52,6 +57,9 @@ public class PlayerUnitTerran_Marine extends PlayerUnit {
 		double lifeConfidenceMultiplicator = (double) (this.unit.getHitPoints() + lifeAddtionStimEffect)
 				/ (double) (this.unit.getType().maxHitPoints());
 
+		// Generate the multiplier based on each medic in the area.
+		double medicMultiplier = this.generateMedicMultiplier();
+
 		// Has to be set for following equation
 		if (enemyStrengthTotal == 0.) {
 			enemyStrengthTotal = 1.;
@@ -65,13 +73,31 @@ public class PlayerUnitTerran_Marine extends PlayerUnit {
 		if (this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
 				+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
 						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
-			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator
+			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator * medicMultiplier
 					* this.confidenceDefault;
 		}
 		// -> PlayerUnit out of range of the enemy Unit
 		else {
 			this.confidence = (playerStrengthTotal / enemyStrengthTotal);
 		}
+	}
+
+	/**
+	 * Function for generating a multiplier based on Terran_Medic Units found in
+	 * an area around the Unit.
+	 * 
+	 * @return a multiplier for each medic in the area around the Unit.
+	 */
+	private double generateMedicMultiplier() {
+		double medicMultiplier = 1.;
+
+		for (Unit unit : this.getAllPlayerUnitsInConfidenceRange()) {
+			if (unit.getType() == UnitType.Terran_Medic) {
+				medicMultiplier += this.additionalMedicMultiplierValue;
+			}
+		}
+
+		return medicMultiplier;
 	}
 
 }
