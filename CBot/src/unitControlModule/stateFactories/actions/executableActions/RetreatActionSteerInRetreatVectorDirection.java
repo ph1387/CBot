@@ -29,7 +29,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 05.06.2017
  *
  */
-public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGeneralSuperclass implements SteeringVectorGenerator {
+public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGeneralSuperclass
+		implements SteeringVectorGenerator {
 
 	private static final double TOTAL_RETREAT_DISTANCE = 96;
 	private static final int TURN_RADIUS = 10;
@@ -56,48 +57,38 @@ public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGen
 	// -------------------- Functions
 
 	@Override
-	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
-		boolean precondtionsMet = false;
+	protected Position generateTempRetreatPosition(IGoapUnit goapUnit) {
+		Chokepoint nearestChoke = BWTA.getNearestChokepoint(((PlayerUnit) goapUnit).getUnit().getPosition());
+		Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(
+				((PlayerUnit) goapUnit).getUnit().getPosition());
+		Polygon currentPolygon = matchingRegionPolygonPair.second;
+		Vector generalizedTargetVector = this.generateGeneralizedRetreatVector(goapUnit, matchingRegionPolygonPair);
+		Position generatedPosition = null;
 
-		// Instantiate the different SteeringOperations that are being used.
+		// Use the generalized Vector to find a valid retreat Position
+		// using the previously generalized Vector as main steering
+		// direction.
+		Vector possibleRetreatVector = SteeringFactory.transformSteeringVector(goapUnit, generalizedTargetVector,
+				currentPolygon, nearestChoke, TOTAL_RETREAT_DISTANCE, TURN_RADIUS);
+
+		// Use the Vector's end-Position as retreat-Position.
+		if (possibleRetreatVector != null) {
+			generatedPosition = new Position(possibleRetreatVector.getX() + (int) (possibleRetreatVector.getDirX()),
+					possibleRetreatVector.getY() + (int) (possibleRetreatVector.getDirY()));
+		}
+
+		return generatedPosition;
+	}
+
+	@Override
+	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
+		// Instantiate the different SteeringOperations that are being used
+		// (Need a GoapUnit!).
 		if (this.steeringChokePoints == null) {
 			this.instantiateSteeringOperations(goapUnit);
 		}
 
-		try {
-			// Position missing -> Action not performed yet.
-			if (this.retreatPosition == null) {
-				Chokepoint nearestChoke = BWTA.getNearestChokepoint(((PlayerUnit) goapUnit).getUnit().getPosition());
-				Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(
-						((PlayerUnit) goapUnit).getUnit().getPosition());
-				Polygon currentPolygon = matchingRegionPolygonPair.second;
-				Vector generalizedTargetVector = this.generateGeneralizedRetreatVector(goapUnit,
-						matchingRegionPolygonPair);
-
-				// Use the generalized Vector to find a valid retreat Position
-				// using the previously generalized Vector as main steering
-				// direction.
-				Vector possibleRetreatVector = SteeringFactory.transformSteeringVector(goapUnit,
-						generalizedTargetVector, currentPolygon, nearestChoke, TOTAL_RETREAT_DISTANCE, TURN_RADIUS);
-
-				// Use the Vector's end-Position as retreat-Position.
-				if (possibleRetreatVector != null) {
-					this.generatedTempRetreatPosition = new Position(
-							possibleRetreatVector.getX() + (int) (possibleRetreatVector.getDirX()),
-							possibleRetreatVector.getY() + (int) (possibleRetreatVector.getDirY()));
-
-					precondtionsMet = true;
-				}
-			}
-			// Position known -> Action performed once.
-			else {
-				precondtionsMet = ((PlayerUnit) goapUnit).getUnit().hasPath(this.retreatPosition);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return precondtionsMet;
+		return true;
 	}
 
 	/**

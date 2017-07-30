@@ -72,6 +72,15 @@ public abstract class PlayerUnit extends GoapUnit {
 	public ConfidenceRangeStates currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
 	public ConfidenceState currentConfidenceState = ConfidenceState.UNDER_THRESHOLD;
 
+	/**
+	 * Flag for enabling / disabling hollow updates. If this flag is set,
+	 * calling the update function has no effect. This can be used if the
+	 * GoapAgent's update function has to be called twice for the underlying FSM
+	 * to work properly and not wanting to create unnecessary CPU overhead by
+	 * doubling the amount of performed calculations.
+	 */
+	private boolean hollowUpdatesEnabled = false;
+
 	// Listeners for removing the corresponding Agent from the collection of
 	// active Agents.
 	private List<Object> agentRemoveListeners = new ArrayList<Object>();
@@ -120,32 +129,35 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	@Override
 	public void update() {
-		// FSM worldState changes in one cycle.
-		if (this.currentState == UnitStates.ENEMY_MISSING
-				&& (this.informationStorage.getTrackerInfo().getEnemyUnits().size() != 0
-						|| this.informationStorage.getTrackerInfo().getEnemyBuildings().size() != 0)) {
-			this.resetActions();
-			this.currentState = UnitStates.ENEMY_KNOWN;
-		}
-		if (this.currentState == UnitStates.ENEMY_KNOWN) {
-			if (this.informationStorage.getTrackerInfo().getEnemyUnits().size() == 0
-					&& this.informationStorage.getTrackerInfo().getEnemyBuildings().size() == 0) {
+		// Only update the PlayerUnit if the flag is not set.
+		if (!this.hollowUpdatesEnabled) {
+			// FSM worldState changes in one cycle.
+			if (this.currentState == UnitStates.ENEMY_MISSING
+					&& (this.informationStorage.getTrackerInfo().getEnemyUnits().size() != 0
+							|| this.informationStorage.getTrackerInfo().getEnemyBuildings().size() != 0)) {
 				this.resetActions();
-				this.currentState = UnitStates.ENEMY_MISSING;
-			} else {
-				this.actOnUnitsKnown();
+				this.currentState = UnitStates.ENEMY_KNOWN;
 			}
-		}
+			if (this.currentState == UnitStates.ENEMY_KNOWN) {
+				if (this.informationStorage.getTrackerInfo().getEnemyUnits().size() == 0
+						&& this.informationStorage.getTrackerInfo().getEnemyBuildings().size() == 0) {
+					this.resetActions();
+					this.currentState = UnitStates.ENEMY_MISSING;
+				} else {
+					this.actOnUnitsKnown();
+				}
+			}
 
-		try {
-			this.worldStateUpdater.update(this);
-			this.goalStateUpdater.update(this);
-			this.actionUpdater.update(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			try {
+				this.worldStateUpdater.update(this);
+				this.goalStateUpdater.update(this);
+				this.actionUpdater.update(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
-		this.updateBaseLocationsSearched();
+			this.updateBaseLocationsSearched();
+		}
 	}
 
 	/**
@@ -478,6 +490,14 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public InformationStorage getInformationStorage() {
 		return informationStorage;
+	}
+
+	public boolean isHollowUpdatesEnabled() {
+		return hollowUpdatesEnabled;
+	}
+
+	public void setHollowUpdatesEnabled(boolean hollowUpdatesDisabled) {
+		this.hollowUpdatesEnabled = hollowUpdatesDisabled;
 	}
 
 	// ------------------------------ Events

@@ -55,73 +55,32 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		if (((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT)
-				|| this.target == null) {
+		// Either no target is present or the retreat Position was set and the
+		// Unit is near it => Remove the Position from the Collection of retreat
+		// Positions.
+		if (this.target == null || (this.retreatPosition != null
+				&& ((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT))) {
 			RetreatActionGeneralSuperclass.gatheringPoints.remove(this.retreatPosition);
 		}
 
-		return !RetreatActionGeneralSuperclass.gatheringPoints.contains(this.retreatPosition);
+		// A retreat Position was set and is now no longer inside the Collection
+		// of gathering Points => Got removed.
+		return this.retreatPosition != null
+				&& !RetreatActionGeneralSuperclass.gatheringPoints.contains(this.retreatPosition);
 	}
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
 
-		// Only override the current retreatPosition if the action trigger is
-		// set and move towards it. This enables the ability of storing the
-		// Positions inside a HashSet and moving other Units towards them
-		// instead of constantly updating them, which would result in a Unit
-		// only following them in one general direction. Once a Position is set,
-		// stick with it.
-		if (this.actionChangeTrigger && this.generatedTempRetreatPosition != null) {
-			this.retreatPosition = this.generatedTempRetreatPosition;
-			RetreatActionGeneralSuperclass.gatheringPoints.add(this.retreatPosition);
-			success &= this.retreatPosition != null && ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
-		} else if (this.actionChangeTrigger && this.generatedTempRetreatPosition == null) {
-			success = false;
-		}
-
-		if (this.retreatPosition != null) {
-
-			// TODO: DEBUG INFO
-			// // Position to which the Unit retreats to
-			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(),
-					this.retreatPosition, new Color(255, 255, 0));
-			Core.getInstance().getGame().drawCircleMap(this.retreatPosition.getPoint(), 5, new Color(0, 255, 0), true);
-		}
-		return this.retreatPosition != null && success;
-	}
-
-	@Override
-	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
-		float returnValue = 0.f;
-
-		try {
-			returnValue = ((PlayerUnit) goapUnit).getUnit().getDistance(this.generatedTempRetreatPosition);
-		} catch (Exception e) {
-			returnValue = Float.MAX_VALUE;
-		}
-
-		return returnValue;
-	}
-
-	@Override
-	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		boolean success = false;
-
-		if (this.target != null && ((PlayerUnit) goapUnit).getClosestEnemyUnitInConfidenceRange() != null) {
+		// Generate a temporary retreat Position when no real retreat Position
+		// is defined. This means that either this is the first iteration or the
+		// last iteration returned null as temporary retreat Position. Therefore
+		// another one can be created.
+		if (this.retreatPosition == null) {
 			this.updateVectors(goapUnit);
 
-			success = this.checkProceduralSpecificPrecondition(goapUnit);
-
-			// The first ever found Position has to be added as temp retreat
-			// Position. This ensures, that isDone() returns false and the
-			// action gets actually executed. The actual retreatPosition gets
-			// set when performAction() gets called.
-			if (this.retreatPosition == null) {
-				this.retreatPosition = this.generatedTempRetreatPosition;
-				RetreatActionGeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
-			}
+			this.generatedTempRetreatPosition = this.generateTempRetreatPosition(goapUnit);
 
 			// TODO: DEBUG INFO
 			// Targeted retreat-Position (Vector Unit -> TargetPosition)
@@ -130,7 +89,56 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 					vecUTP.getY() + (int) (vecUTP.getDirY()));
 			Core.getInstance().getGame().drawLineMap(unit.getPosition(), targetEndPosition, new Color(255, 255, 255));
 		}
-		return success;
+
+		// Only override the current retreatPosition if the action trigger is
+		// set and move towards it. This enables the ability of storing the
+		// Positions inside a HashSet and moving other Units towards them
+		// instead of constantly updating them, which would result in a Unit
+		// only following them in one general direction. Once a Position is set,
+		// stick with it.
+		if (this.actionChangeTrigger && this.generatedTempRetreatPosition != null) {
+			// The first ever found Position has to be added as temporary
+			// retreat Position. This ensures, that isDone() returns false and
+			// the action gets actually executed. The actual retreatPosition
+			// gets set when performAction() gets called.
+			this.retreatPosition = this.generatedTempRetreatPosition;
+			RetreatActionGeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
+
+			success &= this.retreatPosition != null && ((PlayerUnit) goapUnit).getUnit().move(this.retreatPosition);
+		} else if (this.actionChangeTrigger && this.generatedTempRetreatPosition == null) {
+			success = false;
+		}
+
+		// TODO: DEBUG INFO
+		// Position to which the Unit retreats to
+		if (this.retreatPosition != null) {
+			Core.getInstance().getGame().drawLineMap(((PlayerUnit) goapUnit).getUnit().getPosition(),
+					this.retreatPosition, new Color(255, 255, 0));
+			Core.getInstance().getGame().drawCircleMap(this.retreatPosition.getPoint(), 5, new Color(0, 255, 0), true);
+		}
+
+		return this.retreatPosition != null && success;
+	}
+
+	/**
+	 * Function used for generating a Position to which the Unit can retreat to.
+	 * Is called when a new temporary retreat Position is needed.
+	 * 
+	 * @param goapUnit
+	 *            the Unit that will perform the Action.
+	 * @return a Position to which the performing Unit can retreat to.
+	 */
+	protected abstract Position generateTempRetreatPosition(IGoapUnit goapUnit);
+
+	@Override
+	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
+		return 0.f;
+	}
+
+	@Override
+	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
+		return this.target != null && this.checkProceduralSpecificPrecondition(goapUnit)
+				&& ((PlayerUnit) goapUnit).getClosestEnemyUnitInConfidenceRange() != null;
 	}
 
 	/**

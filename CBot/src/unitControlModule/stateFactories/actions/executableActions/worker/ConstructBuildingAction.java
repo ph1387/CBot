@@ -27,7 +27,7 @@ public class ConstructBuildingAction extends BaseAction {
 	// build the given building or idle until the isDone function kicks in and
 	// the building gets queued again.
 	private static final int MIN_TRIES = 20;
-	
+
 	private TilePosition tempBuildingLocationPrev;
 	private TilePosition tempBuildingLocation;
 	private HashSet<TilePosition> tempNeededTilePositions = new HashSet<>();
@@ -56,8 +56,91 @@ public class ConstructBuildingAction extends BaseAction {
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
+		UnitType building = ((ConstructionJob) this.target).getBuilding();
 		boolean success = true;
 
+		// TODO: Possible Change: Split in own functions.
+		// Find the building that is being constructed.
+		if (this.constructingBuilding == null) {
+			this.constructingBuilding = this.findConstructingBuilding(goapUnit);
+
+			if (this.constructingBuilding != null) {
+				// Mark stuff in the worker instance
+				((PlayerUnitWorker) goapUnit).getInformationStorage().getWorkerConfig().getBuildingsBeingCreated()
+						.remove(this.constructingBuilding);
+				((PlayerUnitWorker) goapUnit).setConstructingFlag(this.constructingBuilding);
+
+				// Remove all previously contended spots that might be left in
+				// the HashMap to prevent any miss matches in it.
+				((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders()
+						.removeAll(this.tempNeededTilePositions);
+
+				// Set values in this instance and contend the construction
+				// spot.
+				this.tempBuildingLocation = this.constructingBuilding.getTilePosition();
+				this.tempNeededTilePositions = this.buildLocationFactory.generateNeededTilePositions(building,
+						this.constructingBuilding.getTilePosition());
+				((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders()
+						.addAll(this.tempNeededTilePositions);
+				((ConstructionJob) this.target).setTilePosition(this.constructingBuilding.getTilePosition());
+			}
+		}
+
+		// TODO: Possible Change: Split in own functions.
+		// Create a tempBuildingLocation if none is assigned.
+		if (this.tempBuildingLocation == null) {
+			TilePosition targetTilePosition = ((PlayerUnitWorker) goapUnit).getUnit().getTilePosition();
+
+			// Force the generation of a valid build location.
+			while (this.tempBuildingLocation == null) {
+				this.tempBuildingLocation = this.buildLocationFactory.generateBuildLocation(building,
+						targetTilePosition, goapUnit);
+				((ConstructionJob) this.target).setTilePosition(this.tempBuildingLocation);
+			}
+
+			// Reserve the newly found TilePositions.
+			this.tempNeededTilePositions = this.buildLocationFactory.generateNeededTilePositions(building,
+					this.tempBuildingLocation);
+			((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders()
+					.addAll(this.tempNeededTilePositions);
+		}
+		// Only validate the build location if the constructed building was not
+		// yet found!
+		// -> Ignore any refineries, since they require special treatment and
+		// can only be placed in certain spots.
+		else if (this.constructingBuilding == null && ((ConstructionJob) this.target).getBuilding() != Core
+				.getInstance().getPlayer().getRace().getRefinery()) {
+			boolean invalid = true;
+
+			// TODO: Possible Change: Add maximum counter.
+			// Try generating a new TilePosition until a valid one is found.
+			while (invalid) {
+				invalid = this.buildLocationFactory.arePlayerUnitsBlocking(this.tempNeededTilePositions, goapUnit);
+
+				if (invalid) {
+					// Mark the action to be performed.
+					this.tempBuildingLocationPrev = this.tempBuildingLocation;
+
+					// Remove old contended entries.
+					((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders()
+							.removeAll(this.tempNeededTilePositions);
+
+					// Find a new build location.
+					this.tempBuildingLocation = this.buildLocationFactory.generateBuildLocation(building,
+							this.tempBuildingLocation, goapUnit);
+					((ConstructionJob) this.target).setTilePosition(this.tempBuildingLocation);
+
+					// Reserve the newly found TilePositions
+					this.tempNeededTilePositions = this.buildLocationFactory.generateNeededTilePositions(building,
+							this.tempBuildingLocation);
+					((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders()
+							.addAll(this.tempNeededTilePositions);
+				}
+			}
+		}
+
+		// Only perform a construction action if the temporary build location
+		// changed.
 		if (this.tempBuildingLocationPrev != this.tempBuildingLocation) {
 			this.tempBuildingLocationPrev = this.tempBuildingLocation;
 			this.triedConstructingOnce = true;
@@ -97,78 +180,7 @@ public class ConstructBuildingAction extends BaseAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		if (this.target != null) {
-			UnitType building = ((ConstructionJob) this.target).getBuilding();
-			boolean success = true;
-
-			// TODO: Possible Change: Split in own functions.
-			// Find the building that is being constructed.
-			if (this.constructingBuilding == null) {
-				this.constructingBuilding = this.findConstructingBuilding(goapUnit);
-
-				if (this.constructingBuilding != null) {
-					// Mark stuff in the worker instance
-					((PlayerUnitWorker) goapUnit).getInformationStorage().getWorkerConfig().getBuildingsBeingCreated().remove(this.constructingBuilding);
-					((PlayerUnitWorker) goapUnit).setConstructingFlag(this.constructingBuilding);
-					
-					// Remove all previously contended spots that might be left in the HashMap to prevent any miss matches in it. 
-					((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders().removeAll(this.tempNeededTilePositions);
-					
-					// Set values in this instance and contend the construction spot.
-					this.tempBuildingLocation = this.constructingBuilding.getTilePosition();
-					this.tempNeededTilePositions = this.buildLocationFactory.generateNeededTilePositions(building, this.constructingBuilding.getTilePosition());
-					((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders().addAll(this.tempNeededTilePositions);
-					((ConstructionJob) this.target).setTilePosition(this.constructingBuilding.getTilePosition());
-				}
-			}
-			
-			// TODO: Possible Change: Split in own functions.
-			// Create a tempBuildingLocation if none is assigned.
-			if (this.tempBuildingLocation == null) {
-				TilePosition targetTilePosition = ((PlayerUnitWorker) goapUnit).getUnit().getTilePosition();
-				
-				// Force the generation of a valid build location
-				while(this.tempBuildingLocation == null) {
-					this.tempBuildingLocation = this.buildLocationFactory.generateBuildLocation(building, targetTilePosition, goapUnit);
-					((ConstructionJob) this.target).setTilePosition(this.tempBuildingLocation);
-				}
-
-				// Reserve the newly found TilePositions
-				this.tempNeededTilePositions = this.buildLocationFactory.generateNeededTilePositions(building, this.tempBuildingLocation);
-				((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders().addAll(this.tempNeededTilePositions);
-			} 
-			// Only validate the build location if the constructed building was not yet found!
-			// -> Ignore any refineries, since they require special treatment and can only be placed in certain spots.
-			else if(this.constructingBuilding == null && ((ConstructionJob) this.target).getBuilding() != Core.getInstance().getPlayer().getRace().getRefinery()) {
-				boolean invalid = true;
-
-				// TODO: Possible Change: Add maximum counter
-				// Try finding a new TilePosition until a valid one is found
-				while (invalid) {
-					invalid = this.buildLocationFactory.arePlayerUnitsBlocking(this.tempNeededTilePositions, goapUnit);
-
-					if (invalid) {
-						// Mark the action to be performed.
-						this.tempBuildingLocationPrev = this.tempBuildingLocation;
-						
-						// Remove old contended entries.
-						((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders().removeAll(this.tempNeededTilePositions);
-						
-						// Find a new build location.
-						this.tempBuildingLocation = this.buildLocationFactory.generateBuildLocation(building, this.tempBuildingLocation, goapUnit);
-						((ConstructionJob) this.target).setTilePosition(this.tempBuildingLocation);
-						
-						// Reserve the newly found TilePositions
-						this.tempNeededTilePositions = this.buildLocationFactory.generateNeededTilePositions(building, this.tempBuildingLocation);
-						((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders().addAll(this.tempNeededTilePositions);
-					}
-				}
-			}
-
-			return success && this.tempBuildingLocation != null;
-		} else {
-			return false; // Target = null
-		}
+		return this.target != null;
 	}
 
 	/**

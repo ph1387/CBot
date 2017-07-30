@@ -56,8 +56,16 @@ public class UnitControlModule implements RemoveAgentEvent {
 		// Update a single GoapAgent from the currently stored ones and place
 		// him at the end of the Queue.
 		GoapAgent currentAgent = this.agentUpdateQueueUnits.poll();
+
 		if (currentAgent != null) {
 			currentAgent.update();
+
+			// Do a hollow update for the underlying FSM (Might be having a
+			// Idle-State on top).
+			((PlayerUnit) currentAgent.getAssignedGoapUnit()).setHollowUpdatesEnabled(true);
+			currentAgent.update();
+			((PlayerUnit) currentAgent.getAssignedGoapUnit()).setHollowUpdatesEnabled(false);
+
 			this.agentUpdateQueueUnits.add(currentAgent);
 		}
 

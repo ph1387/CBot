@@ -19,6 +19,8 @@ import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
  */
 public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
+	private boolean initializationMissing = true;
+
 	private RetreatActionSteerInBioUnitDirectionTerran_Medic retreatActionSteerInBioUnitDirectionTerranMedic;
 	private ProtectMoveActionSteerTowardsClosestDamagedUnit protectMoveActionSteerTowardsClosesDamagedUnit;
 	private AbilityActionTerranMedic_Heal abilityActionTerranMedicHeal;
@@ -33,6 +35,12 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 	public void update(PlayerUnit playerUnit) {
 		HashSet<Unit> possibleUnits = new HashSet<>();
 		Unit closestUnit = null;
+
+		// Get the references to all used actions.
+		if (this.initializationMissing) {
+			this.init();
+			this.initializationMissing = false;
+		}
 
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
 			Unit closesEnemytUnit = this.playerUnit.getClosestEnemyUnitInConfidenceRange();

@@ -46,7 +46,7 @@ public class BuildingOrderModule {
 			// training Queues.
 			if (this.informationStorage.getConcurrentQueuedElementCount() < this.informationStorage
 					.getMaxConcurrentElements()) {
-				this.buildingAgent.update();
+//				this.buildingAgent.update();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
