@@ -17,9 +17,9 @@ public abstract class AbilityActionTechTargetNone extends AbilityActionGeneralSu
 	 *            type: Null
 	 */
 	public AbilityActionTechTargetNone(Object target) {
-		// Abilities with no target require the Unit to assign itself as a target.
-		// -> CAN be ignored but cause a lot of error messages in the console!
-		 super(target);
+		// Abilities with no target require the Unit to assign itself as a
+		// target.
+		super(target);
 	}
 
 	// -------------------- Functions

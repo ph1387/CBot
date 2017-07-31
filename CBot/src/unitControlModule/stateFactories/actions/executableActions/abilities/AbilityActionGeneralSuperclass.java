@@ -22,7 +22,7 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 	 * exactly used is determined by the ability itself.
 	 * 
 	 * @param target
-	 *            type: Null, Unit, Position
+	 *            type: Unit, Position, etc.
 	 */
 	public AbilityActionGeneralSuperclass(Object target) {
 		super(target);
@@ -58,7 +58,7 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		return Core.getInstance().getPlayer().hasResearched(this.ability)
+		return this.target != null && Core.getInstance().getPlayer().hasResearched(this.ability)
 				&& this.checkProceduralSpecificPrecondition(goapUnit);
 	}
 
