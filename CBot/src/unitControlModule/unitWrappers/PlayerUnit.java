@@ -70,7 +70,7 @@ public abstract class PlayerUnit extends GoapUnit {
 
 	public UnitStates currentState = UnitStates.ENEMY_MISSING;
 	public ConfidenceRangeStates currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
-	public ConfidenceState currentConfidenceState = ConfidenceState.UNDER_THRESHOLD;
+	public ConfidenceState currentConfidenceState = ConfidenceState.ABOVE_THRESHOLD;
 
 	/**
 	 * Flag for enabling / disabling hollow updates. If this flag is set,
@@ -167,13 +167,26 @@ public abstract class PlayerUnit extends GoapUnit {
 	protected void actOnUnitsKnown() {
 		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
 
-		// Only update the following information if an enemy is in the
-		// confidence range.
-		// -> FPS boost!
-		if (this.closestEnemyUnitInConfidenceRange != null) {
+		// Always update the confidence and the states and not only when an
+		// enemy is in confidence range since this would cause the Unit to
+		// simply stay at one Position and not move. This effect is due to the
+		// confidence not being updated and therefore the threshold not changing
+		// which causes certain actions to not finish (IsDone() i.e. returns
+		// false when it should not).
+		try {
 			this.updateConfidence();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
 			this.updateConfidenceState();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
 			this.updateCurrentRangeState();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

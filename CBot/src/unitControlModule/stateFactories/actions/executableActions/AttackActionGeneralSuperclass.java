@@ -30,7 +30,7 @@ public abstract class AttackActionGeneralSuperclass extends BaseAction {
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
 		boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
-
+		
 		return this.target == null || isConfidenceLow || this.isSpecificDone(goapUnit);
 	}
 

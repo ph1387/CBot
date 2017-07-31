@@ -63,7 +63,7 @@ public abstract class ActionUpdaterGeneral implements Updater {
 		GoapAction actionMatch = null;
 
 		for (GoapAction action : this.playerUnit.getAvailableActions()) {
-			if (instanceClass.isInstance(action)) {
+			if (instanceClass.isInstance(action) && instanceClass.equals(action.getClass())) {
 				actionMatch = action;
 
 				break;
