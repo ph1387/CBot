@@ -29,13 +29,18 @@ public class UnitControlModule implements RemoveAgentEvent {
 	// and removing elements from multiple Collections but functional.
 	private HashSet<GoapAgent> agents = new HashSet<GoapAgent>();
 	private HashSet<PlayerBuilding> buildings = new HashSet<PlayerBuilding>();
-	private Queue<GoapAgent> agentUpdateQueueUnits = new LinkedList<GoapAgent>();
+	private Queue<GoapAgent> agentUpdateQueueCombatUnits = new LinkedList<GoapAgent>();
+	private Queue<GoapAgent> agentUpdateQueueWorkers = new LinkedList<GoapAgent>();
 	private Queue<PlayerBuilding> agentUpdateQueueBuildings = new LinkedList<PlayerBuilding>();
 
 	private Queue<Unit> unitsToAdd = new LinkedList<Unit>();
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 
 	private InformationStorage informationStorage;
+
+	// The percentage of combat Units that are updated in one single iteration.
+	// Higher values equal a stronger impact on the CPU.
+	private double combatUnitUpdatePercentage = 0.2;
 
 	public UnitControlModule(InformationStorage informationStorage) {
 		this.informationStorage = informationStorage;
@@ -53,33 +58,10 @@ public class UnitControlModule implements RemoveAgentEvent {
 		this.validateStoredBuildingAgents();
 		this.removeTrackedUnits();
 
-		// Update a single GoapAgent from the currently stored ones and place
-		// him at the end of the Queue.
-		GoapAgent currentAgent = this.agentUpdateQueueUnits.poll();
-
-		if (currentAgent != null) {
-			currentAgent.update();
-
-			// Do a hollow update for the underlying FSM (Might be having a
-			// Idle-State on top).
-			((PlayerUnit) currentAgent.getAssignedGoapUnit()).setHollowUpdatesEnabled(true);
-			currentAgent.update();
-			((PlayerUnit) currentAgent.getAssignedGoapUnit()).setHollowUpdatesEnabled(false);
-
-			this.agentUpdateQueueUnits.add(currentAgent);
-		}
-
-		// Update a single PlayerBuilding from the currently stored ones and
-		// place it at the end of the Queue.
-		PlayerBuilding currentBuilding = this.agentUpdateQueueBuildings.poll();
-		if (currentBuilding != null) {
-			currentBuilding.update();
-			this.agentUpdateQueueBuildings.add(currentBuilding);
-		}
-
-		// TODO: Possible Change: Extra Queue for combat Units.
-		// TODO: Possible Change: Do not include the supply buildings in the
-		// building Queue.
+		// Update the instances in the specified Queues.
+		this.updateCombatUnitQueue();
+		this.updateWorkerQueue();
+		this.updateBuildingUnitQueue();
 
 		// Display all important information on the screen.
 		UnitControlDisplay.showImportantInformation(this.agents, this.buildings, this.informationStorage);
@@ -104,8 +86,14 @@ public class UnitControlModule implements RemoveAgentEvent {
 					GoapAgent agent = GoapAgentFactory.createAgent(unit, this.informationStorage);
 
 					((PlayerUnit) agent.getAssignedGoapUnit()).addAgentRemoveListener(this);
-					this.agentUpdateQueueUnits.add(agent);
 					this.agents.add(agent);
+
+					// Add the agent towards the appropriate update Queue.
+					if (unit.getType().isWorker()) {
+						this.agentUpdateQueueWorkers.add(agent);
+					} else {
+						this.agentUpdateQueueCombatUnits.add(agent);
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -121,7 +109,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 		HashSet<GoapAgent> failedValidations = new HashSet<>();
 
 		// Update the references to the stored Units.
-		for (GoapAgent goapAgent : this.agentUpdateQueueUnits) {
+		for (GoapAgent goapAgent : this.agentUpdateQueueCombatUnits) {
 			try {
 				// Remove any references to Units that do not exist anymore.
 				if (!((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit().exists()) {
@@ -140,10 +128,11 @@ public class UnitControlModule implements RemoveAgentEvent {
 			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
 		}
 
-		// Remove the GoapAgents that failed to validate from the Queue of
+		// Remove the GoapAgents that failed to validate from the Queue(s) of
 		// agents.
 		for (GoapAgent goapAgent : failedValidations) {
-			this.agentUpdateQueueUnits.remove(goapAgent);
+			this.agentUpdateQueueWorkers.remove(goapAgent);
+			this.agentUpdateQueueCombatUnits.remove(goapAgent);
 			this.agents.remove(goapAgent);
 		}
 	}
@@ -196,6 +185,69 @@ public class UnitControlModule implements RemoveAgentEvent {
 	}
 
 	/**
+	 * Function for updating an amount of combat Units.
+	 */
+	private void updateCombatUnitQueue() {
+		int maxIterations = (int) (Math
+				.ceil((double) (this.agentUpdateQueueCombatUnits.size()) * this.combatUnitUpdatePercentage));
+
+		// Update a fixed percentage of combat Units and place them at the end
+		// of the Queue afterwards.
+		for (int i = 0; i < maxIterations; i++) {
+			GoapAgent currentAgent = this.agentUpdateQueueCombatUnits.poll();
+
+			if (currentAgent != null) {
+				this.updateGoapAgentProcedure(currentAgent);
+				this.agentUpdateQueueCombatUnits.add(currentAgent);
+			}
+		}
+	}
+
+	/**
+	 * Function for updating an amount of worker Units.
+	 */
+	private void updateWorkerQueue() {
+		// Update a single GoapAgent from the currently stored ones and place
+		// him at the end of the Queue.
+		GoapAgent currentAgent = this.agentUpdateQueueWorkers.poll();
+
+		if (currentAgent != null) {
+			this.updateGoapAgentProcedure(currentAgent);
+			this.agentUpdateQueueWorkers.add(currentAgent);
+		}
+	}
+
+	/**
+	 * Function for performing a standard update action for a GoapAgent
+	 * (Multiple steps => own function).
+	 * 
+	 * @param agent
+	 *            the GoapAgent that is going to be updated.
+	 */
+	private void updateGoapAgentProcedure(GoapAgent agent) {
+		agent.update();
+
+		// Do a hollow update for the underlying FSM (Might be having a
+		// Idle-State on top).
+		((PlayerUnit) agent.getAssignedGoapUnit()).setHollowUpdatesEnabled(true);
+		agent.update();
+		((PlayerUnit) agent.getAssignedGoapUnit()).setHollowUpdatesEnabled(false);
+	}
+
+	/**
+	 * Function for updating an amount of buildings.
+	 */
+	private void updateBuildingUnitQueue() {
+		// Update a single PlayerBuilding from the currently stored ones and
+		// place it at the end of the Queue.
+		PlayerBuilding currentBuilding = this.agentUpdateQueueBuildings.poll();
+		if (currentBuilding != null) {
+			currentBuilding.update();
+			this.agentUpdateQueueBuildings.add(currentBuilding);
+		}
+	}
+
+	/**
 	 * Function for removing a building from the collection of tracked Units.
 	 * 
 	 * @param unit
@@ -238,7 +290,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 	private void removeUnit(Unit unit) {
 		GoapAgent matchingAgent = null;
 
-		for (GoapAgent agent : this.agentUpdateQueueUnits) {
+		for (GoapAgent agent : this.agentUpdateQueueCombatUnits) {
 			Unit u = ((PlayerUnit) agent.getAssignedGoapUnit()).getUnit();
 
 			// Reference of the Unit changes!
@@ -252,7 +304,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 		}
 
 		if (matchingAgent != null) {
-			this.agentUpdateQueueUnits.remove(matchingAgent);
+			this.agentUpdateQueueCombatUnits.remove(matchingAgent);
 			this.agents.remove(matchingAgent);
 
 			if (unit.getType().isWorker()) {
@@ -402,7 +454,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 	@Override
 	public void removeAgent(PlayerUnit sender) {
-		for (GoapAgent goapAgent : this.agentUpdateQueueUnits) {
+		for (GoapAgent goapAgent : this.agentUpdateQueueCombatUnits) {
 			if (((PlayerUnit) goapAgent.getAssignedGoapUnit()).equals(sender)) {
 				this.removeUnitFromUnitControl(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
 
