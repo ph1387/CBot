@@ -54,10 +54,14 @@ public class SteeringFactory {
 	 * @param turnRadius
 	 *            the turn radius in <b>degrees</b> that each Vector will be
 	 *            turned in one single iteration.
+	 * @param lengthDecreasePercentage
+	 *            The percentage that the retreat Vectors (Left / Right) get
+	 *            shortened each time they are turned by X degrees.
 	 * @return a Vector to which's end-Position the Unit can retreat to.
 	 */
 	public static Vector transformSteeringVector(IGoapUnit goapUnit, Vector generalizedTargetVector,
-			Polygon currentPolygon, Chokepoint nearestChoke, double toalRetreatDistance, double turnRadius) {
+			Polygon currentPolygon, Chokepoint nearestChoke, double toalRetreatDistance, double turnRadius,
+			double lengthDecreasePercentage) {
 		Vector possibleRetreatVector = null;
 		int totalVectorTurnDegrees = 0;
 
@@ -117,6 +121,12 @@ public class SteeringFactory {
 					possibleRetreatVector = vecLeft;
 				} else if (!isEndPositionBlockedByNeutralOrBuilding(vecRight) && vecRightValid) {
 					possibleRetreatVector = vecRight;
+				}
+				// Since none of the Vectors can be used for retreating towards
+				// a valid Position they must be shortened.
+				else {
+					vecLeft.setToLength(vecLeft.length() * (1. - lengthDecreasePercentage));
+					vecRight.setToLength(vecRight.length() * (1. - lengthDecreasePercentage));
 				}
 
 				// TODO: DEBUG INFO

@@ -32,8 +32,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGeneralSuperclass
 		implements SteeringVectorGenerator {
 
-	private static final double TOTAL_RETREAT_DISTANCE = 128;
+	private static final double TOTAL_RETREAT_DISTANCE = 196;
 	private static final int TURN_RADIUS = 10;
+	private static final double PERCENTAGE_LENGTH_DECREASE = 0.1;
 
 	// Different influence sources for Vector calculations. Higher numbers
 	// indicate a larger impact in the specific sector.
@@ -69,7 +70,7 @@ public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGen
 		// using the previously generalized Vector as main steering
 		// direction.
 		Vector possibleRetreatVector = SteeringFactory.transformSteeringVector(goapUnit, generalizedTargetVector,
-				currentPolygon, nearestChoke, TOTAL_RETREAT_DISTANCE, TURN_RADIUS);
+				currentPolygon, nearestChoke, TOTAL_RETREAT_DISTANCE, TURN_RADIUS, PERCENTAGE_LENGTH_DECREASE);
 
 		// Use the Vector's end-Position as retreat-Position.
 		if (possibleRetreatVector != null) {

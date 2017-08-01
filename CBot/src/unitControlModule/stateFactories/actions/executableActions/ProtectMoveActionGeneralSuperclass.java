@@ -28,12 +28,13 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction implements SteeringVectorGenerator {
 
 	private static final int TURN_RADIUS = 10;
+	private static final double PERCENTAGE_LENGTH_DECREASE = 0.1;
 	private static final double INFLUENCE_INITIAL = 5.0;
 	private static final double INFLUENCE_ENEMIES = 1.0;
-	
+
 	// The total distance the Unit moves in one go.
 	protected double totalMoveDistance = 96;
-	// The distance at which the isDone function activates.
+	// The distance at which the isDone function returns true.
 	protected int minPixelDistanceToTarget = 48;
 	private SteeringOperation steeringEnemiesInConfidenceRange;
 
@@ -42,13 +43,14 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 	// The generated Position at the end of the Vector.
 	private Position moveEndPosition = null;
 	private Position moveEndPositionPrev = null;
-	
+
 	/**
-	 * @param target type: Unit
+	 * @param target
+	 *            type: Unit
 	 */
 	public ProtectMoveActionGeneralSuperclass(Object target) {
 		super(target);
-		
+
 		this.addEffect(new GoapState(0, "isNearSupportableUnit", true));
 		this.addPrecondition(new GoapState(0, "isNearSupportableUnit", false));
 		this.addPrecondition(new GoapState(0, "canMove", true));
@@ -59,38 +61,42 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
-		
+
 		// Finish the one single move to a generated Position.
-		if(this.moveEndPosition != null && ((PlayerUnit) this.currentlyExecutingUnit).getUnit().getDistance(this.moveEndPosition) <= this.moveEndPositionMinDistance) {
+		if (this.moveEndPosition != null && ((PlayerUnit) this.currentlyExecutingUnit).getUnit()
+				.getDistance(this.moveEndPosition) <= this.moveEndPositionMinDistance) {
 			this.moveEndPosition = null;
 		}
-		
+
 		// Generate a new Position to move to.
-		if(this.moveEndPosition == null) {
+		if (this.moveEndPosition == null) {
 			Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(
 					((PlayerUnit) goapUnit).getUnit().getPosition());
 			Chokepoint nearestChoke = BWTA.getNearestChokepoint(((PlayerUnit) goapUnit).getUnit().getPosition());
 			Vector vecToTarget = this.generateGeneralizedRetreatVector(goapUnit, matchingRegionPolygonPair);
-			
+
 			// Use the generalized Vector to find a valid retreat Position
 			// using the previously generalized Vector as main steering
 			// direction.
-			Vector transformedVector = SteeringFactory.transformSteeringVector(goapUnit, vecToTarget, matchingRegionPolygonPair.second, nearestChoke, this.totalMoveDistance, TURN_RADIUS);
-			this.moveEndPosition = new Position(transformedVector.getX() + (int) transformedVector.getDirX(), transformedVector.getY() + (int) transformedVector.getDirY());
+			Vector transformedVector = SteeringFactory.transformSteeringVector(goapUnit, vecToTarget,
+					matchingRegionPolygonPair.second, nearestChoke, this.totalMoveDistance, TURN_RADIUS,
+					PERCENTAGE_LENGTH_DECREASE);
+			this.moveEndPosition = new Position(transformedVector.getX() + (int) transformedVector.getDirX(),
+					transformedVector.getY() + (int) transformedVector.getDirY());
 		}
-		
+
 		// Only execute the move command once.
-		if(this.moveEndPosition != null && this.moveEndPosition != this.moveEndPositionPrev) {
+		if (this.moveEndPosition != null && this.moveEndPosition != this.moveEndPositionPrev) {
 			success = ((PlayerUnit) goapUnit).getUnit().move(this.moveEndPosition);
-			
+
 			this.moveEndPositionPrev = this.moveEndPosition;
 		} else {
 			success = ((PlayerUnit) goapUnit).getUnit().isMoving();
 		}
-		
+
 		return success;
 	}
-	
+
 	/**
 	 * Use a generalized Vector which combines all direction-Vectors from all
 	 * sources influencing the Unit. This generalized Vector is the retreat
@@ -104,20 +110,23 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 	 *            of.
 	 * @return a Vector containing all direction Vectors influencing this Unit.
 	 */
-	public Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit, Pair<Region, Polygon> regionPolygonPairUnitIsIn) {
+	public Vector generateGeneralizedRetreatVector(IGoapUnit goapUnit,
+			Pair<Region, Polygon> regionPolygonPairUnitIsIn) {
 		Unit unit = ((PlayerUnit) goapUnit).getUnit();
 		Unit targetUnit = (Unit) this.target;
-		Vector vecToTarget = new Vector(unit.getPosition().getX(), unit.getPosition().getY(), targetUnit.getPosition().getX() - unit.getPosition().getX(), targetUnit.getPosition().getY() - unit.getPosition().getY());
-		
+		Vector vecToTarget = new Vector(unit.getPosition().getX(), unit.getPosition().getY(),
+				targetUnit.getPosition().getX() - unit.getPosition().getX(),
+				targetUnit.getPosition().getY() - unit.getPosition().getY());
+
 		// Configure the initial Vector.
 		vecToTarget.normalize();
 		vecToTarget.setDirX(vecToTarget.getDirX() * INFLUENCE_INITIAL);
 		vecToTarget.setDirY(vecToTarget.getDirY() * INFLUENCE_INITIAL);
-		
+
 		// Update the direction of the generalized Vector based on
 		// various influences.
 		this.steeringEnemiesInConfidenceRange.applySteeringForce(vecToTarget, INFLUENCE_ENEMIES);
-		
+
 		return vecToTarget;
 	}
 
@@ -130,11 +139,12 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		// Instantiate the SteeringOperation being used.
-		if(this.steeringEnemiesInConfidenceRange == null) {
+		if (this.steeringEnemiesInConfidenceRange == null) {
 			this.steeringEnemiesInConfidenceRange = new SteeringOperationEnemiesInConfidenceRange(goapUnit);
 		}
-		
-		return this.target != null && ((PlayerUnit) goapUnit).getUnit().getDistance((Unit) this.target) > this.minPixelDistanceToTarget;
+
+		return this.target != null
+				&& ((PlayerUnit) goapUnit).getUnit().getDistance((Unit) this.target) > this.minPixelDistanceToTarget;
 	}
 
 	@Override
@@ -149,7 +159,8 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return this.target == null || ((PlayerUnit) goapUnit).getUnit().getDistance((Unit) this.target) <= this.minPixelDistanceToTarget;
+		return this.target == null
+				|| ((PlayerUnit) goapUnit).getUnit().getDistance((Unit) this.target) <= this.minPixelDistanceToTarget;
 	}
 
 	@Override
