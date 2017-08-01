@@ -174,7 +174,7 @@ public abstract class PlayerUnit extends GoapUnit {
 		// which causes certain actions to not finish (IsDone() i.e. returns
 		// false when it should not).
 		try {
-			this.updateConfidence();
+			this.confidence = this.generateConfidence();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -189,45 +189,54 @@ public abstract class PlayerUnit extends GoapUnit {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
-	 * Function for updating the confidence of the Unit which determines if it
+	 * Function for generating the confidence of the Unit which determines if it
 	 * attacks an enemy Unit / building, retreats to another player Unit or
-	 * takes a completely different action. <br>
-	 * <b>Note:</b> Some classes might override the method. Whenever changes are
-	 * made at this point make sure to apply them to all subclasses as well.
+	 * takes a completely different action.
+	 * @return
 	 */
-	protected void updateConfidence() {
-		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyStrengths();
-		double playerStrengthTotal = playerEnemyStrengths.first;
-		double enemyStrengthTotal = playerEnemyStrengths.second;
-		// TODO: Possible Change: Change the way the life offset is calculated.
-		// Calculate the offset of the confidence based on the current Units
-		// health.
-		double lifeConfidenceMultiplicator = (double) (this.unit.getHitPoints())
-				/ (double) (this.unit.getType().maxHitPoints());
+	protected abstract double generateConfidence();
 
-		// Has to be set for following equation
-		if (enemyStrengthTotal == 0.) {
-			enemyStrengthTotal = 1.;
-		}
-
-		// TODO: Possible Change: AirWeapon Implementation
-		// Allow kiting if the PlayerUnit is outside of the other Unit's attack
-		// range. Also this allows Units to further attack and not running
-		// around aimlessly when they are on low health.
-		// -> PlayerUnit in range of enemy Unit + extra
-		if (this.closestEnemyUnitInConfidenceRange != null && this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
-				+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
-						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
-			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator
-					* this.confidenceDefault;
-		}
-		// -> PlayerUnit out of range of the enemy Unit
-		else {
-			this.confidence = (playerStrengthTotal / enemyStrengthTotal);
-		}
-	}
+	// TODO: UML REMOVE
+//	/**
+//	 * Function for updating the confidence of the Unit which determines if it
+//	 * attacks an enemy Unit / building, retreats to another player Unit or
+//	 * takes a completely different action. <br>
+//	 * <b>Note:</b> Some classes might override the method. Whenever changes are
+//	 * made at this point make sure to apply them to all subclasses as well.
+//	 */
+//	protected void updateConfidence() {
+//		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyStrengths();
+//		double playerStrengthTotal = playerEnemyStrengths.first;
+//		double enemyStrengthTotal = playerEnemyStrengths.second;
+//		// TODO: Possible Change: Change the way the life offset is calculated.
+//		// Calculate the offset of the confidence based on the current Units
+//		// health.
+//		double lifeConfidenceMultiplicator = (double) (this.unit.getHitPoints())
+//				/ (double) (this.unit.getType().maxHitPoints());
+//
+//		// Has to be set for following equation
+//		if (enemyStrengthTotal == 0.) {
+//			enemyStrengthTotal = 1.;
+//		}
+//
+//		// TODO: Possible Change: AirWeapon Implementation
+//		// Allow kiting if the PlayerUnit is outside of the other Unit's attack
+//		// range. Also this allows Units to further attack and not running
+//		// around aimlessly when they are on low health.
+//		// -> PlayerUnit in range of enemy Unit + extra
+//		if (this.closestEnemyUnitInConfidenceRange != null && this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
+//				+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
+//						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
+//			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator
+//					* this.confidenceDefault;
+//		}
+//		// -> PlayerUnit out of range of the enemy Unit
+//		else {
+//			this.confidence = (playerStrengthTotal / enemyStrengthTotal);
+//		}
+//	}
 
 	/**
 	 * Used to determine the strength of the PlayerUnits and the enemies by

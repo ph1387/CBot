@@ -5,6 +5,7 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_Medic;
 
+//TODO: UML CHANGE SUPERCLASS
 /**
  * PlayerUnitTerran_Medic.java --- Terran_Medic Class. Used for healing
  * Bio-Units on the map like Terran_Marines and Terran_Firebats.
@@ -12,7 +13,7 @@ import unitControlModule.stateFactories.StateFactoryTerran_Medic;
  * @author P H - 27.06.2017
  *
  */
-public class PlayerUnitTerran_Medic extends PlayerUnit {
+public class PlayerUnitTerran_Medic extends PlayerUnitTypeRanged {
 
 	public PlayerUnitTerran_Medic(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);

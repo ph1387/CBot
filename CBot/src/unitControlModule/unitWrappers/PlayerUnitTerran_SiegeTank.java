@@ -5,13 +5,14 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactoryTerran_SiegeTank;
 import unitControlModule.stateFactories.StateFactory;
 
+//TODO: UML CHANGE SUPERCLASS
 /**
  * PlayerUnit_Siege_Tank.java --- Terran_SiegeTank Class.
  * 
  * @author P H - 25.03.2017
  *
  */
-public class PlayerUnitTerran_SiegeTank extends PlayerUnit {
+public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
 	public PlayerUnitTerran_SiegeTank(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);

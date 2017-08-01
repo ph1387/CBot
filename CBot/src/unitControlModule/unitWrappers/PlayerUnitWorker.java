@@ -7,13 +7,14 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import informationStorage.InformationStorage;
 
+//TODO: UML CHANGE SUPERCLASS
 /**
  * PlayerUnitWorker.java --- Wrapper for a general worker Unit.
  * 
  * @author P H - 29.03.2017
  *
  */
-public abstract class PlayerUnitWorker extends PlayerUnit {
+public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
 
 	protected boolean assignedToSout = false;
 

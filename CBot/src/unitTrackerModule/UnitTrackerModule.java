@@ -481,7 +481,7 @@ public class UnitTrackerModule {
 		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange())
 				/ Double.valueOf(Core.getInstance().getTileSize()));
 
-		// If the unit is a meele unit, the attack range is 0 and there will be
+		// If the unit is a melee unit, the attack range is 0 and there will be
 		// no calculations regarding the ValueTile lists. So the range has to be
 		// set to 1.
 		if (maxAttackTileRange == 0) {

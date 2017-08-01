@@ -7,13 +7,14 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactoryTerran_Marine;
 import unitControlModule.stateFactories.StateFactory;
 
+//TODO: UML CHANGE SUPERCLASS
 /**
  * PlayerUnit_Marine.java --- Terran_Marine Class.
  * 
  * @author P H - 26.02.2017
  *
  */
-public class PlayerUnitTerran_Marine extends PlayerUnit {
+public class PlayerUnitTerran_Marine extends PlayerUnitTypeRanged {
 
 	// The value that will be added towards the medic multiplier for each medic
 	// found.
@@ -30,16 +31,18 @@ public class PlayerUnitTerran_Marine extends PlayerUnit {
 		return new StateFactoryTerran_Marine();
 	}
 
+	// TODO: UML CHANGED
 	/**
 	 * Overridden since Marines use an ability called StimPack, which
 	 * effectively reduces their health but significantly improves their
 	 * movement. All changes made in the Superclass must be implemented here as
 	 * well.
 	 * 
-	 * @see unitControlModule.unitWrappers.PlayerUnit#updateConfidence()
+	 * @see unitControlModule.unitWrappers.PlayerUnitTypeRanged#generateConfidence()
 	 */
 	@Override
-	protected void updateConfidence() {
+	protected double generateConfidence() {
+		double generatedConfidence = 0.;
 		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyStrengths();
 		double playerStrengthTotal = playerEnemyStrengths.first;
 		double enemyStrengthTotal = playerEnemyStrengths.second;
@@ -70,16 +73,19 @@ public class PlayerUnitTerran_Marine extends PlayerUnit {
 		// range. Also this allows Units to further attack and not running
 		// around aimlessly when they are on low health.
 		// -> PlayerUnit in range of enemy Unit + extra
-		if (this.closestEnemyUnitInConfidenceRange != null && this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
-				+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
-						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
-			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator * medicMultiplier
-					* this.confidenceDefault;
+		if (this.closestEnemyUnitInConfidenceRange != null
+				&& this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
+						+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
+								.getDistance(this.closestEnemyUnitInConfidenceRange)) {
+			generatedConfidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator
+					* medicMultiplier * this.confidenceDefault;
 		}
 		// -> PlayerUnit out of range of the enemy Unit
 		else {
-			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * this.confidenceDefault;
+			generatedConfidence = (playerStrengthTotal / enemyStrengthTotal) * this.confidenceDefault;
 		}
+
+		return generatedConfidence;
 	}
 
 	/**
