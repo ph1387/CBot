@@ -14,7 +14,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ActionUpdaterTerran_SiegeTank_SiegeMode extends ActionUpdaterGeneral {
 
-	// TODO: UML ADD
 	private boolean initializationMissing = true;
 
 	private AbilityActionTerranSiegeTank_TankMode abilityActionTerranSiegeTankTankMode;
