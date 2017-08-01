@@ -81,9 +81,15 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
 
 	@Override
 	public void update() {
-		this.customUpdate();
-
 		super.update();
+		
+		// Only perform the custom update when there are no enemies in range.
+		// This is due to the fact that in this case either a retreat or attack
+		// action is necessary and the gathering and construction actions can be
+		// ignored.
+		if (this.currentRangeState == PlayerUnit.ConfidenceRangeStates.NO_UNIT_IN_RANGE) {
+			this.customUpdate();
+		}
 	}
 
 	/**
