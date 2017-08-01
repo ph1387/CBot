@@ -456,10 +456,10 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 	@Override
 	public void removeAgent(PlayerUnit sender) {
-		for (GoapAgent goapAgent : this.agentUpdateQueueCombatUnits) {
+		for (GoapAgent goapAgent : this.agents) {
 			if (((PlayerUnit) goapAgent.getAssignedGoapUnit()).equals(sender)) {
 				this.removeUnitFromUnitControl(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
-
+				
 				break;
 			}
 		}

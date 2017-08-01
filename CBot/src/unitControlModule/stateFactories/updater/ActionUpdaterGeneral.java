@@ -15,7 +15,7 @@ public abstract class ActionUpdaterGeneral implements Updater {
 	private boolean initializationMissing = true;
 	protected PlayerUnit playerUnit;
 
-	RetreatActionSteerInRetreatVectorDirection retreatActionSteerInRetreatVectorDirection;
+	private RetreatActionSteerInRetreatVectorDirection retreatActionSteerInRetreatVectorDirection;
 
 	public ActionUpdaterGeneral(PlayerUnit playerUnit) {
 		this.playerUnit = playerUnit;

@@ -14,6 +14,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ActionUpdaterTerran_SiegeTank_SiegeMode extends ActionUpdaterGeneral {
 
+	// TODO: UML ADD
+	private boolean initializationMissing = true;
+
 	private AbilityActionTerranSiegeTank_TankMode abilityActionTerranSiegeTankTankMode;
 	private AttackUnitActionTerran_SiegeTank_Bombard attackUnitActionTerranSiegeTankBombard;
 
@@ -25,6 +28,12 @@ public class ActionUpdaterTerran_SiegeTank_SiegeMode extends ActionUpdaterGenera
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
+		// Get the references to all used actions.
+		if (this.initializationMissing) {
+			this.init();
+			this.initializationMissing = false;
+		}
+
 		// TODO: Possible Change: Only perform once.
 		this.abilityActionTerranSiegeTankTankMode.setTarget(this.playerUnit);
 
@@ -33,7 +42,8 @@ public class ActionUpdaterTerran_SiegeTank_SiegeMode extends ActionUpdaterGenera
 
 	@Override
 	protected void init() {
-		super.init();
+		// No super.init() is called due to the SiegeTank_SiegeMode not having
+		// any retreat actions!
 
 		this.abilityActionTerranSiegeTankTankMode = ((AbilityActionTerranSiegeTank_TankMode) this
 				.getActionFromInstance(AbilityActionTerranSiegeTank_TankMode.class));
