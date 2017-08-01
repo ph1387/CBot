@@ -217,7 +217,7 @@ public abstract class PlayerUnit extends GoapUnit {
 		// range. Also this allows Units to further attack and not running
 		// around aimlessly when they are on low health.
 		// -> PlayerUnit in range of enemy Unit + extra
-		if (this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
+		if (this.closestEnemyUnitInConfidenceRange != null && this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
 				+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
 						.getDistance(this.closestEnemyUnitInConfidenceRange)) {
 			this.confidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator

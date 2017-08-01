@@ -54,9 +54,9 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 */
 	public void update() {
 		this.addNewTrackedUnits();
+		this.removeTrackedUnits();
 		this.validateStoredUnitAgents();
 		this.validateStoredBuildingAgents();
-		this.removeTrackedUnits();
 
 		// Update the instances in the specified Queues.
 		this.updateCombatUnitQueue();
@@ -289,8 +289,8 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 */
 	private void removeUnit(Unit unit) {
 		GoapAgent matchingAgent = null;
-
-		for (GoapAgent agent : this.agentUpdateQueueCombatUnits) {
+		
+		for (GoapAgent agent : agents) {
 			Unit u = ((PlayerUnit) agent.getAssignedGoapUnit()).getUnit();
 
 			// Reference of the Unit changes!
@@ -298,12 +298,14 @@ public class UnitControlModule implements RemoveAgentEvent {
 			if (((PlayerUnit) agent.getAssignedGoapUnit()).getUnit() == unit
 					|| u.getPosition().equals(unit.getPosition())) {
 				matchingAgent = agent;
-
+				
 				break;
 			}
 		}
 
+		// Remove any stored information regarding the Agent / Unit.
 		if (matchingAgent != null) {
+			this.agentUpdateQueueWorkers.remove(matchingAgent);
 			this.agentUpdateQueueCombatUnits.remove(matchingAgent);
 			this.agents.remove(matchingAgent);
 

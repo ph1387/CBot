@@ -28,7 +28,7 @@ public class Display {
 	private static final Game GAME = Core.getInstance().getGame();
 
 	// Map information visualization.
-	private static final boolean ENABLE_MAP_POLYGONS = true;
+	private static final boolean ENABLE_MAP_POLYGONS = false;
 	private static final boolean ENABLE_MAP_CONTENDED_TILEPOSITIONS = false;
 	private static final Color MAP_BONDARIES_COLOR = new Color(255, 255, 0);
 	private static final Color RESERVED_SPACE_COLOR = new Color(255, 128, 0);
