@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -43,6 +44,10 @@ public class Simulator {
 	private HashSet<ActionType> actionTypes;
 	// The amount each ActionType may be used in the simulation.
 	private HashMap<ActionType, Integer> maxActionTypesOccurrences;
+
+	// TODO: UML ADD
+	// The maximum number of Nodes in a layer.
+	private int layerNodesMaxNumber = 100;
 
 	/**
 	 * @param actionTypes
@@ -196,6 +201,7 @@ public class Simulator {
 			// Carry over to the newly created layer of Nodes.
 			this.nodes.addAll(newLayerNodes);
 			this.currentLayerNodes = newLayerNodes;
+			this.removeNodesUntilSizeMatches(this.currentLayerNodes);
 		}
 
 		// Extract the best sequence of ActionTypes from the root of the tree
@@ -552,6 +558,25 @@ public class Simulator {
 		}
 
 		return newNode;
+	}
+
+	/**
+	 * Function for removing elements from a provided TreeSet containing Nodes.
+	 * The elements that are going to be removed are the ones at the end of the
+	 * TreeSet and therefore the ones with the lowest score. Leaving only the
+	 * "best" ones behind.
+	 * 
+	 * @param nodes
+	 *            the TreeSet from which Nodes are removed.
+	 */
+	private void removeNodesUntilSizeMatches(TreeSet<Node> nodes) {
+		int nodesToRemove = nodes.size() - this.layerNodesMaxNumber;
+
+		// Remove a fixed amount of Nodes from the end of the TreeSet leaving
+		// only the "best" ones behind.
+		for (int i = 0; i < nodesToRemove; i++) {
+			nodes.pollLast();
+		}
 	}
 
 	/**
