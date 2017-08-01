@@ -55,8 +55,8 @@ public class UnitControlModule implements RemoveAgentEvent {
 	public void update() {
 		this.addNewTrackedUnits();
 		this.removeTrackedUnits();
-		this.validateStoredUnitAgents();
-		this.validateStoredBuildingAgents();
+//		this.validateStoredUnitAgents();
+//		this.validateStoredBuildingAgents();
 
 		// Update the instances in the specified Queues.
 		this.updateCombatUnitQueue();
