@@ -28,14 +28,14 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction implements SteeringVectorGenerator {
 
 	private static final int TURN_RADIUS = 10;
-	private static final double PERCENTAGE_LENGTH_DECREASE = 0.1;
+	private static final double PERCENTAGE_LENGTH_DECREASE = 0.05;
 	private static final double INFLUENCE_INITIAL = 5.0;
 	private static final double INFLUENCE_ENEMIES = 1.0;
 
 	// The total distance the Unit moves in one go.
-	protected double totalMoveDistance = 96;
+	protected double totalMoveDistance = 128;
 	// The distance at which the isDone function returns true.
-	protected int minPixelDistanceToTarget = 48;
+	protected int minPixelDistanceToTarget = 32;
 	private SteeringOperation steeringEnemiesInConfidenceRange;
 
 	// The distance at which a new moveEndPosition will be generated.

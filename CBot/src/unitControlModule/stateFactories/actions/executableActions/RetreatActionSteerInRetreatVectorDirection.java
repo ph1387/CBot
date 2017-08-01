@@ -34,7 +34,7 @@ public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGen
 
 	private static final double TOTAL_RETREAT_DISTANCE = 196;
 	private static final int TURN_RADIUS = 10;
-	private static final double PERCENTAGE_LENGTH_DECREASE = 0.1;
+	private static final double PERCENTAGE_LENGTH_DECREASE = 0.05;
 
 	// Different influence sources for Vector calculations. Higher numbers
 	// indicate a larger impact in the specific sector.
