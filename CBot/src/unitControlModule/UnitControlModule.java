@@ -55,8 +55,8 @@ public class UnitControlModule implements RemoveAgentEvent {
 	public void update() {
 		this.addNewTrackedUnits();
 		this.removeTrackedUnits();
-//		this.validateStoredUnitAgents();
-//		this.validateStoredBuildingAgents();
+		// this.validateStoredUnitAgents();
+		// this.validateStoredBuildingAgents();
 
 		// Update the instances in the specified Queues.
 		this.updateCombatUnitQueue();
@@ -289,7 +289,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 */
 	private void removeUnit(Unit unit) {
 		GoapAgent matchingAgent = null;
-		
+
 		for (GoapAgent agent : agents) {
 			Unit u = ((PlayerUnit) agent.getAssignedGoapUnit()).getUnit();
 
@@ -298,7 +298,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 			if (((PlayerUnit) agent.getAssignedGoapUnit()).getUnit() == unit
 					|| u.getPosition().equals(unit.getPosition())) {
 				matchingAgent = agent;
-				
+
 				break;
 			}
 		}
@@ -339,8 +339,8 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 		// Find the assigned sources of the Unit.
 		this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
-				.forEach(new BiConsumer<Unit, ArrayList<Unit>>() {
-					public void accept(Unit source, ArrayList<Unit> units) {
+				.forEach(new BiConsumer<Unit, HashSet<Unit>>() {
+					public void accept(Unit source, HashSet<Unit> units) {
 						for (Unit mappedUnit : units) {
 							if (mappedUnit.equals(mappedUnit)) {
 								mappedSources.add(source);
@@ -459,7 +459,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 		for (GoapAgent goapAgent : this.agents) {
 			if (((PlayerUnit) goapAgent.getAssignedGoapUnit()).equals(sender)) {
 				this.removeUnitFromUnitControl(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
-				
+
 				break;
 			}
 		}

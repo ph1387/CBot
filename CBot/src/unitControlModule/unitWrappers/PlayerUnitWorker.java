@@ -1,6 +1,5 @@
 package unitControlModule.unitWrappers;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import bwapi.Unit;
@@ -82,7 +81,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
 	@Override
 	public void update() {
 		super.update();
-		
+
 		// Only perform the custom update when there are no enemies in range.
 		// This is due to the fact that in this case either a retreat or attack
 		// action is necessary and the gathering and construction actions can be
@@ -262,9 +261,9 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
 		boolean found = false;
 
 		// Get all assigned gathering source(s) for this Unit.
-		for (ArrayList<Unit> list : this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
+		for (HashSet<Unit> set : this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
 				.values()) {
-			if (list.contains(mappedUnit)) {
+			if (set.contains(mappedUnit)) {
 				found = true;
 
 				break;
@@ -308,19 +307,19 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
 		// Create new entries if necessary.
 		if (!this.informationStorage.getWorkerConfig().getMappedSourceContenders().containsKey(mineralField)) {
 			this.informationStorage.getWorkerConfig().getMappedSourceContenders().put(mineralField,
-					new ArrayList<Unit>());
+					new HashSet<Unit>());
 		}
 		if (!this.informationStorage.getWorkerConfig().getMappedSourceContenders().containsKey(gasSource)) {
-			this.informationStorage.getWorkerConfig().getMappedSourceContenders().put(gasSource, new ArrayList<Unit>());
+			this.informationStorage.getWorkerConfig().getMappedSourceContenders().put(gasSource, new HashSet<Unit>());
 		}
 		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
 				.containsKey(mineralField)) {
 			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(mineralField,
-					new ArrayList<Unit>());
+					new HashSet<Unit>());
 		}
 		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().containsKey(gasSource)) {
 			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(gasSource,
-					new ArrayList<Unit>());
+					new HashSet<Unit>());
 		}
 
 		// If a space for gathering a resource is free, set this Unit as a
@@ -420,10 +419,10 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
 		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
 				.containsKey(gatheringSource)) {
 			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(gatheringSource,
-					new ArrayList<Unit>());
+					new HashSet<Unit>());
 		}
 
-		ArrayList<Unit> mappedUnits = this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
+		HashSet<Unit> mappedUnits = this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
 				.get(gatheringSource);
 
 		// If the threshold is not reached, the Unit can gather there.

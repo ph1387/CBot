@@ -1,6 +1,5 @@
 package informationStorage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -27,11 +26,13 @@ public class WorkerConfiguration {
 	private int totalWorkerCount = 0;
 	private boolean workerOnceAssignedScouting = false;
 
+	// TODO: UML TYPE CHANGE
 	// Mapped: gathering sources (Units) -> Units (worker)
 	// Each gathering source holds the Units that are currently working on it.
-	private HashMap<Unit, ArrayList<Unit>> mappedAccessibleGatheringSources = new HashMap<Unit, ArrayList<Unit>>();
+	private HashMap<Unit, HashSet<Unit>> mappedAccessibleGatheringSources = new HashMap<Unit, HashSet<Unit>>();
+	// TODO: UML TYPE CHANGE
 	// Used to prevent double mapping of the same gathering source in one cycle.
-	private HashMap<Unit, ArrayList<Unit>> mappedSourceContenders = new HashMap<Unit, ArrayList<Unit>>();
+	private HashMap<Unit, HashSet<Unit>> mappedSourceContenders = new HashMap<Unit, HashSet<Unit>>();
 	private HashMap<Unit, UnitType> mappedBuildActions = new HashMap<>();
 
 	private Queue<UnitType> buildingQueue = new LinkedList<>();
@@ -85,11 +86,13 @@ public class WorkerConfiguration {
 		this.workerOnceAssignedScouting = workerOnceAssignedScouting;
 	}
 
-	public HashMap<Unit, ArrayList<Unit>> getMappedAccessibleGatheringSources() {
+	// TODO: UML TYPE CHANGE
+	public HashMap<Unit, HashSet<Unit>> getMappedAccessibleGatheringSources() {
 		return mappedAccessibleGatheringSources;
 	}
 
-	public HashMap<Unit, ArrayList<Unit>> getMappedSourceContenders() {
+	// TODO: UML TYPE CHANGE
+	public HashMap<Unit, HashSet<Unit>> getMappedSourceContenders() {
 		return mappedSourceContenders;
 	}
 
