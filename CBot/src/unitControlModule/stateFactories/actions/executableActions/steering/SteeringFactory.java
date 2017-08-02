@@ -28,7 +28,6 @@ public class SteeringFactory {
 
 	// -------------------- Functions
 
-	// TODO: UML PARAMTERS
 	/**
 	 * Function for generating a steering Vector based on a generalized Vector
 	 * which holds all necessary directions to all predefined important

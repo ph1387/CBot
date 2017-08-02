@@ -4,7 +4,6 @@ import bwapi.Pair;
 import bwapi.Unit;
 import informationStorage.InformationStorage;
 
-// TODO: UML ADD
 /**
  * PlayerUnitTypeRanged.java --- Class for ranged Units. This class provides
  * basic functionalities that these types of Units require (confidence

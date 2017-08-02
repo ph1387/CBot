@@ -4,7 +4,6 @@ import bwapi.Pair;
 import bwapi.Unit;
 import informationStorage.InformationStorage;
 
-// TODO: UML ADD
 /**
  * PlayerUnitTypeMelee.java --- Class for melee Units. This class provides basic
  * functionalities that these types of Units require (confidence calculation

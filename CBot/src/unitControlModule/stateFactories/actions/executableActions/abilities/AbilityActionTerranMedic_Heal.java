@@ -37,9 +37,4 @@ public class AbilityActionTerranMedic_Heal extends AbilityActionTechTargetUnit {
 		return ((PlayerUnit) goapUnit).getUnit().getEnergy() > 0;
 	}
 	
-	// TODO: UML REMOVE
-//	@Override
-//	protected float generateBaseCost(IGoapUnit goapUnit) {
-//		return 1;
-//	}
 }

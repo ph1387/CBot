@@ -51,6 +51,17 @@ public class UnitTrackerModule {
 	// The container holding all information.
 	private InformationStorage informationStorage;
 
+	// Needed for increasing the multiplier in the calculations that generates
+	// the total value of the weapon types. Any positive number can be inserted
+	// here. The bigger the number, the stronger the effect of a shorter range
+	// is.
+	private int generalMultiplier = 41;
+	// The generated dividers that are / were used for calculating the
+	// multipliers for the different attack ranges. These can be stored and do
+	// not need to be calculated again since they are the same for each inserted
+	// range.
+	private HashMap<Integer, Double> generatedDividers = new HashMap<>();
+
 	public UnitTrackerModule(InformationStorage informationStorage) {
 		this.informationStorage = informationStorage;
 	}
@@ -488,19 +499,24 @@ public class UnitTrackerModule {
 			maxAttackTileRange = 1;
 		}
 
-		int generalMultiplier = 41; // Needed for increasing the multiplier in
-									// the following calculations. Any positive
-									// number can be inserted here. The bigger
-									// the number, the stronger the effect of a
-									// shorter range is.
-
 		// The dps multiplier for each Unit.
 		double dpsMultiplier = FLAT_DPS_MULTIPLIER * new Double(weaponType.damageAmount() * weaponType.damageFactor())
 				/ new Double(weaponType.damageCooldown());
 
-		double multiplier = new Double(generalMultiplier * dpsMultiplier * unitSpecificMultiplier)
-				/ new Double(8 * Math.pow(maxAttackTileRange, 2) * Math.sin(1.));
+		// If the HashMap does not contain the max attack tile range of the
+		// weapon type, generate the value and insert it.
+		if (!this.generatedDividers.containsKey(maxAttackTileRange)) {
+			this.generatedDividers.put(maxAttackTileRange,
+					(double) (8. * Math.pow(maxAttackTileRange, 2) * Math.sin(1.)));
+		}
 
+		// The multiplier that is going to be used in the strength calculations
+		// for the different TilePositions.
+		double multiplier = new Double(this.generalMultiplier * dpsMultiplier * unitSpecificMultiplier)
+				/ this.generatedDividers.get(maxAttackTileRange);
+
+		// Fill the tiles which the Unit can reach with it's weapon range with
+		// the appropriate values.
 		for (int i = -maxAttackTileRange; i <= maxAttackTileRange; i++) {
 			for (int j = -maxAttackTileRange; j <= maxAttackTileRange; j++) {
 				if (tilePosition.getX() + i >= 0 && tilePosition.getY() + j >= 0) {

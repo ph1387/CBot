@@ -26,11 +26,9 @@ public class WorkerConfiguration {
 	private int totalWorkerCount = 0;
 	private boolean workerOnceAssignedScouting = false;
 
-	// TODO: UML TYPE CHANGE
 	// Mapped: gathering sources (Units) -> Units (worker)
 	// Each gathering source holds the Units that are currently working on it.
 	private HashMap<Unit, HashSet<Unit>> mappedAccessibleGatheringSources = new HashMap<Unit, HashSet<Unit>>();
-	// TODO: UML TYPE CHANGE
 	// Used to prevent double mapping of the same gathering source in one cycle.
 	private HashMap<Unit, HashSet<Unit>> mappedSourceContenders = new HashMap<Unit, HashSet<Unit>>();
 	private HashMap<Unit, UnitType> mappedBuildActions = new HashMap<>();
@@ -86,12 +84,10 @@ public class WorkerConfiguration {
 		this.workerOnceAssignedScouting = workerOnceAssignedScouting;
 	}
 
-	// TODO: UML TYPE CHANGE
 	public HashMap<Unit, HashSet<Unit>> getMappedAccessibleGatheringSources() {
 		return mappedAccessibleGatheringSources;
 	}
 
-	// TODO: UML TYPE CHANGE
 	public HashMap<Unit, HashSet<Unit>> getMappedSourceContenders() {
 		return mappedSourceContenders;
 	}

@@ -7,7 +7,6 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactoryTerran_Marine;
 import unitControlModule.stateFactories.StateFactory;
 
-//TODO: UML CHANGE SUPERCLASS
 /**
  * PlayerUnit_Marine.java --- Terran_Marine Class.
  * 
@@ -34,7 +33,6 @@ public class PlayerUnitTerran_Marine extends PlayerUnitTypeRanged {
 		return new StateFactoryTerran_Marine();
 	}
 
-	// TODO: UML CHANGED
 	/**
 	 * Overridden since Marines use an ability called StimPack, which
 	 * effectively reduces their health but significantly improves their

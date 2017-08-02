@@ -32,11 +32,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGeneralSuperclass
 		implements SteeringVectorGenerator {
 
-	// TODO: UML CHANGE
 	private static final double TOTAL_RETREAT_DISTANCE = 160;
 	private static final int TURN_RADIUS = 10;
-	// TODO: UML REMOVE
-//	private static final double PERCENTAGE_LENGTH_DECREASE = 0.05;
 
 	// Different influence sources for Vector calculations. Higher numbers
 	// indicate a larger impact in the specific sector.

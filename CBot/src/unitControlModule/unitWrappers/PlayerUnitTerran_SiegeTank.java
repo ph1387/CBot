@@ -5,7 +5,6 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactoryTerran_SiegeTank;
 import unitControlModule.stateFactories.StateFactory;
 
-//TODO: UML CHANGE SUPERCLASS
 /**
  * PlayerUnit_Siege_Tank.java --- Terran_SiegeTank Class.
  * 

@@ -5,7 +5,6 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactoryTerran_Vulture;
 import unitControlModule.stateFactories.StateFactory;
 
-//TODO: UML CHANGE SUPERCLASS
 /**
  * PlayerUnit_Vulture.java --- Terran Vulture Class.
  * 

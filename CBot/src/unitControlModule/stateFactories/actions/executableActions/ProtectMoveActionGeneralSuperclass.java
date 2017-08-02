@@ -28,8 +28,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction implements SteeringVectorGenerator {
 
 	private static final int TURN_RADIUS = 10;
-	// TODO: UML REMOVE
-//	private static final double PERCENTAGE_LENGTH_DECREASE = 0.05;
 	private static final double INFLUENCE_INITIAL = 5.0;
 	private static final double INFLUENCE_ENEMIES = 1.0;
 

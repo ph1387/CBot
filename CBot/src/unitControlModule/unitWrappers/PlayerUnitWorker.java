@@ -6,7 +6,6 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import informationStorage.InformationStorage;
 
-//TODO: UML CHANGE SUPERCLASS
 /**
  * PlayerUnitWorker.java --- Wrapper for a general worker Unit.
  * 

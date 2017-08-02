@@ -50,12 +50,4 @@ public class AbilityActionTerranSiegeTank_SiegeMode extends AbilityActionTechTar
 		return success;
 	}
 
-	// TODO: UML REMOVE
-//	@Override
-//	protected float generateBaseCost(IGoapUnit goapUnit) {
-//		// The function is overwritten since the tank must only go into the
-//		// SiegeMode when moving is required. In any other circumstance it is
-//		// counterproductive.
-//		return 1;
-//	}
 }
