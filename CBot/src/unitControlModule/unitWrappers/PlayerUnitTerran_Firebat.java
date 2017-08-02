@@ -17,6 +17,8 @@ public class PlayerUnitTerran_Firebat extends PlayerUnitTerran_Marine {
 	public PlayerUnitTerran_Firebat(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
 
+		// Revert the changes made in the super constructor.
+		this.confidenceDefault = 0.75;
 		this.extraConfidencePixelRangeToClosestUnits = 0;
 	}
 

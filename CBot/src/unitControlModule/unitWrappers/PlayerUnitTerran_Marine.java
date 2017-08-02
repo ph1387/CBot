@@ -22,6 +22,9 @@ public class PlayerUnitTerran_Marine extends PlayerUnitTypeRanged {
 
 	public PlayerUnitTerran_Marine(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
+
+		this.confidenceDefault = 0.5;
+		this.extraConfidencePixelRangeToClosestUnits = 40;
 	}
 
 	// -------------------- Functions
