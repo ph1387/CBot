@@ -46,9 +46,10 @@ public class AbilityActionTerranMarine_StimPack extends AbilityActionTechTargetN
 		return isHealthMatched && isEnemyNear && isNotStimmed;
 	}
 
-	@Override
-	protected float generateBaseCost(IGoapUnit goapUnit) {
-		return 1;
-	}
+	// TODO: UML REMOVE
+//	@Override
+//	protected float generateBaseCost(IGoapUnit goapUnit) {
+//		return 1;
+//	}
 
 }

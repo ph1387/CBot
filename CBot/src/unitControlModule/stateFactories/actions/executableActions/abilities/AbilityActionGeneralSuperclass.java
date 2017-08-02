@@ -48,12 +48,9 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
-		// Base cost is set to -1 since using abilities is generally advised.
-		// NOTE:
-		// Be careful with the preconditions since not enabling / disabling them
-		// can cause severe problems (i.e. Marines constantly using StimPacks,
-		// Tanks constantly going in and out of SiegeMode, ...).
-		return -1;
+		// Set to 1 by default. This only causes certain combinations of actions
+		// to work along with abilities when the Units are allowed to use them.
+		return 1.f;
 	}
 
 	@Override

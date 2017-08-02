@@ -54,11 +54,12 @@ public class AbilityActionTerranSiegeTank_TankMode extends AbilityActionTechTarg
 		return success;
 	}
 
-	@Override
-	protected float generateBaseCost(IGoapUnit goapUnit) {
-		// The function is overwritten since the tank must only return to the
-		// TankMode when moving is required. In any other circumstance it is
-		// counterproductive to return to the normal Tank state.
-		return 1;
-	}
+	// TODO: UML REMOVE
+//	@Override
+//	protected float generateBaseCost(IGoapUnit goapUnit) {
+//		// The function is overwritten since the tank must only return to the
+//		// TankMode when moving is required. In any other circumstance it is
+//		// counterproductive to return to the normal Tank state.
+//		return 1;
+//	}
 }
