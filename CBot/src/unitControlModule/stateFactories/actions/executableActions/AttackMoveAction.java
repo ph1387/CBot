@@ -49,4 +49,16 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 		return ((PlayerUnit) goapUnit).getUnit().canAttack(((TilePosition) this.target).toPosition());
 	}
 
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		return true;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		return ((PlayerUnit) groupMember).getUnit().attack(((TilePosition) this.target).toPosition());
+	}
+
 }

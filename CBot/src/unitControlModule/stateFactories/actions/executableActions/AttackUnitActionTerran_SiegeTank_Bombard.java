@@ -93,4 +93,19 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 	protected boolean requiresInRange(IGoapUnit goapUnit) {
 		return false;
 	}
+
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		// False since the Unit is static and is unable to move. Therefore any
+		// target chosen by the leader might be out of range.
+		return false;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		return false;
+	}
+
 }

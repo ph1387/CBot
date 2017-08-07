@@ -224,4 +224,21 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		this.retreatPosition = null;
 		this.generatedTempRetreatPosition = null;
 	}
+
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		return true;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		// TODO: DEBUG INFO
+		Core.getInstance().getGame().drawLineMap(((PlayerUnit) groupMember).getUnit().getPosition(),
+				this.retreatPosition, new Color(255, 128, 0));
+
+		return ((PlayerUnit) groupMember).getUnit().move(this.retreatPosition);
+	}
+
 }

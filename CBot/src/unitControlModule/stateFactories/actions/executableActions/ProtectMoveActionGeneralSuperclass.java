@@ -59,7 +59,7 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
-		boolean success = true;
+		boolean success;
 
 		// Finish the one single move to a generated Position.
 		if (this.moveEndPosition != null && ((PlayerUnit) this.currentlyExecutingUnit).getUnit()
@@ -168,6 +168,18 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 
 	@Override
 	protected boolean requiresInRange(IGoapUnit goapUnit) {
+		return false;
+	}
+
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		return false;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
 		return false;
 	}
 }

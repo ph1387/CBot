@@ -1,6 +1,8 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
+import bwapi.Color;
 import bwapi.Unit;
+import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -47,6 +49,22 @@ public class AttackUnitAction extends AttackActionGeneralSuperclass {
 	@Override
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().canAttack((Unit) this.target);
+	}
+
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		return true;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		// TODO: DEBUG INFO
+		Core.getInstance().getGame().drawLineMap(((PlayerUnit) groupMember).getUnit().getPosition(),
+				((Unit) this.target).getPosition(), new Color(255, 128, 0));
+
+		return ((PlayerUnit) groupMember).getUnit().attack((Unit) this.target);
 	}
 
 }

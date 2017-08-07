@@ -92,6 +92,18 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 		return false;
 	}
 
+	// -------------------- Groups
+
+	@Override
+	public boolean canPerformGrouped() {
+		return false;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		return false;
+	}
+
 	// ------------------------------ Getter / Setter
 
 }

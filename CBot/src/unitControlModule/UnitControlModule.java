@@ -12,6 +12,7 @@ import core.Core;
 import core.Display;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapAgent;
+import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.RemoveAgentEvent;
@@ -57,6 +58,12 @@ public class UnitControlModule implements RemoveAgentEvent {
 		this.removeTrackedUnits();
 		// this.validateStoredUnitAgents();
 		// this.validateStoredBuildingAgents();
+
+		// TODO: DEBUG INFO
+		// Display the targets of all registered Units.
+		for (GoapAgent goapAgent : this.agents) {
+			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
+		}
 
 		// Update the instances in the specified Queues.
 		this.updateCombatUnitQueue();
@@ -123,9 +130,6 @@ public class UnitControlModule implements RemoveAgentEvent {
 				System.out.println("An Agent failed to validate properly: " + goapAgent + " - Unit: "
 						+ ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
 			}
-
-			// TODO: DEBUG INFO
-			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
 		}
 
 		// Remove the GoapAgents that failed to validate from the Queue(s) of
@@ -308,7 +312,10 @@ public class UnitControlModule implements RemoveAgentEvent {
 			this.agentUpdateQueueWorkers.remove(matchingAgent);
 			this.agentUpdateQueueCombatUnits.remove(matchingAgent);
 			this.agents.remove(matchingAgent);
-
+			
+			// TODO: WIP If validating Units: Add to remove function!
+			BaseAction.removeGroupAssociations(matchingAgent.getAssignedGoapUnit());
+			
 			if (unit.getType().isWorker()) {
 				this.removeAssignedWorkerEntries(unit);
 				this.informationStorage.getWorkerConfig().decrementTotalWorkerCount();

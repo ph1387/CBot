@@ -123,4 +123,18 @@ public class GatherAction extends BaseAction {
 		}
 		return success;
 	}
+
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		// All gather actions are executed by a single Unit.
+		return false;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		return false;
+	}
+
 }

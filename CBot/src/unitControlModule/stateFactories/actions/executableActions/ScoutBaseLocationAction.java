@@ -68,6 +68,22 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected void resetSpecific() {
-		
+
 	}
+
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		// All scouting actions are executed by a single Unit. It makes no
+		// difference if one or more Units move towards the same location. It
+		// can only be discovered once!
+		return false;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		return false;
+	}
+	
 }

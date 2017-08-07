@@ -14,6 +14,8 @@ import core.CBot;
 import core.Core;
 import javaGOAP.GoapAction;
 import javaGOAP.IGoapUnit;
+import unitControlModule.stateFactories.actions.executableActions.grouping.GroupActionManager;
+import unitControlModule.stateFactories.actions.executableActions.grouping.GroupableAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -22,14 +24,19 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 09.02.2017
  *
  */
-public abstract class BaseAction extends GoapAction {
+public abstract class BaseAction extends GoapAction implements GroupableAction {
 
 	private static final int EXPAND_MULTIPLIER_MAX = 5;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 	private static final int DEFAULT_SEARCH_STEP_DISTANCE = 200;
 	private static final int DEFAULT_MIN_DISTANCE = 256;
 
-	protected static HashMap<PlayerUnit, BaseAction> currentlyExecutingActions = new HashMap<>();
+	protected static HashMap<PlayerUnit, BaseAction> CurrentlyExecutingActions = new HashMap<>();
+	// The manager that controls the assignment of all group actions.
+	private static GroupActionManager GroupActionManager = new GroupActionManager();
+	// Flag for re-enabling the action change trigger when the Unit is the new
+	// leader of a group action.
+	private boolean wasPrevLeader = false;
 
 	protected boolean actionChangeTrigger = false;
 	protected IGoapUnit currentlyExecutingUnit;
@@ -42,7 +49,8 @@ public abstract class BaseAction extends GoapAction {
 
 	@Override
 	protected boolean performAction(IGoapUnit goapUnit) {
-		BaseAction storedAction = BaseAction.currentlyExecutingActions.get((PlayerUnit) goapUnit);
+		BaseAction storedAction = BaseAction.CurrentlyExecutingActions.get((PlayerUnit) goapUnit);
+		boolean success;
 
 		// Check if the executing GoapAction has changed and if it did, enable a
 		// trigger on which the subclass can react to.
@@ -55,10 +63,67 @@ public abstract class BaseAction extends GoapAction {
 		// Store the executed action in the HashMap as well as the executing
 		// Unit separately for having access to the Action and reset it when it
 		// finishes.
-		BaseAction.currentlyExecutingActions.put((PlayerUnit) goapUnit, this);
+		BaseAction.CurrentlyExecutingActions.put((PlayerUnit) goapUnit, this);
 		this.currentlyExecutingUnit = goapUnit;
 
-		return this.performSpecificAction(goapUnit);
+		// If the action is listed as a grouped action, perform it as such.
+		if (this.canPerformGrouped()) {
+			success = this.performGroupedAction(goapUnit);
+		}
+		// Otherwise just perform it normally.
+		else {
+			success = this.performSpecificAction(goapUnit);
+		}
+
+		return success;
+	}
+
+	/**
+	 * Extracted function for performing an action as a group and not alone. The
+	 * Unit that performs the action is either just a simple member of the group
+	 * or the leader of one. The former returns always true, since the targets
+	 * and other important information are processed by the leader, which the
+	 * latter returns the actual result of the action. This is either true, if
+	 * the action was successfully performed in a group or false, if something
+	 * went wrong.
+	 * 
+	 * @param goapUnit
+	 *            the performing Unit.
+	 * @return true or false depending if the Unit was a member (Always true) or
+	 *         the leader (True if action succeeded, false if something went
+	 *         wrong).
+	 */
+	private boolean performGroupedAction(IGoapUnit goapUnit) {
+		boolean success;
+
+		if (!BaseAction.GroupActionManager.isGrouped(goapUnit)) {
+			BaseAction.GroupActionManager.addToGroupAction(this.getClass(), goapUnit, this);
+		}
+
+		// Re enable the action change trigger for actions that rely on that
+		// information that might be now performed if the Unit was not the
+		// previous leader and is it now.
+		if (!this.wasPrevLeader && BaseAction.GroupActionManager.isLeader(goapUnit)) {
+			this.wasPrevLeader = true;
+			this.actionChangeTrigger = true;
+		}
+
+		// Only perform the action if the Unit is the leader of the group. The
+		// other members of the group act passively.
+		if (BaseAction.GroupActionManager.isLeader(goapUnit)) {
+			// First perform the action for the leader, then for the other
+			// members of the group. This allows the members to use already
+			// calculated results.
+			success = this.performSpecificAction(goapUnit);
+
+			if (success) {
+				success &= BaseAction.GroupActionManager.performGroupLeaderAction(goapUnit);
+			}
+		} else {
+			success = true;
+		}
+
+		return success;
 	}
 
 	/**
@@ -76,7 +141,7 @@ public abstract class BaseAction extends GoapAction {
 	 * that the actionTrigger is going to be enabled in the next iteration.
 	 */
 	protected void resetStoredAction() {
-		BaseAction.currentlyExecutingActions.put((PlayerUnit) this.currentlyExecutingUnit, null);
+		BaseAction.CurrentlyExecutingActions.put((PlayerUnit) this.currentlyExecutingUnit, null);
 	}
 
 	/**
@@ -98,6 +163,11 @@ public abstract class BaseAction extends GoapAction {
 		this.target = null;
 		this.resetStoredAction();
 		this.resetSpecific();
+
+		// Remove any stored group action references.
+		BaseAction.GroupActionManager.removeFromGroupAction(this.currentlyExecutingUnit);
+		// Reset the group leader flag.
+		this.wasPrevLeader = false;
 	}
 
 	/**
@@ -316,6 +386,20 @@ public abstract class BaseAction extends GoapAction {
 			}
 		}
 		return closestUnit;
+	}
+
+	// -------------------- Group
+
+	/**
+	 * Function for removing any associated groupings regarding a single
+	 * IGoapUnit. This is necessary since the actions can / must not detect
+	 * themselves if the Unit exists / is alive.
+	 * 
+	 * @param goapUnit
+	 *            the Unit whose groupings are being removed.
+	 */
+	public static void removeGroupAssociations(IGoapUnit goapUnit) {
+		BaseAction.GroupActionManager.removeFromGroupAction(goapUnit);
 	}
 
 	// ------------------------------ Getter / Setter

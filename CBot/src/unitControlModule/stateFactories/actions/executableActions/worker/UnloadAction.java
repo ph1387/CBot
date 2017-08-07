@@ -17,9 +17,10 @@ public abstract class UnloadAction extends BaseAction {
 
 	private static final int COUNTER_MAX = 25;
 	private int counter = 0;
-	
+
 	/**
-	 * @param target type: Null
+	 * @param target
+	 *            type: Null
 	 */
 	public UnloadAction(Object target) {
 		super(target);
@@ -34,14 +35,14 @@ public abstract class UnloadAction extends BaseAction {
 		// Counting backwards is more efficient.
 		if (this.counter <= 0) {
 			this.counter = COUNTER_MAX;
-			
+
 			success = ((PlayerUnit) goapUnit).getUnit().returnCargo(true);
 		} else {
 			this.counter--;
 		}
 		return success;
 	}
-	
+
 	@Override
 	protected void resetSpecific() {
 		this.counter = 0;
@@ -64,6 +65,19 @@ public abstract class UnloadAction extends BaseAction {
 
 	@Override
 	protected boolean requiresInRange(IGoapUnit goapUnit) {
+		return false;
+	}
+
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		// All unload actions are executed by a single Unit.
+		return false;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
 		return false;
 	}
 }

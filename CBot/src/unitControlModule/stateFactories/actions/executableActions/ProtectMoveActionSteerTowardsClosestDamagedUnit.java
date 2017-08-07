@@ -24,5 +24,5 @@ public class ProtectMoveActionSteerTowardsClosestDamagedUnit extends ProtectMove
 	}
 
 	// -------------------- Functions
-
+	
 }

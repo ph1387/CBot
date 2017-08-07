@@ -241,6 +241,19 @@ public class ConstructBuildingAction extends BaseAction {
 		return false;
 	}
 
+	// -------------------- Group
+
+	@Override
+	public boolean canPerformGrouped() {
+		// Any construction actions are executed by a single Unit.
+		return false;
+	}
+
+	@Override
+	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		return false;
+	}
+
 	// ------------------------------ Getter / Setter
 
 	public void setTempNeededTilePositions(HashSet<TilePosition> tempNeededTilePositions) {
