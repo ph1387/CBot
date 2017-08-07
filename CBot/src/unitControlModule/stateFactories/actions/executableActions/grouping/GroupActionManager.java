@@ -90,7 +90,7 @@ public class GroupActionManager {
 	 *            therefore must provide a instance of an action for mirroring.
 	 * @return true if the Unit was added towards a group, otherwise false.
 	 */
-	public boolean addToGroupAction(Class<?> type, IGoapUnit goapUnit, GroupableAction action) {
+	public boolean addToGroupAction(Class<? extends GroupableAction> type, IGoapUnit goapUnit, GroupableAction action) {
 		boolean success = false;
 
 		// The Unit must not be already grouped and the action must be

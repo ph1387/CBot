@@ -22,7 +22,7 @@ public class GroupAction {
 	private int maxGroupSize = 5;
 	private int currentGroupSize = 0;
 
-	public GroupAction(Class<?> type) {
+	public GroupAction(Class<? extends GroupableAction> type) {
 		this.type = type;
 	}
 
@@ -64,7 +64,7 @@ public class GroupAction {
 	 * Function for checking if the group has not reached it's maximum available
 	 * capacity.
 	 * 
-	 * @return true if space is availabel and a Unti could be added towards the
+	 * @return true if space is available and a Unit could be added towards the
 	 *         group or false is the maximum capacity of the group has been
 	 *         reached.
 	 */
