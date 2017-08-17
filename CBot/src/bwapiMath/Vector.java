@@ -1,5 +1,10 @@
 package bwapiMath;
 
+import bwapi.Color;
+import bwapi.Game;
+import bwapi.Position;
+import core.Core;
+
 /**
  * Vector.java --- Class used for Vector operations.
  * 
@@ -8,17 +13,49 @@ package bwapiMath;
  */
 public class Vector extends Point {
 
-	private final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
-	private final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
+	// TODO: UML ADD
+	private static final int DEFAULT_ARROW_LENGTH = 5;
+	// TODO: UML ADD
+	private static final int DEFAULT_ARROW_ANGLE_DEG = 30;
+	// TODO: UML ADD
+	private static final Color DEFAULT_ARROW_COLOR = new Color(255, 255, 255);
+	// TODO: UML ADD
+	private static final boolean DEFAULT_ARROW_DIRECTION_SHOWN = true;
+	
+	// TODO: UML CHANGE STATIC
+	private static final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
+	// TODO: UML CHANGE STATIC
+	private static final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
 	private double dirX = 0., dirY = 0.;
 	private double length = 0.;
 
-	public Vector(int x, int y) {
-		super(x, y, Type.NONE);
-	}
+	// TODO: UML REMOVE
+//	public Vector(int x, int y) {
+//		super(x, y, Type.NONE);
+//	}
 
+	// TODO: UML ADD
+	public Vector(Point start, Position end) {
+		this(start, new Point(end));
+	}
+	
+	// TODO: UML ADD
+	public Vector(Position start, Point end) {
+		this(new Point(start), end);
+	}
+	
+	// TODO: UML ADD
+	public Vector(Position start, Position end) {
+		this(new Point(start), new Point(end));
+	}
+	
+	// TODO: UML ADD
+	public Vector(Point start, Point end) {
+		this(start.getX(), start.getY(), end.getX() - start.getX(), end.getY() - start.getY());
+	}
+	
 	public Vector(int x, int y, double dirX, double dirY) {
-		this(x, y);
+		super(x, y, Point.Type.NONE);
 
 		this.dirX = dirX;
 		this.dirY = dirY;
@@ -122,13 +159,13 @@ public class Vector extends Point {
 		if (this.dirX == 0.) {
 			rY = new Double(new Double(-1 * this.y + point.y) / new Double(this.dirY));
 
-			if (Math.abs(Math.abs(this.x) - Math.abs(point.x)) < this.NEEDED_MP_MAX_DIFF) {
+			if (Math.abs(Math.abs(this.x) - Math.abs(point.x)) < NEEDED_MP_MAX_DIFF) {
 				returnValue = rY;
 			}
 		} else if (this.dirY == 0.) {
 			rX = new Double(new Double(-1 * this.x + point.x) / new Double(this.dirX));
 
-			if (Math.abs(Math.abs(this.y) - Math.abs(point.y)) < this.NEEDED_MP_MAX_DIFF) {
+			if (Math.abs(Math.abs(this.y) - Math.abs(point.y)) < NEEDED_MP_MAX_DIFF) {
 				returnValue = rX;
 			}
 		}
@@ -146,7 +183,7 @@ public class Vector extends Point {
 				rY = rX;
 			}
 
-			if (Math.abs(Math.abs(rX) - Math.abs(rY)) < this.NEEDED_MP_MAX_DIFF) {
+			if (Math.abs(Math.abs(rX) - Math.abs(rY)) < NEEDED_MP_MAX_DIFF) {
 				returnValue = rX; // Could also be rY
 			}
 		}
@@ -174,9 +211,9 @@ public class Vector extends Point {
 			r = (new Double(vectorB.x - this.x + s * vectorB.dirX)) / new Double(this.dirX);
 		}
 
-		if (Math.abs(Math.abs(this.x + r * this.dirX) - Math.abs(vectorB.x + s * vectorB.dirX)) < this.INTERSEC_MAX_DIFF
+		if (Math.abs(Math.abs(this.x + r * this.dirX) - Math.abs(vectorB.x + s * vectorB.dirX)) < INTERSEC_MAX_DIFF
 				&& Math.abs(Math.abs(this.y + r * this.dirY)
-						- Math.abs(vectorB.y + s * vectorB.dirY)) < this.INTERSEC_MAX_DIFF) {
+						- Math.abs(vectorB.y + s * vectorB.dirY)) < INTERSEC_MAX_DIFF) {
 			return new Point((int) (this.x + r * this.dirX), (int) (this.y + r * this.dirY), this.type);
 		} else {
 			return null;
@@ -248,8 +285,66 @@ public class Vector extends Point {
 		return Math.toDegrees(Math.acos(this.getScalarProduct(vectorB) / (this.length * vectorB.length())));
 	}
 	
+	// TODO: UML JAVADOC
+	public void display() {
+		this.display(DEFAULT_ARROW_COLOR);
+	}
+	
+	// TODO: UML JAVADOC
+	public void display(Color color) {
+		this.display(color, DEFAULT_ARROW_DIRECTION_SHOWN);
+	}
+	
+	// TODO: UML JAVADOC
+	public void display(Color color, boolean showDirection) {
+		this.display(color, showDirection, DEFAULT_ARROW_LENGTH, DEFAULT_ARROW_ANGLE_DEG);
+	}
+
+	// TODO: UML JAVADOC
+	public void display(Color color, boolean showDirection, int arrowLength, int arrowAngleDeg) {
+		Position start = new Position(this.x, this.y);
+		Position end = new Position((int)(this.x + this.dirX), (int)(this.y + this.dirY));
+		Game game = Core.getInstance().getGame();
+		
+		game.drawLineMap(start, end, color);
+		
+		// Display the direction of the Vector.
+		if(showDirection) {
+			Vector arrowLeft = new Vector(end.getX(), end.getY(), start.getX() - end.getX(), start.getY() - end.getY());
+			Vector arrowRight = new Vector(end.getX(), end.getY(), start.getX() - end.getX(), start.getY() - end.getY());
+			
+			// Shorten the Vectors.
+			arrowLeft.setToLength(arrowLength);
+			arrowRight.setToLength(arrowLength);
+			
+			// Rotate them accordingly.
+			arrowLeft.rotateLeftDEG(arrowAngleDeg);
+			arrowRight.rotateRightDEG(arrowAngleDeg);
+			
+			// Display them on the map.
+			game.drawLineMap(end, new Position((int)(arrowLeft.getX() + arrowLeft.getDirX()), (int)(arrowLeft.getY() + arrowLeft.getDirY())), color);
+			game.drawLineMap(end, new Position((int)(arrowRight.getX() + arrowRight.getDirX()), (int)(arrowRight.getY() + arrowRight.getDirY())), color);
+		}
+	}
+
 	// ------------------------------ Getter / Setter
 
+	// TODO: UML ADD
+	@Override
+	public void setX(Integer x) {
+		this.x = x;
+		
+		this.updateLength();
+	}
+
+	// TODO: UML ADD
+	@Override
+	public void setY(Integer y) {
+		this.y = y;
+		
+		this.updateLength();
+	}
+	
 	public double getDirX() {
 		return dirX;
 	}

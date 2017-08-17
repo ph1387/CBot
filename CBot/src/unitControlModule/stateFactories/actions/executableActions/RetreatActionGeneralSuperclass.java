@@ -240,5 +240,5 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 		return ((PlayerUnit) groupMember).getUnit().move(this.retreatPosition);
 	}
-
+	
 }

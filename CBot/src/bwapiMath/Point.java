@@ -1,5 +1,6 @@
 package bwapiMath;
 
+import bwapi.Color;
 import bwapi.Position;
 import bwapi.TilePosition;
 import core.Core;
@@ -12,6 +13,13 @@ import core.Core;
  */
 public class Point {
 
+	// TODO: UML ADD
+	private static final int DEFAULT_RADIUS = 5;
+	// TODO: UML ADD
+	private static final boolean DEFAULT_FILLED = true;
+	// TODO: UML ADD
+	private static final Color DEFAULT_COLOR = new Color(255, 255, 255);
+	
 	public static enum Direction {
 		NULL, LEFT, TOP, RIGHT, BOTTOM
 	}
@@ -170,6 +178,30 @@ public class Point {
 		return dir;
 	}
 
+	// TODO: UML ADD JAVADOC
+	public void display() {
+		this.display(DEFAULT_COLOR);
+	}
+	
+	// TODO: UML ADD JAVADOC
+	public void display(Color color) {
+		this.display(color, DEFAULT_FILLED);
+	}
+	
+	// TODO: UML ADD JAVADOC
+	public void display(Color color, boolean filled) {
+		this.display(DEFAULT_RADIUS, color, filled);
+	}
+
+	// TODO: UML ADD JAVADOC
+	public void display(int radius, Color color, boolean filled) {
+		if(filled) {
+			Core.getInstance().getGame().drawCircleMap(this.toPosition(), radius, color, true);
+		} else {
+			Core.getInstance().getGame().drawCircleMap(this.toPosition(), radius, color);
+		}
+	}
+	
 	// ------------------------------ Getter / Setter
 
 	public Integer getX() {

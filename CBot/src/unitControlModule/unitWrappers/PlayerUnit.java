@@ -11,6 +11,7 @@ import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapiMath.Point;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
@@ -21,6 +22,7 @@ import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.updater.Updater;
 
+// TODO: UML ADD INTERFACE
 /**
  * PlayerUnit.java --- Wrapper for a player unit. All Player Units derive from
  * this.
@@ -28,7 +30,7 @@ import unitControlModule.stateFactories.updater.Updater;
  * @author P H - 20.02.2017
  *
  */
-public abstract class PlayerUnit extends GoapUnit {
+public abstract class PlayerUnit extends GoapUnit implements IRetreatUnit  {
 
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
@@ -456,6 +458,11 @@ public abstract class PlayerUnit extends GoapUnit {
 		return this.confidence >= CONFIDENCE_THRESHHOLD;
 	}
 
+	// TODO: UML ADD
+	public Point defineCurrentPosition() {
+		return new Point(this.unit.getPosition());
+	}
+	
 	// ------------------------------ Getter / Setter
 
 	public Unit getUnit() {
