@@ -1,5 +1,7 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
+import java.util.HashMap;
+
 import bwapi.Color;
 import bwapiMath.Point;
 import bwapiMath.Vector;
@@ -16,6 +18,7 @@ public class RetreatPositionCluster {
 	
 	private int radiusDefault = 1;
 	private RetreatPositionClusterElement[][] endpositionClusterElements;
+	private HashMap<RetreatUnit, RetreatPositionClusterElement> mappedUnitsToClusterElements = new HashMap<>();
 	private int radiusCurrent = this.radiusDefault;
 	private int sizeMax= 0;
 	private int sizeCurrent = 0;
@@ -102,7 +105,7 @@ public class RetreatPositionCluster {
 		return invalidPositionCount;
 	}
 	
-	public void addUnit(RetreatUnit iRetreatUnit) {
+	public void addUnit(RetreatUnit retreatUnit) {
 		RetreatPositionClusterElement closestFreeEndposition = null;
 		Vector vecClosestFreeEndposition = null;
 		
@@ -112,7 +115,7 @@ public class RetreatPositionCluster {
 		for (RetreatPositionClusterElement[] endpositionClusterElements : endpositionClusterElements) {
 			for (RetreatPositionClusterElement endpositionClusterElement : endpositionClusterElements) {
 				if(endpositionClusterElement.isFree()) {
-					Vector vecEndpositionClusterElement = new Vector(iRetreatUnit.defineCurrentPosition(), endpositionClusterElement.getPosition());
+					Vector vecEndpositionClusterElement = new Vector(retreatUnit.defineCurrentPosition(), endpositionClusterElement.getPosition());
 					
 					if(closestFreeEndposition == null || vecEndpositionClusterElement.length() < vecClosestFreeEndposition.length()) {
 						closestFreeEndposition = endpositionClusterElement;
@@ -123,7 +126,10 @@ public class RetreatPositionCluster {
 		}
 		
 		// Insert the new Unit at the found matrix space.
-		closestFreeEndposition.setUnit(iRetreatUnit);
+		closestFreeEndposition.setUnit(retreatUnit);
+		
+		// Add the Unit to the map of stored Units.
+		this.mappedUnitsToClusterElements.put(retreatUnit, closestFreeEndposition);
 		
 		this.sizeCurrent++;
 	}
@@ -174,6 +180,13 @@ public class RetreatPositionCluster {
 		}
 	}
 	
+	public boolean containsRetreatUnit(RetreatUnit retreatUnit) {
+		return this.mappedUnitsToClusterElements.containsKey(retreatUnit);
+	}
+	
 	// ------------------------------ Getter / Setter
 
+	public RetreatPositionClusterElement getAssignedPosition(RetreatUnit retreatUnit) {
+		return this.mappedUnitsToClusterElements.get(retreatUnit);
+	}
 }

@@ -3,9 +3,13 @@ package unitControlModule.stateFactories.actions.executableActions;
 import java.util.HashSet;
 
 import bwapi.Color;
+import bwapi.Pair;
 import bwapi.Position;
 import bwapi.Unit;
+import bwapiMath.Point;
+import bwapiMath.Polygon;
 import bwapiMath.Vector;
+import bwta.Region;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -37,6 +41,10 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	// vecEU -> Vector(enemyUnit, playerUnit)
 	// vecUTP -> Vector(playerUnit, targetPosition)
 	protected Vector vecEU, vecUTP;
+	
+	// TODO: UML ADD
+	// Group related stuff.
+	private RetreatPositionCluster retreatPositionCluster;
 
 	/**
 	 * @param target
@@ -102,6 +110,37 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 			// gets set when performAction() gets called.
 			this.retreatPosition = this.generatedTempRetreatPosition;
 			RetreatActionGeneralSuperclass.gatheringPoints.add(this.generatedTempRetreatPosition);
+			
+			
+			
+			
+			
+			
+			// TODO: WIP
+			class Validator implements RetreatPositionValidator {
+
+				Position retreatPosition;
+				
+				public Validator(Position retreatPosition) {
+					this.retreatPosition = retreatPosition;
+				}
+				
+				@Override
+				public boolean validatePosition(Point position) {
+					Pair<Region, Polygon> boundaries = BaseAction.findBoundariesPositionIsIn(new Position(position.getX(), position.getY()));
+					return boundaries != null && boundaries.equals(BaseAction.findBoundariesPositionIsIn(this.retreatPosition));
+				}
+				
+			}
+			Validator validator = new Validator(this.retreatPosition);
+			this.retreatPositionCluster = new RetreatPositionCluster((RetreatUnit) this.currentlyExecutingUnit, new Point(this.retreatPosition), 32, 90, validator);
+				
+				
+			
+			
+			
+			
+			
 		} else if (this.actionChangeTrigger && this.generatedTempRetreatPosition == null) {
 			success = false;
 		}
@@ -223,6 +262,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	protected void resetSpecific() {
 		this.retreatPosition = null;
 		this.generatedTempRetreatPosition = null;
+		this.retreatPositionCluster = null;
 	}
 
 	// -------------------- Group
@@ -234,11 +274,29 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
-		// TODO: DEBUG INFO
-		Core.getInstance().getGame().drawLineMap(((PlayerUnit) groupMember).getUnit().getPosition(),
-				this.retreatPosition, new Color(255, 128, 0));
-
-		return ((PlayerUnit) groupMember).getUnit().move(this.retreatPosition);
+//		// TODO: DEBUG INFO
+//		Core.getInstance().getGame().drawLineMap(((PlayerUnit) groupMember).getUnit().getPosition(),
+//				this.retreatPosition, new Color(255, 128, 0));
+//
+//		return ((PlayerUnit) groupMember).getUnit().move(this.retreatPosition);
+		
+		
+		
+		
+		
+		
+		// TODO: WIP
+		// Add the Unit to the cluster if it was missing before.
+		if(!this.retreatPositionCluster.containsRetreatUnit((RetreatUnit) groupMember)) {
+			this.retreatPositionCluster.addUnit((RetreatUnit) groupMember);
+		}
+		
+		// TODO: WIP DEBUG INFO
+		this.retreatPositionCluster.display();
+		
+		// Move the Unit to it's assigned location.
+		Point position = this.retreatPositionCluster.getAssignedPosition((RetreatUnit) groupMember).getPosition();
+		return ((PlayerUnit) groupMember).getUnit().move(new Position(position.getX(), position.getY()));
 	}
 	
 }
