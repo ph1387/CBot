@@ -20,6 +20,7 @@ import informationStorage.InformationStorage;
 import javaGOAP.GoapUnit;
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.StateFactory;
+import unitControlModule.stateFactories.actions.executableActions.RetreatUnit;
 import unitControlModule.stateFactories.updater.Updater;
 
 // TODO: UML ADD INTERFACE
@@ -30,7 +31,7 @@ import unitControlModule.stateFactories.updater.Updater;
  * @author P H - 20.02.2017
  *
  */
-public abstract class PlayerUnit extends GoapUnit implements IRetreatUnit  {
+public abstract class PlayerUnit extends GoapUnit implements RetreatUnit  {
 
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
