@@ -13,47 +13,32 @@ import core.Core;
  */
 public class Vector extends Point {
 
-	// TODO: UML ADD
 	private static final int DEFAULT_ARROW_LENGTH = 5;
-	// TODO: UML ADD
 	private static final int DEFAULT_ARROW_ANGLE_DEG = 30;
-	// TODO: UML ADD
 	private static final Color DEFAULT_ARROW_COLOR = new Color(255, 255, 255);
-	// TODO: UML ADD
 	private static final boolean DEFAULT_ARROW_DIRECTION_SHOWN = true;
-	
-	// TODO: UML CHANGE STATIC
+
 	private static final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
-	// TODO: UML CHANGE STATIC
 	private static final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
 	private double dirX = 0., dirY = 0.;
 	private double length = 0.;
 
-	// TODO: UML REMOVE
-//	public Vector(int x, int y) {
-//		super(x, y, Type.NONE);
-//	}
-
-	// TODO: UML ADD
 	public Vector(Point start, Position end) {
 		this(start, new Point(end));
 	}
-	
-	// TODO: UML ADD
+
 	public Vector(Position start, Point end) {
 		this(new Point(start), end);
 	}
-	
-	// TODO: UML ADD
+
 	public Vector(Position start, Position end) {
 		this(new Point(start), new Point(end));
 	}
-	
-	// TODO: UML ADD
+
 	public Vector(Point start, Point end) {
 		this(start.getX(), start.getY(), end.getX() - start.getX(), end.getY() - start.getY());
 	}
-	
+
 	public Vector(int x, int y, double dirX, double dirY) {
 		super(x, y, Point.Type.NONE);
 
@@ -92,7 +77,7 @@ public class Vector extends Point {
 	public void rotateLeftRAD(double alpha) {
 		double newDirX = this.dirX * Math.cos(alpha) + this.dirY * Math.sin(alpha);
 		double newDirY = -1. * this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha);
-		
+
 		this.dirX = newDirX;
 		this.dirY = newDirY;
 		this.updateLength();
@@ -116,7 +101,7 @@ public class Vector extends Point {
 	public void rotateRightRAD(double alpha) {
 		double newDirX = this.dirX * Math.cos(alpha) - this.dirY * Math.sin(alpha);
 		double newDirY = this.dirX * Math.sin(alpha) + this.dirY * Math.cos(alpha);
-		
+
 		this.dirX = newDirX;
 		this.dirY = newDirY;
 		this.updateLength();
@@ -124,12 +109,13 @@ public class Vector extends Point {
 
 	/**
 	 * Function for retrieving the length of the Vector.
+	 * 
 	 * @return the length of the Vector.
 	 */
 	public double length() {
 		return this.length;
 	}
-	
+
 	/**
 	 * Function for updating the stored length of the Vector. This is necessary
 	 * since calculating it over and over again would create unnecessary cpu
@@ -238,7 +224,7 @@ public class Vector extends Point {
 	public void normalize() {
 		double newDirX = (1. / this.length()) * this.dirX;
 		double newDirY = (1. / this.length()) * this.dirY;
-		
+
 		this.dirX = newDirX;
 		this.dirY = newDirY;
 		this.updateLength();
@@ -252,7 +238,7 @@ public class Vector extends Point {
 	 */
 	public void setToLength(double length) {
 		this.normalize();
-		
+
 		this.dirX *= length;
 		this.dirY *= length;
 		this.updateLength();
@@ -284,84 +270,119 @@ public class Vector extends Point {
 	public double getAngleToVector(Vector vectorB) {
 		return Math.toDegrees(Math.acos(this.getScalarProduct(vectorB) / (this.length * vectorB.length())));
 	}
-	
-	// TODO: UML JAVADOC
+
+	/**
+	 * Convenience function. The values being used are the default ones.
+	 * 
+	 * @see Vector#display(Color, boolean, int, int)
+	 */
 	public void display() {
 		this.display(DEFAULT_ARROW_COLOR);
 	}
-	
-	// TODO: UML JAVADOC
+
+	/**
+	 * Convenience function.
+	 * 
+	 * @see Vector#display(Color, boolean, int, int)
+	 * @param color
+	 *            the color of the displayed Vector.
+	 */
 	public void display(Color color) {
 		this.display(color, DEFAULT_ARROW_DIRECTION_SHOWN);
 	}
-	
-	// TODO: UML JAVADOC
+
+	/**
+	 * Convenience function. If the direction flag is set the values being used
+	 * are the default ones.
+	 * 
+	 * @see Vector#display(Color, boolean, int, int)
+	 * @param color
+	 *            the color of the displayed Vector.
+	 * @param showDirection
+	 *            flag for determining if the direction of the Vector should be
+	 *            shown with an arrow.
+	 */
 	public void display(Color color, boolean showDirection) {
 		this.display(color, showDirection, DEFAULT_ARROW_LENGTH, DEFAULT_ARROW_ANGLE_DEG);
 	}
 
-	// TODO: UML JAVADOC
+	/**
+	 * Function for displaying the Vector on the ingame map.
+	 * 
+	 * @param color
+	 *            the color of the displayed Vector.
+	 * @param showDirection
+	 *            flag for determining if the direction of the Vector should be
+	 *            shown with an arrow.
+	 * @param arrowLength
+	 *            the length of the arrow head sides. Can be ignored if the
+	 *            direction flag is not set.
+	 * @param arrowAngleDeg
+	 *            the degree at which the arrow head sides are shown. Can be
+	 *            ignored if the direction flag is not set.
+	 */
 	public void display(Color color, boolean showDirection, int arrowLength, int arrowAngleDeg) {
 		Position start = new Position(this.x, this.y);
-		Position end = new Position((int)(this.x + this.dirX), (int)(this.y + this.dirY));
+		Position end = new Position((int) (this.x + this.dirX), (int) (this.y + this.dirY));
 		Game game = Core.getInstance().getGame();
-		
+
 		game.drawLineMap(start, end, color);
-		
+
 		// Display the direction of the Vector.
-		if(showDirection) {
+		if (showDirection) {
 			Vector arrowLeft = new Vector(end.getX(), end.getY(), start.getX() - end.getX(), start.getY() - end.getY());
-			Vector arrowRight = new Vector(end.getX(), end.getY(), start.getX() - end.getX(), start.getY() - end.getY());
-			
+			Vector arrowRight = new Vector(end.getX(), end.getY(), start.getX() - end.getX(),
+					start.getY() - end.getY());
+
 			// Shorten the Vectors.
 			arrowLeft.setToLength(arrowLength);
 			arrowRight.setToLength(arrowLength);
-			
+
 			// Rotate them accordingly.
 			arrowLeft.rotateLeftDEG(arrowAngleDeg);
 			arrowRight.rotateRightDEG(arrowAngleDeg);
-			
+
 			// Display them on the map.
-			game.drawLineMap(end, new Position((int)(arrowLeft.getX() + arrowLeft.getDirX()), (int)(arrowLeft.getY() + arrowLeft.getDirY())), color);
-			game.drawLineMap(end, new Position((int)(arrowRight.getX() + arrowRight.getDirX()), (int)(arrowRight.getY() + arrowRight.getDirY())), color);
+			game.drawLineMap(end, new Position((int) (arrowLeft.getX() + arrowLeft.getDirX()),
+					(int) (arrowLeft.getY() + arrowLeft.getDirY())), color);
+			game.drawLineMap(end, new Position((int) (arrowRight.getX() + arrowRight.getDirX()),
+					(int) (arrowRight.getY() + arrowRight.getDirY())), color);
 		}
 	}
 
 	// ------------------------------ Getter / Setter
 
-	// TODO: UML ADD
 	@Override
 	public void setX(Integer x) {
 		this.x = x;
-		
+
 		this.updateLength();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public void setY(Integer y) {
 		this.y = y;
-		
+
 		this.updateLength();
 	}
-	
+
 	public double getDirX() {
 		return dirX;
 	}
-	
+
 	public void setDirX(double dirX) {
 		this.dirX = dirX;
-		
+
 		this.updateLength();
 	}
-	
+
 	public double getDirY() {
 		return dirY;
 	}
 
 	public void setDirY(double dirY) {
 		this.dirY = dirY;
-		
+
 		this.updateLength();
 	}
 }

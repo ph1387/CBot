@@ -27,7 +27,7 @@ public class UnitTrackerModule {
 	private static final double FLAT_DPS_MULTIPLIER = 100.;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
-	private static boolean enablePlayerStrength = false;
+	private static boolean enablePlayerStrength = true;
 	private static boolean enableEnemyStrength = true;
 
 	// Tracking information

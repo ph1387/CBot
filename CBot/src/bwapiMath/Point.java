@@ -13,13 +13,10 @@ import core.Core;
  */
 public class Point {
 
-	// TODO: UML ADD
 	private static final int DEFAULT_RADIUS = 5;
-	// TODO: UML ADD
 	private static final boolean DEFAULT_FILLED = true;
-	// TODO: UML ADD
 	private static final Color DEFAULT_COLOR = new Color(255, 255, 255);
-	
+
 	public static enum Direction {
 		NULL, LEFT, TOP, RIGHT, BOTTOM
 	}
@@ -178,30 +175,59 @@ public class Point {
 		return dir;
 	}
 
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Convenience function. The values used are the default ones.
+	 * 
+	 * @see Point#display(int, Color, boolean)
+	 */
 	public void display() {
 		this.display(DEFAULT_COLOR);
 	}
-	
-	// TODO: UML ADD JAVADOC
+
+	/**
+	 * Convenience function.
+	 * 
+	 * @see Point#display(int, Color, boolean)
+	 * @param color
+	 *            the color of the displayed Point.
+	 */
 	public void display(Color color) {
 		this.display(color, DEFAULT_FILLED);
 	}
-	
-	// TODO: UML ADD JAVADOC
+
+	/**
+	 * Convenience function.
+	 * 
+	 * @see Point#display(int, Color, boolean)
+	 * @param color
+	 *            the color of the displayed Point.
+	 * @param filled
+	 *            flag determining if the Point should be displayed filled or
+	 *            not.
+	 */
 	public void display(Color color, boolean filled) {
 		this.display(DEFAULT_RADIUS, color, filled);
 	}
 
-	// TODO: UML ADD JAVADOC
+	/**
+	 * Function for displaying the Point on the ingame map.
+	 * 
+	 * @param radius
+	 *            the radius of the displayed Point.
+	 * @param color
+	 *            the color of the displayed Point.
+	 * @param filled
+	 *            flag determining if the Point should be displayed filled or
+	 *            not.
+	 */
 	public void display(int radius, Color color, boolean filled) {
-		if(filled) {
+		if (filled) {
 			Core.getInstance().getGame().drawCircleMap(this.toPosition(), radius, color, true);
 		} else {
 			Core.getInstance().getGame().drawCircleMap(this.toPosition(), radius, color);
 		}
 	}
-	
+
 	// ------------------------------ Getter / Setter
 
 	public Integer getX() {

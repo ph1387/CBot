@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 
-import bwapi.Color;
 import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
@@ -15,7 +14,6 @@ import bwapiMath.Point;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
-import core.Display;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapUnit;
 import javaGOAP.GoapAction;
@@ -23,7 +21,6 @@ import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.actions.executableActions.RetreatUnit;
 import unitControlModule.stateFactories.updater.Updater;
 
-// TODO: UML ADD INTERFACE
 /**
  * PlayerUnit.java --- Wrapper for a player unit. All Player Units derive from
  * this.
@@ -31,7 +28,7 @@ import unitControlModule.stateFactories.updater.Updater;
  * @author P H - 20.02.2017
  *
  */
-public abstract class PlayerUnit extends GoapUnit implements RetreatUnit  {
+public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
@@ -192,11 +189,12 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit  {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Function for generating the confidence of the Unit which determines if it
 	 * attacks an enemy Unit / building, retreats to another player Unit or
 	 * takes a completely different action.
+	 * 
 	 * @return
 	 */
 	protected abstract double generateConfidence();
@@ -459,11 +457,12 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit  {
 		return this.confidence >= CONFIDENCE_THRESHHOLD;
 	}
 
-	// TODO: UML ADD
+	// -------------------- RetreatUnit
+
 	public Point defineCurrentPosition() {
 		return new Point(this.unit.getPosition());
 	}
-	
+
 	// ------------------------------ Getter / Setter
 
 	public Unit getUnit() {
@@ -512,4 +511,5 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit  {
 	public void removeCorrespondingAgent() {
 		this.dispatchRemoveAgentEvent();
 	}
+	
 }
