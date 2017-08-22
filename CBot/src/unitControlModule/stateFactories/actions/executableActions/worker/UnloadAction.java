@@ -1,7 +1,6 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import javaGOAP.IGoapUnit;
-import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -13,7 +12,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  * @author P H - 26.06.2017
  *
  */
-public abstract class UnloadAction extends BaseAction {
+public abstract class UnloadAction extends WorkerAction {
 
 	private static final int COUNTER_MAX = 25;
 	private int counter = 0;
@@ -58,38 +57,16 @@ public abstract class UnloadAction extends BaseAction {
 		return 0;
 	}
 
-	@Override
-	protected boolean isInRange(IGoapUnit goapUnit) {
-		return false;
-	}
+	// TODO: UML REMOVE
+//	@Override
+//	protected boolean isInRange(IGoapUnit goapUnit) {
+//		return false;
+//	}
 
-	@Override
-	protected boolean requiresInRange(IGoapUnit goapUnit) {
-		return false;
-	}
+	// TODO: UML REMOVE
+//	@Override
+//	protected boolean requiresInRange(IGoapUnit goapUnit) {
+//		return false;
+//	}
 
-	// -------------------- Group
-
-	@Override
-	public boolean canPerformGrouped() {
-		// All unload actions are executed by a single Unit.
-		return false;
-	}
-
-	@Override
-	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
-		return false;
-	}
-	
-	// TODO: UML ADD
-	@Override
-	public int defineMaxGroupSize() {
-		return 0;
-	}
-	
-	// TODO: UML ADD
-	@Override
-	public int defineMaxLeaderTileDistance() {
-		return 0;
-	}
 }

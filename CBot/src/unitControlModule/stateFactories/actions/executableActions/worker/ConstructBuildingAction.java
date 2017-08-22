@@ -8,7 +8,6 @@ import bwapi.UnitType;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
-import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
@@ -19,7 +18,7 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  * @author P H - 02.04.2017
  *
  */
-public class ConstructBuildingAction extends BaseAction {
+public class ConstructBuildingAction extends WorkerAction {
 
 	// Safety feature for the isDone function, since the Unit could take a while
 	// to start constructing after executing the command, which gets executed at
@@ -231,40 +230,17 @@ public class ConstructBuildingAction extends BaseAction {
 						.getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.CONFIRMED;
 	}
 
-	@Override
-	protected boolean isInRange(IGoapUnit goapUnit) {
-		return false;
-	}
+	// TODO: UML REMOVE
+//	@Override
+//	protected boolean isInRange(IGoapUnit goapUnit) {
+//		return false;
+//	}
 
-	@Override
-	protected boolean requiresInRange(IGoapUnit goapUnit) {
-		return false;
-	}
-
-	// -------------------- Group
-
-	@Override
-	public boolean canPerformGrouped() {
-		// Any construction actions are executed by a single Unit.
-		return false;
-	}
-
-	@Override
-	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
-		return false;
-	}
-	
-	// TODO: UML ADD
-	@Override
-	public int defineMaxGroupSize() {
-		return 0;
-	}
-	
-	// TODO: UML ADD
-	@Override
-	public int defineMaxLeaderTileDistance() {
-		return 0;
-	}
+	// TODO: UML REMOVE
+//	@Override
+//	protected boolean requiresInRange(IGoapUnit goapUnit) {
+//		return false;
+//	}
 
 	// ------------------------------ Getter / Setter
 

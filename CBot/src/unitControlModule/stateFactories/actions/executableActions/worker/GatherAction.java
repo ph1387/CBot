@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.actions.executableActions.worker;
 import bwapi.Unit;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
-import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
@@ -14,7 +13,7 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  * @author P H - 29.03.2017
  *
  */
-public class GatherAction extends BaseAction {
+public class GatherAction extends WorkerAction {
 
 	protected Unit gatheringSourceTemp = null;
 	protected Unit gatheringSource = null;
@@ -92,15 +91,17 @@ public class GatherAction extends BaseAction {
 		return this.target == null || !((Unit) this.target).exists();
 	}
 
-	@Override
-	protected boolean isInRange(IGoapUnit goapUnit) {
-		return false;
-	}
+	// TODO: UML REMOVE
+//	@Override
+//	protected boolean isInRange(IGoapUnit goapUnit) {
+//		return false;
+//	}
 
-	@Override
-	protected boolean requiresInRange(IGoapUnit goapUnit) {
-		return false;
-	}
+	// TODO: UML REMOVE
+//	@Override
+//	protected boolean requiresInRange(IGoapUnit goapUnit) {
+//		return false;
+//	}
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
@@ -122,31 +123,6 @@ public class GatherAction extends BaseAction {
 			}
 		}
 		return success;
-	}
-
-	// -------------------- Group
-
-	@Override
-	public boolean canPerformGrouped() {
-		// All gather actions are executed by a single Unit.
-		return false;
-	}
-
-	@Override
-	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
-		return false;
-	}
-	
-	// TODO: UML ADD
-	@Override
-	public int defineMaxGroupSize() {
-		return 0;
-	}
-
-	// TODO: UML ADD
-	@Override
-	public int defineMaxLeaderTileDistance() {
-		return 0;
 	}
 
 }
