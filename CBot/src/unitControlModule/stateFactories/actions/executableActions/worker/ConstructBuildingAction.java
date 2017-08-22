@@ -259,6 +259,12 @@ public class ConstructBuildingAction extends BaseAction {
 	public int defineMaxGroupSize() {
 		return 0;
 	}
+	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxLeaderTileDistance() {
+		return 0;
+	}
 
 	// ------------------------------ Getter / Setter
 

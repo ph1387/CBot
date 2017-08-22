@@ -110,6 +110,12 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 		return 0;
 	}
 	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxLeaderTileDistance() {
+		return 0;
+	}
+	
 	// ------------------------------ Getter / Setter
 
 }

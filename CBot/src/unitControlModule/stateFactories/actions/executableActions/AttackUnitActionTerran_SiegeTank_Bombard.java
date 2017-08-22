@@ -113,5 +113,11 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 	public int defineMaxGroupSize() {
 		return 0;
 	}
+
+	// TODO: UML ADD
+	@Override
+	public int defineMaxLeaderTileDistance() {
+		return 0;
+	}
 	
 }

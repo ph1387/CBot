@@ -76,6 +76,8 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	private int matrixTurnAngleYDEG = 90;
 	// TODO: UML ADD
 	private int maxGroupSize = 5;
+	// TODO: UML ADD
+	private int maxLeaderTileDistance = 5;
 
 	/**
 	 * @param target
@@ -298,6 +300,12 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	@Override
 	public int defineMaxGroupSize() {
 		return this.maxGroupSize;
+	}
+	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxLeaderTileDistance() {
+		return this.maxLeaderTileDistance;
 	}
 
 }

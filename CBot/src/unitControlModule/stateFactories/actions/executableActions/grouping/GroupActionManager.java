@@ -19,10 +19,11 @@ public class GroupActionManager {
 
 	private HashMap<Class<?>, HashSet<GroupAction>> storedGroups = new HashMap<>();
 	private HashMap<IGoapUnit, GroupAction> mappedUnits = new HashMap<>();
+	// TODO: UML REMOVE
 	// The maximum range in tiles (X and Y) that a leader is allowed to be away.
 	// Grouping is not affected by actions like retreating from an enemy since
 	// these are handled separately.
-	private int maxLeaderTileRange = 5;
+//	private int maxLeaderTileRange = 5;
 
 	// -------------------- Functions
 
@@ -106,7 +107,8 @@ public class GroupActionManager {
 			}
 
 			// Find the potential groups that the Unit can be added to.
-			HashSet<GroupAction> potentialGroups = this.extractViableGroups(type, goapUnit);
+			HashSet<GroupAction> potentialGroups = this.extractViableGroups(type, goapUnit,
+					action.defineMaxLeaderTileDistance());
 
 			// If no remain create a new group just for the Unit itself.
 			if (potentialGroups.isEmpty()) {
@@ -127,6 +129,7 @@ public class GroupActionManager {
 		return success;
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for extracting groups that the Unit is able to join. The groups
 	 * that are going to be looked at are the ones stored in this instance. From
@@ -136,15 +139,19 @@ public class GroupActionManager {
 	 *            the type / Class of action that the Unit is going to join.
 	 * @param goapUnit
 	 *            the Unit that is going to join a group.
+	 * @param maxLeaderTileDistance
+	 *            the maximum distance in TilePositions that a leader is allowed
+	 *            to be away from the Unit.
 	 * @return a HashSet of all groups that the Unit is able to join.
 	 */
-	private HashSet<GroupAction> extractViableGroups(Class<?> type, IGoapUnit goapUnit) {
+	private HashSet<GroupAction> extractViableGroups(Class<?> type, IGoapUnit goapUnit, int maxLeaderTileDistance) {
 		HashSet<GroupAction> potentialGroups = new HashSet<>();
 
 		// Get all groups with the same action and extract the ones that are not
 		// already full and in acceptable range.
 		for (GroupAction groupAction : this.storedGroups.get(type)) {
-			if (groupAction.isSpaceAvailable() && this.isLeaderInTileRange(goapUnit, groupAction)) {
+			if (groupAction.isSpaceAvailable()
+					&& this.isLeaderInTileRange(goapUnit, groupAction, maxLeaderTileDistance)) {
 				potentialGroups.add(groupAction);
 			}
 		}
@@ -152,6 +159,7 @@ public class GroupActionManager {
 		return potentialGroups;
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for checking if a group's leader is in an acceptable, predefined
 	 * tile range around a provided Unit.
@@ -161,16 +169,19 @@ public class GroupActionManager {
 	 * @param groupAction
 	 *            the group whose leader must be in a certain tile range around
 	 *            the provided Unit.
+	 * @param maxLeaderTileDistance
+	 *            the maximum distance in TilePositions that a leader is allowed
+	 *            to be away from the Unit.
 	 * @return true if the group's leader is in an acceptable tile range, false
 	 *         if it is not.
 	 */
-	private boolean isLeaderInTileRange(IGoapUnit goapUnit, GroupAction groupAction) {
+	private boolean isLeaderInTileRange(IGoapUnit goapUnit, GroupAction groupAction, int maxLeaderTileDistance) {
 		TilePosition unitTilePosition = ((PlayerUnit) goapUnit).getUnit().getTilePosition();
 		TilePosition leaderTilePosition = ((PlayerUnit) groupAction.getLeader()).getUnit().getTilePosition();
 
 		// X and Y coordinates are in the acceptable range.
-		return (Math.abs(unitTilePosition.getX() - leaderTilePosition.getX()) <= this.maxLeaderTileRange)
-				&& (Math.abs(unitTilePosition.getY() - leaderTilePosition.getY()) <= this.maxLeaderTileRange);
+		return (Math.abs(unitTilePosition.getX() - leaderTilePosition.getX()) <= maxLeaderTileDistance)
+				&& (Math.abs(unitTilePosition.getY() - leaderTilePosition.getY()) <= maxLeaderTileDistance);
 	}
 
 	/**

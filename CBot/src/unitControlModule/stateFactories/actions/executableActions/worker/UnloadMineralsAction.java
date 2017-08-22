@@ -35,10 +35,4 @@ public class UnloadMineralsAction extends UnloadAction {
 		return !((PlayerUnit) goapUnit).getUnit().isCarryingMinerals();
 	}
 	
-	// TODO: UML ADD
-	@Override
-	public int defineMaxGroupSize() {
-		return 0;
-	}
-	
 }

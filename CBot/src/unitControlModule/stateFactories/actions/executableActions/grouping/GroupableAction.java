@@ -38,4 +38,14 @@ public interface GroupableAction {
 	 * @return the maximum number of members the group is allowed to have.
 	 */
 	public int defineMaxGroupSize();
+
+	// TODO: UML ADD
+	/**
+	 * Function for defining the max range for a Unit trying to join a leader's
+	 * group.
+	 * 
+	 * @return the max distance in TilePositions that a leader is allowed to be
+	 *         away from the Unit.
+	 */
+	public int defineMaxLeaderTileDistance();
 }

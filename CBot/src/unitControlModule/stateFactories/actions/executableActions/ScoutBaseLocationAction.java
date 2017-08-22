@@ -92,4 +92,10 @@ public class ScoutBaseLocationAction extends BaseAction {
 		return 0;
 	}
 	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxLeaderTileDistance() {
+		return 0;
+	}
+	
 }

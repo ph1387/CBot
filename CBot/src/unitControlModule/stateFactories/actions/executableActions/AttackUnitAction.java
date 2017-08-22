@@ -17,6 +17,8 @@ public class AttackUnitAction extends AttackActionGeneralSuperclass {
 
 	// TODO: UML ADD
 	private int maxGroupSize = 5;
+	// TODO: UML ADD
+	private int maxLeaderTileDistance = 5;
 
 	/**
 	 * @param target
@@ -76,4 +78,10 @@ public class AttackUnitAction extends AttackActionGeneralSuperclass {
 		return this.maxGroupSize;
 	}
 
+	// TODO: UML ADD
+	@Override
+	public int defineMaxLeaderTileDistance() {
+		return this.maxLeaderTileDistance;
+	}
+	
 }

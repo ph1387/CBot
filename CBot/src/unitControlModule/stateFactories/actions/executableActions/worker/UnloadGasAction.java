@@ -35,10 +35,4 @@ public class UnloadGasAction extends UnloadAction {
 		return !((PlayerUnit) goapUnit).getUnit().isCarryingGas();
 	}
 	
-	// TODO: UML ADD
-	@Override
-	public int defineMaxGroupSize() {
-		return 0;
-	}
-	
 }
