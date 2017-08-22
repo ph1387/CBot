@@ -31,4 +31,11 @@ public interface GroupableAction {
 	 */
 	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember);
 
+	// TODO: UML ADD
+	/**
+	 * Function for defining the maximum number of members of the group.
+	 * 
+	 * @return the maximum number of members the group is allowed to have.
+	 */
+	public int defineMaxGroupSize();
 }

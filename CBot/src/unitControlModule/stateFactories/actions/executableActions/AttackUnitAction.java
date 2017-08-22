@@ -15,6 +15,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class AttackUnitAction extends AttackActionGeneralSuperclass {
 
+	// TODO: UML ADD
+	private int maxGroupSize = 5;
+	
 	/**
 	 * @param target
 	 *            type: Unit
@@ -67,4 +70,10 @@ public class AttackUnitAction extends AttackActionGeneralSuperclass {
 		return ((PlayerUnit) groupMember).getUnit().attack((Unit) this.target);
 	}
 
+	// TODO: UML ADD
+	@Override
+	public int defineMaxGroupSize() {
+		return this.maxGroupSize;
+	}
+	
 }

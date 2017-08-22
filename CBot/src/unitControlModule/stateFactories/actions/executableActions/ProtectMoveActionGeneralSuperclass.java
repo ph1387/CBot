@@ -182,4 +182,11 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
 		return false;
 	}
+	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxGroupSize() {
+		return 0;
+	}
+		
 }

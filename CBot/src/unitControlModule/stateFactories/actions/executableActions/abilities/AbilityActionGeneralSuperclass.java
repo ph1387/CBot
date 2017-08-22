@@ -104,6 +104,12 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 		return false;
 	}
 
+	// TODO: UML ADD
+	@Override
+	public int defineMaxGroupSize() {
+		return 0;
+	}
+	
 	// ------------------------------ Getter / Setter
 
 }

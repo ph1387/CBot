@@ -69,6 +69,8 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	private int distanceBetweenUnits = 32;
 	private int matrixTurnAngleXDEG = 0;
 	private int matrixTurnAngleYDEG = 90;
+	// TODO: UML ADD
+	private int maxGroupSize = 5;
 
 	/**
 	 * @param target
@@ -282,6 +284,12 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		// Move the Unit to it's assigned location.
 		Point position = this.retreatPositionCluster.getAssignedPosition((RetreatUnit) groupMember);
 		return ((PlayerUnit) groupMember).getUnit().move(new Position(position.getX(), position.getY()));
+	}
+	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxGroupSize() {
+		return this.maxGroupSize;
 	}
 	
 }

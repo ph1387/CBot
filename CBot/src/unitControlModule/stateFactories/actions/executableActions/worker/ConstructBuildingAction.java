@@ -253,6 +253,12 @@ public class ConstructBuildingAction extends BaseAction {
 	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
 		return false;
 	}
+	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxGroupSize() {
+		return 0;
+	}
 
 	// ------------------------------ Getter / Setter
 

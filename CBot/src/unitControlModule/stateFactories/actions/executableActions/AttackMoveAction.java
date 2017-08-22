@@ -14,6 +14,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
+	// TODO: UML ADD
+	private int maxGroupSize = 5;
+	
 	/**
 	 * @param target
 	 *            type: TilePosition
@@ -61,4 +64,10 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 		return ((PlayerUnit) groupMember).getUnit().attack(((TilePosition) this.target).toPosition());
 	}
 
+	// TODO: UML ADD
+	@Override
+	public int defineMaxGroupSize() {
+		return this.maxGroupSize;
+	}
+	
 }

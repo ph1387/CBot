@@ -34,4 +34,11 @@ public class UnloadMineralsAction extends UnloadAction {
 	protected boolean isDone(IGoapUnit goapUnit) {
 		return !((PlayerUnit) goapUnit).getUnit().isCarryingMinerals();
 	}
+	
+	// TODO: UML ADD
+	@Override
+	public int defineMaxGroupSize() {
+		return 0;
+	}
+	
 }

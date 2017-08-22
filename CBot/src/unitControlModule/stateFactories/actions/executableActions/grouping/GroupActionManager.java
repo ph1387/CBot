@@ -110,7 +110,7 @@ public class GroupActionManager {
 
 			// If no remain create a new group just for the Unit itself.
 			if (potentialGroups.isEmpty()) {
-				chosenGroup = new GroupAction(type);
+				chosenGroup = new GroupAction(type, action);
 				this.storedGroups.get(type).add(chosenGroup);
 			}
 			// Find the "best" / closest one if there are more than one group
