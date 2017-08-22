@@ -2,7 +2,7 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import bwapi.Color;
 import bwapi.Unit;
-import core.Core;
+import bwapiMath.Vector;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -17,7 +17,7 @@ public class AttackUnitAction extends AttackActionGeneralSuperclass {
 
 	// TODO: UML ADD
 	private int maxGroupSize = 5;
-	
+
 	/**
 	 * @param target
 	 *            type: Unit
@@ -64,8 +64,8 @@ public class AttackUnitAction extends AttackActionGeneralSuperclass {
 	@Override
 	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
 		// TODO: DEBUG INFO
-		Core.getInstance().getGame().drawLineMap(((PlayerUnit) groupMember).getUnit().getPosition(),
-				((Unit) this.target).getPosition(), new Color(255, 128, 0));
+		(new Vector(((PlayerUnit) groupMember).getUnit().getPosition(), ((Unit) this.target).getPosition()))
+				.display(new Color(255, 128, 0));
 
 		return ((PlayerUnit) groupMember).getUnit().attack((Unit) this.target);
 	}
@@ -75,5 +75,5 @@ public class AttackUnitAction extends AttackActionGeneralSuperclass {
 	public int defineMaxGroupSize() {
 		return this.maxGroupSize;
 	}
-	
+
 }
