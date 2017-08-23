@@ -82,6 +82,7 @@ public class CurrentGameInformation {
 
 	// -------------------- Functions
 
+	// TODO: JAVADOC
 	// TODO: UML ADD
 	private HashMap<UnitType, Integer> generateCurrentUnitCounts(HashMap<UnitType, HashSet<Unit>> currentUnits) {
 		HashMap<UnitType, Integer> currentUnitCounts = new HashMap<>();

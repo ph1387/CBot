@@ -1,5 +1,7 @@
 package unitControlModule.stateFactories.updater;
 
+import bwapi.Unit;
+import core.Core;
 import unitControlModule.stateFactories.worldStates.UnitWorldStateWorker;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
@@ -13,6 +15,11 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  */
 public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 
+	// TODO: UML ADD
+	// The maximum distance a worker is allowed travel away from a center
+	// building when attacking a enemy Unit.
+	private double maxPixelDistanceAllowedToCenter = 300;
+
 	public WorldStateUpdaterWorker(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
@@ -22,6 +29,9 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
+
+		// Extract the distance to the closest center building for later use.
+		Double closestCenterDistance = this.extractClosestCenterDistance(playerUnit);
 
 		if (playerUnit.getUnit().isGatheringMinerals()) {
 			this.changeWorldStateEffect("gatheringMinerals", true);
@@ -41,15 +51,22 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("constructing", false);
 		}
 
-		// Only allow fighting if the worker is either near an enemy or scouting
-		if (this.playerUnit.getClosestEnemyUnitInConfidenceRange() != null
-				|| ((PlayerUnitWorker) playerUnit).isAssignedToSout()) {
+		// Only allow fighting if the worker is either near an enemy as well as
+		// a center building or is assigned scouting. This keeps workers from
+		// running after retreating enemies that attacked the base.
+		// NOTE:
+		// Also allow the workers to attack when no center remains (distance ==
+		// null).
+		if ((closestCenterDistance == null)
+				|| (closestCenterDistance != null && closestCenterDistance <= this.maxPixelDistanceAllowedToCenter
+						&& (this.playerUnit.getClosestEnemyUnitInConfidenceRange()) != null)
+				|| (((PlayerUnitWorker) playerUnit).isAssignedToSout())) {
 			this.changeWorldStateEffect("allowFighting", true);
 		} else {
 			this.changeWorldStateEffect("allowFighting", false);
 		}
 
-		// Change scouting and gathering properties accordingly
+		// Change scouting and gathering properties accordingly.
 		if (((PlayerUnitWorker) playerUnit).isAssignedToSout()) {
 			this.changeWorldStateEffect("isScout", true);
 			this.changeWorldStateEffect("allowGathering", false);
@@ -57,17 +74,30 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("isScout", false);
 			this.changeWorldStateEffect("allowGathering", true);
 		}
-		
+
 		// Update the carrying states of the worker Unit.
-		if(playerUnit.getUnit().isCarryingMinerals()) {
+		if (playerUnit.getUnit().isCarryingMinerals()) {
 			this.changeWorldStateEffect("isCarryingMinerals", true);
 		} else {
 			this.changeWorldStateEffect("isCarryingMinerals", false);
 		}
-		if(playerUnit.getUnit().isCarryingGas()) {
+		if (playerUnit.getUnit().isCarryingGas()) {
 			this.changeWorldStateEffect("isCarryingGas", true);
 		} else {
 			this.changeWorldStateEffect("isCarryingGas", false);
 		}
+	}
+
+	// TODO: JAVADOC
+	// TODO: UML ADD
+	private Double extractClosestCenterDistance(PlayerUnit playerUnit) {
+		Unit closestCenter = playerUnit.getClosestUnit(playerUnit.getInformationStorage().getCurrentGameInformation()
+				.getCurrentUnits().get(Core.getInstance().getPlayer().getRace().getCenter()));
+		Double distance = null;
+
+		if (closestCenter != null) {
+			distance = (double) playerUnit.getUnit().getDistance(closestCenter);
+		}
+		return distance;
 	}
 }

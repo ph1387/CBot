@@ -357,6 +357,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return sum;
 	}
 
+	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for extracting the closest Unit relative to this Unit from a
 	 * given HashSet.
@@ -366,7 +367,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the closest Unit from the given HashSet or null if the HashSet is
 	 *         empty.
 	 */
-	protected Unit getClosestUnit(HashSet<Unit> set) {
+	public Unit getClosestUnit(HashSet<Unit> set) {
 		Unit closestUnit = null;
 
 		for (Unit setUnit : set) {
