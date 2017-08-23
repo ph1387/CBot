@@ -17,9 +17,9 @@ class GameStateUnits_Worker extends GameState {
 
 	@Override
 	protected double generateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
-		double centers = (double) (manager.getCurrentGameInformation().getCurrentUnits()
+		double centers = (double) (manager.getCurrentGameInformation().getCurrentUnitCounts()
 				.get(Core.getInstance().getPlayer().getRace().getCenter()));
-		double workers = (double) (manager.getCurrentGameInformation().getCurrentUnits()
+		double workers = (double) (manager.getCurrentGameInformation().getCurrentUnitCounts()
 				.get(Core.getInstance().getPlayer().getRace().getWorker()));
 
 		return this.generalMultiplier * (centers / workers);

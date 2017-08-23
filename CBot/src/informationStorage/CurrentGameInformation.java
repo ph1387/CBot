@@ -2,8 +2,10 @@ package informationStorage;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import bwapi.TechType;
+import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
 
@@ -25,7 +27,10 @@ public class CurrentGameInformation {
 	private double currentBuildingsPercent = 0.;
 	private double currentCombatUnitsPercent = 0.;
 
-	private HashMap<UnitType, Integer> currentUnits = new HashMap<>();
+	// TODO: UML NAME CHANGE
+	private HashMap<UnitType, Integer> currentUnitCounts = new HashMap<>();
+	// TODO: UML ADD
+	private HashMap<UnitType, HashSet<Unit>> currentUnits = new HashMap<>();
 	private HashSet<TechType> currentTechs = new HashSet<>();
 	private HashMap<UpgradeType, Integer> currentUpgrades = new HashMap<>();
 
@@ -33,6 +38,7 @@ public class CurrentGameInformation {
 
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * @param currentUnitCountTotal
 	 *            the total number of Units the Bot controls.
@@ -57,8 +63,8 @@ public class CurrentGameInformation {
 	 */
 	public CurrentGameInformation(int currentUnitCountTotal, int currentWorkerCount, int currentBuildingCount,
 			int currentCombatUnitCount, double currentWorkerPercent, double currentBuildingsPercent,
-			double currentCombatUnitsPercent, HashMap<UnitType, Integer> currentUnits, HashSet<TechType> currentTechs,
-			HashMap<UpgradeType, Integer> currentUpgrades) {
+			double currentCombatUnitsPercent, HashMap<UnitType, HashSet<Unit>> currentUnits,
+			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
 		this.currentUnitCountTotal = currentUnitCountTotal;
 		this.currentWorkerCount = currentWorkerCount;
 		this.currentBuildingCount = currentBuildingCount;
@@ -68,12 +74,26 @@ public class CurrentGameInformation {
 		this.currentBuildingsPercent = currentBuildingsPercent;
 		this.currentCombatUnitsPercent = currentCombatUnitsPercent;
 
+		this.currentUnitCounts = this.generateCurrentUnitCounts(currentUnits);
 		this.currentUnits = currentUnits;
 		this.currentTechs = currentTechs;
 		this.currentUpgrades = currentUpgrades;
 	}
 
 	// -------------------- Functions
+
+	// TODO: UML ADD
+	private HashMap<UnitType, Integer> generateCurrentUnitCounts(HashMap<UnitType, HashSet<Unit>> currentUnits) {
+		HashMap<UnitType, Integer> currentUnitCounts = new HashMap<>();
+		Set<UnitType> keySet = currentUnits.keySet();
+
+		// Transfer the number of individual Units into the new HashMap.
+		for (UnitType unitType : keySet) {
+			currentUnitCounts.put(unitType, currentUnits.get(unitType).size());
+		}
+
+		return currentUnitCounts;
+	}
 
 	// ------------------------------ Getter / Setter
 
@@ -133,12 +153,25 @@ public class CurrentGameInformation {
 		this.currentCombatUnitsPercent = currentCombatUnitsPercent;
 	}
 
-	public HashMap<UnitType, Integer> getCurrentUnits() {
+	// TODO: UML NAME CHANGE
+	public HashMap<UnitType, Integer> getCurrentUnitCounts() {
+		return currentUnitCounts;
+	}
+
+	// TODO: UML NAME CHANGE
+	public void setCurrentUnitCounts(HashMap<UnitType, Integer> currentUnits) {
+		this.currentUnitCounts = currentUnits;
+	}
+
+	// TODO: UML ADD
+	public HashMap<UnitType, HashSet<Unit>> getCurrentUnits() {
 		return currentUnits;
 	}
 
-	public void setCurrentUnits(HashMap<UnitType, Integer> currentUnits) {
+	// TODO: UML ADD
+	public void setCurrentUnits(HashMap<UnitType, HashSet<Unit>> currentUnits) {
 		this.currentUnits = currentUnits;
+		this.currentUnitCounts = this.generateCurrentUnitCounts(currentUnits);
 	}
 
 	public HashSet<TechType> getCurrentTechs() {

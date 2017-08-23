@@ -2,6 +2,7 @@ package unitTrackerModule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import bwapi.Game;
@@ -46,7 +47,8 @@ public class UnitTrackerModule {
 	private double currentWorkerPercent;
 	private double currentBuildingsPercent;
 	private double currentCombatUnitsPercent;
-	private HashMap<UnitType, Integer> currentUnits;
+	// TODO: UML CHANGE NAME
+	private HashMap<UnitType, HashSet<Unit>> currentUnits;
 
 	// The container holding all information.
 	private InformationStorage informationStorage;
@@ -110,13 +112,12 @@ public class UnitTrackerModule {
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
 			UnitType type = unit.getType();
 
-			// Add the Units to a HashMap counting the individual Units
-			// themselves.
-			if (this.currentUnits.containsKey(type)) {
-				this.currentUnits.put(type, this.currentUnits.get(type) + 1);
-			} else {
-				this.currentUnits.put(type, 1);
+			// Add and instantiate a new HashSet if none is found.
+			if (!this.currentUnits.containsKey(type)) {
+				this.currentUnits.put(type, new HashSet<Unit>());
 			}
+
+			this.currentUnits.get(type).add(unit);
 
 			// Count the different types of Units.
 			if (type.isWorker()) {

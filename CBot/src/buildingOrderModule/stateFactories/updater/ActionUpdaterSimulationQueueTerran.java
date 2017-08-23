@@ -31,9 +31,9 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 	protected HashSet<ActionType> generateAllAvailableActionTypes(BuildActionManager manager) {
 		HashSet<ActionType> availableActionTypes = new HashSet<>();
 		HashSet<GoapAction> availableActions = manager.getAvailableActions();
-		Integer playerCenterCount = manager.getCurrentGameInformation().getCurrentUnits()
+		Integer playerCenterCount = manager.getCurrentGameInformation().getCurrentUnitCounts()
 				.get(Core.getInstance().getPlayer().getRace().getCenter());
-		Integer playerRefineryCount = manager.getCurrentGameInformation().getCurrentUnits()
+		Integer playerRefineryCount = manager.getCurrentGameInformation().getCurrentUnitCounts()
 				.get(Core.getInstance().getPlayer().getRace().getRefinery());
 
 		// Get all the Types plus their amount that are currently produced and

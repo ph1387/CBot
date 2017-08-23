@@ -36,9 +36,9 @@ class GameStateFocused_Refinery extends GameStateGradualChangeWithReset {
 		boolean reset = false;
 
 		// Extract the number of centers and refineries from the storage.
-		Integer centerCountCurrent = manager.getCurrentGameInformation().getCurrentUnits()
+		Integer centerCountCurrent = manager.getCurrentGameInformation().getCurrentUnitCounts()
 				.get(Core.getInstance().getPlayer().getRace().getCenter());
-		Integer refineryCountCurrent = manager.getCurrentGameInformation().getCurrentUnits()
+		Integer refineryCountCurrent = manager.getCurrentGameInformation().getCurrentUnitCounts()
 				.get(Core.getInstance().getPlayer().getRace().getRefinery());
 
 		if (refineryCountCurrent != null) {

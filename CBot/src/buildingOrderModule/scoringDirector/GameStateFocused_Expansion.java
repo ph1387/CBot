@@ -29,7 +29,7 @@ class GameStateFocused_Expansion extends GameStateGradualChangeWithReset {
 
 	@Override
 	protected boolean shouldReset(ScoringDirector scoringDirector, BuildActionManager manager) {
-		int centerCountCurrent = manager.getCurrentGameInformation().getCurrentUnits()
+		int centerCountCurrent = manager.getCurrentGameInformation().getCurrentUnitCounts()
 				.get(Core.getInstance().getPlayer().getRace().getCenter());
 		boolean reset = false;
 
