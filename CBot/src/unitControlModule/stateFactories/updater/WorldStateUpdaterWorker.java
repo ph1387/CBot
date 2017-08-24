@@ -16,7 +16,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 	// TODO: UML ADD
 	// The maximum distance a worker is allowed travel away from a center
 	// building when attacking a enemy Unit.
-	private double maxPixelDistanceAllowedToCenter = 300;
+	private int maxPixelDistanceAllowedToCenter = 300;
 
 	public WorldStateUpdaterWorker(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -29,7 +29,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 		super.update(playerUnit);
 
 		// Extract the distance to the closest center building for later use.
-		Double closestCenterDistance = playerUnit.extractClosestCenterDistance();
+		Integer closestCenterDistance = playerUnit.extractClosestCenterDistance();
 
 		if (playerUnit.getUnit().isGatheringMinerals()) {
 			this.changeWorldStateEffect("gatheringMinerals", true);

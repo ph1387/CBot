@@ -25,6 +25,11 @@ import unitControlModule.unitWrappers.RemoveAgentEvent;
  */
 public class UnitControlModule implements RemoveAgentEvent {
 
+	// TODO: UML ADD
+	private static boolean ShowQueueInformation = true;
+	// TODO: UML ADD
+	private static boolean ShowUnitConfidence = false;
+
 	// The HashSet(s) is / are used for displaying the content whereas the
 	// Queue(s) is / are used for updating. Not a perfect solution due to adding
 	// and removing elements from multiple Collections but functional.
@@ -56,6 +61,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 	public void update() {
 		this.addNewTrackedUnits();
 		this.removeTrackedUnits();
+		// TODO: WIP REMOVE
 		// this.validateStoredUnitAgents();
 		// this.validateStoredBuildingAgents();
 
@@ -70,8 +76,13 @@ public class UnitControlModule implements RemoveAgentEvent {
 		this.updateWorkerQueue();
 		this.updateBuildingUnitQueue();
 
-		// Display all important information on the screen.
-		UnitControlDisplay.showImportantInformation(this.agents, this.buildings, this.informationStorage);
+		// Display of various information on the screen and on the map.
+		if (ShowQueueInformation) {
+			UnitControlDisplay.showQueueInformation(this.agents, this.buildings, this.informationStorage);
+		}
+		if (ShowUnitConfidence) {
+			UnitControlDisplay.showConfidence(this.agents);
+		}
 	}
 
 	/**
@@ -108,6 +119,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 		}
 	}
 
+	// TODO: WIP REMOVE
 	/**
 	 * Function for verifying the stored GoapAgents and especially their
 	 * associated Unit.
@@ -141,6 +153,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 		}
 	}
 
+	// TODO: WIP REMOVE
 	/**
 	 * Function for verifying the stored PlayerBuildings and especially their
 	 * associated Unit.
@@ -312,10 +325,11 @@ public class UnitControlModule implements RemoveAgentEvent {
 			this.agentUpdateQueueWorkers.remove(matchingAgent);
 			this.agentUpdateQueueCombatUnits.remove(matchingAgent);
 			this.agents.remove(matchingAgent);
-			
+
+			// TODO: WIP REMOVE
 			// TODO: WIP If validating Units: Add to remove function!
 			BaseAction.removeGroupAssociations(matchingAgent.getAssignedGoapUnit());
-			
+
 			if (unit.getType().isWorker()) {
 				this.removeAssignedWorkerEntries(unit);
 				this.informationStorage.getWorkerConfig().decrementTotalWorkerCount();

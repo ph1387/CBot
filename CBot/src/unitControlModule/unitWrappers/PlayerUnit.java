@@ -30,6 +30,7 @@ import unitControlModule.stateFactories.updater.Updater;
  */
 public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
+	// The timer after a BaseLocation might be searched again.
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
 	// own parameters
@@ -45,8 +46,22 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	protected Unit unit;
 	protected Unit closestEnemyUnitInConfidenceRange;
 	protected double confidence = 1.;
+
+	// Extra distance that will be added to the enemy when determining if the
+	// Unit should retreat or not.
 	protected int extraConfidencePixelRangeToClosestUnits = 32;
 	protected double confidenceDefault = 0.75;
+
+	// Properties used for modifying a generated confidence:
+	// TODO: UML ADD
+	private static boolean AllowModifiedConfidenceGeneration = false;
+	// TODO: UML ADD
+	// The distance at which the center range confidence multiplier activates.
+	private int maxCenterPixelDistanceConfidenceBoost = 320;
+	// TODO: UML ADD
+	private double confidenceMultiplierSingleCenter = 2.5;
+	// TODO: UML ADD
+	private double confidenceMultiplierInMaxCenterDistance = 1.5;
 
 	// Factories and Objects needed for an accurate representation of the Units
 	// capabilities.
@@ -174,7 +189,12 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		// which causes certain actions to not finish (IsDone() i.e. returns
 		// false when it should not).
 		try {
-			this.confidence = this.generateConfidence();
+			// Either generate a modified confidence value or a "normal" one.
+			if (AllowModifiedConfidenceGeneration) {
+				this.confidence = this.generateModifiedConfidence();
+			} else {
+				this.confidence = this.generateConfidence();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -190,12 +210,56 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		}
 	}
 
+	// TODO: UML ADD
+	/**
+	 * Function for generating a modified version of the standard confidence.
+	 * This function utilizes the {@link #generateConfidence()} method that is
+	 * implemented by the Subclasses and applies a modifier to it that is based
+	 * on the distance of the Unit to the nearest (center) building/-s. Using
+	 * this method it is possible for the Unit to react to it's defensive
+	 * surroundings, either defending them (centers) or fighting near them
+	 * (bunkers).
+	 * 
+	 * @return the modified confidence of the Unit that takes various other
+	 *         factors into account like the distance to certain buildings and
+	 *         locations.
+	 */
+	private double generateModifiedConfidence() {
+		Integer closestCenterDistance = this.extractClosestCenterDistance();
+		double modifiedConfidence = this.generateConfidence();
+
+		// If the Unit is near a center building apply a buff to the confidence
+		// to it because they MUST be defended!.
+		if (closestCenterDistance != null && closestCenterDistance <= this.maxCenterPixelDistanceConfidenceBoost) {
+			// If only one center remains, fight with maximum force. This
+			// ensures that no Units run away when the last remaining center is
+			// attacked.
+			// NOTE:
+			// Helps to defend against rushes!
+			if (this.informationStorage.getCurrentGameInformation().getCurrentUnitCounts()
+					.get(Core.getInstance().getPlayer().getRace().getCenter()).equals(1)) {
+				modifiedConfidence *= this.confidenceMultiplierSingleCenter;
+			} else {
+				modifiedConfidence *= this.confidenceMultiplierInMaxCenterDistance;
+			}
+		}
+		// Otherwise if no distance could be calculated go all in and attack
+		// with all force possible since no center remains. This probably means
+		// that the enemy is right inside the base and MUST be destroyed since
+		// this is the only possible way to maybe win.
+		else if (closestCenterDistance == null) {
+			modifiedConfidence = Double.MAX_VALUE;
+		}
+
+		return modifiedConfidence;
+	}
+
 	/**
 	 * Function for generating the confidence of the Unit which determines if it
 	 * attacks an enemy Unit / building, retreats to another player Unit or
 	 * takes a completely different action.
 	 * 
-	 * @return
+	 * @return the base confidence of the Unit.
 	 */
 	protected abstract double generateConfidence();
 
@@ -457,13 +521,17 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the smallest distance to the therefore closest center building
 	 *         casted to int or null if none is found.
 	 */
-	public Double extractClosestCenterDistance() {
-		Unit closestCenter = this.getClosestUnit(this.informationStorage.getCurrentGameInformation().getCurrentUnits()
-				.get(Core.getInstance().getPlayer().getRace().getCenter()));
-		Double distance = null;
+	public Integer extractClosestCenterDistance() {
+		Integer distance = null;
+		HashSet<Unit> centers = this.informationStorage.getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getCenter());
 
-		if (closestCenter != null) {
-			distance = (double) this.unit.getDistance(closestCenter);
+		if (centers != null) {
+			Unit closestCenter = this.getClosestUnit(centers);
+
+			if (closestCenter != null) {
+				distance = this.unit.getDistance(closestCenter);
+			}
 		}
 		return distance;
 	}
@@ -488,6 +556,11 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	public Unit getUnit() {
 		return this.unit;
+	}
+
+	// TODO: UML ADD
+	public double getConfidence() {
+		return confidence;
 	}
 
 	public static HashMap<BaseLocation, Integer> getBaselocationsSearched() {

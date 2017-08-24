@@ -26,13 +26,14 @@ public abstract class PlayerUnitTypeMelee extends PlayerUnit {
 		double playerStrengthTotal = playerEnemyStrengths.first;
 		double enemyStrengthTotal = playerEnemyStrengths.second;
 
-		// Has to be set for following equation
+		// Calculate the confidence based on the strength difference:
+		// No enemy = Maximum confidence.
 		if (enemyStrengthTotal == 0.) {
-			enemyStrengthTotal = 1.;
+			return 1.;
+		} else {
+			// TODO: Possible Change: AirWeapon Implementation
+			return playerStrengthTotal / enemyStrengthTotal;
 		}
-
-		// TODO: Possible Change: AirWeapon Implementation
-		return playerStrengthTotal / enemyStrengthTotal;
 	}
 	
 	// ------------------------------ Getter / Setter

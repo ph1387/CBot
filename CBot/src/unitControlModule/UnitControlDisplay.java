@@ -1,5 +1,6 @@
 package unitControlModule;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +11,7 @@ import core.Core;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerBuilding;
+import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
 /**
@@ -29,11 +31,34 @@ public class UnitControlDisplay {
 	private static final Color BUILDING_INFO_BAR_COLOR = new Color(255, 255, 255);
 	private static final Game GAME = Core.getInstance().getGame();
 
+	// TODO: UML ADD
+	// Formatter for the PlayerUnit confidence output
+	private static final DecimalFormat CONFIDENCE_FORMATTER = new DecimalFormat("0.00");
+
 	// -------------------- Functions
 
+	// TODO: UML ADD
 	/**
-	 * Main function for showing all important information regarding all
-	 * {@link PlayerBuilding}s and {@link PlayerUnitWorker}s.
+	 * Function for displaying the confidence of each Unit on the map at their
+	 * current Position.
+	 * 
+	 * @param agents
+	 *            the GoapAgents which contain the PlayerUnit references that
+	 *            are needed for displaying.
+	 */
+	public static void showConfidence(Collection<GoapAgent> agents) {
+		for (GoapAgent goapAgent : agents) {
+			GAME.drawTextMap(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit().getPosition(),
+					CONFIDENCE_FORMATTER.format(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getConfidence()));
+		}
+	}
+
+	// TODO: UML RENAME showImportantInformation
+	/**
+	 * Main function for showing all important queued information regarding all
+	 * {@link PlayerBuilding}s and {@link PlayerUnitWorker}s. This includes
+	 * queued buildings, technologies etc. as well as reserved resources and
+	 * construction timers / bars.
 	 * 
 	 * @param agents
 	 *            the GoapAgents which contain the PlayerUnit instances that are
@@ -41,9 +66,12 @@ public class UnitControlDisplay {
 	 * @param buildings
 	 *            the PlayerUnitBuilding instances that are going to be used to
 	 *            show information like training Units, added Addons, etc.
-	 * @param informationStorage object that holds all important worker and resource information.
+	 * @param informationStorage
+	 *            object that holds all important worker and resource
+	 *            information.
 	 */
-	public static void showImportantInformation(Collection<GoapAgent> agents, Collection<PlayerBuilding> buildings, InformationStorage informationStorage) {
+	public static void showQueueInformation(Collection<GoapAgent> agents, Collection<PlayerBuilding> buildings,
+			InformationStorage informationStorage) {
 		int currentPosY = LINEHEIGHT;
 
 		// Calculate the new y position each time a function gets called. Each
@@ -84,7 +112,9 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
-	 * @param informationStorage object that holds all important worker and resource information.
+	 * @param informationStorage
+	 *            object that holds all important worker and resource
+	 *            information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
@@ -203,7 +233,9 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
-	 * @param informationStorage object that holds all important worker and resource information.
+	 * @param informationStorage
+	 *            object that holds all important worker and resource
+	 *            information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
@@ -211,7 +243,8 @@ public class UnitControlDisplay {
 		int newPosY = posY;
 
 		if (!informationStorage.getWorkerConfig().getBuildingQueue().isEmpty()) {
-			newPosY = showIterableCollection(posX, posY, informationStorage.getWorkerConfig().getBuildingQueue(), "Building Queue:");
+			newPosY = showIterableCollection(posX, posY, informationStorage.getWorkerConfig().getBuildingQueue(),
+					"Building Queue:");
 		}
 		return leaveOneLineFree(newPosY);
 	}
@@ -223,7 +256,9 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
-	 * @param informationStorage object that holds all important worker and resource information.
+	 * @param informationStorage
+	 *            object that holds all important worker and resource
+	 *            information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
@@ -243,7 +278,9 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
-	 * @param informationStorage object that holds all important worker and resource information.
+	 * @param informationStorage
+	 *            object that holds all important worker and resource
+	 *            information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
@@ -263,7 +300,9 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
-	 * @param informationStorage object that holds all important worker and resource information.
+	 * @param informationStorage
+	 *            object that holds all important worker and resource
+	 *            information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
@@ -283,7 +322,9 @@ public class UnitControlDisplay {
 	 *            the x position of the information being displayed.
 	 * @param posY
 	 *            the y position of the information being displayed.
-	 * @param informationStorage object that holds all important worker and resource information.
+	 * @param informationStorage
+	 *            object that holds all important worker and resource
+	 *            information.
 	 * @return the new y position the next line of text starts without
 	 *         interfering with the currently display ones.
 	 */
