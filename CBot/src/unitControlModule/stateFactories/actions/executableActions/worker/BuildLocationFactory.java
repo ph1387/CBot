@@ -9,9 +9,11 @@ import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
+import core.TilePositionFactory;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
+// TODO: UML CHANGE SUPERCLASS
 /**
  * BuildLocationFinder.java --- Class for finding building locations on the map
  * and storing all special TilePositions.
@@ -19,7 +21,7 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  * @author P H - 26.04.2017
  *
  */
-public class BuildLocationFactory extends TilePositionFactory {
+public class BuildLocationFactory {
 
 	private int maxBuildingSearchRadius = 5;
 	// Due to the large tile range there should not be any trouble finding a
@@ -32,6 +34,25 @@ public class BuildLocationFactory extends TilePositionFactory {
 
 	// -------------------- Functions
 
+	// TODO: UML ADD
+	// TODO: WIP maybe change
+	// TODO: Possible Change: Move dependencies to implementing Class.
+	/**
+	 * Function for finding all required TilePositions of a building plus a
+	 * additional row at the bottom, if the building can train Units.
+	 * 
+	 * @param unitType
+	 *            the UnitType whose TilePositions are going to be calculated.
+	 * @param targetTilePosition
+	 *            the TilePosition the Unit is going to be constructed /
+	 *            targeted at.
+	 * @return a HashSet containing all TilePositions that the constructed Unit
+	 *         would have if it was constructed at the targetTilePosition.
+	 */
+	public HashSet<TilePosition> generateNeededTilePositions(UnitType unitType, TilePosition targetTilePosition) {
+		return TilePositionFactory.generateNeededTilePositions(unitType, targetTilePosition);
+	}
+	
 	/**
 	 * Function for finding a suitable building location around a given
 	 * TilePosition.
@@ -205,7 +226,7 @@ public class BuildLocationFactory extends TilePositionFactory {
 			for (int i = minWidth; i <= maxWidth && buildLocation == null; i++) {
 				for (int j = minHeight; j <= maxHeight && buildLocation == null; j++) {
 					TilePosition testPosition = new TilePosition(i, j);
-					HashSet<TilePosition> neededTilePositions = this.generateNeededTilePositions(building,
+					HashSet<TilePosition> neededTilePositions = TilePositionFactory.generateNeededTilePositions(building,
 							testPosition);
 
 					// If the space is free, try changing the building's

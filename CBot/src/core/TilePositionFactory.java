@@ -1,10 +1,11 @@
-package unitControlModule.stateFactories.actions.executableActions.worker;
+package core;
 
 import java.util.HashSet;
 
 import bwapi.TilePosition;
 import bwapi.UnitType;
 
+// TODO: UML ADD MOVED FROM WORKER
 /**
  * FactorySuperclass.java --- Superclass for worker actions depending on
  * knowledge of needed TilePositions.
@@ -20,6 +21,7 @@ public class TilePositionFactory {
 
 	// -------------------- Functions
 
+	// TODO: UML STATIC VISIBILITY CHANGE 
 	/**
 	 * Function for finding all required TilePositions of a building plus a
 	 * additional row at the bottom, if the building can train Units.
@@ -32,7 +34,7 @@ public class TilePositionFactory {
 	 * @return a HashSet containing all TilePositions that the constructed Unit
 	 *         would have if it was constructed at the targetTilePosition.
 	 */
-	protected HashSet<TilePosition> generateNeededTilePositions(UnitType unitType, TilePosition targetTilePosition) {
+	public static HashSet<TilePosition> generateNeededTilePositions(UnitType unitType, TilePosition targetTilePosition) {
 		HashSet<TilePosition> neededTilePositions = new HashSet<TilePosition>();
 		int bottomRowAddion = 0;
 

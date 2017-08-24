@@ -15,8 +15,8 @@ import bwapiMath.Point.Direction;
 import bwapiMath.Point.Type;
 import bwta.BWTA;
 import informationStorage.InformationStorage;
-import unitControlModule.stateFactories.actions.executableActions.worker.TilePositionFactory;
 
+// TODO: WIP Change Superclass
 /**
  * TilePositionContenderGenerator.java --- Class for generating the default
  * contended construction spots on the map, on which no worker can construct a
