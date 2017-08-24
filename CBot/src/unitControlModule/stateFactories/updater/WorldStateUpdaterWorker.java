@@ -1,7 +1,5 @@
 package unitControlModule.stateFactories.updater;
 
-import bwapi.Unit;
-import core.Core;
 import unitControlModule.stateFactories.worldStates.UnitWorldStateWorker;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;

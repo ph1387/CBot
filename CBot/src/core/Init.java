@@ -55,6 +55,7 @@ public class Init {
 //					.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
 //							.generateDefaultContendedTilePositions());
 
+			// TODO: WIP: Disable on Custom Maps!
 			// Create the reversed Region access order. Reversed means that any
 			// Unit in a Region has access to the information to which Region it
 			// has to move to get to the Player's starting location.

@@ -16,7 +16,6 @@ import bwapiMath.Point.Type;
 import bwta.BWTA;
 import informationStorage.InformationStorage;
 
-// TODO: WIP Change Superclass
 /**
  * TilePositionContenderGenerator.java --- Class for generating the default
  * contended construction spots on the map, on which no worker can construct a
@@ -231,7 +230,7 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 
 			for (Unit unit : startingGeysers) {
 				designatedHashSet.removeAll(
-						this.generateNeededTilePositions(UnitType.Resource_Vespene_Geyser, unit.getTilePosition()));
+						generateNeededTilePositions(UnitType.Resource_Vespene_Geyser, unit.getTilePosition()));
 			}
 
 			// Add the Polygon to the Set of Polygons
