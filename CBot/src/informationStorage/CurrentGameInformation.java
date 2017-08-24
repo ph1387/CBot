@@ -82,8 +82,17 @@ public class CurrentGameInformation {
 
 	// -------------------- Functions
 
-	// TODO: JAVADOC
 	// TODO: UML ADD
+	/**
+	 * Internal function for transforming a HashMap containing references to all
+	 * current Player Units to a HashMap containing the UnitTypes as keys and
+	 * the number of Units currently associated with this type as value.
+	 * 
+	 * @param currentUnits
+	 *            the currently active Units of the Player.
+	 * @return a new HashMap containing UnitTypes as keys and the number of
+	 *         Units of that type that the Player currently controls as values.
+	 */
 	private HashMap<UnitType, Integer> generateCurrentUnitCounts(HashMap<UnitType, HashSet<Unit>> currentUnits) {
 		HashMap<UnitType, Integer> currentUnitCounts = new HashMap<>();
 		Set<UnitType> keySet = currentUnits.keySet();

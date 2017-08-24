@@ -448,6 +448,26 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return playerUnits;
 	}
 
+	// TODO: UML ADD
+	/**
+	 * Function for extracting the distance to the closest Player center
+	 * building on the map. This function either returns the actual distance
+	 * casted to int or null, if no center building is found.
+	 * 
+	 * @return the smallest distance to the therefore closest center building
+	 *         casted to int or null if none is found.
+	 */
+	public Double extractClosestCenterDistance() {
+		Unit closestCenter = this.getClosestUnit(this.informationStorage.getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getCenter()));
+		Double distance = null;
+
+		if (closestCenter != null) {
+			distance = (double) this.unit.getDistance(closestCenter);
+		}
+		return distance;
+	}
+
 	protected abstract StateFactory createFactory();
 
 	public boolean isConfidenceBelowThreshold() {
@@ -512,5 +532,5 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	public void removeCorrespondingAgent() {
 		this.dispatchRemoveAgentEvent();
 	}
-	
+
 }

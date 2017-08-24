@@ -31,7 +31,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 		super.update(playerUnit);
 
 		// Extract the distance to the closest center building for later use.
-		Double closestCenterDistance = this.extractClosestCenterDistance(playerUnit);
+		Double closestCenterDistance = playerUnit.extractClosestCenterDistance();
 
 		if (playerUnit.getUnit().isGatheringMinerals()) {
 			this.changeWorldStateEffect("gatheringMinerals", true);
@@ -88,16 +88,4 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 		}
 	}
 
-	// TODO: JAVADOC
-	// TODO: UML ADD
-	private Double extractClosestCenterDistance(PlayerUnit playerUnit) {
-		Unit closestCenter = playerUnit.getClosestUnit(playerUnit.getInformationStorage().getCurrentGameInformation()
-				.getCurrentUnits().get(Core.getInstance().getPlayer().getRace().getCenter()));
-		Double distance = null;
-
-		if (closestCenter != null) {
-			distance = (double) playerUnit.getUnit().getDistance(closestCenter);
-		}
-		return distance;
-	}
 }
