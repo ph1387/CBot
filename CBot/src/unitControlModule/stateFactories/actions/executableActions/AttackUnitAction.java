@@ -28,7 +28,6 @@ public class AttackUnitAction extends AttackActionGeneralSuperclass {
 		super(target);
 
 		this.addPrecondition(new GoapState(0, "unitsInRange", true));
-		this.addPrecondition(new GoapState(0, "unitsInSight", true));
 	}
 
 	// -------------------- Functions
