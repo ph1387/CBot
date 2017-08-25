@@ -42,16 +42,20 @@ public class BuildingOrderModule {
 		this.buildSupplyIfNeeded();
 
 		try {
-			// Only allow a certain amount of elements in the building and
+			// Check the config if the updates are enabled or disabled. This is
+			// necessary since some Actions of the module can only be performed
+			// on "normal" maps.
+			// Also only allow a certain amount of elements in the building and
 			// training Queues.
-			if (this.informationStorage.getConcurrentQueuedElementCount() < this.informationStorage
-					.getMaxConcurrentElements()) {
-//				this.buildingAgent.update();
+			if (this.informationStorage.getiBuildingOrderModuleConfig().enableBuildingOrderModuleUpdates()
+					&& this.informationStorage.getConcurrentQueuedElementCount() < this.informationStorage
+							.getMaxConcurrentElements()) {
+				this.buildingAgent.update();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		// Display the information on screen.
 		BuildingOrderDisplay.showInformation((BuildActionManager) (this.buildingAgent).getAssignedGoapUnit());
 	}

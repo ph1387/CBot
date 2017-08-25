@@ -54,8 +54,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	// Properties used for modifying a generated confidence:
 	// TODO: UML ADD
-	private static boolean AllowModifiedConfidenceGeneration = false;
-	// TODO: UML ADD
 	// The distance at which the center range confidence multiplier activates.
 	private int maxCenterPixelDistanceConfidenceBoost = 320;
 	// TODO: UML ADD
@@ -190,7 +188,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		// false when it should not).
 		try {
 			// Either generate a modified confidence value or a "normal" one.
-			if (AllowModifiedConfidenceGeneration) {
+			if (this.informationStorage.getiPlayerUnitConfig().enableModifiedConfidenceGeneration()) {
 				this.confidence = this.generateModifiedConfidence();
 			} else {
 				this.confidence = this.generateConfidence();

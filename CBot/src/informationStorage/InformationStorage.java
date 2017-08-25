@@ -6,6 +6,13 @@ import java.util.Queue;
 import bwapi.TechType;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
+import informationStorage.config.GameConfig;
+import informationStorage.config.IBuildingOrderModuleConfig;
+import informationStorage.config.IDisplayConfig;
+import informationStorage.config.IInitConfig;
+import informationStorage.config.IPlayerUnitConfig;
+import informationStorage.config.IUnitControlModuleConfig;
+import informationStorage.config.IUnitTrackerModuleConfig;
 
 /**
  * InformationStorage.java --- Class for storing and distributing all kinds of
@@ -16,6 +23,7 @@ import bwapi.UpgradeType;
  */
 public class InformationStorage {
 
+	// The number of elements that are allowed in the building / training queue.
 	private int maxConcurrentElements = 2;
 
 	// Training / Building related collections
@@ -36,6 +44,20 @@ public class InformationStorage {
 
 	// Information regarding the Player and the current state of the game.
 	private CurrentGameInformation currentGameInformation;
+	
+	// TODO: UML ADD
+	// Configuration information:
+	private IBuildingOrderModuleConfig iBuildingOrderModuleConfig;
+	// TODO: UML ADD
+	private IDisplayConfig iDisplayConfig;
+	// TODO: UML ADD
+	private IInitConfig iInitConfig;
+	// TODO: UML ADD
+	private IPlayerUnitConfig iPlayerUnitConfig;
+	// TODO: UML ADD
+	private IUnitControlModuleConfig iUnitControlModuleConfig;
+	// TODO: UML ADD
+	private IUnitTrackerModuleConfig iUnitTrackerModuleConfig;
 
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
 			UnitTrackerInformation trackerInfo, MapInformation mapInfo, CurrentGameInformation currentGameInformation) {
@@ -44,6 +66,15 @@ public class InformationStorage {
 		this.trackerInfo = trackerInfo;
 		this.mapInfo = mapInfo;
 		this.currentGameInformation = currentGameInformation;
+		
+		// Generate the configuration object:
+		GameConfig gameConfig = new GameConfig();
+		this.iBuildingOrderModuleConfig = gameConfig;
+		this.iDisplayConfig = gameConfig;
+		this.iInitConfig = gameConfig;
+		this.iPlayerUnitConfig = gameConfig;
+		this.iUnitControlModuleConfig = gameConfig;
+		this.iUnitTrackerModuleConfig = gameConfig;
 	}
 
 	public InformationStorage() {
@@ -124,4 +155,29 @@ public class InformationStorage {
 		return currentGameInformation;
 	}
 
+	// ------------------------------ Config:
+	
+	public IBuildingOrderModuleConfig getiBuildingOrderModuleConfig() {
+		return iBuildingOrderModuleConfig;
+	}
+
+	public IDisplayConfig getiDisplayConfig() {
+		return iDisplayConfig;
+	}
+
+	public IInitConfig getiInitConfig() {
+		return iInitConfig;
+	}
+
+	public IPlayerUnitConfig getiPlayerUnitConfig() {
+		return iPlayerUnitConfig;
+	}
+
+	public IUnitControlModuleConfig getiUnitControlModuleConfig() {
+		return iUnitControlModuleConfig;
+	}
+
+	public IUnitTrackerModuleConfig getiUnitTrackerModuleConfig() {
+		return iUnitTrackerModuleConfig;
+	}
 }

@@ -13,6 +13,7 @@ import bwapiMath.Point;
 import bwapiMath.Polygon;
 import bwapiMath.Vector;
 import bwta.Region;
+import informationStorage.InformationStorage;
 
 /**
  * Display.java --- A class used for displaying all sorts of basic information
@@ -22,14 +23,17 @@ import bwta.Region;
  *
  */
 public class Display {
+
 	private static final int LINE_HEIGHT = Core.getInstance().getLineheight();
 	private static final int OFFSET_LEFT = Core.getInstance().getOffsetLeft();
 	private static final int TILE_SIZE = Core.getInstance().getTileSize();
 	private static final Game GAME = Core.getInstance().getGame();
 
 	// Map information visualization.
-	private static final boolean ENABLE_MAP_POLYGONS = false;
-	private static final boolean ENABLE_MAP_CONTENDED_TILEPOSITIONS = false;
+	// TODO: UML REMOVE
+	// private static final boolean ENABLE_MAP_POLYGONS = false;
+	// TODO: UML REMOVE
+	// private static final boolean ENABLE_MAP_CONTENDED_TILEPOSITIONS = false;
 	private static final Color MAP_BONDARIES_COLOR = new Color(255, 255, 0);
 	private static final Color RESERVED_SPACE_COLOR = new Color(255, 128, 0);
 	private static final int POLYGON_VERTEX_RADIUS = 5;
@@ -169,19 +173,22 @@ public class Display {
 		}
 	}
 
+	// TODO: UML PARAMS CHANGE
 	/**
 	 * Wrapper function for displaying internal game information like the
 	 * elapsed time, APM or FPS.
+	 * 
+	 * @param informationStorage
 	 */
-	public static void showGameInformation() {
+	public static void showGameInformation(InformationStorage informationStorage) {
 		showTime(OFFSET_LEFT, LINE_HEIGHT);
 		showAPM(OFFSET_LEFT, LINE_HEIGHT * 2);
 		showFPS(OFFSET_LEFT, LINE_HEIGHT * 3);
 
-		if (ENABLE_MAP_CONTENDED_TILEPOSITIONS) {
+		if (informationStorage.getiDisplayConfig().enableDisplayMapContendedTilePositions()) {
 			showContendedTilePositions();
 		}
-		if (ENABLE_MAP_POLYGONS) {
+		if (informationStorage.getiDisplayConfig().enableDisplayMapBoundaries()) {
 			showPolygons();
 		}
 	}
@@ -263,7 +270,7 @@ public class Display {
 		// for (Pair<Region, Polygon> pair :
 		// CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries())
 		// {
-		// drawPolygon(pair.second, mapBoundariesColor, polygonVertexRadius);
+		// drawPolygon(pair.second, MAP_BONDARIES_COLOR, polygonVertexRadius);
 		// }
 
 		// Custom Polygons:

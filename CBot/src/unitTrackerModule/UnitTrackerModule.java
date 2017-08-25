@@ -28,10 +28,10 @@ public class UnitTrackerModule {
 	private static final double FLAT_DPS_MULTIPLIER = 100.;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
-	// TODO: UML RENAME enablePlayerStrength
-	private static boolean EnablePlayerStrength = true;
-	// TODO: UML RENAME enableEnemyStrength
-	private static boolean EnableEnemyStrength = false;
+	// TODO: UML REMOVE enablePlayerStrength
+	// private static boolean EnablePlayerStrength = true;
+	// TODO: UML REMOVE enableEnemyStrength
+	// private static boolean EnableEnemyStrength = false;
 
 	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
@@ -87,10 +87,10 @@ public class UnitTrackerModule {
 		// air forces of the enemy and the player. Player has to the shown
 		// first, since the enemy list might be empty which would result in none
 		// of them being shown.
-		if (EnablePlayerStrength) {
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerStrength()) {
 			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
 		}
-		if (EnableEnemyStrength) {
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyStrength()) {
 			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
 		}
 	}

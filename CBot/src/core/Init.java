@@ -23,6 +23,7 @@ import informationStorage.InformationStorage;
  *
  */
 public class Init {
+	
 	private static final int UNIT_FLAG = 1;
 	private static final int GAME_SPEED = 240; // TODO: 20, 0, etc.
 	private static final int MAX_POLYGON_EDGE_LENGTH = 100;
@@ -49,17 +50,20 @@ public class Init {
 			BWTA.readMap();
 			BWTA.analyze();
 
-			// TODO: WIP: Disable on Custom Maps!
 			// Add all default contended TilePositions.
-//			informationStorage.getMapInfo().getTilePositionContenders()
-//					.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
-//							.generateDefaultContendedTilePositions());
+			if(informationStorage.getiInitConfig().enableGenerateDefaultContendedTilePositions()) {
+				informationStorage.getMapInfo().getTilePositionContenders()
+				.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
+						.generateDefaultContendedTilePositions());
+			}
 
-			// TODO: WIP: Disable on Custom Maps!
 			// Create the reversed Region access order. Reversed means that any
 			// Unit in a Region has access to the information to which Region it
 			// has to move to get to the Player's starting location.
-//			informationStorage.getMapInfo().setReversedRegionAccessOrder(generateReversedRegionAccessOrder());
+			if(informationStorage.getiInitConfig().enableGenerateReversedRegionAccessOrder()) {
+				informationStorage.getMapInfo().setReversedRegionAccessOrder(generateReversedRegionAccessOrder());
+			}
+			
 
 			// Add all BWTA-Polygons to the collection of Polygons in the
 			// InformationStorage.

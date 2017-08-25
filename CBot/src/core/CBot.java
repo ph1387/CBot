@@ -151,7 +151,7 @@ public class CBot implements BWEventListener {
 			}
 
 			if (this.started) {
-				Display.showGameInformation();
+				Display.showGameInformation(this.informationStorage);
 				Display.showUnits(this.game.self().getUnits());
 
 				this.unitTrackerModule.update();

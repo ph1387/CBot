@@ -25,11 +25,6 @@ import unitControlModule.unitWrappers.RemoveAgentEvent;
  */
 public class UnitControlModule implements RemoveAgentEvent {
 
-	// TODO: UML ADD
-	private static boolean ShowQueueInformation = true;
-	// TODO: UML ADD
-	private static boolean ShowUnitConfidence = false;
-
 	// The HashSet(s) is / are used for displaying the content whereas the
 	// Queue(s) is / are used for updating. Not a perfect solution due to adding
 	// and removing elements from multiple Collections but functional.
@@ -77,10 +72,10 @@ public class UnitControlModule implements RemoveAgentEvent {
 		this.updateBuildingUnitQueue();
 
 		// Display of various information on the screen and on the map.
-		if (ShowQueueInformation) {
+		if (this.informationStorage.getiUnitControlModuleConfig().enableDisplayQueueInformation()) {
 			UnitControlDisplay.showQueueInformation(this.agents, this.buildings, this.informationStorage);
 		}
-		if (ShowUnitConfidence) {
+		if (this.informationStorage.getiUnitControlModuleConfig().enableDisplayUnitConfidence()) {
 			UnitControlDisplay.showConfidence(this.agents);
 		}
 	}
