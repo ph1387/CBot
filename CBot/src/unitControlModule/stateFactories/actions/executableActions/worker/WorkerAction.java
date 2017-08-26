@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
+import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 

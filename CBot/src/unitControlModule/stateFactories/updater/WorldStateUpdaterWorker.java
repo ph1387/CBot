@@ -15,8 +15,14 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 
 	// TODO: UML ADD
 	// The maximum distance a worker is allowed travel away from a center
-	// building when attacking a enemy Unit.
-	private int maxPixelDistanceAllowedToCenter = 300;
+	// building when attacking a enemy Unit. Beyond this it is forbidden to
+	// start a new attack Action.
+	private int maxPixelAttackDistanceToCenter = 600;
+	// TODO: UML ADD
+	// The maximum distance at which a worker is allowed to search for mineral
+	// spots and refineries. Beyond this distance the worker must first return
+	// to his nearest center building before searching around him.
+	private int maxPixelResourceSearchDistanceToCenter = 300;
 
 	public WorldStateUpdaterWorker(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -29,7 +35,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 		super.update(playerUnit);
 
 		// Extract the distance to the closest center building for later use.
-		Integer closestCenterDistance = playerUnit.extractClosestCenterDistance();
+		Integer closestCenterDistance = playerUnit.generateClosestCenterDistance();
 
 		if (playerUnit.getUnit().isGatheringMinerals()) {
 			this.changeWorldStateEffect("gatheringMinerals", true);
@@ -56,7 +62,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 		// Also allow the workers to attack when no center remains (distance ==
 		// null).
 		if ((closestCenterDistance == null)
-				|| (closestCenterDistance != null && closestCenterDistance <= this.maxPixelDistanceAllowedToCenter
+				|| (closestCenterDistance != null && closestCenterDistance <= this.maxPixelAttackDistanceToCenter
 						&& (this.playerUnit.getClosestEnemyUnitInConfidenceRange()) != null)
 				|| (((PlayerUnitWorker) playerUnit).isAssignedToSout())) {
 			this.changeWorldStateEffect("allowFighting", true);
@@ -70,7 +76,13 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("allowGathering", false);
 		} else {
 			this.changeWorldStateEffect("isScout", false);
-			this.changeWorldStateEffect("allowGathering", true);
+			
+			// Only allow gathering if the Unit is near a center building.
+			if(closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter) {
+				this.changeWorldStateEffect("allowGathering", true);
+			} else {
+				this.changeWorldStateEffect("allowGathering", false);
+			}
 		}
 
 		// Update the carrying states of the worker Unit.

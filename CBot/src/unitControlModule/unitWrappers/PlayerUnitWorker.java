@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import bwapi.Unit;
 import bwapi.UnitType;
+import core.Core;
 import informationStorage.InformationStorage;
 
 /**
@@ -380,14 +381,19 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
 	protected Unit findClosestFreeGasSource() {
 		Unit closestRefinery = null;
 
-		// Get all vaspene geysers
-		for (Unit gatheringSource : this.getUnit()
-				.getUnitsInRadius(this.informationStorage.getWorkerConfig().getPixelGatherSearchRadius())) {
-			if (gatheringSource.getType().isRefinery() && !gatheringSource.isBeingConstructed()) {
-				closestRefinery = this.checkAgainstMappedAccessibleSources(gatheringSource, closestRefinery,
-						this.informationStorage.getWorkerConfig().getMaxNumberGatheringGas());
+		// If references to refineries are found, extract the ones
+		HashSet<Unit> refineries = this.informationStorage.getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getRefinery());
+		if (refineries != null) {
+			// Check the availability and the distance of each refinery.
+			for (Unit gatheringSource : refineries) {
+				if (!gatheringSource.isBeingConstructed()) {
+					closestRefinery = this.checkAgainstMappedAccessibleSources(gatheringSource, closestRefinery,
+							this.informationStorage.getWorkerConfig().getMaxNumberGatheringGas());
+				}
 			}
 		}
+
 		return closestRefinery;
 	}
 

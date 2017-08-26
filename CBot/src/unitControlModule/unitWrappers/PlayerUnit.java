@@ -223,7 +223,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 *         locations.
 	 */
 	private double generateModifiedConfidence() {
-		Integer closestCenterDistance = this.extractClosestCenterDistance();
+		Integer closestCenterDistance = this.generateClosestCenterDistance();
 		double modifiedConfidence = this.generateConfidence();
 
 		// If the Unit is near a center building apply a buff to the confidence
@@ -519,19 +519,32 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the smallest distance to the therefore closest center building
 	 *         casted to int or null if none is found.
 	 */
-	public Integer extractClosestCenterDistance() {
+	public Integer generateClosestCenterDistance() {
 		Integer distance = null;
-		HashSet<Unit> centers = this.informationStorage.getCurrentGameInformation().getCurrentUnits()
-				.get(Core.getInstance().getPlayer().getRace().getCenter());
+		Unit closestCenter = this.getClosestCenter();
 
-		if (centers != null) {
-			Unit closestCenter = this.getClosestUnit(centers);
-
-			if (closestCenter != null) {
-				distance = this.unit.getDistance(closestCenter);
-			}
+		if (closestCenter != null) {
+			distance = this.unit.getDistance(closestCenter);
 		}
 		return distance;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting the center Unit that is the closest one to the
+	 * current PlayerUnit's Position.
+	 * 
+	 * @return the closest center Unit.
+	 */
+	public Unit getClosestCenter() {
+		HashSet<Unit> centers = this.informationStorage.getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getCenter());
+		Unit closestCenter = null;
+
+		if (centers != null) {
+			closestCenter = this.getClosestUnit(centers);
+		}
+		return closestCenter;
 	}
 
 	protected abstract StateFactory createFactory();

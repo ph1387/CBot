@@ -5,6 +5,7 @@ import unitControlModule.stateFactories.actions.executableActions.worker.Constru
 import unitControlModule.stateFactories.actions.executableActions.worker.ConstructionJob;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherGasAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.MoveToNearestCenterAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.ScoutBaseLocationWorkerAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.UnloadGasAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.UnloadMineralsAction;
@@ -26,6 +27,8 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 	private GatherGasAction gatherGasAction;
 	private ConstructBuildingAction constructBuildingAction;
 	private ScoutBaseLocationWorkerAction scoutBaseLocationWorkerAction;
+	// TODO: UML ADD
+	private MoveToNearestCenterAction moveToNearestCenterAction;
 
 	public ActionUpdaterWorker(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -44,7 +47,13 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 		this.gatherMineralsAction.setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeMineralField());
 		this.gatherGasAction.setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeGasSource());
 
-		// Set the target once and only change its UnitType afterwards
+		this.moveToNearestCenterAction.setTarget(this.playerUnit.getClosestCenter());
+		
+		// Set the target once and only change the ConstructionJob's UnitType
+		// afterwards. This is less CPU intensive than continuously creating new
+		// ConstructionJobs.
+		// All this needs only to be done if the Unit has a building assigned
+		// that needs to be build.
 		if (((PlayerUnitWorker) playerUnit)
 				.getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.AWAIT_CONFIRMATION) {
 			if (this.constructBuildingAction.getTarget() == null) {
@@ -72,10 +81,14 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 
 		this.scoutBaseLocationWorkerAction = ((ScoutBaseLocationWorkerAction) this
 				.getActionFromInstance(ScoutBaseLocationWorkerAction.class));
+
+		this.moveToNearestCenterAction = ((MoveToNearestCenterAction) this
+				.getActionFromInstance(MoveToNearestCenterAction.class));
 	}
 
 	@Override
 	protected void baselocationScoutingConfiguration() {
 		this.scoutBaseLocationWorkerAction.setTarget(findClosestReachableBasePosition());
 	}
+
 }

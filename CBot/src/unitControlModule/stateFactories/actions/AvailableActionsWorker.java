@@ -4,6 +4,7 @@ import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.ConstructBuildingAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherGasAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
+import unitControlModule.stateFactories.actions.executableActions.worker.MoveToNearestCenterAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.ScoutBaseLocationWorkerAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.UnloadGasAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.UnloadMineralsAction;
@@ -22,6 +23,7 @@ public class AvailableActionsWorker extends AvailableActionsDefault {
 		this.add(new ConstructBuildingAction(null));
 		this.add(new UnloadMineralsAction(null));
 		this.add(new UnloadGasAction(null));
+		this.add(new MoveToNearestCenterAction(null));
 	}
 	
 	@Override
