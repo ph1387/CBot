@@ -292,7 +292,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 			this.retreatPositionCluster.addUnit((RetreatUnit) groupMember);
 		}
 
-		// TODO: WIP DEBUG INFO
+		// TODO: WIP POSITION DEBUG INFO
 		this.retreatPositionCluster.display();
 
 		// Move the Unit to it's assigned location.

@@ -45,7 +45,8 @@ public class MoveToNearestCenterAction extends WorkerAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		return (((Unit) this.target).getType() == Core.getInstance().getPlayer().getRace().getCenter());
+		return this.target != null
+				&& (((Unit) this.target).getType() == Core.getInstance().getPlayer().getRace().getCenter());
 	}
 
 	@Override

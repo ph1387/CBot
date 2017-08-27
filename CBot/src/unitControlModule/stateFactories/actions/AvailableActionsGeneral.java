@@ -3,6 +3,7 @@ package unitControlModule.stateFactories.actions;
 import java.util.HashSet;
 
 import javaGOAP.GoapAction;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionInPreviousAdjacentRegion;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInRetreatVectorDirection;
 
 /**
@@ -17,6 +18,7 @@ public abstract class AvailableActionsGeneral extends HashSet<GoapAction> {
 
 	public AvailableActionsGeneral() {
 		this.add(new RetreatActionSteerInRetreatVectorDirection(null));
+		this.add(new RetreatActionInPreviousAdjacentRegion(null));
 	}
 
 	// -------------------- Functions

@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.updater;
 
 import javaGOAP.GoapAction;
+import unitControlModule.stateFactories.actions.executableActions.RetreatActionInPreviousAdjacentRegion;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInRetreatVectorDirection;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -16,6 +17,8 @@ public abstract class ActionUpdaterGeneral implements Updater {
 	protected PlayerUnit playerUnit;
 
 	private RetreatActionSteerInRetreatVectorDirection retreatActionSteerInRetreatVectorDirection;
+	// TODO: UML ADD
+	private RetreatActionInPreviousAdjacentRegion retreatActionInPreviousAdjacentRegion;
 
 	public ActionUpdaterGeneral(PlayerUnit playerUnit) {
 		this.playerUnit = playerUnit;
@@ -37,6 +40,8 @@ public abstract class ActionUpdaterGeneral implements Updater {
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
 			this.retreatActionSteerInRetreatVectorDirection
 					.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+			this.retreatActionInPreviousAdjacentRegion
+					.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 		}
 	}
 
@@ -48,6 +53,8 @@ public abstract class ActionUpdaterGeneral implements Updater {
 	protected void init() {
 		this.retreatActionSteerInRetreatVectorDirection = ((RetreatActionSteerInRetreatVectorDirection) this
 				.getActionFromInstance(RetreatActionSteerInRetreatVectorDirection.class));
+		this.retreatActionInPreviousAdjacentRegion = ((RetreatActionInPreviousAdjacentRegion) this
+				.getActionFromInstance(RetreatActionInPreviousAdjacentRegion.class));
 	}
 
 	/**
