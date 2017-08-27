@@ -13,6 +13,7 @@ import bwta.Region;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
+import unitControlModule.stateFactories.actions.executableActions.steering.SteeringFactory;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -44,7 +45,10 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		public boolean validatePosition(Point position) {
 			Pair<Region, Polygon> boundaries = BaseAction
 					.findBoundariesPositionIsIn(new Position(position.getX(), position.getY()));
-			return boundaries != null && boundaries.equals(BaseAction.findBoundariesPositionIsIn(this.retreatPosition));
+			boolean positionBlocked = SteeringFactory.isEndPositionBlockedByNeutralOrBuilding(retreatPosition);
+
+			return boundaries != null && boundaries.equals(BaseAction.findBoundariesPositionIsIn(this.retreatPosition))
+					&& !positionBlocked;
 		}
 
 	}
@@ -301,7 +305,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	public int defineMaxGroupSize() {
 		return this.maxGroupSize;
 	}
-	
+
 	// TODO: UML ADD
 	@Override
 	public int defineMaxLeaderTileDistance() {

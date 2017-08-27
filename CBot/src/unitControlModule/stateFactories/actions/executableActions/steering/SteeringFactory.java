@@ -192,6 +192,7 @@ public class SteeringFactory {
 		}
 	}
 
+	// TODO: UML VISIBILITY
 	/**
 	 * Function for checking if any neutral Units or buildings are blocking a
 	 * Vector's end-Position.
@@ -201,11 +202,26 @@ public class SteeringFactory {
 	 * @return true or false depending if the end-Position is being blocked or
 	 *         not.
 	 */
-	private static boolean isEndPositionBlockedByNeutralOrBuilding(Vector vector) {
+	public static boolean isEndPositionBlockedByNeutralOrBuilding(Vector vector) {
 		Position endPositionVec = new Position(vector.getX() + (int) (vector.getDirX()),
 				vector.getY() + (int) (vector.getDirY()));
+
+		return isEndPositionBlockedByNeutralOrBuilding(endPositionVec);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for checking if any neutral Units or buildings are blocking a
+	 * Position.
+	 * 
+	 * @param position
+	 *            the Position that will be checked for buildings and neutral
+	 *            Units.
+	 * @return true or false depending if the Position is being blocked or not.
+	 */
+	public static boolean isEndPositionBlockedByNeutralOrBuilding(Position position) {
 		List<Unit> endTilePositionVecRightUnits = Core.getInstance().getGame()
-				.getUnitsOnTile(endPositionVec.toTilePosition());
+				.getUnitsOnTile(position.toTilePosition());
 		boolean blocked = false;
 
 		// Filter the Units that are on these TilePosition. only neutral Units
