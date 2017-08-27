@@ -43,9 +43,9 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 		@Override
 		public boolean validatePosition(Point position) {
-			Pair<Region, Polygon> boundaries = BaseAction
-					.findBoundariesPositionIsIn(new Position(position.getX(), position.getY()));
-			boolean positionBlocked = SteeringFactory.isEndPositionBlockedByNeutralOrBuilding(retreatPosition);
+			Position checkedPosition = new Position(position.getX(), position.getY());
+			Pair<Region, Polygon> boundaries = BaseAction.findBoundariesPositionIsIn(checkedPosition);
+			boolean positionBlocked = SteeringFactory.isEndPositionBlockedByNeutralOrBuilding(checkedPosition);
 
 			return boundaries != null && boundaries.equals(BaseAction.findBoundariesPositionIsIn(this.retreatPosition))
 					&& !positionBlocked;
@@ -54,10 +54,11 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	}
 
 	// The distance at which isDone() returns true.
-	// TODO: UML VISIBILITY CHANGE NON STATIC NON FINAL RENAME DIST_TO_GATHERING_POINT
+	// TODO: UML VISIBILITY CHANGE NON STATIC NON FINAL RENAME
+	// DIST_TO_GATHERING_POINT
 	protected int minDistanceToGatheringPoint = 2 * Core.getInstance().getTileSize();
 	// TODO: UML REMOVE
-//	protected static final int TILE_RADIUS_NEAR = 1;
+	// protected static final int TILE_RADIUS_NEAR = 1;
 
 	// All generated retreat Positions. Each Unit that generates one stores it
 	// in this HashSet. When the Action is finished it is removed again.
