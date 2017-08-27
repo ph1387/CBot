@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import bwapi.Color;
-import bwapi.Game;
 import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
@@ -23,6 +22,15 @@ import core.Core;
  *
  */
 public class Polygon {
+
+	// TODO: UML ADD
+	private static final Color DEFAULT_COLOR = new Color(255, 255, 255);
+	// TODO: UML ADD
+	private static final boolean DEFAULT_VERTICES_SHOWN = true;
+	// TODO: UML ADD
+	private static final int DEFAULT_VERTICES_RADIUS = 5;
+	// TODO: UML ADD
+	private static final boolean DEFAULT_VERTICES_FILLED = false;
 
 	private java.awt.Polygon polygon = new java.awt.Polygon();
 	private List<Point> vertices = new ArrayList<Point>();
@@ -258,8 +266,8 @@ public class Polygon {
 
 				// Find the intersection itself.
 				Point intersection = testVector.getIntersection(polyVector);
-				
-				if(intersection != null) {
+
+				if (intersection != null) {
 					intersections.add(new Pair<Vector, Point>(polyVector, intersection));
 				}
 			}
@@ -323,8 +331,8 @@ public class Polygon {
 
 		// Find the middle of the edge.
 		vecToNextPoint.normalize();
-		Vector vecToMiddlePoint = new Vector(vecToNextPoint.x, vecToNextPoint.y, vecToNextPoint.getDirX() * vecLengthHalf,
-				vecToNextPoint.getDirY() * vecLengthHalf);
+		Vector vecToMiddlePoint = new Vector(vecToNextPoint.x, vecToNextPoint.y,
+				vecToNextPoint.getDirX() * vecLengthHalf, vecToNextPoint.getDirY() * vecLengthHalf);
 		Point middlePoint = new Point((int) (vecToMiddlePoint.x + vecToMiddlePoint.getDirX()),
 				(int) (vecToMiddlePoint.y + vecToMiddlePoint.getDirY()), Point.Type.POSITION);
 		Vector vecToEndPoint = new Vector(middlePoint.x, middlePoint.y, endPoint.x - middlePoint.x,
@@ -351,7 +359,89 @@ public class Polygon {
 		if (vecToMiddlePoint.length() > maxEdgeLength) {
 			this.splitEdgesInHalfRecursion(currentIndex, middleIndex, vecToMiddlePoint, maxEdgeLength);
 		}
+	}
 
+	// TODO: UML ADD
+	/**
+	 * Convenience function. The values being used are the default ones.
+	 * 
+	 * @see Vector#display(Color, boolean, int, int)
+	 */
+	public void display() {
+		this.display(DEFAULT_COLOR);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Convenience function.
+	 * 
+	 * @param color
+	 *            the color of the displayed Polygon.
+	 */
+	public void display(Color color) {
+		this.display(color, DEFAULT_VERTICES_SHOWN);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Convenience function.
+	 * 
+	 * @param color
+	 *            the color of the displayed Polygon.
+	 * @param verticesShown
+	 *            flag set true if the vertices should be shown, false if not.
+	 */
+	public void display(Color color, boolean verticesShown) {
+		this.display(color, verticesShown, DEFAULT_VERTICES_RADIUS);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Convenience function.
+	 * 
+	 * @param color
+	 *            the color of the displayed Polygon.
+	 * @param verticesShown
+	 *            flag set true if the vertices should be shown, false if not.
+	 * @param verticesRadius
+	 *            the radius of the vertices being shown.
+	 */
+	public void display(Color color, boolean verticesShown, int verticesRadius) {
+		this.display(color, verticesShown, verticesRadius, DEFAULT_VERTICES_FILLED);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for displaying the Polygon on the ingame map.
+	 * 
+	 * @param color
+	 *            the color of the displayed Polygon.
+	 * @param verticesShown
+	 *            flag set true if the vertices should be shown, false if not.
+	 * @param verticesRadius
+	 *            the radius of the vertices being shown.
+	 * @param verticesFilled
+	 *            flag set true if the vertices should be filled, false if not.
+	 */
+	public void display(Color color, boolean verticesShown, int verticesRadius, boolean verticesFilled) {
+		// Vertices:
+		if (verticesShown) {
+			for (Point point : this.vertices) {
+				point.display(verticesRadius, color, verticesFilled);
+			}
+		}
+
+		// Edges:
+		for (int i = 0; i < this.vertices.size(); i++) {
+			// Connect the last vertex with the first one
+			if (i == this.vertices.size() - 1) {
+				Core.getInstance().getGame().drawLineMap(this.vertices.get(i).toPosition(),
+						this.vertices.get(0).toPosition(), color);
+			} else {
+				Core.getInstance().getGame().drawLineMap(this.vertices.get(i).toPosition(),
+						this.vertices.get(i + 1).toPosition(), color);
+			}
+		}
 	}
 
 	// ------------------------------ Getter / Setter
