@@ -32,7 +32,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGeneralSuperclass
 		implements SteeringVectorGenerator {
 
-	private static final double TOTAL_RETREAT_DISTANCE = 160;
+	private static final double TOTAL_RETREAT_DISTANCE = 224;
 	private static final int TURN_RADIUS = 10;
 
 	// Different influence sources for Vector calculations. Higher numbers
