@@ -11,6 +11,7 @@ import javaGOAP.GoapState;
 public class UnitWorldStateWorker extends UnitWorldStateDefault {
 
 	public UnitWorldStateWorker() {
+		this.add(new GoapState(0, "isScout", true));
 		this.add(new GoapState(0, "gatheringMinerals", false));
 		this.add(new GoapState(0, "gatheringGas", false));
 		this.add(new GoapState(0, "constructing", false));

@@ -20,6 +20,8 @@ public abstract class WorkerAction extends BaseAction {
 	 */
 	public WorkerAction(Object target) {
 		super(target);
+		
+		this.addPrecondition(new GoapState(0, "canMove", true));
 	}
 
 	// -------------------- Functions

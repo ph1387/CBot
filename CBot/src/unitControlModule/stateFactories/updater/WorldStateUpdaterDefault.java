@@ -34,6 +34,9 @@ public class WorldStateUpdaterDefault extends WorldStateUpdaterGeneral {
 		
 		// Never set true, since the general intent of the unit is to destroy the enemy.
 		this.changeDestroyUnit(false);
+		
+		// Change the move world state accordingly.
+		this.changeWorldStateEffect("canMove", playerUnit.getUnit().canMove());
 	}
 
 	/**
