@@ -31,7 +31,8 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	private boolean displayEnemyStrength = false;
 
 	// Display:
-	private boolean displayMapBoundaries = true;
+	private boolean displayMapBoundaries = false;
+	private boolean displayReservedSpacePolygons = false;
 	private boolean displayMapContendedTilePositions = false;
 
 	// UnitControlModule:
@@ -78,6 +79,11 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	@Override
 	public boolean enableDisplayMapBoundaries() {
 		return this.displayMapBoundaries;
+	}
+	
+	@Override
+	public boolean enableDisplayReservedSpacePolygons() {
+		return this.displayReservedSpacePolygons;
 	}
 
 	@Override

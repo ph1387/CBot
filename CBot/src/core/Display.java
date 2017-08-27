@@ -189,7 +189,10 @@ public class Display {
 			showContendedTilePositions();
 		}
 		if (informationStorage.getiDisplayConfig().enableDisplayMapBoundaries()) {
-			showPolygons();
+			showBoundaries();
+		}
+		if (informationStorage.getiDisplayConfig().enableDisplayReservedSpacePolygons()) {
+			showReservedSpacePolygons();
 		}
 	}
 
@@ -245,11 +248,11 @@ public class Display {
 		GAME.drawTextScreen(offsetX, offsetY, "FPS: " + GAME.getFPS());
 	}
 
+	// TODO: UML RENAME showPolygons
 	/**
-	 * Function for displaying the polygons on the map. This includes the map's
-	 * boundaries as well as the reserved space at the starting location.
+	 * Function for displaying the map's boundaries on the screen.
 	 */
-	private static void showPolygons() {
+	private static void showBoundaries() {
 
 		// TODO: REMOVE DEBUG WIP
 		int boundaryCount = CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries().size();
@@ -272,8 +275,15 @@ public class Display {
 		// {
 		// drawPolygon(pair.second, MAP_BONDARIES_COLOR, polygonVertexRadius);
 		// }
+	}
 
-		// Custom Polygons:
+	// TODO: UML ADD
+	/**
+	 * Function for displaying all Polygons that represent the reserved space on
+	 * the map. No buildings can be constructed on TilePositions in this
+	 * Polygon.
+	 */
+	private static void showReservedSpacePolygons() {
 		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getReservedSpace()) {
 			drawPolygon(polygon, RESERVED_SPACE_COLOR, POLYGON_VERTEX_RADIUS);
 		}

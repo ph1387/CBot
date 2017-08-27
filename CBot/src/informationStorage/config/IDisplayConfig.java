@@ -21,6 +21,13 @@ public interface IDisplayConfig {
 
 	/**
 	 *
+	 * @return true for enabling the highlight of the Polygons that represent
+	 *         the reserved space on the map, false for disabling it.
+	 */
+	public boolean enableDisplayReservedSpacePolygons();
+
+	/**
+	 *
 	 * @return true for enabling the highlight of the contended TilePositions,
 	 *         false for disabling it.
 	 */
