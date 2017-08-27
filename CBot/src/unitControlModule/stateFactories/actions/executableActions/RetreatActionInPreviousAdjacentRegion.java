@@ -27,6 +27,10 @@ public class RetreatActionInPreviousAdjacentRegion extends RetreatActionGeneralS
 	// the Action can be performed.
 	private int acceptableChokePointRange = 320;
 	private Position prevRegionRetreatPosition = null;
+	// The percentage of the distance towards the previous Region Position that
+	// the Unit has to travel in order for the Action to be finished.
+	// Percentages are used since the distances that Units travel may vary.
+	private double minTravelDistancePercentange = 0.75;
 
 	/**
 	 * @param target
@@ -49,26 +53,15 @@ public class RetreatActionInPreviousAdjacentRegion extends RetreatActionGeneralS
 
 		// The ranges were not checked in any previous iteration.
 		if (this.prevRegionRetreatPosition == null) {
-			// Find the current Region and the one that the Unit must retreat to
-			// in order to get to the starting location.
-			Region curRegion = BWTA.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition());
-			Region prevRegion = ((PlayerUnit) goapUnit).getInformationStorage().getMapInfo()
-					.getReversedRegionAccessOrder().get(curRegion);
+			this.prevRegionRetreatPosition = this.generatePrevRegionRetreatPosition(goapUnit);
 
-			// The Unit might be already in the starting Region (No previous
-			// Region!).
-			if (prevRegion != null) {
-				// Check the distance to each ChokePoint. If the distance is in
-				// the acceptable range, the Action can be performed.
-				for (Chokepoint chokepoint : prevRegion.getChokepoints()) {
-					if (((PlayerUnit) goapUnit).getUnit()
-							.getDistance(chokepoint.getCenter()) <= this.acceptableChokePointRange) {
-						this.prevRegionRetreatPosition = prevRegion.getCenter();
-						success = true;
+			success = this.prevRegionRetreatPosition != null;
 
-						break;
-					}
-				}
+			// Set the distance at which the isDone function returns true and
+			// the Action is therefore finished.
+			if (success) {
+				this.minDistanceToGatheringPoint = (int) ((1. - this.minTravelDistancePercentange)
+						* ((PlayerUnit) goapUnit).getUnit().getDistance(prevRegionRetreatPosition));
 			}
 		}
 		// the previous Region's center was found.
@@ -82,6 +75,42 @@ public class RetreatActionInPreviousAdjacentRegion extends RetreatActionGeneralS
 		}
 
 		return success;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating the retreat Position of the previous Region that
+	 * the Unit has to move to in order to reach the starting location.
+	 * 
+	 * @param goapUnit
+	 *            the Unit that is going to move to another Region.
+	 * @return the Position in another Region that the Unit can / must retreat
+	 *         to in order to reach the starting location.
+	 */
+	private Position generatePrevRegionRetreatPosition(IGoapUnit goapUnit) {
+		// Find the current Region and the one that the Unit must retreat to
+		// in order to get to the starting location.
+		Region curRegion = BWTA.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition());
+		Region prevRegion = ((PlayerUnit) goapUnit).getInformationStorage().getMapInfo().getReversedRegionAccessOrder()
+				.get(curRegion);
+		Position generatedPosition = null;
+
+		// The Unit might be already in the starting Region (No previous
+		// Region!).
+		if (prevRegion != null) {
+			// Check the distance to each ChokePoint. If the distance is in
+			// the acceptable range, the Action can be performed.
+			for (Chokepoint chokepoint : prevRegion.getChokepoints()) {
+				if (((PlayerUnit) goapUnit).getUnit()
+						.getDistance(chokepoint.getCenter()) <= this.acceptableChokePointRange) {
+					generatedPosition = prevRegion.getCenter();
+
+					break;
+				}
+			}
+		}
+
+		return generatedPosition;
 	}
 
 	@Override

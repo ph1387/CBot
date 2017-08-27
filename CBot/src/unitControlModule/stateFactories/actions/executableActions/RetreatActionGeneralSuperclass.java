@@ -54,8 +54,10 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	}
 
 	// The distance at which isDone() returns true.
-	private static final int DIST_TO_GATHERING_POINT = 2 * Core.getInstance().getTileSize();
-	protected static final int TILE_RADIUS_NEAR = 1;
+	// TODO: UML VISIBILITY CHANGE NON STATIC NON FINAL RENAME DIST_TO_GATHERING_POINT
+	protected int minDistanceToGatheringPoint = 2 * Core.getInstance().getTileSize();
+	// TODO: UML REMOVE
+//	protected static final int TILE_RADIUS_NEAR = 1;
 
 	// All generated retreat Positions. Each Unit that generates one stores it
 	// in this HashSet. When the Action is finished it is removed again.
@@ -103,7 +105,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		// Unit is near it => Remove the Position from the Collection of retreat
 		// Positions.
 		if (this.target == null || (this.retreatPosition != null
-				&& ((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, DIST_TO_GATHERING_POINT))) {
+				&& ((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, minDistanceToGatheringPoint))) {
 			RetreatActionGeneralSuperclass.GatheringPoints.remove(this.retreatPosition);
 		}
 

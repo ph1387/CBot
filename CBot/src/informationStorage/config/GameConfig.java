@@ -31,7 +31,7 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	private boolean displayEnemyStrength = false;
 
 	// Display:
-	private boolean displayMapBoundaries = false;
+	private boolean displayMapBoundaries = true;
 	private boolean displayMapContendedTilePositions = false;
 
 	// UnitControlModule:
