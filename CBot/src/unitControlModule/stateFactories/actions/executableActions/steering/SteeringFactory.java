@@ -192,7 +192,6 @@ public class SteeringFactory {
 		}
 	}
 
-	// TODO: UML VISIBILITY
 	/**
 	 * Function for checking if any neutral Units or buildings are blocking a
 	 * Vector's end-Position.
@@ -209,7 +208,6 @@ public class SteeringFactory {
 		return isEndPositionBlockedByNeutralOrBuilding(endPositionVec);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for checking if any neutral Units or buildings are blocking a
 	 * Position.

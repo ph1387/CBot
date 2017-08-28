@@ -44,19 +44,13 @@ public class InformationStorage {
 
 	// Information regarding the Player and the current state of the game.
 	private CurrentGameInformation currentGameInformation;
-	
-	// TODO: UML ADD
+
 	// Configuration information:
 	private IBuildingOrderModuleConfig iBuildingOrderModuleConfig;
-	// TODO: UML ADD
 	private IDisplayConfig iDisplayConfig;
-	// TODO: UML ADD
 	private IInitConfig iInitConfig;
-	// TODO: UML ADD
 	private IPlayerUnitConfig iPlayerUnitConfig;
-	// TODO: UML ADD
 	private IUnitControlModuleConfig iUnitControlModuleConfig;
-	// TODO: UML ADD
 	private IUnitTrackerModuleConfig iUnitTrackerModuleConfig;
 
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
@@ -66,7 +60,7 @@ public class InformationStorage {
 		this.trackerInfo = trackerInfo;
 		this.mapInfo = mapInfo;
 		this.currentGameInformation = currentGameInformation;
-		
+
 		// Generate the configuration object:
 		GameConfig gameConfig = new GameConfig();
 		this.iBuildingOrderModuleConfig = gameConfig;
@@ -156,7 +150,7 @@ public class InformationStorage {
 	}
 
 	// ------------------------------ Config:
-	
+
 	public IBuildingOrderModuleConfig getiBuildingOrderModuleConfig() {
 		return iBuildingOrderModuleConfig;
 	}

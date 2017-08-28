@@ -17,7 +17,6 @@ public abstract class ActionUpdaterGeneral implements Updater {
 	protected PlayerUnit playerUnit;
 
 	private RetreatActionSteerInRetreatVectorDirection retreatActionSteerInRetreatVectorDirection;
-	// TODO: UML ADD
 	private RetreatActionInPreviousAdjacentRegion retreatActionInPreviousAdjacentRegion;
 
 	public ActionUpdaterGeneral(PlayerUnit playerUnit) {

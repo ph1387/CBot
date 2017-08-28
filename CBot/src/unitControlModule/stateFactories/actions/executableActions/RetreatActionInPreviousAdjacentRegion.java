@@ -10,7 +10,6 @@ import bwta.Region;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * RetreatActionInPreviousAdjacentRegion.java --- A retreat Action with which a
  * Unit can easily move between two different Regions and retreat to the one
@@ -68,7 +67,7 @@ public class RetreatActionInPreviousAdjacentRegion extends RetreatActionGeneralS
 		else {
 			success = true;
 
-			// TODO: WIP POSITION DEBUG INFO
+			// TODO: DEBUG INFO POSITION
 			// Display the retreat Position as one big (Red) circle.
 			(new Point(this.prevRegionRetreatPosition)).display(25, new Color(255, 0, 0), true);
 			(new Vector(((PlayerUnit) goapUnit).getUnit().getPosition(), this.prevRegionRetreatPosition)).display();
@@ -77,7 +76,6 @@ public class RetreatActionInPreviousAdjacentRegion extends RetreatActionGeneralS
 		return success;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating the retreat Position of the previous Region that
 	 * the Unit has to move to in order to reach the starting location.
@@ -121,7 +119,6 @@ public class RetreatActionInPreviousAdjacentRegion extends RetreatActionGeneralS
 		return 10;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected void resetSpecific() {
 		super.resetSpecific();

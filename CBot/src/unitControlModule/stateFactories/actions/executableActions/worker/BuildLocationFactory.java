@@ -13,7 +13,6 @@ import core.TilePositionFactory;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
-// TODO: UML CHANGE SUPERCLASS
 /**
  * BuildLocationFinder.java --- Class for finding building locations on the map
  * and storing all special TilePositions.
@@ -34,8 +33,6 @@ public class BuildLocationFactory {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
-	// TODO: WIP maybe change
 	// TODO: Possible Change: Move dependencies to implementing Class.
 	/**
 	 * Function for finding all required TilePositions of a building plus a

@@ -86,13 +86,11 @@ public class ScoutBaseLocationAction extends BaseAction {
 		return false;
 	}
 	
-	// TODO: UML ADD
 	@Override
 	public int defineMaxGroupSize() {
 		return 0;
 	}
 	
-	// TODO: UML ADD
 	@Override
 	public int defineMaxLeaderTileDistance() {
 		return 0;

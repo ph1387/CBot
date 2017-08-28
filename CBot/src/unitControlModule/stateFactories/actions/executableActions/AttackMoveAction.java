@@ -14,9 +14,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
-	// TODO: UML ADD
 	private int maxGroupSize = 5;
-	// TODO: UML ADD
 	private int maxLeaderTileDistance = 5;
 	
 	/**
@@ -66,13 +64,11 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 		return ((PlayerUnit) groupMember).getUnit().attack(((TilePosition) this.target).toPosition());
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxGroupSize() {
 		return this.maxGroupSize;
 	}
 	
-	// TODO: UML ADD
 	@Override
 	public int defineMaxLeaderTileDistance() {
 		return this.maxLeaderTileDistance;

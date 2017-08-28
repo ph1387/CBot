@@ -91,18 +91,6 @@ public class GatherAction extends WorkerAction {
 		return this.target == null || !((Unit) this.target).exists();
 	}
 
-	// TODO: UML REMOVE
-//	@Override
-//	protected boolean isInRange(IGoapUnit goapUnit) {
-//		return false;
-//	}
-
-	// TODO: UML REMOVE
-//	@Override
-//	protected boolean requiresInRange(IGoapUnit goapUnit) {
-//		return false;
-//	}
-
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		boolean success = false;

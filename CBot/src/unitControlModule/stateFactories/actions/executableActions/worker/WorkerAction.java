@@ -4,7 +4,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 
-// TODO: UML ADD
 /**
  * WorkerAction.java --- Superclass for shared information between different
  * worker actions (I.e.: Grouping).

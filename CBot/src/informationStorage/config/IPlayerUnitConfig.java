@@ -2,7 +2,6 @@ package informationStorage.config;
 
 import unitControlModule.unitWrappers.PlayerUnit;
 
-//TODO: UML ADD
 /**
  * IPlayerUnitConfig.java --- Configuration Interface for the
  * {@link PlayerUnit}. Class.

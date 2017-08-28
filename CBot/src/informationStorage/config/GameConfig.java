@@ -1,6 +1,5 @@
 package informationStorage.config;
 
-// TODO: UML ADD
 /**
  * GameConfig.java --- Centralized configuration Class for a simple switching
  * between different configuration / debug / display modes.

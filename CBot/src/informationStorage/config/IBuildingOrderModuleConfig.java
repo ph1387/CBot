@@ -2,7 +2,6 @@ package informationStorage.config;
 
 import buildingOrderModule.BuildingOrderModule;
 
-//TODO: UML ADD
 /**
  * IBuildingOrderModuleConfig.java --- Configuration Interface for the
  * {@link BuildingOrderModule} Class.

@@ -230,18 +230,6 @@ public class ConstructBuildingAction extends WorkerAction {
 						.getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.CONFIRMED;
 	}
 
-	// TODO: UML REMOVE
-//	@Override
-//	protected boolean isInRange(IGoapUnit goapUnit) {
-//		return false;
-//	}
-
-	// TODO: UML REMOVE
-//	@Override
-//	protected boolean requiresInRange(IGoapUnit goapUnit) {
-//		return false;
-//	}
-
 	// ------------------------------ Getter / Setter
 
 	public void setTempNeededTilePositions(HashSet<TilePosition> tempNeededTilePositions) {

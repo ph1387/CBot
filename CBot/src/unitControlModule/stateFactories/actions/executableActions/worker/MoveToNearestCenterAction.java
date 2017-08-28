@@ -6,7 +6,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * RetreatToNearestCenterAction.java --- A Action with which the worker can
  * return to the nearest center building.

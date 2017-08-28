@@ -3,7 +3,6 @@ package informationStorage.config;
 import buildingOrderModule.BuildingOrderModule;
 import unitControlModule.UnitControlModule;
 
-//TODO: UML ADD
 /**
  * IUnitControlModuleConfig.java --- Configuration Interface for the
  * {@link UnitControlModule} Class.

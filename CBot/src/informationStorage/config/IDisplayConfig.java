@@ -2,7 +2,6 @@ package informationStorage.config;
 
 import core.Display;
 
-//TODO: UML ADD
 /**
  * IDisplayConfig.java --- Configuration Interface for the {@link Display}
  * Class.

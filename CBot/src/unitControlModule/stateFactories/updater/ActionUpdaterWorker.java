@@ -27,7 +27,6 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 	private GatherGasAction gatherGasAction;
 	private ConstructBuildingAction constructBuildingAction;
 	private ScoutBaseLocationWorkerAction scoutBaseLocationWorkerAction;
-	// TODO: UML ADD
 	private MoveToNearestCenterAction moveToNearestCenterAction;
 
 	public ActionUpdaterWorker(PlayerUnit playerUnit) {
@@ -48,7 +47,7 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 		this.gatherGasAction.setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeGasSource());
 
 		this.moveToNearestCenterAction.setTarget(this.playerUnit.getClosestCenter());
-		
+
 		// Set the target once and only change the ConstructionJob's UnitType
 		// afterwards. This is less CPU intensive than continuously creating new
 		// ConstructionJobs.

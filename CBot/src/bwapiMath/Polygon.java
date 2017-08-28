@@ -23,13 +23,9 @@ import core.Core;
  */
 public class Polygon {
 
-	// TODO: UML ADD
 	private static final Color DEFAULT_COLOR = new Color(255, 255, 255);
-	// TODO: UML ADD
 	private static final boolean DEFAULT_VERTICES_SHOWN = true;
-	// TODO: UML ADD
 	private static final int DEFAULT_VERTICES_RADIUS = 5;
-	// TODO: UML ADD
 	private static final boolean DEFAULT_VERTICES_FILLED = false;
 
 	private java.awt.Polygon polygon = new java.awt.Polygon();
@@ -361,7 +357,6 @@ public class Polygon {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function. The values being used are the default ones.
 	 * 
@@ -371,7 +366,6 @@ public class Polygon {
 		this.display(DEFAULT_COLOR);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -382,7 +376,6 @@ public class Polygon {
 		this.display(color, DEFAULT_VERTICES_SHOWN);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -395,7 +388,6 @@ public class Polygon {
 		this.display(color, verticesShown, DEFAULT_VERTICES_RADIUS);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -410,7 +402,6 @@ public class Polygon {
 		this.display(color, verticesShown, verticesRadius, DEFAULT_VERTICES_FILLED);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for displaying the Polygon on the ingame map.
 	 * 

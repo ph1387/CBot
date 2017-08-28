@@ -57,16 +57,4 @@ public abstract class UnloadAction extends WorkerAction {
 		return 0;
 	}
 
-	// TODO: UML REMOVE
-//	@Override
-//	protected boolean isInRange(IGoapUnit goapUnit) {
-//		return false;
-//	}
-
-	// TODO: UML REMOVE
-//	@Override
-//	protected boolean requiresInRange(IGoapUnit goapUnit) {
-//		return false;
-//	}
-
 }

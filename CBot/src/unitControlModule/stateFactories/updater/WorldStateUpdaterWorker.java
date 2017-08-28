@@ -13,12 +13,10 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  */
 public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 
-	// TODO: UML ADD
 	// The maximum distance a worker is allowed travel away from a center
 	// building when attacking a enemy Unit. Beyond this it is forbidden to
 	// start a new attack Action.
 	private int maxPixelAttackDistanceToCenter = 600;
-	// TODO: UML ADD
 	// The maximum distance at which a worker is allowed to search for mineral
 	// spots and refineries. Beyond this distance the worker must first return
 	// to his nearest center building before searching around him.
@@ -76,9 +74,9 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("allowGathering", false);
 		} else {
 			this.changeWorldStateEffect("isScout", false);
-			
+
 			// Only allow gathering if the Unit is near a center building.
-			if(closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter) {
+			if (closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter) {
 				this.changeWorldStateEffect("allowGathering", true);
 			} else {
 				this.changeWorldStateEffect("allowGathering", false);

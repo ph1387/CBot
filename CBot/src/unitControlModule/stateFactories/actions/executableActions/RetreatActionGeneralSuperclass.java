@@ -54,11 +54,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	}
 
 	// The distance at which isDone() returns true.
-	// TODO: UML VISIBILITY CHANGE NON STATIC NON FINAL RENAME
-	// DIST_TO_GATHERING_POINT
 	protected int minDistanceToGatheringPoint = 2 * Core.getInstance().getTileSize();
-	// TODO: UML REMOVE
-	// protected static final int TILE_RADIUS_NEAR = 1;
 
 	// All generated retreat Positions. Each Unit that generates one stores it
 	// in this HashSet. When the Action is finished it is removed again.
@@ -70,8 +66,6 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	// Vector related stuff.
 	protected static final int ALPHA_MAX = 90;
-	// TODO: UML REMOVE
-	// protected double maxDistance = 10 * Core.getInstance().getTileSize();
 	// vecEU -> Vector(enemyUnit, playerUnit)
 	// vecUTP -> Vector(playerUnit, targetPosition)
 	protected Vector vecEU, vecUTP;
@@ -81,9 +75,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	private int distanceBetweenUnits = 32;
 	private int matrixTurnAngleXDEG = 0;
 	private int matrixTurnAngleYDEG = 90;
-	// TODO: UML ADD
 	private int maxGroupSize = 5;
-	// TODO: UML ADD
 	private int maxLeaderTileDistance = 5;
 
 	/**
@@ -295,7 +287,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 			this.retreatPositionCluster.addUnit((RetreatUnit) groupMember);
 		}
 
-		// TODO: WIP POSITION DEBUG INFO
+		// TODO: DEBUG INFO POSITION
 		this.retreatPositionCluster.display();
 
 		// Move the Unit to it's assigned location.
@@ -303,13 +295,11 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		return ((PlayerUnit) groupMember).getUnit().move(new Position(position.getX(), position.getY()));
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxGroupSize() {
 		return this.maxGroupSize;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxLeaderTileDistance() {
 		return this.maxLeaderTileDistance;

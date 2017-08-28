@@ -53,12 +53,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	protected double confidenceDefault = 0.75;
 
 	// Properties used for modifying a generated confidence:
-	// TODO: UML ADD
 	// The distance at which the center range confidence multiplier activates.
 	private int maxCenterPixelDistanceConfidenceBoost = 320;
-	// TODO: UML ADD
 	private double confidenceMultiplierSingleCenter = 2.5;
-	// TODO: UML ADD
 	private double confidenceMultiplierInMaxCenterDistance = 1.5;
 
 	// Factories and Objects needed for an accurate representation of the Units
@@ -208,7 +205,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a modified version of the standard confidence.
 	 * This function utilizes the {@link #generateConfidence()} method that is
@@ -419,7 +415,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return sum;
 	}
 
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for extracting the closest Unit relative to this Unit from a
 	 * given HashSet.
@@ -510,7 +505,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return playerUnits;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the distance to the closest Player center
 	 * building on the map. This function either returns the actual distance
@@ -529,7 +523,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return distance;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the center Unit that is the closest one to the
 	 * current PlayerUnit's Position.
@@ -569,7 +562,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return this.unit;
 	}
 
-	// TODO: UML ADD
 	public double getConfidence() {
 		return confidence;
 	}

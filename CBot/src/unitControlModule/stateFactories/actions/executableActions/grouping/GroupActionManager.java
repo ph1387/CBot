@@ -19,11 +19,6 @@ public class GroupActionManager {
 
 	private HashMap<Class<?>, HashSet<GroupAction>> storedGroups = new HashMap<>();
 	private HashMap<IGoapUnit, GroupAction> mappedUnits = new HashMap<>();
-	// TODO: UML REMOVE
-	// The maximum range in tiles (X and Y) that a leader is allowed to be away.
-	// Grouping is not affected by actions like retreating from an enemy since
-	// these are handled separately.
-//	private int maxLeaderTileRange = 5;
 
 	// -------------------- Functions
 
@@ -129,7 +124,6 @@ public class GroupActionManager {
 		return success;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for extracting groups that the Unit is able to join. The groups
 	 * that are going to be looked at are the ones stored in this instance. From
@@ -159,7 +153,6 @@ public class GroupActionManager {
 		return potentialGroups;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for checking if a group's leader is in an acceptable, predefined
 	 * tile range around a provided Unit.

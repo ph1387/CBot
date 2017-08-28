@@ -28,10 +28,6 @@ public class Display {
 	private static final Game GAME = Core.getInstance().getGame();
 
 	// Map information visualization.
-	// TODO: UML REMOVE
-	// private static final boolean ENABLE_MAP_POLYGONS = false;
-	// TODO: UML REMOVE
-	// private static final boolean ENABLE_MAP_CONTENDED_TILEPOSITIONS = false;
 	private static final Color MAP_BONDARIES_COLOR = new Color(255, 255, 0);
 	private static final Color RESERVED_SPACE_COLOR = new Color(255, 128, 0);
 	private static final int POLYGON_VERTEX_RADIUS = 5;
@@ -171,7 +167,6 @@ public class Display {
 		}
 	}
 
-	// TODO: UML PARAMS CHANGE
 	/**
 	 * Wrapper function for displaying internal game information like the
 	 * elapsed time, APM or FPS.
@@ -194,7 +189,6 @@ public class Display {
 		}
 	}
 
-	// Display the current time
 	/**
 	 * Function for displaying the elapsed time. This includes the time in
 	 * minutes, seconds and frames.
@@ -246,7 +240,6 @@ public class Display {
 		GAME.drawTextScreen(offsetX, offsetY, "FPS: " + GAME.getFPS());
 	}
 
-	// TODO: UML RENAME showPolygons
 	/**
 	 * Function for displaying the map's boundaries on the screen.
 	 */
@@ -275,7 +268,6 @@ public class Display {
 		// }
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for displaying all Polygons that represent the reserved space on
 	 * the map. No buildings can be constructed on TilePositions in this
@@ -299,124 +291,4 @@ public class Display {
 		}
 	}
 
-	// TODO: UML REMOVE
-//	/**
-//	 * Convenience function.
-//	 * 
-//	 * @param polygon
-//	 *            the Polygon that is being drawn.
-//	 * @param color
-//	 *            the Color that is used to represent the Polygon.
-//	 * @param vertexRadius
-//	 *            the radius of the ellipses symbolizing the different vertices.
-//	 * @see #drawOnMap(Color, int, boolean)
-//	 */
-//	public static void drawPolygon(Polygon polygon, Color color, int vertexRadius) {
-//		drawPolygon(polygon, color, vertexRadius, false);
-//	}
-
-	// TODO: UML REMOVE
-//	/**
-//	 * Function for drawing a Polygon on the ingame map.
-//	 *
-//	 * @param polygon
-//	 *            the Polygon that is being drawn.
-//	 * @param color
-//	 *            the Color that is used to represent the Polygon.
-//	 * @param vertexRadius
-//	 *            the radius of the ellipses symbolizing the different vertices.
-//	 * @param verticesFilled
-//	 *            show the ellipses either empty or filled.
-//	 */
-//	public static void drawPolygon(Polygon polygon, Color color, int vertexRadius, boolean verticesFilled) {
-//		// Vertices:
-//		for (Point point : polygon.getVertices()) {
-//			drawPoint(point, color, vertexRadius);
-//		}
-//
-//		// Edges:
-//		for (int i = 0; i < polygon.getVertices().size(); i++) {
-//			// Connect the last vertex with the first one
-//			if (i == polygon.getVertices().size() - 1) {
-//				GAME.drawLineMap(polygon.getVertices().get(i).toPosition(), polygon.getVertices().get(0).toPosition(),
-//						color);
-//			} else {
-//				GAME.drawLineMap(polygon.getVertices().get(i).toPosition(),
-//						polygon.getVertices().get(i + 1).toPosition(), color);
-//			}
-//		}
-//	}
-
-	// TODO: UML REMOVE
-//	/**
-//	 * Convenience function.
-//	 * 
-//	 * @param vector
-//	 *            the Vector that is being drawn
-//	 * @param color
-//	 *            he Color that is used to represent the Vector.
-//	 */
-//	public static void drawVector(Vector vector, Color color) {
-//		drawVector(vector, color, false, 0);
-//	}
-
-	// TODO: UML REMOVE
-//	/**
-//	 * Function for drawing a Vector on the ingame map.
-//	 * 
-//	 * @param vector
-//	 *            the Vector that is being drawn
-//	 * @param color
-//	 *            he Color that is used to represent the Vector.
-//	 * @param endsShown
-//	 *            if true then the beginning and end of the Vector are being
-//	 *            represented as Points on the map.
-//	 * @param radius
-//	 *            the radius of the Points being shown.
-//	 */
-//	public static void drawVector(Vector vector, Color color, boolean endsShown, int radius) {
-//		GAME.drawLineMap(vector.getX(), vector.getY(), vector.getX() + (int) vector.getDirX(),
-//				vector.getY() + (int) vector.getDirY(), color);
-//
-//		// Draw the beginning and the end of the Vector as well.
-//		if (endsShown) {
-//			drawPoint(new Point(vector.getX(), vector.getY(), Point.Type.POSITION), color, radius);
-//			drawPoint(new Point(vector.getX() + (int) vector.getDirX(), vector.getY() + (int) vector.getDirY(),
-//					Point.Type.POSITION), color, radius);
-//		}
-//	}
-
-	// TODO: UML REMOVE
-//	/**
-//	 * Convenience function.
-//	 * 
-//	 * @param point
-//	 *            the Point that is being drawn
-//	 * @param color
-//	 *            he Color that is used to represent the Vector.
-//	 * @param radius
-//	 *            the radius of the Point being drawn.
-//	 */
-//	public static void drawPoint(Point point, Color color, int radius) {
-//		drawPoint(point, color, radius, false);
-//	}
-
-	// TODO: UML REMOVE
-//	/**
-//	 * Function for drawing a Point on the ingame map.
-//	 * 
-//	 * @param point
-//	 *            the Point that is being drawn
-//	 * @param color
-//	 *            he Color that is used to represent the Vector.
-//	 * @param radius
-//	 *            the radius of the Point being drawn.
-//	 * @param filled
-//	 *            if true then the Point being drawn will be shown as a filled
-//	 *            Point.
-//	 */
-//	public static void drawPoint(Point point, Color color, int radius, boolean filled) {
-//		GAME.drawEllipseMap(point.toPosition(), radius, radius, color, filled);
-//	}
-	
 }

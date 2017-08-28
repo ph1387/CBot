@@ -28,11 +28,6 @@ public class UnitTrackerModule {
 	private static final double FLAT_DPS_MULTIPLIER = 100.;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
-	// TODO: UML REMOVE enablePlayerStrength
-	// private static boolean EnablePlayerStrength = true;
-	// TODO: UML REMOVE enableEnemyStrength
-	// private static boolean EnableEnemyStrength = false;
-
 	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
@@ -49,7 +44,6 @@ public class UnitTrackerModule {
 	private double currentWorkerPercent;
 	private double currentBuildingsPercent;
 	private double currentCombatUnitsPercent;
-	// TODO: UML CHANGE NAME
 	private HashMap<UnitType, HashSet<Unit>> currentUnits;
 
 	// The container holding all information.

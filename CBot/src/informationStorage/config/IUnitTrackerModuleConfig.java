@@ -2,7 +2,6 @@ package informationStorage.config;
 
 import unitTrackerModule.UnitTrackerModule;
 
-//TODO: UML ADD
 /**
  * IUnitTrackerModuleConfig.java --- Configuration Interface for the
  * {@link UnitTrackerModule} Class.

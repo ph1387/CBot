@@ -27,9 +27,7 @@ public class CurrentGameInformation {
 	private double currentBuildingsPercent = 0.;
 	private double currentCombatUnitsPercent = 0.;
 
-	// TODO: UML NAME CHANGE
 	private HashMap<UnitType, Integer> currentUnitCounts = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<UnitType, HashSet<Unit>> currentUnits = new HashMap<>();
 	private HashSet<TechType> currentTechs = new HashSet<>();
 	private HashMap<UpgradeType, Integer> currentUpgrades = new HashMap<>();
@@ -38,7 +36,6 @@ public class CurrentGameInformation {
 
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * @param currentUnitCountTotal
 	 *            the total number of Units the Bot controls.
@@ -82,7 +79,6 @@ public class CurrentGameInformation {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	/**
 	 * Internal function for transforming a HashMap containing references to all
 	 * current Player Units to a HashMap containing the UnitTypes as keys and
@@ -163,22 +159,18 @@ public class CurrentGameInformation {
 		this.currentCombatUnitsPercent = currentCombatUnitsPercent;
 	}
 
-	// TODO: UML NAME CHANGE
 	public HashMap<UnitType, Integer> getCurrentUnitCounts() {
 		return currentUnitCounts;
 	}
 
-	// TODO: UML NAME CHANGE
 	public void setCurrentUnitCounts(HashMap<UnitType, Integer> currentUnits) {
 		this.currentUnitCounts = currentUnits;
 	}
 
-	// TODO: UML ADD
 	public HashMap<UnitType, HashSet<Unit>> getCurrentUnits() {
 		return currentUnits;
 	}
 
-	// TODO: UML ADD
 	public void setCurrentUnits(HashMap<UnitType, HashSet<Unit>> currentUnits) {
 		this.currentUnits = currentUnits;
 		this.currentUnitCounts = this.generateCurrentUnitCounts(currentUnits);

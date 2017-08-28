@@ -19,11 +19,9 @@ public class GroupAction {
 	private Class<?> type;
 	private List<IGoapUnit> members = new ArrayList<>();
 	private List<GroupableAction> actions = new ArrayList<>();
-	// TODO: UML CHANGE VALUE
 	private int maxGroupSize;
 	private int currentGroupSize = 0;
 
-	// TODO: UML CHANGE PARAM
 	public GroupAction(Class<? extends GroupableAction> type, GroupableAction action) {
 		this.type = type;
 		this.maxGroupSize = action.defineMaxGroupSize();

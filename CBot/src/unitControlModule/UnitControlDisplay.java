@@ -31,13 +31,11 @@ public class UnitControlDisplay {
 	private static final Color BUILDING_INFO_BAR_COLOR = new Color(255, 255, 255);
 	private static final Game GAME = Core.getInstance().getGame();
 
-	// TODO: UML ADD
 	// Formatter for the PlayerUnit confidence output
 	private static final DecimalFormat CONFIDENCE_FORMATTER = new DecimalFormat("0.00");
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	/**
 	 * Function for displaying the confidence of each Unit on the map at their
 	 * current Position.
@@ -53,7 +51,6 @@ public class UnitControlDisplay {
 		}
 	}
 
-	// TODO: UML RENAME showImportantInformation
 	/**
 	 * Main function for showing all important queued information regarding all
 	 * {@link PlayerBuilding}s and {@link PlayerUnitWorker}s. This includes

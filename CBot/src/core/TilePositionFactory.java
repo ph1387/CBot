@@ -5,7 +5,6 @@ import java.util.HashSet;
 import bwapi.TilePosition;
 import bwapi.UnitType;
 
-// TODO: UML ADD MOVED FROM WORKER
 /**
  * FactorySuperclass.java --- Superclass for worker actions depending on
  * knowledge of needed TilePositions.
@@ -21,7 +20,6 @@ public class TilePositionFactory {
 
 	// -------------------- Functions
 
-	// TODO: UML STATIC VISIBILITY CHANGE 
 	/**
 	 * Function for finding all required TilePositions of a building plus a
 	 * additional row at the bottom, if the building can train Units.

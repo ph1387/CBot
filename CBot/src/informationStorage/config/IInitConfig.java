@@ -2,7 +2,6 @@ package informationStorage.config;
 
 import core.Init;
 
-//TODO: UML ADD
 /**
  * IInitConfig.java --- Configuration Interface for the {@link Init} Class.
  * 

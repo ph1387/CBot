@@ -56,9 +56,6 @@ public class UnitControlModule implements RemoveAgentEvent {
 	public void update() {
 		this.addNewTrackedUnits();
 		this.removeTrackedUnits();
-		// TODO: WIP REMOVE
-		// this.validateStoredUnitAgents();
-		// this.validateStoredBuildingAgents();
 
 		// TODO: DEBUG INFO
 		// Display the targets of all registered Units.
@@ -111,71 +108,6 @@ public class UnitControlModule implements RemoveAgentEvent {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-	}
-
-	// TODO: WIP REMOVE
-	/**
-	 * Function for verifying the stored GoapAgents and especially their
-	 * associated Unit.
-	 */
-	private void validateStoredUnitAgents() {
-		HashSet<GoapAgent> failedValidations = new HashSet<>();
-
-		// Update the references to the stored Units.
-		for (GoapAgent goapAgent : this.agentUpdateQueueCombatUnits) {
-			try {
-				// Remove any references to Units that do not exist anymore.
-				if (!((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit().exists()) {
-					failedValidations.add(goapAgent);
-				}
-			} catch (Exception e) {
-				failedValidations.add(goapAgent);
-				e.printStackTrace();
-
-				// TODO: DEBUG INFO
-				System.out.println("An Agent failed to validate properly: " + goapAgent + " - Unit: "
-						+ ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit());
-			}
-		}
-
-		// Remove the GoapAgents that failed to validate from the Queue(s) of
-		// agents.
-		for (GoapAgent goapAgent : failedValidations) {
-			this.agentUpdateQueueWorkers.remove(goapAgent);
-			this.agentUpdateQueueCombatUnits.remove(goapAgent);
-			this.agents.remove(goapAgent);
-		}
-	}
-
-	// TODO: WIP REMOVE
-	/**
-	 * Function for verifying the stored PlayerBuildings and especially their
-	 * associated Unit.
-	 */
-	private void validateStoredBuildingAgents() {
-		HashSet<PlayerBuilding> failedValidations = new HashSet<>();
-
-		// Update the references to the stored buildings.
-		for (PlayerBuilding building : this.agentUpdateQueueBuildings) {
-			try {
-				// Remove any references to buildings that do not exist anymore.
-				if (!building.getUnit().exists()) {
-					failedValidations.add(building);
-				}
-			} catch (Exception e) {
-				failedValidations.add(building);
-				e.printStackTrace();
-
-				// TODO: DEBUG INFO
-				System.out.println(
-						"A Building failed to update properly: " + building + " - Unit: " + building.getUnit());
-			}
-		}
-
-		for (PlayerBuilding playerBuilding : failedValidations) {
-			this.agentUpdateQueueBuildings.remove(playerBuilding);
-			this.buildings.remove(playerBuilding);
 		}
 	}
 
@@ -321,10 +253,10 @@ public class UnitControlModule implements RemoveAgentEvent {
 			this.agentUpdateQueueCombatUnits.remove(matchingAgent);
 			this.agents.remove(matchingAgent);
 
-			// TODO: WIP REMOVE
-			// TODO: WIP If validating Units: Add to remove function!
+			// Remove the Unit from any assigned groups.
 			BaseAction.removeGroupAssociations(matchingAgent.getAssignedGoapUnit());
 
+			// Remove any contended / assigned entries if the Unit is a worker.
 			if (unit.getType().isWorker()) {
 				this.removeAssignedWorkerEntries(unit);
 				this.informationStorage.getWorkerConfig().decrementTotalWorkerCount();
