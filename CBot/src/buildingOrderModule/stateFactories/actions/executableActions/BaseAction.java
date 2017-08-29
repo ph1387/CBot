@@ -1,6 +1,5 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
-import buildingOrderModule.buildActionManagers.BuildActionManager;
 import javaGOAP.GoapAction;
 import javaGOAP.IGoapUnit;
 
@@ -25,13 +24,8 @@ public abstract class BaseAction extends GoapAction {
 
 	@Override
 	public boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
+		// If needed, other checks can be performed here.
 		boolean success = true;
-
-		if (((BuildActionManager) goapUnit).getInformationStorage()
-				.getTrainingAndBuildingQueueSize() > ((BuildActionManager) goapUnit).getInformationStorage()
-						.getMaxConcurrentElements()) {
-			success = false;
-		}
 
 		return success && this.checkProceduralSpecificPrecondition(goapUnit);
 	}

@@ -1,5 +1,9 @@
 package buildingOrderModule;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.buildActionManagers.BuildActionManagerFactory;
 import bwapi.*;
@@ -7,6 +11,7 @@ import core.Core;
 import informationStorage.InformationStorage;
 import javaGOAP.DefaultGoapAgent;
 import javaGOAP.GoapAgent;
+import unitControlModule.UnitControlModule;
 
 /**
  * BuildingOrderModule.java --- Module for controlling the Player's building
@@ -16,6 +21,31 @@ import javaGOAP.GoapAgent;
  *
  */
 public class BuildingOrderModule {
+
+	// The elements that are allowed in the queue regardless of the generated
+	// result.
+	private int extraQueueElements = 1;
+
+	// The Terran Unit production facilities that are tested in the generation
+	// of the allowed Queue elements.
+	private List<UnitType> terranProductionUnits = Arrays.asList(new UnitType[] { UnitType.Terran_Command_Center,
+			UnitType.Terran_Barracks, UnitType.Terran_Factory, UnitType.Terran_Starport
+
+	});
+
+	// The Protoss Unit production facilities that are tested in the generation
+	// of the allowed Queue elements.
+	private List<UnitType> protossProductionUnits = Arrays.asList(new UnitType[] { UnitType.Protoss_Nexus,
+			UnitType.Protoss_Gateway, UnitType.Protoss_Robotics_Facility, UnitType.Protoss_Stargate });
+
+	// The Zerg Unit production facilities that are tested in the generation of
+	// the allowed Queue elements.
+	// NOTE:
+	// Zerg do evolve, so if the Bot plays Zerg, another form of generating the
+	// max number of Queue elements must be found.
+	private List<UnitType> zergProductionUnits = Arrays.asList(new UnitType[] {
+
+	});
 
 	private CommandSender sender = new BuildingOrderSender();
 	private GoapAgent buildingAgent;
@@ -48,8 +78,9 @@ public class BuildingOrderModule {
 			// Also only allow a certain amount of elements in the building and
 			// training Queues.
 			if (this.informationStorage.getiBuildingOrderModuleConfig().enableBuildingOrderModuleUpdates()
-					&& this.informationStorage.getConcurrentQueuedElementCount() < this.informationStorage
-							.getMaxConcurrentElements()) {
+					&& this.informationStorage
+							.getTrainingAndBuildingQueueSize() < this.generateMaxConcurrentQueuedElements()
+									+ this.extraQueueElements) {
 				this.buildingAgent.update();
 			}
 		} catch (Exception e) {
@@ -84,4 +115,57 @@ public class BuildingOrderModule {
 			this.sender.buildBuilding(player.getRace().getSupplyProvider());
 		}
 	}
+
+	/**
+	 * Function for generating the maximum allowed number of currently present
+	 * elements that are forwarded into the {@link UnitControlModule} Queue.
+	 * 
+	 * @return the maximum number of elements that are allowed to be in the
+	 *         Queue at the same time.
+	 */
+	private int generateMaxConcurrentQueuedElements() {
+		Race race = Core.getInstance().getPlayer().getRace();
+		int maxQueuedNumber = 0;
+
+		if (race == Race.Terran) {
+			maxQueuedNumber = this.extractFreeFacilitiesCount(this.terranProductionUnits);
+		} else if (race == Race.Protoss) {
+			maxQueuedNumber = this.extractFreeFacilitiesCount(this.protossProductionUnits);
+		} else {
+			// TODO: Needed Change: If the Bot plays Zerg, another form of
+			// defining the maximum number of queued elements must be found.
+			maxQueuedNumber = -1;
+		}
+
+		return maxQueuedNumber;
+	}
+
+	/**
+	 * Function for extracting the number of training facilities that are
+	 * currently not active and therefore not training any Unit.
+	 * 
+	 * @param facilityTypes
+	 *            the UnitTypes that are counted as training facilities.
+	 * @return the number of training facilities that are not currently training
+	 *         any Unit.
+	 */
+	private int extractFreeFacilitiesCount(List<UnitType> facilityTypes) {
+		int freeFacilitiesCount = 0;
+
+		for (UnitType unitType : facilityTypes) {
+			HashSet<Unit> trainingFacilities = this.informationStorage.getCurrentGameInformation().getCurrentUnits()
+					.get(unitType);
+
+			if (trainingFacilities != null) {
+				for (Unit unit : trainingFacilities) {
+					if (!unit.isTraining()) {
+						freeFacilitiesCount++;
+					}
+				}
+			}
+		}
+
+		return freeFacilitiesCount;
+	}
+
 }

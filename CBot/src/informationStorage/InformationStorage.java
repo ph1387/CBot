@@ -23,9 +23,6 @@ import informationStorage.config.IUnitTrackerModuleConfig;
  */
 public class InformationStorage {
 
-	// The number of elements that are allowed in the building / training queue.
-	private int maxConcurrentElements = 2;
-
 	// Training / Building related collections
 	private Queue<UnitType> trainingQueue = new LinkedList<UnitType>();
 	private Queue<UnitType> addonQueue = new LinkedList<UnitType>();
@@ -108,10 +105,6 @@ public class InformationStorage {
 	}
 
 	// ------------------------------ Getter / Setter
-
-	public int getMaxConcurrentElements() {
-		return maxConcurrentElements;
-	}
 
 	public Queue<UnitType> getTrainingQueue() {
 		return trainingQueue;
