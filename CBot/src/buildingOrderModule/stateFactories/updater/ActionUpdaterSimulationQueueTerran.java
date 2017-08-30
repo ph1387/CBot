@@ -52,28 +52,36 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 				// adding towards the available ActionTypes HashSet.
 				switch (actionType.defineResultType().toString()) {
 				case "UnitType_Terran_Command_Center":
-					if (!usedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Command_Center)
-							&& !forwardedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Command_Center)) {
+					if (!usedActionTypes.containsKey(actionType.defineResultType())
+							&& !forwardedActionTypes.containsKey(actionType.defineResultType())) {
 						availableActionTypes.add(actionType);
 					}
 					break;
 				case "UnitType_Terran_Refinery":
 					// Only allow the construction of refineries when the center
 					// count is larger than the refinery count.
-					if (!usedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Refinery)
-							&& !forwardedActionTypes.containsKey(TypeWrapper.UnitType_Terran_Refinery)
+					if (!usedActionTypes.containsKey(actionType.defineResultType())
+							&& !forwardedActionTypes.containsKey(actionType.defineResultType())
 							&& playerCenterCount != null && playerRefineryCount != null
 							&& playerCenterCount > playerRefineryCount) {
 						availableActionTypes.add(actionType);
 					}
 					break;
 				case "TechType_Tank_Siege_Mode":
-					if (!usedActionTypes.containsKey(TypeWrapper.TechType_Tank_Siege_Mode)
-							&& !forwardedActionTypes.containsKey(TypeWrapper.TechType_Tank_Siege_Mode)) {
+					if (!usedActionTypes.containsKey(actionType.defineResultType())
+							&& !forwardedActionTypes.containsKey(actionType.defineResultType())) {
 						availableActionTypes.add(actionType);
 					}
 					break;
-
+				// Only allow the construction of a single machine shop.
+				case "UnitType_Terran_Machine_Shop":
+					if (manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+							.get(actionType.defineResultType().getUnitType()).equals(0)
+							&& !usedActionTypes.containsKey(actionType.defineResultType())
+							&& !forwardedActionTypes.containsKey(actionType.defineResultType())) {
+						availableActionTypes.add(actionType);
+					}
+					break;
 				default:
 					availableActionTypes.add(actionType);
 				}
