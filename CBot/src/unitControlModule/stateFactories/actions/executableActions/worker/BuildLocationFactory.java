@@ -26,6 +26,10 @@ public class BuildLocationFactory {
 	// Due to the large tile range there should not be any trouble finding a
 	// suitable building location.
 	private int maxTileRange = 50;
+	// TODO: UML ADD
+	// The maximum acceptable range for checking the distance between a free
+	// geyser and a center building.
+	private int maxDistanceGeysers = 320;
 
 	public BuildLocationFactory() {
 
@@ -49,7 +53,7 @@ public class BuildLocationFactory {
 	public HashSet<TilePosition> generateNeededTilePositions(UnitType unitType, TilePosition targetTilePosition) {
 		return TilePositionFactory.generateNeededTilePositions(unitType, targetTilePosition);
 	}
-	
+
 	/**
 	 * Function for finding a suitable building location around a given
 	 * TilePosition.
@@ -75,7 +79,7 @@ public class BuildLocationFactory {
 		// If the Building is a refinery then search specifically for vaspene
 		// geysers.
 		else if (building == Core.getInstance().getPlayer().getRace().getRefinery()) {
-			buildLocation = this.findRefineryBuildLocation(building, targetTilePosition, goapUnit);
+			buildLocation = this.findRefineryBuildLocation(goapUnit);
 		}
 		// If none of the above match the criteria just look for a standard
 		// build location.
@@ -142,29 +146,57 @@ public class BuildLocationFactory {
 		return locationFree;
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for finding a suitable building location around a given
 	 * TilePosition with a max range for a refinery. This needs to be a special
 	 * function since these buildings are constructed on top of a vaspene
 	 * geyser, which has to be checked individually.
 	 *
-	 * @param building
-	 *            the UnitType of the building that is going to be built.
-	 * @param targetTilePosition
-	 *            the TilePosition the new TilePosition is going to be
-	 *            calculated around.
 	 * @param goapUnit
 	 *            the IGoapUnit that is going to be constructing the building.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
 	 */
-	private TilePosition findRefineryBuildLocation(UnitType building, TilePosition targetTilePosition,
-			IGoapUnit goapUnit) {
+	private TilePosition findRefineryBuildLocation(IGoapUnit goapUnit) {
 		TilePosition buildLocation = null;
-		Unit closestGeyser = null;
+		Unit foundGeyser = null;
+		HashSet<Unit> freeGeysers = this.extractFreeGeysers();
 
-		// Find the closest geyser and check if no refinery is build on top of
-		// it.
+		// Iterate through all currently active center buildings and compare the
+		// distances to the free geysers.
+		for (Unit center : ((PlayerUnitWorker) goapUnit).getInformationStorage().getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getCenter())) {
+			for (Unit geyser : freeGeysers) {
+				if (center.getDistance(geyser) <= this.maxDistanceGeysers) {
+					foundGeyser = geyser;
+					break;
+				}
+			}
+
+			if (foundGeyser != null) {
+				break;
+			}
+		}
+
+		if (foundGeyser != null) {
+			buildLocation = foundGeyser.getTilePosition();
+		}
+		return buildLocation;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting all geysers on the map without any refinery on
+	 * them.
+	 * 
+	 * @return a HashSet containing all geysers on the map without a refinery of
+	 *         the Bot's Race on them.
+	 */
+	private HashSet<Unit> extractFreeGeysers() {
+		HashSet<Unit> freeGeysers = new HashSet<>();
+
+		// Extract all free geysers without any refinery on them.
 		for (Unit geyser : Core.getInstance().getGame().getGeysers()) {
 			List<Unit> unitsOnGeyserTile = Core.getInstance().getGame().getUnitsOnTile(geyser.getTilePosition());
 			boolean allowedToBuildOnTile = true;
@@ -177,18 +209,11 @@ public class BuildLocationFactory {
 				}
 			}
 
-			// Check distance and the allowance to build on the TilePosition.
-			if (allowedToBuildOnTile
-					&& (closestGeyser == null || geyser.getDistance(targetTilePosition.toPosition()) < closestGeyser
-							.getDistance(targetTilePosition.toPosition()))) {
-				closestGeyser = geyser;
+			if (allowedToBuildOnTile) {
+				freeGeysers.add(geyser);
 			}
 		}
-
-		if (closestGeyser != null) {
-			buildLocation = closestGeyser.getTilePosition();
-		}
-		return buildLocation;
+		return freeGeysers;
 	}
 
 	/**
@@ -223,8 +248,8 @@ public class BuildLocationFactory {
 			for (int i = minWidth; i <= maxWidth && buildLocation == null; i++) {
 				for (int j = minHeight; j <= maxHeight && buildLocation == null; j++) {
 					TilePosition testPosition = new TilePosition(i, j);
-					HashSet<TilePosition> neededTilePositions = TilePositionFactory.generateNeededTilePositions(building,
-							testPosition);
+					HashSet<TilePosition> neededTilePositions = TilePositionFactory
+							.generateNeededTilePositions(building, testPosition);
 
 					// If the space is free, try changing the building's
 					// location.
@@ -260,7 +285,7 @@ public class BuildLocationFactory {
 		// Check each player Unit except the constructor itself
 		for (TilePosition tilePosition : desiredTilePositions) {
 			for (Unit unit : Core.getInstance().getGame().getUnitsOnTile(tilePosition)) {
-				if(unit != ((PlayerUnitWorker) constructor).getUnit()) {
+				if (unit != ((PlayerUnitWorker) constructor).getUnit()) {
 					return true;
 				}
 			}
