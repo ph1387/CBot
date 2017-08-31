@@ -39,6 +39,15 @@ public abstract class GameStateUnits_FreeTrainingFacilities extends GameState {
 		return idlingFacilities;
 	}
 
+	// TODO: UML ADD
+	@Override
+	protected int defineDivider() {
+		// The score represents the number of idling facilities. Therefore
+		// casting it to int represents the needed divider that will be used in
+		// generating the multiplier for the score.
+		return (int) this.getCurrentScore();
+	}
+
 	/**
 	 * Function for defining the UnitType of the factory whose idlers will be
 	 * counted.

@@ -170,17 +170,13 @@ public abstract class ScoringDirector {
 	 */
 	private void updateScoringActionScores(HashSet<ScoringAction> updatableActions, BuildActionManager manager) {
 		for (ScoringAction scoringAction : updatableActions) {
-			double gameStateCount = scoringAction.defineUsedGameStates().size();
+			double gameStateDivider = 0.;
 			double gameStateSum = 0.;
-
-			// Prevent errors by dividing by 0.
-			if (gameStateCount == 0.) {
-				gameStateCount = 1;
-			}
 
 			// Get the sum of all used GameStates of the action.
 			for (GameState gameState : scoringAction.defineUsedGameStates()) {
 				gameStateSum += gameState.getCurrentScore();
+				gameStateDivider += gameState.defineDivider();
 			}
 
 			// Divide the total sum by the number of GameStates added together
@@ -188,7 +184,7 @@ public abstract class ScoringDirector {
 			// this value. The base multiplier is added to ensure that no scores
 			// below 1.0 are missing (Casted to int!).
 			double score = (double) (scoringAction.defineMineralCost() + scoringAction.defineGasCost())
-					* (gameStateSum / gameStateCount) * this.basePointMultiplier;
+					* (gameStateSum / Math.max(gameStateDivider, 1.)) * this.basePointMultiplier;
 			// Depending if the action is a technology or a upgrade apply a
 			// multiplier to it.
 			if (isUpgradeOrTechnology(scoringAction)) {

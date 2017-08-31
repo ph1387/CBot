@@ -83,8 +83,10 @@ public class BuildingOrderDisplay {
 
 		// Display the GameStates with their current value on the screen.
 		for (GameState gameState : usedGameStates) {
-			GAME.drawTextScreen(OFFSET_LEFT_TOTAL, currentPosY, MULTIPLY_FORMATTER.format(gameState.getCurrentScore())
-					+ " | " + gameState.getClass().getSimpleName());
+			GAME.drawTextScreen(OFFSET_LEFT_TOTAL, currentPosY,
+					MULTIPLY_FORMATTER.format(
+							gameState.getCurrentScore() / Math.max((double) (gameState.getCurrentDivider()), 1.))
+							+ " | " + gameState.getClass().getSimpleName());
 			currentPosY += LINEHEIGHT;
 		}
 

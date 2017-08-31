@@ -32,7 +32,7 @@ public abstract class GameState {
 	public static final GameState Expensive_Units = new GameStateUnits_Expensive();
 	public static final GameState Mineral_Units = new GameStateUnits_Mineral();
 	public static final GameState Gas_Units = new GameStateUnits_Gas();
-	
+
 	public static final GameState Flying_Units = new GameStateUnits_Flying();
 	public static final GameState Bio_Units = new GameStateUnits_Bio();
 	public static final GameState Support_Units = new GameStateUnits_Support();
@@ -49,13 +49,16 @@ public abstract class GameState {
 	public static final GameState FreeTrainingFacility_Terran_Factory = new FreeTrainingFacilities_TerranFactory();
 	// TODO: UML ADD
 	public static final GameState FreeTrainingFacility_Terran_Starport = new FreeTrainingFacilities_TerranStarport();
-	
+
 	// The current score this state holds.
 	private double currentScore = 0.;
+	// TODO: UML ADD
+	// The number of times the state is going to be divided.
+	private int currentDivider = 1;
 
 	// TODO: UML VISIBILITY
 	public GameState() {
-		
+
 	}
 
 	// -------------------- Functions
@@ -73,6 +76,7 @@ public abstract class GameState {
 	 */
 	public void updateScore(ScoringDirector scoringDirector, BuildActionManager manager) {
 		this.currentScore = this.generateScore(scoringDirector, manager);
+		this.currentDivider = this.defineDivider();
 	}
 
 	/**
@@ -92,10 +96,39 @@ public abstract class GameState {
 	 */
 	protected abstract double generateScore(ScoringDirector scoringDirector, BuildActionManager manager);
 
+	// TODO: UML ADD
+	/**
+	 * Function for defining the divider which will be added together with the
+	 * other GameStates and used in generating the total score
+	 * ({@link ScoringDirector#updateScoringActionScores}). The returned value
+	 * defines the number of influence points the GameState has. This is usually
+	 * 1, since most GameStates are only influenced by a single component.
+	 * <b>BUT</b> some GameStates ( I.e.: The number of free and therefore
+	 * idling training facilities) require the GameState to account for the
+	 * extra components (In this example the number of facilities). This is due
+	 * to the multiplier in most cases not being allowed to be larger than 1.0.
+	 * Only accounting for 1.0 a single time would yield no appropriate result
+	 * as well as n (N = The number of idling facilities) would result in
+	 * gigantic multiplier (Namely: N).</br>
+	 * Using this method the multiplier converges to 1.0 but should not
+	 * overshoot it.
+	 * 
+	 * @return the divider that will be used for dividing the score of the
+	 *         state.
+	 */
+	protected int defineDivider() {
+		return 1;
+	}
+
 	// ------------------------------ Getter / Setter
 
 	public double getCurrentScore() {
 		return currentScore;
+	}
+	
+	// TODO: UML ADD
+	public int getCurrentDivider() {
+		return currentDivider;
 	}
 
 }
