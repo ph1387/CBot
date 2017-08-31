@@ -23,6 +23,8 @@ public class TrainUnitActionTerran_Marine extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Bio_Units);
 		this.addToGameStates(GameState.Combat_Units);
+		
+		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Barracks);
 	}
 
 	// -------------------- Functions

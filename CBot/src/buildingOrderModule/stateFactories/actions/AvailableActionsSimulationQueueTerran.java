@@ -8,6 +8,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
+import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Vulture;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueStartingTerranRaxFE;
 
@@ -31,6 +32,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new TrainUnitActionWorker(1));
 		this.add(new TrainUnitActionTerran_Marine(1));
 		this.add(new TrainUnitActionTerran_SiegeTank(1));
+		this.add(new TrainUnitActionTerran_Vulture(1));
 
 		this.add(new BuildAddonTerran_MachineShop(1));
 
