@@ -34,6 +34,9 @@ public class ConstructBuildingAction extends WorkerAction {
 	private boolean triedConstructingOnce = false;
 	private int counterTries = 0;
 
+	// TODO: UML ADD
+	private boolean isMovingToConstructionSite = false;
+
 	private BuildLocationFactory buildLocationFactory;
 
 	/**
@@ -138,16 +141,27 @@ public class ConstructBuildingAction extends WorkerAction {
 			}
 		}
 
-		// Only perform a construction action if the temporary build location
-		// changed.
-		if (this.tempBuildingLocationPrev != this.tempBuildingLocation) {
-			this.tempBuildingLocationPrev = this.tempBuildingLocation;
-			this.triedConstructingOnce = true;
+		// If the construction site is not already explored, move towards it.
+		if (!Core.getInstance().getGame().isExplored(((ConstructionJob) this.target).getTilePosition())) {
+			((PlayerUnitWorker) goapUnit).getUnit()
+					.move(((ConstructionJob) this.target).getTilePosition().toPosition());
 
-			((PlayerUnitWorker) goapUnit).getUnit().build(((ConstructionJob) this.target).getBuilding(),
-					((ConstructionJob) this.target).getTilePosition());
-			((PlayerUnitWorker) goapUnit).getInformationStorage().getWorkerConfig().getMappedBuildActions()
-					.put(((PlayerUnitWorker) goapUnit).getUnit(), ((ConstructionJob) this.target).getBuilding());
+			this.isMovingToConstructionSite = true;
+		} else {
+			this.isMovingToConstructionSite = false;
+
+			// Only perform a construction action if the temporary build
+			// location
+			// changed.
+			if (this.tempBuildingLocationPrev != this.tempBuildingLocation) {
+				this.tempBuildingLocationPrev = this.tempBuildingLocation;
+				this.triedConstructingOnce = true;
+
+				((PlayerUnitWorker) goapUnit).getUnit().build(((ConstructionJob) this.target).getBuilding(),
+						((ConstructionJob) this.target).getTilePosition());
+				((PlayerUnitWorker) goapUnit).getInformationStorage().getWorkerConfig().getMappedBuildActions()
+						.put(((PlayerUnitWorker) goapUnit).getUnit(), ((ConstructionJob) this.target).getBuilding());
+			}
 		}
 
 		return success;
@@ -175,6 +189,8 @@ public class ConstructBuildingAction extends WorkerAction {
 		this.constructingBuilding = null;
 		this.triedConstructingOnce = false;
 		this.counterTries = 0;
+
+		this.isMovingToConstructionSite = false;
 	}
 
 	@Override
@@ -218,16 +234,18 @@ public class ConstructBuildingAction extends WorkerAction {
 	protected boolean isDone(IGoapUnit goapUnit) {
 		boolean triesFullfilled = false;
 
-		// The operation has to be tried at least for x cycles
-		if (counterTries < MIN_TRIES) {
-			counterTries++;
-		} else {
-			triesFullfilled = true;
+		if (!((PlayerUnit) goapUnit).getUnit().isConstructing() && !this.isMovingToConstructionSite) {
+			// The operation has to be tried at least for x cycles
+			if (this.counterTries < MIN_TRIES) {
+				this.counterTries++;
+			} else {
+				triesFullfilled = true;
+			}
 		}
 
-		return triesFullfilled && !((PlayerUnit) goapUnit).getUnit().isConstructing() && this.triedConstructingOnce
+		return triesFullfilled || (!((PlayerUnit) goapUnit).getUnit().isConstructing() && this.triedConstructingOnce
 				&& ((PlayerUnitWorker) goapUnit)
-						.getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.CONFIRMED;
+						.getCurrentConstructionState() == PlayerUnitWorker.ConstructionState.CONFIRMED);
 	}
 
 	// ------------------------------ Getter / Setter
