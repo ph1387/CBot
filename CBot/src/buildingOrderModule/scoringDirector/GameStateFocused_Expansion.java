@@ -16,7 +16,7 @@ class GameStateFocused_Expansion extends GameStateGradualChangeWithReset {
 	// The rate that is applied to the score in each iteration.
 	private static double Rate = 0.1;
 	// The frames after the rate is applied.
-	private static double FrameDiff = 200;
+	private static double FrameDiff = 600;
 
 	// The number of centers built by the Bot.
 	private int centerCountPrev = 0;
