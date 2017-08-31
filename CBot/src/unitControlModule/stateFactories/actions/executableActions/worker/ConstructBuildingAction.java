@@ -27,7 +27,8 @@ public class ConstructBuildingAction extends WorkerAction {
 	// the building gets queued again.
 	private static final int MIN_TRIES = 20;
 
-	private TilePosition tempBuildingLocationPrev;
+	// TODO: UML REMOVE
+	// private TilePosition tempBuildingLocationPrev;
 	private TilePosition tempBuildingLocation;
 	private HashSet<TilePosition> tempNeededTilePositions = new HashSet<>();
 	private Unit constructingBuilding;
@@ -106,40 +107,6 @@ public class ConstructBuildingAction extends WorkerAction {
 			((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders()
 					.addAll(this.tempNeededTilePositions);
 		}
-		// Only validate the build location if the constructed building was not
-		// yet found!
-		// -> Ignore any refineries, since they require special treatment and
-		// can only be placed in certain spots.
-		else if (this.constructingBuilding == null && ((ConstructionJob) this.target).getBuilding() != Core
-				.getInstance().getPlayer().getRace().getRefinery()) {
-			boolean invalid = true;
-
-			// TODO: Possible Change: Add maximum counter.
-			// Try generating a new TilePosition until a valid one is found.
-			while (invalid) {
-				invalid = this.buildLocationFactory.arePlayerUnitsBlocking(this.tempNeededTilePositions, goapUnit);
-
-				if (invalid) {
-					// Mark the action to be performed.
-					this.tempBuildingLocationPrev = this.tempBuildingLocation;
-
-					// Remove old contended entries.
-					((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders()
-							.removeAll(this.tempNeededTilePositions);
-
-					// Find a new build location.
-					this.tempBuildingLocation = this.buildLocationFactory.generateBuildLocation(building,
-							this.tempBuildingLocation, goapUnit);
-					((ConstructionJob) this.target).setTilePosition(this.tempBuildingLocation);
-
-					// Reserve the newly found TilePositions
-					this.tempNeededTilePositions = this.buildLocationFactory.generateNeededTilePositions(building,
-							this.tempBuildingLocation);
-					((PlayerUnitWorker) goapUnit).getInformationStorage().getMapInfo().getTilePositionContenders()
-							.addAll(this.tempNeededTilePositions);
-				}
-			}
-		}
 
 		// If the construction site is not already explored, move towards it.
 		if (!Core.getInstance().getGame().isExplored(((ConstructionJob) this.target).getTilePosition())) {
@@ -150,17 +117,18 @@ public class ConstructBuildingAction extends WorkerAction {
 		} else {
 			this.isMovingToConstructionSite = false;
 
-			// Only perform a construction action if the temporary build
-			// location
-			// changed.
-			if (this.tempBuildingLocationPrev != this.tempBuildingLocation) {
-				this.tempBuildingLocationPrev = this.tempBuildingLocation;
-				this.triedConstructingOnce = true;
+			// Perform the build command one single time when constructing the
+			// building is possible.
+			if (!this.triedConstructingOnce) {
+				if (((PlayerUnitWorker) goapUnit).getUnit().canBuild(((ConstructionJob) this.target).getBuilding(),
+						((ConstructionJob) this.target).getTilePosition())) {
+					this.triedConstructingOnce = true;
 
-				((PlayerUnitWorker) goapUnit).getUnit().build(((ConstructionJob) this.target).getBuilding(),
-						((ConstructionJob) this.target).getTilePosition());
-				((PlayerUnitWorker) goapUnit).getInformationStorage().getWorkerConfig().getMappedBuildActions()
-						.put(((PlayerUnitWorker) goapUnit).getUnit(), ((ConstructionJob) this.target).getBuilding());
+					((PlayerUnitWorker) goapUnit).getUnit().build(((ConstructionJob) this.target).getBuilding(),
+							((ConstructionJob) this.target).getTilePosition());
+					((PlayerUnitWorker) goapUnit).getInformationStorage().getWorkerConfig().getMappedBuildActions().put(
+							((PlayerUnitWorker) goapUnit).getUnit(), ((ConstructionJob) this.target).getBuilding());
+				}
 			}
 		}
 
@@ -183,7 +151,6 @@ public class ConstructBuildingAction extends WorkerAction {
 		}
 
 		this.target = null;
-		this.tempBuildingLocationPrev = null;
 		this.tempBuildingLocation = null;
 		this.tempNeededTilePositions = null;
 		this.constructingBuilding = null;
