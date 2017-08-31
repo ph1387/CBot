@@ -98,7 +98,7 @@ public class ResourceReserver {
 	 */
 	public void reserveGas(int amount) {
 		if (amount >= 0) {
-			this.reservedMinerals += amount;
+			this.reservedGas += amount;
 		}
 	}
 
