@@ -51,32 +51,34 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 				// Some ActionTypes required special treatment regarding the
 				// adding towards the available ActionTypes HashSet.
 				switch (actionType.defineResultType().toString()) {
-				case "UnitType_Terran_Command_Center":
+				case "Terran_Command_Center":
 					if (!usedActionTypes.containsKey(actionType.defineResultType())
 							&& !forwardedActionTypes.containsKey(actionType.defineResultType())) {
 						availableActionTypes.add(actionType);
 					}
 					break;
-				case "UnitType_Terran_Refinery":
+				case "Terran_Refinery":
 					// Only allow the construction of refineries when the center
 					// count is larger than the refinery count.
 					if (!usedActionTypes.containsKey(actionType.defineResultType())
 							&& !forwardedActionTypes.containsKey(actionType.defineResultType())
-							&& playerCenterCount != null && playerRefineryCount != null
-							&& playerCenterCount > playerRefineryCount) {
+							&& (playerRefineryCount == null || (playerCenterCount != null && playerRefineryCount != null
+									&& playerCenterCount > playerRefineryCount))) {
 						availableActionTypes.add(actionType);
 					}
 					break;
-				case "TechType_Tank_Siege_Mode":
+				case "Tank_Siege_Mode":
 					if (!usedActionTypes.containsKey(actionType.defineResultType())
 							&& !forwardedActionTypes.containsKey(actionType.defineResultType())) {
 						availableActionTypes.add(actionType);
 					}
 					break;
 				// Only allow the construction of a single machine shop.
-				case "UnitType_Terran_Machine_Shop":
-					if (manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
-							.get(actionType.defineResultType().getUnitType()).equals(0)
+				case "Terran_Machine_Shop":
+					if ((manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+							.get(actionType.defineResultType().getUnitType()) == null
+							|| manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+									.get(actionType.defineResultType().getUnitType()).equals(0))
 							&& !usedActionTypes.containsKey(actionType.defineResultType())
 							&& !forwardedActionTypes.containsKey(actionType.defineResultType())) {
 						availableActionTypes.add(actionType);
