@@ -1,6 +1,11 @@
 package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.freeTrainingFacilities.FreeTrainingFacilities_Center;
+import buildingOrderModule.scoringDirector.freeTrainingFacilities.FreeTrainingFacilities_TerranBarracks;
+import buildingOrderModule.scoringDirector.freeTrainingFacilities.FreeTrainingFacilities_TerranCommandCenter;
+import buildingOrderModule.scoringDirector.freeTrainingFacilities.FreeTrainingFacilities_TerranFactory;
+import buildingOrderModule.scoringDirector.freeTrainingFacilities.FreeTrainingFacilities_TerranStarport;
 
 /**
  * GameState.java --- Class for representing a state in the game with an
@@ -27,17 +32,30 @@ public abstract class GameState {
 	public static final GameState Expensive_Units = new GameStateUnits_Expensive();
 	public static final GameState Mineral_Units = new GameStateUnits_Mineral();
 	public static final GameState Gas_Units = new GameStateUnits_Gas();
-
+	
 	public static final GameState Flying_Units = new GameStateUnits_Flying();
 	public static final GameState Bio_Units = new GameStateUnits_Bio();
 	public static final GameState Support_Units = new GameStateUnits_Support();
 	public static final GameState Healer_Units = new GameStateUnits_Healer();
 
+	// The GameStates that rely on idling training facilities:
+	// TODO: UML ADD
+	public static final GameState FreeTrainingFacility_Center = new FreeTrainingFacilities_Center();
+	// TODO: UML ADD
+	public static final GameState FreeTrainingFacility_Terran_Barracks = new FreeTrainingFacilities_TerranBarracks();
+	// TODO: UML ADD
+	public static final GameState FreeTrainingFacility_Terran_CommandCenter = new FreeTrainingFacilities_TerranCommandCenter();
+	// TODO: UML ADD
+	public static final GameState FreeTrainingFacility_Terran_Factory = new FreeTrainingFacilities_TerranFactory();
+	// TODO: UML ADD
+	public static final GameState FreeTrainingFacility_Terran_Starport = new FreeTrainingFacilities_TerranStarport();
+	
 	// The current score this state holds.
 	private double currentScore = 0.;
 
-	GameState() {
-
+	// TODO: UML VISIBILITY
+	public GameState() {
+		
 	}
 
 	// -------------------- Functions
