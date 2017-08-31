@@ -27,8 +27,8 @@ import informationStorage.InformationStorage;
 public class TilePositionContenderFactory extends TilePositionFactory {
 
 	private int contendedTileRangeBorder = 1;
-	private int contendedTileRangeMinerals = 2;
-	private int contendedTileRangeGeysers = 2;
+	private int contendedTileRangeMinerals = 3;
+	private int contendedTileRangeGeysers = 3;
 
 	private InformationStorage informationStorage;
 	
@@ -86,8 +86,8 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 
 		for (Unit unit : Core.getInstance().getGame().getMinerals()) {
 			if (!excludedUnits.contains(unit)) {
-				for (int i = unit.getTilePosition().getX() - this.contendedTileRangeBorder; i <= unit.getTilePosition()
-						.getX() + this.contendedTileRangeBorder; i++) {
+				for (int i = unit.getTilePosition().getX() - this.contendedTileRangeMinerals; i <= unit.getTilePosition()
+						.getX() + this.contendedTileRangeMinerals; i++) {
 					for (int j = unit.getTilePosition().getY() - this.contendedTileRangeMinerals; j <= unit
 							.getTilePosition().getY() + this.contendedTileRangeMinerals; j++) {
 						TilePosition generatedTilePosition = new TilePosition(i, j);
