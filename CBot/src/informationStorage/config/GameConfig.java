@@ -14,14 +14,14 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// Disable following properties on custom maps!
 
 	// Init:
-	private boolean generateDefaultContendedTilePositions = true;
-	private boolean generateReversedRegionAccessOrder = true;
+	private boolean generateDefaultContendedTilePositions = false;
+	private boolean generateReversedRegionAccessOrder = false;
 
 	// BuildingOrderModule:
-	private boolean enableBuildingOrderModuleUpdates = true;
+	private boolean enableBuildingOrderModuleUpdates = false;
 
 	// PlayerUnit:
-	private boolean allowModifiedConfidenceGeneration = true;
+	private boolean allowModifiedConfidenceGeneration = false;
 
 	// ----- Display / Debug functionalities:
 
