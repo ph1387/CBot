@@ -20,12 +20,13 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  */
 public class ConstructBuildingAction extends WorkerAction {
 
+	// TODO: UML CHANGE
 	// Safety feature for the isDone function, since the Unit could take a while
 	// to start constructing after executing the command, which gets executed at
 	// least the given amount of times. This effectively forces the Unit to
 	// build the given building or idle until the isDone function kicks in and
 	// the building gets queued again.
-	private static final int MIN_TRIES = 20;
+	private static final int MIN_TRIES = 5;
 
 	// TODO: UML REMOVE
 	// private TilePosition tempBuildingLocationPrev;
