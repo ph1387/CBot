@@ -41,13 +41,25 @@ public class AbilityActionTerranSiegeTank_SiegeMode extends AbilityActionTechTar
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
-		boolean success = ((PlayerUnit) goapUnit).getUnit().siege();
+		boolean success = true;
 
-		// Remove the agent to make space for the new SiegeMode agent.
-		if (success) {
-			((PlayerUnit) goapUnit).removeCorrespondingAgent();
+		// Try to siege until the Unit is able to.
+		if (((PlayerUnit) goapUnit).getUnit().canSiege()) {
+			success = ((PlayerUnit) goapUnit).getUnit().siege();
+
+			// Remove the agent to make space for the new SiegeMode agent.
+			if (success) {
+				((PlayerUnit) goapUnit).removeCorrespondingAgent();
+			}
 		}
+
 		return success;
 	}
 
+	// TODO: UML ADD
+	@Override
+	protected boolean isDone(IGoapUnit goapUnit) {
+		return ((PlayerUnit) goapUnit).getUnit().isSieged();
+	}
+	
 }
