@@ -59,7 +59,7 @@ public class TilePositionFactory {
 		return neededTilePositions;
 	}
 
-	// TODO: UML ADD
+	// TODO: UML ADD VISIBILITY
 	/**
 	 * Function for adding additional TilePositions to the normal required space
 	 * of the UnitType based on the addon that it is able to construct.
@@ -74,16 +74,17 @@ public class TilePositionFactory {
 	 *            the HashSet of already needed TilePositions to which the addon
 	 *            ones are going to be added.
 	 */
-	private static void addAdditionalAddonSpace(UnitType unitType, TilePosition targetTilePosition,
+	public static void addAdditionalAddonSpace(UnitType unitType, TilePosition targetTilePosition,
 			HashSet<TilePosition> neededTilePositions) {
 		// TODO: Possible Change: Directly get the addon from the type.
 		// Differentiate between the different UnitTypes.
 		if (unitType == UnitType.Terran_Factory) {
 			// The Machine_Shop is build in the bottom right corner of the
-			// Factory.
+			// Factory. Therefore the tile height is subtracted by 1 since the
+			// TilePositions start in the upper left corner.
 			UnitType addon = UnitType.Terran_Machine_Shop;
 			TilePosition bottomRightCorner = new TilePosition(targetTilePosition.getX() + unitType.tileWidth(),
-					targetTilePosition.getY() + unitType.tileHeight());
+					targetTilePosition.getY() + unitType.tileHeight() - 1);
 
 			for (int i = 0; i < addon.tileWidth(); i++) {
 				for (int j = 0; j < addon.tileHeight(); j++) {

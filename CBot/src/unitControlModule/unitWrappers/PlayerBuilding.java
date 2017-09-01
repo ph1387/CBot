@@ -1,10 +1,14 @@
 package unitControlModule.unitWrappers;
 
+import java.util.HashSet;
+
 import bwapi.TechType;
+import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
+import core.TilePositionContenderFactory;
 import informationStorage.InformationStorage;
 
 /**
@@ -84,6 +88,10 @@ public class PlayerBuilding {
 				this.switchState();
 			}
 		}
+
+		// If the building can construct addons, contend the default location
+		// for them in order to ensure that they can be build.
+		this.addExtraAddonContendedTilePositions();
 	}
 
 	/**
@@ -96,7 +104,7 @@ public class PlayerBuilding {
 		UpgradeType upgradeToBuild = this.informationStorage.getUpgradeQueue().peek();
 		TechType techToResearch = this.informationStorage.getResearchQueue().peek();
 
-		// Train an Unit
+		// Train an Unit.
 		if (resultMissing && unitToTrain != null && this.unit.canTrain(unitToTrain)
 				&& this.informationStorage.getResourceReserver().canAffordConstruction(unitToTrain)) {
 			this.state = State.TRAINING;
@@ -104,7 +112,7 @@ public class PlayerBuilding {
 			resultMissing = false;
 		}
 
-		// Construct an addon
+		// Construct an addon.
 		if (resultMissing && addonToBuild != null && this.unit.canBuildAddon(addonToBuild)
 				&& this.informationStorage.getResourceReserver().canAffordConstruction(addonToBuild)) {
 			this.state = State.CONSTRUCTING;
@@ -112,7 +120,7 @@ public class PlayerBuilding {
 			resultMissing = false;
 		}
 
-		// Build an upgrade
+		// Build an upgrade.
 		if (resultMissing && upgradeToBuild != null && this.unit.canUpgrade(upgradeToBuild)
 				&& this.informationStorage.getResourceReserver().canAffordConstruction(upgradeToBuild)) {
 			this.state = State.UPGRADING;
@@ -120,7 +128,7 @@ public class PlayerBuilding {
 			resultMissing = false;
 		}
 
-		// Research a technology
+		// Research a technology.
 		if (resultMissing && techToResearch != null && this.unit.canResearch(techToResearch)
 				&& this.informationStorage.getResourceReserver().canAffordConstruction(techToResearch)) {
 			this.state = State.RESEARCHING;
@@ -129,6 +137,23 @@ public class PlayerBuilding {
 		}
 
 		return resultMissing;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for adding the extra TilePositions to the contended ones that
+	 * represent the default Position of the addon. This is needed since no
+	 * other building is allowed to block any addons from being constructed
+	 * which might happen if the space is not reserved.
+	 */
+	private void addExtraAddonContendedTilePositions() {
+		if (this.unit.canBuildAddon()) {
+			HashSet<TilePosition> extraAddonSpace = new HashSet<>();
+			TilePositionContenderFactory.addAdditionalAddonSpace(this.unit.getType(), this.unit.getTilePosition(),
+					extraAddonSpace);
+
+			this.informationStorage.getMapInfo().getTilePositionContenders().addAll(extraAddonSpace);
+		}
 	}
 
 	// ------------------------------ Getter / Setter

@@ -32,7 +32,7 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// Display:
 	private boolean displayMapBoundaries = false;
 	private boolean displayReservedSpacePolygons = false;
-	private boolean displayMapContendedTilePositions = false;
+	private boolean displayMapContendedTilePositions = true;
 
 	// UnitControlModule:
 	private boolean displayQueueInformation = true;

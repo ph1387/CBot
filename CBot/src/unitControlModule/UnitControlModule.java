@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
 import bwapi.*;
 import core.Core;
 import core.Display;
+import core.TilePositionContenderFactory;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapAgent;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
@@ -222,6 +223,37 @@ public class UnitControlModule implements RemoveAgentEvent {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+
+		// If the building can construct addons, remove the contended
+		// TilePositions that block any other buildings. This is only done with
+		// buildings and not addons themselves since removing the contended
+		// TilePositions when the addon is destroyed would allow workers to
+		// construct other buildings on these tiles even though the main
+		// building is still intact and could add a new addon itself.
+		this.removeExtraAddonContendedTilePositions(unit);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for removing any contended TilePositions that were contended by
+	 * default to ensure the construction of any future addons. This function is
+	 * directed towards Terran structures like the Terran_Factory that are able
+	 * to construct an addon to change their behavior. These TilePositions must
+	 * be freed again after the building is destroyed.
+	 * 
+	 * @param unit
+	 *            the building whose addon spots are going to be reserved. Must
+	 *            be able to construct addons for this function to have any
+	 *            effect at all.
+	 */
+	private void removeExtraAddonContendedTilePositions(Unit unit) {
+		if (unit.canBuildAddon()) {
+			HashSet<TilePosition> extraAddonSpace = new HashSet<>();
+			TilePositionContenderFactory.addAdditionalAddonSpace(unit.getType(), unit.getTilePosition(),
+					extraAddonSpace);
+
+			this.informationStorage.getMapInfo().getTilePositionContenders().removeAll(extraAddonSpace);
 		}
 	}
 
