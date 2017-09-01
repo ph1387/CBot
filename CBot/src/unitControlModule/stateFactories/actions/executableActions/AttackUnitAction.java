@@ -15,7 +15,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class AttackUnitAction extends AttackActionGeneralSuperclass {
 
-	private int maxGroupSize = 5;
+	// TODO: UML CHANGE
+	private int maxGroupSize = 10;
 	private int maxLeaderTileDistance = 5;
 
 	/**
