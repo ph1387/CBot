@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
 import bwapi.Unit;
+import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -15,7 +16,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 
 	// Below this distance the SiegeTank_SiegeMode will / can not attack.
-	private static final int MIN_TILE_RANGE = 6;
+	// TODO: UML CHANGE 6
+	private static final int MIN_TILE_RANGE = 2;
 	private static final int MAX_TILE_RANGE = 12;
 
 	/**
@@ -38,10 +40,10 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 		boolean success = false;
 
 		if (this.target != null) {
-			boolean minDistanceMet = !((PlayerUnit) goapUnit).isNearTilePosition(((Unit) this.target).getTilePosition(),
-					MIN_TILE_RANGE);
-			boolean maxDistanceMet = ((PlayerUnit) goapUnit).isNearTilePosition(((Unit) this.target).getTilePosition(),
-					MAX_TILE_RANGE);
+			boolean minDistanceMet = !((PlayerUnit) goapUnit).isNearPosition(((Unit) this.target).getPosition(),
+					MIN_TILE_RANGE * Core.getInstance().getTileSize());
+			boolean maxDistanceMet = ((PlayerUnit) goapUnit).isNearPosition(((Unit) this.target).getPosition(),
+					MAX_TILE_RANGE * Core.getInstance().getTileSize());
 
 			success = minDistanceMet && maxDistanceMet;
 		}
@@ -117,5 +119,5 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 	public int defineMaxLeaderTileDistance() {
 		return 0;
 	}
-	
+
 }
