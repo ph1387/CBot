@@ -2,13 +2,14 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
+import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank_SiegeMode;
 
 // TODO: UML ADD
 /**
  * TerranSiegeTank_SiegeMode_Reposition.java --- Action for a
- * Terran_SiegeTank_SiegeMode to reposition itself. This is necessary since
- * otherwise the Unit would stay in SiegeMode since no other goal can be
- * reached.
+ * {@link PlayerUnitTerran_SiegeTank_SiegeMode} to reposition itself. This is
+ * necessary since otherwise the Unit would stay in SiegeMode since no other
+ * goal can be reached.
  * 
  * @author P H - 01.09.2017
  *

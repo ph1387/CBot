@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_SiegeTank;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitActionTerran_SiegeTank_Bombard;
+import unitControlModule.stateFactories.actions.executableActions.TerranSiegeTank_TankMode_MoveIntoSiegeRange;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranSiegeTank_SiegeMode;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -16,6 +17,9 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 
 	private AbilityActionTerranSiegeTank_SiegeMode abilityActionTerranSiegeTankSiegeMode;
 	private AttackUnitActionTerran_SiegeTank_Bombard abilityActionTerranSiegeTankBombard;
+	
+	// TODO: UML ADD
+	private TerranSiegeTank_TankMode_MoveIntoSiegeRange terranSiegeTank_TankMode_MoveIntoSiegeRange;
 
 	public ActionUpdaterTerran_SiegeTank(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -31,6 +35,8 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 		this.abilityActionTerranSiegeTankSiegeMode.setTarget(this.playerUnit);
 
 		this.abilityActionTerranSiegeTankBombard.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+		
+		this.terranSiegeTank_TankMode_MoveIntoSiegeRange.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
 	}
 
 	@Override
@@ -41,5 +47,7 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 				.getActionFromInstance(AbilityActionTerranSiegeTank_SiegeMode.class));
 		this.abilityActionTerranSiegeTankBombard = ((AttackUnitActionTerran_SiegeTank_Bombard) this
 				.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class));
+		this.terranSiegeTank_TankMode_MoveIntoSiegeRange = ((TerranSiegeTank_TankMode_MoveIntoSiegeRange) this
+				.getActionFromInstance(TerranSiegeTank_TankMode_MoveIntoSiegeRange.class)); 
 	}
 }

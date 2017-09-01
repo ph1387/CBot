@@ -1,10 +1,10 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
 import bwapi.Unit;
-import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
+import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank;
 
 /**
  * AttackUnitActionTerran_SiegeTank_Bombard.java --- A specific AttackUnitAction
@@ -16,9 +16,10 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 
 	// Below this distance the SiegeTank_SiegeMode will / can not attack.
-	// TODO: UML CHANGE 6
-	private static final int MIN_TILE_RANGE = 2;
-	private static final int MAX_TILE_RANGE = 12;
+	// TODO: UML CHANGE 6 REMOVE
+	// private static final int MIN_TILE_RANGE = 2;
+	// TODO: UML REMOVE
+	// private static final int MAX_TILE_RANGE = 12;
 
 	/**
 	 * @param target
@@ -31,23 +32,15 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 		this.addPrecondition(new GoapState(0, "enemyKnown", true));
 		this.addPrecondition(new GoapState(0, "allowFighting", true));
 		this.addPrecondition(new GoapState(0, "isSieged", true));
+		
+		this.addPrecondition(new GoapState(0, "inSiegeRange", true));
 	}
 
 	// -------------------- Functions
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		boolean success = false;
-
-		if (this.target != null) {
-			boolean minDistanceMet = !((PlayerUnit) goapUnit).isNearPosition(((Unit) this.target).getPosition(),
-					MIN_TILE_RANGE * Core.getInstance().getTileSize());
-			boolean maxDistanceMet = ((PlayerUnit) goapUnit).isNearPosition(((Unit) this.target).getPosition(),
-					MAX_TILE_RANGE * Core.getInstance().getTileSize());
-
-			success = minDistanceMet && maxDistanceMet;
-		}
-		return success;
+		return this.target != null;
 	}
 
 	@Override
@@ -59,8 +52,8 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 	protected boolean isDone(IGoapUnit goapUnit) {
 		boolean isEnemyDead = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().contains(this.target);
 		boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
-		boolean isEnemyTooClose = ((PlayerUnit) goapUnit).isNearTilePosition(((Unit) this.target).getTilePosition(),
-				MIN_TILE_RANGE);
+		boolean isEnemyTooClose = ((PlayerUnit) goapUnit).isNearPosition(((Unit) this.target).getPosition(),
+				PlayerUnitTerran_SiegeTank.getMinSiegeRange());
 
 		return isEnemyDead || isConfidenceLow || isEnemyTooClose;
 	}

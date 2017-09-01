@@ -13,5 +13,6 @@ public class UnitWorldStateAbilityUsingUnitsTerran_SiegeTank extends UnitWorldSt
 
 	public UnitWorldStateAbilityUsingUnitsTerran_SiegeTank() {
 		this.add(new GoapState(0, "isSieged", false));
+		this.add(new GoapState(0, "inSiegeRange", false));
 	}
 }

@@ -61,5 +61,5 @@ public class AbilityActionTerranSiegeTank_SiegeMode extends AbilityActionTechTar
 	protected boolean isDone(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().isSieged();
 	}
-	
+
 }
