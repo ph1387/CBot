@@ -1,6 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import java.util.HashSet;
+import java.util.Queue;
 
 import bwapi.TechType;
 import bwapi.TilePosition;
@@ -19,6 +20,187 @@ import informationStorage.InformationStorage;
  *
  */
 public class PlayerBuilding {
+
+	// TODO: UML ADD
+	/**
+	 * QueueElementChecker.java --- Wrapper for Classes used in the
+	 * {@link PlayerBuilding#extractPossibleMatch(Queue, QueueElementChecker)}
+	 * function.
+	 * 
+	 * @author P H - 02.09.2017
+	 *
+	 */
+	private interface QueueElementChecker<T> {
+
+		public boolean checkElement();
+
+		public boolean checkElement(T element);
+
+		public boolean canAfford(T element);
+
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Checker.java --- Class for transferring the Unit and InformationStorage
+	 * reference.
+	 * 
+	 * @author P H - 02.09.2017
+	 *
+	 */
+	private class Checker {
+
+		protected Unit unit;
+		protected InformationStorage informationStorage;
+
+		public Checker(Unit unit, InformationStorage informationStorage) {
+			this.unit = unit;
+			this.informationStorage = informationStorage;
+		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * TechnologyChecker.java --- Class used for checking for a viable TechType
+	 * in the
+	 * {@link PlayerBuilding#extractPossibleMatch(Queue, QueueElementChecker)}
+	 * function.
+	 * 
+	 * @author P H - 02.09.2017
+	 *
+	 */
+	private class TechnologyChecker extends Checker implements QueueElementChecker<TechType> {
+
+		public TechnologyChecker(Unit unit, InformationStorage informationStorage) {
+			super(unit, informationStorage);
+		}
+
+		@Override
+		public boolean checkElement() {
+			return this.unit.canResearch();
+		}
+
+		@Override
+		public boolean checkElement(TechType element) {
+			return this.unit.canResearch(element);
+		}
+
+		@Override
+		public boolean canAfford(TechType element) {
+			return this.informationStorage.getResourceReserver().canAffordConstruction(element);
+		}
+
+	}
+
+	// TODO: UML ADD
+	/**
+	 * UpgradeChecker.java --- Class used for checking for a viable UpgradeType
+	 * in the
+	 * {@link PlayerBuilding#extractPossibleMatch(Queue, QueueElementChecker)}
+	 * function.
+	 * 
+	 * @author P H - 02.09.2017
+	 *
+	 */
+	private class UpgradeChecker extends Checker implements QueueElementChecker<UpgradeType> {
+
+		public UpgradeChecker(Unit unit, InformationStorage informationStorage) {
+			super(unit, informationStorage);
+		}
+
+		@Override
+		public boolean checkElement() {
+			return this.unit.canUpgrade();
+		}
+
+		@Override
+		public boolean checkElement(UpgradeType element) {
+			return this.unit.canUpgrade(element);
+		}
+
+		@Override
+		public boolean canAfford(UpgradeType element) {
+			return this.informationStorage.getResourceReserver().canAffordConstruction(element);
+		}
+
+	}
+
+	// TODO: UML ADD
+	/**
+	 * AddonChecker.java --- Class used for checking for a viable UnitType
+	 * (Addon) in the
+	 * {@link PlayerBuilding#extractPossibleMatch(Queue, QueueElementChecker)}
+	 * function.
+	 * 
+	 * @author P H - 02.09.2017
+	 *
+	 */
+	private class AddonChecker extends Checker implements QueueElementChecker<UnitType> {
+
+		public AddonChecker(Unit unit, InformationStorage informationStorage) {
+			super(unit, informationStorage);
+		}
+
+		@Override
+		public boolean checkElement() {
+			return this.unit.canBuildAddon();
+		}
+
+		@Override
+		public boolean checkElement(UnitType element) {
+			return this.unit.canBuildAddon(element);
+		}
+
+		@Override
+		public boolean canAfford(UnitType element) {
+			return this.informationStorage.getResourceReserver().canAffordConstruction(element);
+		}
+
+	}
+
+	// TODO: UML ADD
+	/**
+	 * TrainChecker.java --- Class used for checking for a viable UnitType
+	 * (Trainable Unit) in the
+	 * {@link PlayerBuilding#extractPossibleMatch(Queue, QueueElementChecker)}
+	 * function.
+	 * 
+	 * @author P H - 02.09.2017
+	 *
+	 */
+	private class TrainChecker extends Checker implements QueueElementChecker<UnitType> {
+
+		public TrainChecker(Unit unit, InformationStorage informationStorage) {
+			super(unit, informationStorage);
+		}
+
+		@Override
+		public boolean checkElement() {
+			return this.unit.canTrain();
+		}
+
+		@Override
+		public boolean checkElement(UnitType element) {
+			return this.unit.canTrain(element);
+		}
+
+		@Override
+		public boolean canAfford(UnitType element) {
+			return this.informationStorage.getResourceReserver().canAffordConstruction(element);
+		}
+
+	}
+
+	// The different checkers that are necessary for extracting different
+	// elements from the Queues stored in the information storage:
+	// TODO: UML ADD
+	private QueueElementChecker<TechType> technologyChecker;
+	// TODO: UML ADD
+	private QueueElementChecker<UpgradeType> upgradeChecker;
+	// TODO: UML ADD
+	private QueueElementChecker<UnitType> addonChecker;
+	// TODO: UML ADD
+	private QueueElementChecker<UnitType> trainChecker;
 
 	protected Unit unit;
 
@@ -40,6 +222,12 @@ public class PlayerBuilding {
 	public PlayerBuilding(Unit unit, InformationStorage informationStorage) {
 		this.unit = unit;
 		this.informationStorage = informationStorage;
+
+		// Initialize the different checkers:
+		this.technologyChecker = new TechnologyChecker(this.unit, this.informationStorage);
+		this.upgradeChecker = new UpgradeChecker(this.unit, this.informationStorage);
+		this.addonChecker = new AddonChecker(this.unit, this.informationStorage);
+		this.trainChecker = new TrainChecker(this.unit, this.informationStorage);
 	}
 
 	// -------------------- Functions
@@ -98,45 +286,80 @@ public class PlayerBuilding {
 	 * Function for switching the State of the building.
 	 */
 	private boolean switchState() {
-		boolean resultMissing = true;
-		UnitType unitToTrain = this.informationStorage.getTrainingQueue().peek();
-		UnitType addonToBuild = this.informationStorage.getAddonQueue().peek();
-		UpgradeType upgradeToBuild = this.informationStorage.getUpgradeQueue().peek();
-		TechType techToResearch = this.informationStorage.getResearchQueue().peek();
+		// Research a technology.
+		if (this.state == State.IDLE) {
+			this.researchedTech = extractPossibleMatch(this.informationStorage.getResearchQueue(),
+					this.technologyChecker);
 
-		// Train an Unit.
-		if (resultMissing && unitToTrain != null && this.unit.canTrain(unitToTrain)
-				&& this.informationStorage.getResourceReserver().canAffordConstruction(unitToTrain)) {
-			this.state = State.TRAINING;
-			this.trainedUnit = this.informationStorage.getTrainingQueue().poll();
-			resultMissing = false;
-		}
-
-		// Construct an addon.
-		if (resultMissing && addonToBuild != null && this.unit.canBuildAddon(addonToBuild)
-				&& this.informationStorage.getResourceReserver().canAffordConstruction(addonToBuild)) {
-			this.state = State.CONSTRUCTING;
-			this.constructedAddon = this.informationStorage.getAddonQueue().poll();
-			resultMissing = false;
+			if (this.researchedTech != null) {
+				this.state = State.RESEARCHING;
+			}
 		}
 
 		// Build an upgrade.
-		if (resultMissing && upgradeToBuild != null && this.unit.canUpgrade(upgradeToBuild)
-				&& this.informationStorage.getResourceReserver().canAffordConstruction(upgradeToBuild)) {
-			this.state = State.UPGRADING;
-			this.builtUpgrade = this.informationStorage.getUpgradeQueue().poll();
-			resultMissing = false;
+		if (this.state == State.IDLE) {
+			this.builtUpgrade = extractPossibleMatch(this.informationStorage.getUpgradeQueue(), this.upgradeChecker);
+
+			if (this.builtUpgrade != null) {
+				this.state = State.UPGRADING;
+			}
 		}
 
-		// Research a technology.
-		if (resultMissing && techToResearch != null && this.unit.canResearch(techToResearch)
-				&& this.informationStorage.getResourceReserver().canAffordConstruction(techToResearch)) {
-			this.state = State.RESEARCHING;
-			this.researchedTech = this.informationStorage.getResearchQueue().poll();
-			resultMissing = false;
+		// Construct an addon.
+		if (this.state == State.IDLE) {
+			this.constructedAddon = extractPossibleMatch(this.informationStorage.getAddonQueue(), this.addonChecker);
+
+			if (this.constructedAddon != null) {
+				this.state = State.CONSTRUCTING;
+			}
 		}
 
-		return resultMissing;
+		// Train an Unit.
+		if (this.state == State.IDLE) {
+			this.trainedUnit = extractPossibleMatch(this.informationStorage.getTrainingQueue(), this.trainChecker);
+
+			if (this.trainedUnit != null) {
+				this.state = State.TRAINING;
+			}
+		}
+
+		return this.state != State.IDLE;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting an element from the provided Queue that matches
+	 * the all QueueElementCheckers conditions. The function iterates through
+	 * the whole Queue and only stops when either the Queue is cycled through
+	 * once or an element that matches all conditions is found.
+	 * 
+	 * @param checkedQueue
+	 *            the Queue that is being cycled through.
+	 * @param elementCheker
+	 *            the conditions that an element of the Queue must fulfill.
+	 * @return an element that fulfills either all conditions of the
+	 *         QueueElementChecker or null if none is found and the Queue was
+	 *         cycled through once.
+	 */
+	private static <T> T extractPossibleMatch(Queue<T> checkedQueue, QueueElementChecker<T> elementCheker) {
+		T matchingElement = null;
+
+		if (elementCheker.checkElement()) {
+			int queueSize = checkedQueue.size();
+
+			// Iterate through all stored entries and try to find one that can
+			// be worked on by this Unit.
+			for (int i = 0; i < queueSize && matchingElement == null; i++) {
+				T element = checkedQueue.poll();
+
+				if (elementCheker.checkElement(element) && elementCheker.canAfford(element)) {
+					matchingElement = element;
+				} else {
+					checkedQueue.add(element);
+				}
+			}
+		}
+		return matchingElement;
 	}
 
 	// TODO: UML ADD

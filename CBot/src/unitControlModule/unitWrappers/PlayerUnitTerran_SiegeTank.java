@@ -43,7 +43,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	protected double generateConfidence() {
 		double generatedConfidence = super.generateConfidence();
 
-		// TODO: WIP
 		// Boost the confidence based on the range towards the closest enemy
 		// Unit. If the Unit is too close and the tank is therefore unable to
 		// attack it in siege mode, decrease the confidence drastically.
