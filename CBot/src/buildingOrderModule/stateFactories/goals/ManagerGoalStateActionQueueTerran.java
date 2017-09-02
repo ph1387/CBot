@@ -1,7 +1,6 @@
 package buildingOrderModule.stateFactories.goals;
 
-import javaGOAP.GoapState;
-
+// TODO: UML SUPERCLASS
 /**
  * ManagerGoalStateActionQueueTerran.java --- GoalState for a Terran
  * BuildActionManager.
@@ -9,10 +8,9 @@ import javaGOAP.GoapState;
  * @author P H - 30.04.2017
  *
  */
-
-public class ManagerGoalStateActionQueueTerran extends ManagerGoalStateActionQueue {
+public class ManagerGoalStateActionQueueTerran extends ManagerGoalStateActionQueueSimulationResults {
 
 	public ManagerGoalStateActionQueueTerran() {
-		this.add(new GoapState(1, "simulationRunning", true));
+		
 	}
 }

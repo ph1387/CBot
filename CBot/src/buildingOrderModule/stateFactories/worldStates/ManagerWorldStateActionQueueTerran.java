@@ -1,7 +1,6 @@
 package buildingOrderModule.stateFactories.worldStates;
 
-import javaGOAP.GoapState;
-
+// TODO: UML SUPERCLASS
 /**
  * ManagerWorldStateActionQueueTerran.java --- WorldState for a Terran
  * BuildActionManager.
@@ -9,10 +8,9 @@ import javaGOAP.GoapState;
  * @author P H - 30.04.2017
  *
  */
-public class ManagerWorldStateActionQueueTerran extends ManagerWorldStateActionQueue {
+public class ManagerWorldStateActionQueueTerran extends ManagerWorldStateActionQueueSimulationResults {
 
 	public ManagerWorldStateActionQueueTerran() {
-		this.add(new GoapState(0, "simulationAllowed", false));
-		this.add(new GoapState(0, "simulationRunning", false));
+
 	}
 }
