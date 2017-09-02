@@ -23,17 +23,39 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	// TODO: UML ADD
 	private static final int MAX_SIEGE_TILE_RANGE = 12;
 
+	// TODO: UML ADD
+	private double inSiegeRangeConfidenceMultiplier = 1.5;
+	// TODO: UML ADD
+	private double notInSiegeRangeConfidenceMultiplier = 0.5;
+
 	public PlayerUnitTerran_SiegeTank(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
 
 		// TODO: Possible Change: Siege Mode range change
 		// Siege mode -> min range = 2 * 32 (+ extra)
 		this.extraConfidencePixelRangeToClosestUnits = 128;
-		this.confidenceDefault = 0.3;
 	}
 
 	// -------------------- Functions
 
+	// TODO: UML ADD
+	@Override
+	protected double generateConfidence() {
+		double generatedConfidence = super.generateConfidence();
+
+		// TODO: WIP
+		// Boost the confidence based on the range towards the closest enemy
+		// Unit. If the Unit is too close and the tank is therefore unable to
+		// attack it in siege mode, decrease the confidence drastically.
+		if (this.isInSiegeRange(this.closestEnemyUnitInConfidenceRange)) {
+			generatedConfidence *= this.inSiegeRangeConfidenceMultiplier;
+		} else {
+			generatedConfidence *= this.notInSiegeRangeConfidenceMultiplier;
+		}
+
+		return generatedConfidence;
+	}
+	
 	@Override
 	protected StateFactory createFactory() {
 		return new StateFactoryTerran_SiegeTank();
