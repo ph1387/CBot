@@ -11,7 +11,8 @@ import core.Core;
  */
 class GameStateUnits_Worker extends GameState {
 
-	private double generalMultiplier = 4.;
+	// TODO: UML CHANGE 4
+	private double generalMultiplier = 8.;
 
 	// -------------------- Functions
 
