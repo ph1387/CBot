@@ -14,37 +14,29 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public abstract class UnloadAction extends WorkerAction {
 
-	private static final int COUNTER_MAX = 25;
-	private int counter = 0;
+	// TODO: UML REMOVE
+//	private static final int COUNTER_MAX = 25;
+	// TODO: UML REMOVE
+//	private int counter = 0;
 
 	/**
 	 * @param target
 	 *            type: Null
 	 */
 	public UnloadAction(Object target) {
-		super(target);
+		super(new Object());
 	}
 
 	// -------------------- Functions
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
-		boolean success = true;
-
-		// Counting backwards is more efficient.
-		if (this.counter <= 0) {
-			this.counter = COUNTER_MAX;
-
-			success = ((PlayerUnit) goapUnit).getUnit().returnCargo(true);
-		} else {
-			this.counter--;
-		}
-		return success;
+		return ((PlayerUnit) goapUnit).getUnit().returnCargo();
 	}
 
 	@Override
 	protected void resetSpecific() {
-		this.counter = 0;
+		
 	}
 
 	@Override

@@ -108,6 +108,7 @@ public class GatherAction extends WorkerAction {
 					this.gatheringSourceTemp = (Unit) this.target;
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return success;

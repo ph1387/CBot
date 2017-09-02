@@ -19,6 +19,10 @@ public class MoveToNearestCenterAction extends WorkerAction {
 	// finished.
 	private int minDistanceToTargetCenter = 128;
 
+	// The center Unit the Unit is moving to. Needed since the target of this
+	// action might change (IsDone must know what to check for).
+	private Unit centerToMoveTo;
+
 	/**
 	 * @param target
 	 *            type: Unit (A center Unit)
@@ -34,12 +38,19 @@ public class MoveToNearestCenterAction extends WorkerAction {
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).getUnit().move(((Unit) this.target).getPosition());
+		boolean success = true;
+
+		if (this.centerToMoveTo == null) {
+			this.centerToMoveTo = (Unit) this.target;
+
+			success = ((PlayerUnit) goapUnit).getUnit().move(this.centerToMoveTo.getPosition());
+		}
+		return success;
 	}
 
 	@Override
 	protected void resetSpecific() {
-
+		this.centerToMoveTo = null;
 	}
 
 	@Override
@@ -60,8 +71,18 @@ public class MoveToNearestCenterAction extends WorkerAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).isNearPosition(((Unit) this.target).getPosition(),
-				this.minDistanceToTargetCenter);
+		boolean isDone;
+
+		// The initial test must use the target as reference.
+		if (this.centerToMoveTo == null) {
+			isDone = ((PlayerUnit) goapUnit).isNearPosition(((Unit) this.target).getPosition(),
+					this.minDistanceToTargetCenter);
+		} else {
+			isDone = ((PlayerUnit) goapUnit).isNearPosition(this.centerToMoveTo.getPosition(),
+					this.minDistanceToTargetCenter);
+		}
+
+		return isDone;
 	}
 
 }
