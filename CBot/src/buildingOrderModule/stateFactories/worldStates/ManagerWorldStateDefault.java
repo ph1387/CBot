@@ -16,5 +16,6 @@ public class ManagerWorldStateDefault extends HashSet<GoapState> {
 	public ManagerWorldStateDefault() {
 		this.add(new GoapState(0, "unitsNeeded", true));
 		this.add(new GoapState(0, "buildingsNeeded", true));
+		this.add(new GoapState(0, "managerBaseActionsAllowed", true));
 	}
 }

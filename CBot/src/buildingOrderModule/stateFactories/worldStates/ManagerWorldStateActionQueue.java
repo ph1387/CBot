@@ -14,6 +14,5 @@ public class ManagerWorldStateActionQueue extends ManagerWorldStateDefault {
 	public ManagerWorldStateActionQueue() {
 		this.add(new GoapState(0, "buildOrderAllowed", true));
 		this.add(new GoapState(0, "startingBuildOrderNeeded", true));
-		this.add(new GoapState(0, "simulationRunning", false));
 	}
 }

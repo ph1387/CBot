@@ -5,6 +5,7 @@ import java.util.HashSet;
 import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.scoringDirector.ScoringAction;
 import buildingOrderModule.simulator.ActionType;
+import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 
 /**
@@ -34,6 +35,8 @@ public abstract class ManagerBaseAction extends BaseAction implements ActionType
 	 */
 	public ManagerBaseAction(Object target) {
 		super(target);
+
+		this.addPrecondition(new GoapState(0, "managerBaseActionsAllowed", true));
 	}
 
 	// -------------------- Functions

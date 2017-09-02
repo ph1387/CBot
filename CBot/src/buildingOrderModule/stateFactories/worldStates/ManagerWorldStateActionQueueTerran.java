@@ -13,5 +13,6 @@ public class ManagerWorldStateActionQueueTerran extends ManagerWorldStateActionQ
 
 	public ManagerWorldStateActionQueueTerran() {
 		this.add(new GoapState(0, "simulationAllowed", false));
+		this.add(new GoapState(0, "simulationRunning", false));
 	}
 }

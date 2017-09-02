@@ -30,6 +30,11 @@ public class WorldStateUpdaterActionQueueTerran extends WorldStateUpdaterActionQ
 				&& Core.getInstance().getGame().getFrameCount() >= this.startingBuildingOrderNeededFrameMax) {
 			this.changeWorldStateEffect("simulationAllowed", true);
 
+			// Disable any other actions that are relying on the
+			// ManagerBaseAction since only the simulation results do matter.
+			// The Bot is not allowed to queue any other actions.
+			this.changeWorldStateEffect("managerBaseActionsAllowed", false);
+
 			this.simuationAllowed = true;
 		}
 	}
