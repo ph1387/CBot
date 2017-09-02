@@ -32,7 +32,7 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 		this.addPrecondition(new GoapState(0, "enemyKnown", true));
 		this.addPrecondition(new GoapState(0, "allowFighting", true));
 		this.addPrecondition(new GoapState(0, "isSieged", true));
-		
+
 		this.addPrecondition(new GoapState(0, "inSiegeRange", true));
 	}
 
@@ -40,7 +40,7 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		return this.target != null;
+		return this.target != null && ((PlayerUnitTerran_SiegeTank) goapUnit).isInSiegeRange((Unit) this.target);
 	}
 
 	@Override
