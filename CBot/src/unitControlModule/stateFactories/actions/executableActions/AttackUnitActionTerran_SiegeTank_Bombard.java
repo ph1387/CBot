@@ -15,12 +15,6 @@ import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank;
  */
 public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 
-	// Below this distance the SiegeTank_SiegeMode will / can not attack.
-	// TODO: UML CHANGE 6 REMOVE
-	// private static final int MIN_TILE_RANGE = 2;
-	// TODO: UML REMOVE
-	// private static final int MAX_TILE_RANGE = 12;
-
 	/**
 	 * @param target
 	 *            type: Unit

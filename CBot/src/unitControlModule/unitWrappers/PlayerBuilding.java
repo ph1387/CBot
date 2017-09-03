@@ -21,7 +21,6 @@ import informationStorage.InformationStorage;
  */
 public class PlayerBuilding {
 
-	// TODO: UML ADD
 	/**
 	 * QueueElementChecker.java --- Wrapper for Classes used in the
 	 * {@link PlayerBuilding#extractPossibleMatch(Queue, QueueElementChecker)}
@@ -40,7 +39,6 @@ public class PlayerBuilding {
 
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Checker.java --- Class for transferring the Unit and InformationStorage
 	 * reference.
@@ -59,7 +57,6 @@ public class PlayerBuilding {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * TechnologyChecker.java --- Class used for checking for a viable TechType
 	 * in the
@@ -92,7 +89,6 @@ public class PlayerBuilding {
 
 	}
 
-	// TODO: UML ADD
 	/**
 	 * UpgradeChecker.java --- Class used for checking for a viable UpgradeType
 	 * in the
@@ -125,7 +121,6 @@ public class PlayerBuilding {
 
 	}
 
-	// TODO: UML ADD
 	/**
 	 * AddonChecker.java --- Class used for checking for a viable UnitType
 	 * (Addon) in the
@@ -158,7 +153,6 @@ public class PlayerBuilding {
 
 	}
 
-	// TODO: UML ADD
 	/**
 	 * TrainChecker.java --- Class used for checking for a viable UnitType
 	 * (Trainable Unit) in the
@@ -193,13 +187,9 @@ public class PlayerBuilding {
 
 	// The different checkers that are necessary for extracting different
 	// elements from the Queues stored in the information storage:
-	// TODO: UML ADD
 	private QueueElementChecker<TechType> technologyChecker;
-	// TODO: UML ADD
 	private QueueElementChecker<UpgradeType> upgradeChecker;
-	// TODO: UML ADD
 	private QueueElementChecker<UnitType> addonChecker;
-	// TODO: UML ADD
 	private QueueElementChecker<UnitType> trainChecker;
 
 	protected Unit unit;
@@ -326,7 +316,6 @@ public class PlayerBuilding {
 		return this.state != State.IDLE;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting an element from the provided Queue that matches
 	 * the all QueueElementCheckers conditions. The function iterates through
@@ -362,7 +351,6 @@ public class PlayerBuilding {
 		return matchingElement;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for adding the extra TilePositions to the contended ones that
 	 * represent the default Position of the addon. This is needed since no

@@ -4,7 +4,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank_SiegeMode;
 
-// TODO: UML ADD
 /**
  * TerranSiegeTank_SiegeMode_Reposition.java --- Action for a
  * {@link PlayerUnitTerran_SiegeTank_SiegeMode} to reposition itself. This is

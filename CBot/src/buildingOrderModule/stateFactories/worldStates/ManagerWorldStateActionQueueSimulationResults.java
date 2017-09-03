@@ -2,7 +2,6 @@ package buildingOrderModule.stateFactories.worldStates;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * ManagerWorldStateActionQueueSimulationResults.java --- WorldState for a
  * BuildActionManager that uses simulations.

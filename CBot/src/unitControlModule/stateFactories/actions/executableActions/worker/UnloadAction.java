@@ -14,11 +14,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public abstract class UnloadAction extends WorkerAction {
 
-	// TODO: UML REMOVE
-//	private static final int COUNTER_MAX = 25;
-	// TODO: UML REMOVE
-//	private int counter = 0;
-
 	/**
 	 * @param target
 	 *            type: Null

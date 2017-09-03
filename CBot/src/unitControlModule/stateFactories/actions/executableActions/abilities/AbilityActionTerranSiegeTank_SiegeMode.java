@@ -56,7 +56,6 @@ public class AbilityActionTerranSiegeTank_SiegeMode extends AbilityActionTechTar
 		return success;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().isSieged();

@@ -2,7 +2,6 @@ package buildingOrderModule.stateFactories.goals;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * ManagerGoalStateActionQueueSimulationResults.java --- GoalState for a
  * BuildActionManager that is using simulation action queues.

@@ -59,7 +59,6 @@ public class TilePositionFactory {
 		return neededTilePositions;
 	}
 
-	// TODO: UML ADD VISIBILITY
 	/**
 	 * Function for adding additional TilePositions to the normal required space
 	 * of the UnitType based on the addon that it is able to construct.

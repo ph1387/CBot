@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector.freeTrainingFacilities;
 
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * FreeTrainingFacilities_TerranCommandCenter.java --- A GameState that defines
  * the Terran_Command_Center as it's training facility whose idlers will be

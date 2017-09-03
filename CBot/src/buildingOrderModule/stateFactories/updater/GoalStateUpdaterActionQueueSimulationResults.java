@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueSimulationResults;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * GoalStateUpdaterActionQueueSimulationResults.java --- Updater for updating a
  * {@link ManagerGoalStateActionQueueSimulationResults} instance.

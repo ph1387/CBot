@@ -15,7 +15,6 @@ class GameStateFocused_Expansion extends GameStateGradualChangeWithReset {
 	private static double ScoreStart = 0.;
 	// The rate that is applied to the score in each iteration.
 	private static double Rate = 0.1;
-	// TODO: UML CHANGE 600
 	// The frames after the rate is applied.
 	private static double FrameDiff = 400;
 

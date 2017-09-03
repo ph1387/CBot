@@ -39,24 +39,17 @@ public abstract class GameState {
 	public static final GameState Healer_Units = new GameStateUnits_Healer();
 
 	// The GameStates that rely on idling training facilities:
-	// TODO: UML ADD
 	public static final GameState FreeTrainingFacility_Center = new FreeTrainingFacilities_Center();
-	// TODO: UML ADD
 	public static final GameState FreeTrainingFacility_Terran_Barracks = new FreeTrainingFacilities_TerranBarracks();
-	// TODO: UML ADD
 	public static final GameState FreeTrainingFacility_Terran_CommandCenter = new FreeTrainingFacilities_TerranCommandCenter();
-	// TODO: UML ADD
 	public static final GameState FreeTrainingFacility_Terran_Factory = new FreeTrainingFacilities_TerranFactory();
-	// TODO: UML ADD
 	public static final GameState FreeTrainingFacility_Terran_Starport = new FreeTrainingFacilities_TerranStarport();
 
 	// The current score this state holds.
 	private double currentScore = 0.;
-	// TODO: UML ADD
 	// The number of times the state is going to be divided.
 	private int currentDivider = 1;
 
-	// TODO: UML VISIBILITY
 	public GameState() {
 
 	}
@@ -96,7 +89,6 @@ public abstract class GameState {
 	 */
 	protected abstract double generateScore(ScoringDirector scoringDirector, BuildActionManager manager);
 
-	// TODO: UML ADD
 	/**
 	 * Function for defining the divider which will be added together with the
 	 * other GameStates and used in generating the total score
@@ -125,8 +117,7 @@ public abstract class GameState {
 	public double getCurrentScore() {
 		return currentScore;
 	}
-	
-	// TODO: UML ADD
+
 	public int getCurrentDivider() {
 		return currentDivider;
 	}

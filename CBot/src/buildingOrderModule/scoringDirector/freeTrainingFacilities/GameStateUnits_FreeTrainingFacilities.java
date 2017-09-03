@@ -8,7 +8,6 @@ import buildingOrderModule.scoringDirector.ScoringDirector;
 import bwapi.Unit;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * GameStateUnits_FreeTrainingFacilities.java --- A GameState focused on
  * providing a score based on the available training facilities that are
@@ -17,7 +16,7 @@ import bwapi.UnitType;
  * @author P H - 31.08.2017
  *
  */
-public abstract class GameStateUnits_FreeTrainingFacilities extends GameState {
+abstract class GameStateUnits_FreeTrainingFacilities extends GameState {
 
 	// -------------------- Functions
 
@@ -39,7 +38,6 @@ public abstract class GameStateUnits_FreeTrainingFacilities extends GameState {
 		return idlingFacilities;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected int defineDivider() {
 		// The score represents the number of idling facilities. Therefore

@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector.freeTrainingFacilities;
 import bwapi.UnitType;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * FreeTrainingFacilities_Center.java --- A GameState that defines the Center as
  * it's training facility whose idlers will be counted.

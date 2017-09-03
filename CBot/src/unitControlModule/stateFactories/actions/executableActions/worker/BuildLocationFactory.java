@@ -25,12 +25,10 @@ import unitTrackerModule.EnemyUnit;
  */
 public class BuildLocationFactory {
 
-	// TODO: UML RENAME maxBuildingSearchRadius
 	private int maxBuildingSearchTileRadius = 5;
 	// Due to the large tile range there should not be any trouble finding a
 	// suitable building location.
 	private int maxTileRange = 50;
-	// TODO: UML ADD
 	// The maximum acceptable range for checking the distance between a free
 	// geyser and a center building.
 	private int maxDistanceGeysers = 320;
@@ -94,7 +92,6 @@ public class BuildLocationFactory {
 		return buildLocation;
 	}
 
-	// TODO: PARAMS
 	/**
 	 * Function for finding a suitable building location for a center Unit.
 	 * 
@@ -118,7 +115,6 @@ public class BuildLocationFactory {
 		return newBaseLocation.getTilePosition();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all BaseLocations at which a new center Unit can
 	 * be constructed.
@@ -167,7 +163,6 @@ public class BuildLocationFactory {
 		return locationFree;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the closest EnemyUnit (Building) from the
 	 * currently known ones.
@@ -196,7 +191,6 @@ public class BuildLocationFactory {
 		return closestEnemyBuilding;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for sorting a List of BaseLocations based on two factors:
 	 * <ul>
@@ -251,7 +245,6 @@ public class BuildLocationFactory {
 		}
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for finding a suitable building location around a given
 	 * TilePosition with a max range for a refinery. This needs to be a special
@@ -282,7 +275,6 @@ public class BuildLocationFactory {
 		return buildLocation;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting a geyser from the provided HashSet of free
 	 * geysers that is near an already existing center building. This should be
@@ -311,7 +303,6 @@ public class BuildLocationFactory {
 		return null;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting a geyser from the provided HashSet of free
 	 * geysers that is near the next generated center build location.
@@ -337,7 +328,6 @@ public class BuildLocationFactory {
 		return closestGeyser;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all geysers on the map without any refinery on
 	 * them.

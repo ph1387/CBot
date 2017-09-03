@@ -18,7 +18,6 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 	private AbilityActionTerranSiegeTank_SiegeMode abilityActionTerranSiegeTankSiegeMode;
 	private AttackUnitActionTerran_SiegeTank_Bombard abilityActionTerranSiegeTankBombard;
 	
-	// TODO: UML ADD
 	private TerranSiegeTank_TankMode_MoveIntoSiegeRange terranSiegeTank_TankMode_MoveIntoSiegeRange;
 
 	public ActionUpdaterTerran_SiegeTank(PlayerUnit playerUnit) {

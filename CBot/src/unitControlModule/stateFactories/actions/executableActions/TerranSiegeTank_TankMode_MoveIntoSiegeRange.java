@@ -14,7 +14,6 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank;
 
-// TODO: UML ADD
 /**
  * TerranSiegeTank_TankMode_MoveIntoSiegeRange.java --- Action for a
  * {@link PlayerUnitTerran_SiegeTank} to move into bombard / siege range of a
@@ -79,7 +78,6 @@ public class TerranSiegeTank_TankMode_MoveIntoSiegeRange extends BaseAction {
 		return position != null && ((PlayerUnit) goapUnit).getUnit().move(position);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a new Position for the Terran_Siege_Tank to move
 	 * to. This function utilizes the SteeringFactory since no Positions are

@@ -4,7 +4,6 @@ import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * TrainUnitActionTerran_Vulture.java --- Class for training a Terran_Vulture.
  * 

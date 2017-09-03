@@ -16,16 +16,12 @@ import unitControlModule.stateFactories.StateFactoryTerran_SiegeTank;
  */
 public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
-	// TODO: UML ADD
 	// Below this distance the SiegeTank_SiegeMode will / can not use the siege
 	// attack.
 	private static final int MIN_SIEGE_TILE_RANGE = 4;
-	// TODO: UML ADD
 	private static final int MAX_SIEGE_TILE_RANGE = 12;
 
-	// TODO: UML ADD
 	private double inSiegeRangeConfidenceMultiplier = 1.5;
-	// TODO: UML ADD
 	private double notInSiegeRangeConfidenceMultiplier = 0.5;
 
 	public PlayerUnitTerran_SiegeTank(Unit unit, InformationStorage informationStorage) {
@@ -38,7 +34,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected double generateConfidence() {
 		double generatedConfidence = super.generateConfidence();
@@ -62,7 +57,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		return new StateFactoryTerran_SiegeTank();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -75,7 +69,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		return this.isInSiegeRange(unit.getPosition());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -88,7 +81,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		return this.isInSiegeRange(tilePosition.toPosition());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for checking if a Position is in the
 	 * {@link PlayerUnitTerran_SiegeTank}'s siege range. This siege range has a
@@ -106,22 +98,18 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
 	// ------------------------------ Getter / Setter
 
-	// TODO: UML ADD
 	public static int getMinSiegeTileRange() {
 		return MIN_SIEGE_TILE_RANGE;
 	}
 
-	// TODO: UML ADD
 	public static int getMaxSiegeTileRange() {
 		return MAX_SIEGE_TILE_RANGE;
 	}
 
-	// TODO: UML ADD
 	public static int getMinSiegeRange() {
 		return MIN_SIEGE_TILE_RANGE * Core.getInstance().getTileSize();
 	}
 
-	// TODO: UML ADD
 	public static int getMaxSiegeRange() {
 		return MAX_SIEGE_TILE_RANGE * Core.getInstance().getTileSize();
 	}

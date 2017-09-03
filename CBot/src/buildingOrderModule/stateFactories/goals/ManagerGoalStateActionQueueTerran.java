@@ -1,6 +1,5 @@
 package buildingOrderModule.stateFactories.goals;
 
-// TODO: UML SUPERCLASS
 /**
  * ManagerGoalStateActionQueueTerran.java --- GoalState for a Terran
  * BuildActionManager.

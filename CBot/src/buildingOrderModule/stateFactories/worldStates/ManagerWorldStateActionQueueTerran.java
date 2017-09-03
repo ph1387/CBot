@@ -1,6 +1,5 @@
 package buildingOrderModule.stateFactories.worldStates;
 
-// TODO: UML SUPERCLASS
 /**
  * ManagerWorldStateActionQueueTerran.java --- WorldState for a Terran
  * BuildActionManager.

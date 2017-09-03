@@ -234,7 +234,6 @@ public class UnitControlModule implements RemoveAgentEvent {
 		this.removeExtraAddonContendedTilePositions(unit);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for removing any contended TilePositions that were contended by
 	 * default to ensure the construction of any future addons. This function is
