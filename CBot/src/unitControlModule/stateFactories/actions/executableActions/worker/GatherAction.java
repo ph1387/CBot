@@ -57,10 +57,13 @@ public class GatherAction extends WorkerAction {
 		// Make the blocked space at the mapped gathering source available again
 		// if the Action stops.
 		try {
-			((PlayerUnitWorker) this.currentlyExecutingUnit).getInformationStorage().getWorkerConfig()
-					.getMappedAccessibleGatheringSources().get(this.gatheringSource)
-					.remove(((PlayerUnit) this.currentlyExecutingUnit).getUnit());
+			if(this.gatheringSource != null) {
+				((PlayerUnitWorker) this.currentlyExecutingUnit).getInformationStorage().getWorkerConfig()
+				.getMappedAccessibleGatheringSources().get(this.gatheringSource)
+				.remove(((PlayerUnit) this.currentlyExecutingUnit).getUnit());
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		this.target = null;

@@ -19,6 +19,7 @@ public class MoveToNearestCenterAction extends WorkerAction {
 	// finished.
 	private int minDistanceToTargetCenter = 128;
 
+	// TODO: UML ADD
 	// The center Unit the Unit is moving to. Needed since the target of this
 	// action might change (IsDone must know what to check for).
 	private Unit centerToMoveTo;
