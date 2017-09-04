@@ -2,18 +2,21 @@ package unitControlModule.unitWrappers;
 
 import java.util.HashSet;
 
+import bwapi.Position;
 import bwapi.Unit;
 import bwapi.UnitType;
 import core.Core;
 import informationStorage.InformationStorage;
+import workerManagerResourceSpotAllocation.ResourceManagerEntry;
 
+// TODO: UML INTERFACE ADD
 /**
  * PlayerUnitWorker.java --- Wrapper for a general worker Unit.
  * 
  * @author P H - 29.03.2017
  *
  */
-public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
+public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements ResourceManagerEntry {
 
 	protected boolean assignedToSout = false;
 
@@ -436,6 +439,14 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee {
 			return gatheringSource;
 		}
 		return referenceUnit;
+	}
+	
+	// ------------------------------ ResourceManagerEntry
+	
+	// TODO: UML ADD
+	@Override
+	public Position getPosition() {
+		return this.unit.getPosition();
 	}
 
 	// ------------------------------ Getter / Setter

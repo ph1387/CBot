@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.updater;
 
+import core.CBot;
 import unitControlModule.stateFactories.actions.AvailableActionsWorker;
 import unitControlModule.stateFactories.actions.executableActions.worker.ConstructBuildingAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.ConstructionJob;
@@ -42,9 +43,6 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 		// TODO: Possible Change: Only perform once.
 		this.unloadMineralsAction.setTarget(this.playerUnit);
 		this.unloadGasAction.setTarget(this.playerUnit);
-
-		this.gatherMineralsAction.setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeMineralField());
-		this.gatherGasAction.setTarget(((PlayerUnitWorker) playerUnit).getClosestFreeGasSource());
 
 		this.moveToNearestCenterAction.setTarget(this.playerUnit.getClosestCenter());
 

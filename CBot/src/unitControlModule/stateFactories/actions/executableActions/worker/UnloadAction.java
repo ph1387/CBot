@@ -31,7 +31,7 @@ public abstract class UnloadAction extends WorkerAction {
 
 	@Override
 	protected void resetSpecific() {
-		
+		this.target = new Object();
 	}
 
 	@Override

@@ -109,24 +109,24 @@ public class ConstructBuildingAction extends WorkerAction {
 		if (!Core.getInstance().getGame().isExplored(((ConstructionJob) this.target).getTilePosition())) {
 			((PlayerUnitWorker) goapUnit).getUnit()
 					.move(((ConstructionJob) this.target).getTilePosition().toPosition());
-
+			
 			this.isMovingToConstructionSite = true;
 		} else {
 			this.isMovingToConstructionSite = false;
 
 			// Perform the build command one single time when constructing the
 			// building is possible.
-			if (!this.triedConstructingOnce) {
-				if (((PlayerUnitWorker) goapUnit).getUnit().canBuild(((ConstructionJob) this.target).getBuilding(),
-						((ConstructionJob) this.target).getTilePosition())) {
+//			if (!this.triedConstructingOnce) {
+//				if (((PlayerUnitWorker) goapUnit).getUnit().canBuild(((ConstructionJob) this.target).getBuilding(),
+//						((ConstructionJob) this.target).getTilePosition())) {
 					this.triedConstructingOnce = true;
 
 					((PlayerUnitWorker) goapUnit).getUnit().build(((ConstructionJob) this.target).getBuilding(),
 							((ConstructionJob) this.target).getTilePosition());
 					((PlayerUnitWorker) goapUnit).getInformationStorage().getWorkerConfig().getMappedBuildActions().put(
 							((PlayerUnitWorker) goapUnit).getUnit(), ((ConstructionJob) this.target).getBuilding());
-				}
-			}
+//				}
+//			}
 		}
 
 		return success;
@@ -185,8 +185,8 @@ public class ConstructBuildingAction extends WorkerAction {
 
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
-		// 100 since it should not be randomly added to other action Queues.
-		return 100;
+		// 1 since it should not be randomly added to other action Queues.
+		return 1;
 	}
 
 	@Override

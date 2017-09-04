@@ -13,6 +13,7 @@ import bwapi.Unit;
 import informationStorage.InformationStorage;
 import unitControlModule.UnitControlModule;
 import unitTrackerModule.UnitTrackerModule;
+import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
 
 /**
  * CBot.java --- The bot-class itself of which an instance gets created. This
@@ -22,7 +23,9 @@ import unitTrackerModule.UnitTrackerModule;
  *
  */
 public class CBot implements BWEventListener {
+	
 	private static CBot instance;
+	
 	private Mirror mirror = new Mirror();
 	private Game game;
 	private boolean started = false;
@@ -32,6 +35,9 @@ public class CBot implements BWEventListener {
 	private UnitTrackerModule unitTrackerModule;
 	private UnitControlModule unitControlModule;
 	private BuildingOrderModule buildingOrderModule;
+	
+	// TODO: UML ADD
+	private WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation;
 
 	// Information storage across multiple modules.
 	private InformationStorage informationStorage = new InformationStorage();
@@ -125,6 +131,7 @@ public class CBot implements BWEventListener {
 			this.unitTrackerModule = new UnitTrackerModule(this.informationStorage);
 			this.unitControlModule = new UnitControlModule(this.informationStorage);
 			this.buildingOrderModule = new BuildingOrderModule(this.informationStorage);
+			this.workerManagerResourceSpotAllocation = new WorkerManagerResourceSpotAllocation(this.informationStorage);
 
 			System.out.println("---STARTUP: success---");
 		} catch (Exception e) {
@@ -181,6 +188,11 @@ public class CBot implements BWEventListener {
 	public void onUnitComplete(Unit unit) {
 		if (this.firstFrameOver && unit.getPlayer() == this.game.self()) {
 			this.unitControlModule.addToUnitControl(unit);
+			
+			// Add refineries to the manager as available gathering sources.
+			if(unit.getType().isRefinery()) {
+				this.workerManagerResourceSpotAllocation.addRefinery(unit);
+			}
 		}
 	}
 
@@ -188,6 +200,11 @@ public class CBot implements BWEventListener {
 	public void onUnitDestroy(Unit unit) {
 		if (unit.getPlayer() == this.game.self()) {
 			this.unitControlModule.removeUnitFromUnitControl(unit);
+			
+			// Remove any destroyed refineries from the manager.
+			if(unit.getType().isRefinery()) {
+				this.workerManagerResourceSpotAllocation.removeRefinery(unit);
+			}
 		}
 	}
 
@@ -272,6 +289,11 @@ public class CBot implements BWEventListener {
 
 	public BuildingOrderModule getBuildingOrderModule() {
 		return buildingOrderModule;
+	}
+	
+	// TODO: UML ADD
+	public WorkerManagerResourceSpotAllocation getWorkerManagerResourceSpotAllocation() {
+		return workerManagerResourceSpotAllocation;
 	}
 
 	public InformationStorage getInformationStorage() {
