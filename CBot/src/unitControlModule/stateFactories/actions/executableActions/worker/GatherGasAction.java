@@ -13,7 +13,6 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  */
 public class GatherGasAction extends GatherAction {
 
-	// TODO: UML TARGET CHANGE
 	/**
 	 * @param target
 	 *            type: Null
@@ -26,7 +25,6 @@ public class GatherGasAction extends GatherAction {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
@@ -35,7 +33,8 @@ public class GatherGasAction extends GatherAction {
 			success &= this.workerManagerResourceSpotAllocation.addGasGatherer((PlayerUnitWorker) goapUnit);
 		}
 
-		Unit currentGatheringSource = this.workerManagerResourceSpotAllocation.getGatheringSource((PlayerUnitWorker) goapUnit);
+		Unit currentGatheringSource = this.workerManagerResourceSpotAllocation
+				.getGatheringSource((PlayerUnitWorker) goapUnit);
 
 		// If the gathering source changed, execute a new gather command.
 		if (currentGatheringSource != this.prevGatheringSource) {
@@ -47,7 +46,6 @@ public class GatherGasAction extends GatherAction {
 		return success;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		boolean success = true;

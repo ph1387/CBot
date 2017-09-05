@@ -10,7 +10,6 @@ import bwapi.Position;
 import bwapi.Unit;
 import bwta.BaseLocation;
 
-//TODO: UML ADD
 /**
  * MineralPatch.java --- Wrapper Class for mineral spots that are going to be
  * managed by {@link MineralPatchManager} instances as {@link GatheringSource}s.
@@ -20,7 +19,7 @@ import bwta.BaseLocation;
  * @author P H - 03.09.2017
  *
  */
-public class MineralPatch implements GatheringSource {
+class MineralPatch implements GatheringSource {
 
 	private IResourceManager mineralPatchManager;
 
@@ -49,7 +48,6 @@ public class MineralPatch implements GatheringSource {
 		return this.assignedWorkers.add(worker) && this.mapWorker(worker);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for mapping a worker to a specific single gathering spot since
 	 * there are multiple possible ones at a single BaseLocation.
@@ -120,7 +118,6 @@ public class MineralPatch implements GatheringSource {
 		return this.freeWorkerSpots;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for updating the number of free worker spots of this particular
 	 * {@link MineralPatch}.

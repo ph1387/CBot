@@ -2,7 +2,6 @@ package workerManagerResourceSpotAllocation;
 
 import bwapi.Unit;
 
-// TODO: UML ADD
 /**
  * IResourceManager.java --- Interface that each resource manager must implement
  * in order to be used in the {@link WorkerManagerResourceSpotAllocation}

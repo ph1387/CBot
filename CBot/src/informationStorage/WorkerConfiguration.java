@@ -16,9 +16,6 @@ import bwapi.UnitType;
  */
 public class WorkerConfiguration {
 
-	private int maxNumberMining = 2;
-	private int maxNumberGatheringGas = 3;
-	private int pixelGatherSearchRadius = 350;
 	private int constructionCounterMax = 20;
 
 	// Initial scouting configuration
@@ -26,11 +23,6 @@ public class WorkerConfiguration {
 	private int totalWorkerCount = 0;
 	private boolean workerOnceAssignedScouting = false;
 
-	// Mapped: gathering sources (Units) -> Units (worker)
-	// Each gathering source holds the Units that are currently working on it.
-	private HashMap<Unit, HashSet<Unit>> mappedAccessibleGatheringSources = new HashMap<Unit, HashSet<Unit>>();
-	// Used to prevent double mapping of the same gathering source in one cycle.
-	private HashMap<Unit, HashSet<Unit>> mappedSourceContenders = new HashMap<Unit, HashSet<Unit>>();
 	private HashMap<Unit, UnitType> mappedBuildActions = new HashMap<>();
 
 	private Queue<UnitType> buildingQueue = new LinkedList<>();
@@ -52,18 +44,6 @@ public class WorkerConfiguration {
 
 	// ------------------------------ Getter / Setter
 
-	public int getMaxNumberMining() {
-		return maxNumberMining;
-	}
-
-	public int getMaxNumberGatheringGas() {
-		return maxNumberGatheringGas;
-	}
-
-	public int getPixelGatherSearchRadius() {
-		return pixelGatherSearchRadius;
-	}
-
 	public int getConstructionCounterMax() {
 		return constructionCounterMax;
 	}
@@ -82,14 +62,6 @@ public class WorkerConfiguration {
 
 	public void setWorkerOnceAssignedScouting(boolean workerOnceAssignedScouting) {
 		this.workerOnceAssignedScouting = workerOnceAssignedScouting;
-	}
-
-	public HashMap<Unit, HashSet<Unit>> getMappedAccessibleGatheringSources() {
-		return mappedAccessibleGatheringSources;
-	}
-
-	public HashMap<Unit, HashSet<Unit>> getMappedSourceContenders() {
-		return mappedSourceContenders;
 	}
 
 	public Queue<UnitType> getBuildingQueue() {

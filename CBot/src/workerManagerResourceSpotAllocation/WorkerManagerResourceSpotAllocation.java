@@ -5,7 +5,6 @@ import java.util.HashMap;
 import bwapi.Unit;
 import informationStorage.InformationStorage;
 
-// TODO: UML ADD
 /**
  * WorkerManagerResourceSpotAllocation.java --- The main Class managing the
  * different {@link ResourceManager}s, mainly the one for minerals and the one

@@ -1,11 +1,8 @@
 package unitControlModule.stateFactories.updater;
 
-import core.CBot;
 import unitControlModule.stateFactories.actions.AvailableActionsWorker;
 import unitControlModule.stateFactories.actions.executableActions.worker.ConstructBuildingAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.ConstructionJob;
-import unitControlModule.stateFactories.actions.executableActions.worker.GatherGasAction;
-import unitControlModule.stateFactories.actions.executableActions.worker.GatherMineralsAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.MoveToNearestCenterAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.ScoutBaseLocationWorkerAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.UnloadGasAction;
@@ -24,8 +21,6 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 
 	private UnloadMineralsAction unloadMineralsAction;
 	private UnloadGasAction unloadGasAction;
-	private GatherMineralsAction gatherMineralsAction;
-	private GatherGasAction gatherGasAction;
 	private ConstructBuildingAction constructBuildingAction;
 	private ScoutBaseLocationWorkerAction scoutBaseLocationWorkerAction;
 	private MoveToNearestCenterAction moveToNearestCenterAction;
@@ -41,8 +36,8 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 		super.update(playerUnit);
 
 		// TODO: Possible Change: Only perform once.
-		this.unloadMineralsAction.setTarget(this.playerUnit);
-		this.unloadGasAction.setTarget(this.playerUnit);
+		this.unloadMineralsAction.setTarget(new Object());
+		this.unloadGasAction.setTarget(new Object());
 
 		this.moveToNearestCenterAction.setTarget(this.playerUnit.getClosestCenter());
 
@@ -70,8 +65,6 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 
 		this.unloadMineralsAction = ((UnloadMineralsAction) this.getActionFromInstance(UnloadMineralsAction.class));
 		this.unloadGasAction = ((UnloadGasAction) this.getActionFromInstance(UnloadGasAction.class));
-		this.gatherMineralsAction = ((GatherMineralsAction) this.getActionFromInstance(GatherMineralsAction.class));
-		this.gatherGasAction = ((GatherGasAction) this.getActionFromInstance(GatherGasAction.class));
 
 		this.constructBuildingAction = ((ConstructBuildingAction) this
 				.getActionFromInstance(ConstructBuildingAction.class));

@@ -14,10 +14,10 @@ public class UnloadMineralsAction extends UnloadAction {
 
 	/**
 	 * @param target
-	 *            type: Unit
+	 *            type: Null
 	 */
 	public UnloadMineralsAction(Object target) {
-		super(target);
+		super(new Object());
 
 		this.addEffect(new GoapState(0, "isCarryingMinerals", false));
 		this.addPrecondition(new GoapState(0, "isCarryingMinerals", true));

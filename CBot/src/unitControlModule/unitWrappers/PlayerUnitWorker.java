@@ -1,15 +1,11 @@
 package unitControlModule.unitWrappers;
 
-import java.util.HashSet;
-
 import bwapi.Position;
 import bwapi.Unit;
 import bwapi.UnitType;
-import core.Core;
 import informationStorage.InformationStorage;
 import workerManagerResourceSpotAllocation.ResourceManagerEntry;
 
-// TODO: UML INTERFACE ADD
 /**
  * PlayerUnitWorker.java --- Wrapper for a general worker Unit.
  * 
@@ -34,9 +30,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	protected UnitType assignedBuildingType;
 	protected Unit assignedBuilding;
 
-	// Resources
-	protected Unit closestFreeMineralField;
-	protected Unit closestFreeGasSource;
+	// Resources:
 	protected boolean resourcesResettable = false;
 
 	public PlayerUnitWorker(Unit unit, InformationStorage informationStorage) {
@@ -66,18 +60,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	public void resetActions() {
 		if (!this.unit.isConstructing()) {
 			super.resetActions();
-
-			// Remove any contended spots
-			this.updateMappedSourceContenders();
-
-			// Assign a new closestFreeMineralField / closestFreeGasSource since
-			// these are being transferred over to the GatherAction at the end
-			// of the main update function (especially after a reset!). Without
-			// this the Units would refrain from gathering for one cycle and
-			// possibly end up attacking the enemy.
-			if (!this.isMappedToGatheringSource()) {
-				this.markContenders();
-			}
 		}
 	}
 
@@ -101,7 +83,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	 */
 	protected void customUpdate() {
 		this.tryFreeingResources();
-		this.updateMappedSourceContenders();
 		this.updateConstructionState();
 
 		// Scout at the beginning of the game if a certain worker count is
@@ -143,24 +124,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		this.informationStorage.getResourceReserver().freeGas(this.personalReservedGas);
 		this.personalReservedMinerals = 0;
 		this.personalReservedGas = 0;
-	}
-
-	/**
-	 * Function for removing any previously contended gathering spots by the
-	 * worker. This is needed since the spots must be reassigned if the Unit for
-	 * example starts constructing a building.
-	 */
-	protected void updateMappedSourceContenders() {
-		if (this.informationStorage.getWorkerConfig().getMappedSourceContenders()
-				.containsKey(this.closestFreeMineralField)) {
-			this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(this.closestFreeMineralField)
-					.remove(this.unit);
-		}
-		if (this.informationStorage.getWorkerConfig().getMappedSourceContenders()
-				.containsKey(this.closestFreeGasSource)) {
-			this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(this.closestFreeGasSource)
-					.remove(this.unit);
-		}
 	}
 
 	/**
@@ -212,8 +175,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 
 	/**
 	 * Function for updating all information regarding possible work the worker
-	 * can do. This is either the assigning of a building for construction or a
-	 * gathering source for either minerals or gas.
+	 * can perform.
 	 */
 	protected void updateCurrentActionInformation() {
 		// Get a building from the building Queue and reset actions if possible.
@@ -222,13 +184,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 						.canAffordConstruction(this.informationStorage.getWorkerConfig().getBuildingQueue().peek())
 				&& this.currentConstructionState == ConstructionState.IDLE) {
 			this.assignConstructionJob();
-		}
-		// Find a gathering source if the Unit is not constructing a building.
-		// Do not block the spots for other Units if that is the case.
-		else if (!this.unit.isConstructing()) {
-			if (!this.isMappedToGatheringSource()) {
-				this.markContenders();
-			}
 		}
 	}
 
@@ -253,30 +208,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	}
 
 	/**
-	 * Function for testing if the Unit is mapped to any particular gathering
-	 * source.
-	 * 
-	 * @return true or false depending if the Unit is mapped to a gathering
-	 *         source.
-	 */
-	protected boolean isMappedToGatheringSource() {
-		Unit mappedUnit = this.unit;
-		boolean found = false;
-
-		// Get all assigned gathering source(s) for this Unit.
-		for (HashSet<Unit> set : this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
-				.values()) {
-			if (set.contains(mappedUnit)) {
-				found = true;
-
-				break;
-			}
-		}
-
-		return found;
-	}
-
-	/**
 	 * Function for resetting everything assigned for a construction of a
 	 * building. If the construction flag was not set, the UnitType is queued
 	 * again since the building was not constructed / did not start being
@@ -298,166 +229,14 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		this.assignedBuildingType = null;
 	}
 
-	/**
-	 * Mark a gathering source as contender so that no other worker can set it
-	 * as their closest free gathering source. This can only be done if the Unit
-	 * is currently not mapped to an actual accessible gathering source.
-	 */
-	protected void markContenders() {
-		Unit mineralField = this.findClosestFreeMineralField();
-		Unit gasSource = this.findClosestFreeGasSource();
-
-		// Create new entries if necessary.
-		if (!this.informationStorage.getWorkerConfig().getMappedSourceContenders().containsKey(mineralField)) {
-			this.informationStorage.getWorkerConfig().getMappedSourceContenders().put(mineralField,
-					new HashSet<Unit>());
-		}
-		if (!this.informationStorage.getWorkerConfig().getMappedSourceContenders().containsKey(gasSource)) {
-			this.informationStorage.getWorkerConfig().getMappedSourceContenders().put(gasSource, new HashSet<Unit>());
-		}
-		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
-				.containsKey(mineralField)) {
-			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(mineralField,
-					new HashSet<Unit>());
-		}
-		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().containsKey(gasSource)) {
-			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(gasSource,
-					new HashSet<Unit>());
-		}
-
-		// If a space for gathering a resource is free, set this Unit as a
-		// contender for the spot. Contended sources are assigned to a Unit
-		// while the action is executed so that, if the found source has no
-		// free spot, a new one will be eventually found in one of the next
-		// iterations.
-		if (this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(mineralField).size()
-				+ this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().get(mineralField)
-						.size() < this.informationStorage.getWorkerConfig().getMaxNumberMining()) {
-			this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(mineralField).add(this.unit);
-			this.closestFreeMineralField = mineralField;
-		}
-		if (this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(gasSource).size()
-				+ this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().get(gasSource)
-						.size() < this.informationStorage.getWorkerConfig().getMaxNumberGatheringGas()) {
-			this.informationStorage.getWorkerConfig().getMappedSourceContenders().get(gasSource).add(this.unit);
-			this.closestFreeGasSource = gasSource;
-		}
-	}
-
-	/**
-	 * Function for finding the closest free mineral field.
-	 * 
-	 * @return the closest free mineral field.
-	 */
-	protected Unit findClosestFreeMineralField() {
-		Unit closestFreeMineralField = null;
-		HashSet<Unit> checkedUnits = new HashSet<Unit>();
-		int searchRadiusMultiplier = 1;
-
-		while (closestFreeMineralField == null) {
-			// Check all Units in an increasing range around the worker Unit.
-			for (Unit gatheringSource : this.getUnit().getUnitsInRadius(
-					this.informationStorage.getWorkerConfig().getPixelGatherSearchRadius() * searchRadiusMultiplier)) {
-				if (!checkedUnits.contains(gatheringSource)) {
-					checkedUnits.add(gatheringSource);
-
-					// Get all mineral fields
-					if (gatheringSource.getType().isMineralField()) {
-						closestFreeMineralField = this.checkAgainstMappedAccessibleSources(gatheringSource,
-								closestFreeMineralField,
-								this.informationStorage.getWorkerConfig().getMaxNumberMining());
-					}
-				}
-			}
-
-			searchRadiusMultiplier++;
-		}
-
-		return closestFreeMineralField;
-	}
-
-	/**
-	 * Function for finding the closest free gas source.
-	 * 
-	 * @return the closest free gas source.
-	 */
-	protected Unit findClosestFreeGasSource() {
-		Unit closestRefinery = null;
-
-		// If references to refineries are found, extract the ones
-		HashSet<Unit> refineries = this.informationStorage.getCurrentGameInformation().getCurrentUnits()
-				.get(Core.getInstance().getPlayer().getRace().getRefinery());
-		if (refineries != null) {
-			// Check the availability and the distance of each refinery.
-			for (Unit gatheringSource : refineries) {
-				if (!gatheringSource.isBeingConstructed()) {
-					closestRefinery = this.checkAgainstMappedAccessibleSources(gatheringSource, closestRefinery,
-							this.informationStorage.getWorkerConfig().getMaxNumberGatheringGas());
-				}
-			}
-		}
-
-		return closestRefinery;
-	}
-
-	/**
-	 * Function for checking if a Unit can be mapped to a gathering source.
-	 * Conditions are that the amount of Units already gathering there has to be
-	 * less than a set threshold as well as the check against an already
-	 * existing reference Unit, which is a gathering source of the same type
-	 * with a set distance to the PlayerUnitWorker (Unit can be null => first
-	 * other gathering source will be set). If no entry for the source is found,
-	 * a new one is generated.
-	 * 
-	 * @param gatheringSource
-	 *            the gathering source.
-	 * @param referenceUnit
-	 *            the currently chosen closest gathering source.
-	 * @param workerThreshold
-	 *            the threshold of workers, that can work at the specific
-	 *            gathering source.
-	 * @return the reference Unit if the distance to the new gathering source is
-	 *         greater than the reference value or the threshold is reached. Or
-	 *         the gathering source, if the threshold is not yet reached and the
-	 *         distance is smaller than the distance towards the reference Unit.
-	 */
-	protected Unit checkAgainstMappedAccessibleSources(Unit gatheringSource, Unit referenceUnit, int workerThreshold) {
-		// Create a new entry in the map if no other entry for the gathering
-		// source is found.
-		if (!this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
-				.containsKey(gatheringSource)) {
-			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().put(gatheringSource,
-					new HashSet<Unit>());
-		}
-
-		HashSet<Unit> mappedUnits = this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
-				.get(gatheringSource);
-
-		// If the threshold is not reached, the Unit can gather there.
-		if (mappedUnits.size() < workerThreshold && (referenceUnit == null
-				|| this.unit.getDistance(gatheringSource) < this.unit.getDistance(referenceUnit))) {
-			return gatheringSource;
-		}
-		return referenceUnit;
-	}
-	
 	// ------------------------------ ResourceManagerEntry
 	
-	// TODO: UML ADD
 	@Override
 	public Position getPosition() {
 		return this.unit.getPosition();
 	}
 
 	// ------------------------------ Getter / Setter
-
-	public Unit getClosestFreeMineralField() {
-		return closestFreeMineralField;
-	}
-
-	public Unit getClosestFreeGasSource() {
-		return closestFreeGasSource;
-	}
 
 	public UnitType getAssignedBuildingType() {
 		return assignedBuildingType;

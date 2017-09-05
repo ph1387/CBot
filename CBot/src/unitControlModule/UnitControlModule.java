@@ -1,11 +1,8 @@
 package unitControlModule;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-import java.util.function.BiConsumer;
 
 import bwapi.*;
 import core.Core;
@@ -289,7 +286,6 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 			// Remove any contended / assigned entries if the Unit is a worker.
 			if (unit.getType().isWorker()) {
-				this.removeAssignedWorkerEntries(unit);
 				this.informationStorage.getWorkerConfig().decrementTotalWorkerCount();
 			}
 		}
@@ -301,36 +297,6 @@ public class UnitControlModule implements RemoveAgentEvent {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-	}
-
-	/**
-	 * Function for removing a assigned worker Unit from the mapped gathering
-	 * sources HashMap. This is only necessary if the Unit was destroyed before
-	 * its Confidence got updated, since it then would have remove itself.
-	 * 
-	 * @param unit
-	 *            the Unit (worker) that is going to be removed from the
-	 *            assigned gathering sources HashMap.
-	 */
-	private void removeAssignedWorkerEntries(Unit unit) {
-		final List<Unit> mappedSources = new ArrayList<Unit>();
-
-		// Find the assigned sources of the Unit.
-		this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources()
-				.forEach(new BiConsumer<Unit, HashSet<Unit>>() {
-					public void accept(Unit source, HashSet<Unit> units) {
-						for (Unit mappedUnit : units) {
-							if (mappedUnit.equals(mappedUnit)) {
-								mappedSources.add(source);
-							}
-						}
-					}
-				});
-
-		// Remove the Unit from the found sources.
-		for (Unit source : mappedSources) {
-			this.informationStorage.getWorkerConfig().getMappedAccessibleGatheringSources().get(source).remove(unit);
 		}
 	}
 

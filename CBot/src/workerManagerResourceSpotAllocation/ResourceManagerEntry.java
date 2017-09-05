@@ -2,7 +2,6 @@ package workerManagerResourceSpotAllocation;
 
 import bwapi.Position;
 
-//TODO: UML ADD
 /**
  * ResourceManagerEntry.java --- The Interface that each worker that is going to
  * be added to the {@link IResourceManager}s.

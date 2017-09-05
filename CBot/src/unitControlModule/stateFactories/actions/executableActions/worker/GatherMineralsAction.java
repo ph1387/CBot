@@ -13,7 +13,6 @@ import unitControlModule.unitWrappers.PlayerUnitWorker;
  */
 public class GatherMineralsAction extends GatherAction {
 
-	// TODO: UML TARGET CHANGE
 	/**
 	 * @param target
 	 *            type: Null
@@ -26,7 +25,6 @@ public class GatherMineralsAction extends GatherAction {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
@@ -48,7 +46,6 @@ public class GatherMineralsAction extends GatherAction {
 		return success;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		boolean success = true;

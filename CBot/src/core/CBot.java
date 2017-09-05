@@ -36,7 +36,6 @@ public class CBot implements BWEventListener {
 	private UnitControlModule unitControlModule;
 	private BuildingOrderModule buildingOrderModule;
 	
-	// TODO: UML ADD
 	private WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation;
 
 	// Information storage across multiple modules.
@@ -291,7 +290,6 @@ public class CBot implements BWEventListener {
 		return buildingOrderModule;
 	}
 	
-	// TODO: UML ADD
 	public WorkerManagerResourceSpotAllocation getWorkerManagerResourceSpotAllocation() {
 		return workerManagerResourceSpotAllocation;
 	}

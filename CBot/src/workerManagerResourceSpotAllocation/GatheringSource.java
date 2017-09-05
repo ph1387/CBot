@@ -3,7 +3,6 @@ package workerManagerResourceSpotAllocation;
 import bwapi.Position;
 import bwapi.Unit;
 
-//TODO: UML ADD
 /**
  * GatheringSource.java --- An Interface specifying a single gathering source
  * or, addressing minerals, a group of possible gathering sources. The Class

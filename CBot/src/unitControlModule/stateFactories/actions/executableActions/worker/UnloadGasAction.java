@@ -14,10 +14,10 @@ public class UnloadGasAction extends UnloadAction {
 
 	/**
 	 * @param target
-	 *            type Unit
+	 *            type Null
 	 */
 	public UnloadGasAction(Object target) {
-		super(target);
+		super(new Object());
 
 		this.addEffect(new GoapState(0, "isCarryingGas", false));
 		this.addPrecondition(new GoapState(0, "isCarryingGas", true));

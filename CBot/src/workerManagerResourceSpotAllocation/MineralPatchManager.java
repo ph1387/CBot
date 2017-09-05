@@ -3,7 +3,6 @@ package workerManagerResourceSpotAllocation;
 import bwta.BWTA;
 import bwta.BaseLocation;
 
-//TODO: UML ADD
 /**
  * MineralPatchManager.java --- {@link ResourceManager} for mineral fields. The
  * {@link GatheringSource}s that this Class holds are all the accessible mineral
@@ -12,7 +11,7 @@ import bwta.BaseLocation;
  * @author P H - 03.09.2017
  *
  */
-public class MineralPatchManager<T extends GatheringSource> extends ResourceManager<GatheringSource> {
+class MineralPatchManager<T extends GatheringSource> extends ResourceManager<GatheringSource> {
 
 	public MineralPatchManager() {
 		super();

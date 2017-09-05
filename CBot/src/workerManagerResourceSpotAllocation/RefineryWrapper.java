@@ -5,7 +5,6 @@ import java.util.HashSet;
 import bwapi.Position;
 import bwapi.Unit;
 
-//TODO: UML ADD
 /**
  * RefineryWrapper.java --- Wrapper Class for refineries that are going to be
  * managed by {@link RefineryManager} instances as {@link GatheringSource}s.
@@ -13,22 +12,20 @@ import bwapi.Unit;
  * @author P H - 03.09.2017
  *
  */
-public class RefineryWrapper implements GatheringSource {
+class RefineryWrapper implements GatheringSource {
 
 	private IResourceManager refineryManager;
 
 	// The Unit instance that represents the refinery that any assigned Units
 	// are going to gather at.
 	private Unit refinery;
-	private int freeWorkerSpots;
 	private int maxWorkersPerRefinery = 3;
+	private int freeWorkerSpots = this.maxWorkersPerRefinery;
 	private HashSet<ResourceManagerEntry> assignedWorkers = new HashSet<>();
 
 	public RefineryWrapper(Unit refinery, IResourceManager refineryManager) {
 		this.refineryManager = refineryManager;
 		this.refinery = refinery;
-
-		this.freeWorkerSpots = this.maxWorkersPerRefinery;
 	}
 
 	// -------------------- Functions

@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import bwapi.Unit;
 
-//TODO: UML ADD
 /**
  * RefineryManager.java --- {@link ResourceManager} for refineries. The
  * {@link GatheringSource}s that this Class holds are all the currently existing
@@ -13,7 +12,7 @@ import bwapi.Unit;
  * @author P H - 03.09.2017
  *
  */
-public class RefineryManager<T extends GatheringSource> extends ResourceManager<GatheringSource> {
+class RefineryManager<T extends GatheringSource> extends ResourceManager<GatheringSource> {
 
 	private HashMap<Unit, RefineryWrapper> mappedRefineries = new HashMap<>();
 

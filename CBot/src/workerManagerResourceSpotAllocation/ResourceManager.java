@@ -6,7 +6,6 @@ import java.util.List;
 
 import bwapi.Unit;
 
-//TODO: UML ADD
 /**
  * ResourceManager.java --- Manager class for a List of
  * {@link GatheringSource}s. These include mainly the {@link MineralPatch}s and
@@ -15,7 +14,7 @@ import bwapi.Unit;
  * @author P H - 03.09.2017
  *
  */
-public class ResourceManager<T extends GatheringSource> implements IResourceManager {
+class ResourceManager<T extends GatheringSource> implements IResourceManager {
 
 	// A List of all GatheringSources that are being managed by this instance.
 	protected List<T> gatheringSources = new ArrayList<T>();

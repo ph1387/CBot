@@ -19,7 +19,7 @@ public abstract class UnloadAction extends WorkerAction {
 	 *            type: Null
 	 */
 	public UnloadAction(Object target) {
-		super(new Object());
+		super(target);
 	}
 
 	// -------------------- Functions
