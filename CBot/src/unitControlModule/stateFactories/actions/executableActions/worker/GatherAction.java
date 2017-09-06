@@ -1,7 +1,6 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import bwapi.Unit;
-import core.CBot;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
@@ -20,8 +19,6 @@ public abstract class GatherAction extends WorkerAction {
 	// actions:
 	protected boolean assigningMissing = true;
 	protected Unit prevGatheringSource = null;
-	protected WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation = CBot.getInstance()
-			.getWorkerManagerResourceSpotAllocation();
 
 	/**
 	 * @param target
@@ -39,9 +36,14 @@ public abstract class GatherAction extends WorkerAction {
 	@Override
 	protected void resetSpecific() {
 		// Remove any assigned instances of the Unit.
-		if (this.currentlyExecutingUnit != null && this.workerManagerResourceSpotAllocation
-				.isAssignedGathering((PlayerUnitWorker) this.currentlyExecutingUnit)) {
-			this.workerManagerResourceSpotAllocation.removeGatherer((PlayerUnitWorker) this.currentlyExecutingUnit);
+		if (this.currentlyExecutingUnit != null) {
+			WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation = ((PlayerUnitWorker) this.currentlyExecutingUnit)
+					.getWorkerManagerResourceSpotAllocation();
+
+			if (workerManagerResourceSpotAllocation
+					.isAssignedGathering((PlayerUnitWorker) this.currentlyExecutingUnit)) {
+				workerManagerResourceSpotAllocation.removeGatherer((PlayerUnitWorker) this.currentlyExecutingUnit);
+			}
 		}
 
 		this.assigningMissing = true;
@@ -62,8 +64,8 @@ public abstract class GatherAction extends WorkerAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return !this.assigningMissing
-				&& this.workerManagerResourceSpotAllocation.getGatheringSource((PlayerUnitWorker) goapUnit) == null;
+		return !this.assigningMissing && ((PlayerUnitWorker) goapUnit).getWorkerManagerResourceSpotAllocation()
+				.getGatheringSource((PlayerUnitWorker) goapUnit) == null;
 	}
 
 }

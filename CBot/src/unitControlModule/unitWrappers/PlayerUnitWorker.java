@@ -5,7 +5,9 @@ import bwapi.Unit;
 import core.CBot;
 import informationStorage.InformationStorage;
 import workerManagerConstructionJobDistribution.ConstructionWorker;
+import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDistribution;
 import workerManagerResourceSpotAllocation.ResourceManagerEntry;
+import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
 
 /**
  * PlayerUnitWorker.java --- Wrapper for a general worker Unit.
@@ -15,12 +17,17 @@ import workerManagerResourceSpotAllocation.ResourceManagerEntry;
  */
 public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements ResourceManagerEntry, ConstructionWorker {
 
+	private WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation;
+	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution;
+	
 	protected boolean assignedToSout = false;
 
-	public PlayerUnitWorker(Unit unit, InformationStorage informationStorage) {
+	public PlayerUnitWorker(Unit unit, InformationStorage informationStorage, WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation, WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution) {
 		super(unit, informationStorage);
 
 		this.informationStorage.getWorkerConfig().incrementTotalWorkerCount();
+		this.workerManagerResourceSpotAllocation = workerManagerResourceSpotAllocation;
+		this.workerManagerConstructionJobDistribution = workerManagerConstructionJobDistribution;
 	}
 
 	// -------------------- Functions
@@ -91,6 +98,14 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 
 	// ------------------------------ Getter / Setter
 
+	public WorkerManagerResourceSpotAllocation getWorkerManagerResourceSpotAllocation() {
+		return workerManagerResourceSpotAllocation;
+	}
+
+	public WorkerManagerConstructionJobDistribution getWorkerManagerConstructionJobDistribution() {
+		return workerManagerConstructionJobDistribution;
+	}
+	
 	public boolean isAssignedToSout() {
 		return assignedToSout;
 	}

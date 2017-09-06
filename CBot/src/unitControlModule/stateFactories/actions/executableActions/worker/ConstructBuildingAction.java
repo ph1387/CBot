@@ -1,6 +1,5 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
-import core.CBot;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
@@ -15,9 +14,6 @@ import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDist
  *
  */
 public class ConstructBuildingAction extends WorkerAction {
-
-	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = CBot.getInstance()
-			.getWorkerManagerConstructionJobDistribution();
 
 	/**
 	 * @param target
@@ -36,17 +32,19 @@ public class ConstructBuildingAction extends WorkerAction {
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
+		WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = ((PlayerUnitWorker) goapUnit)
+				.getWorkerManagerConstructionJobDistribution();
 		boolean success = false;
 
 		// Assign the worker to a ConstructionJob if necessary.
-		if (!this.workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)) {
-			success = this.workerManagerConstructionJobDistribution.addWorker((PlayerUnitWorker) goapUnit);
+		if (!workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)) {
+			success = workerManagerConstructionJobDistribution.addWorker((PlayerUnitWorker) goapUnit);
 		}
 
 		// Checked again due to the possibility of the worker not being assigned
 		// to a ConstructionJob.
-		if (this.workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)) {
-			IConstrucionInformation constructionInformation = this.workerManagerConstructionJobDistribution
+		if (workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)) {
+			IConstrucionInformation constructionInformation = workerManagerConstructionJobDistribution
 					.getConstructionInformation((PlayerUnitWorker) goapUnit);
 
 			// Update the ConstructionJob first.
@@ -67,9 +65,14 @@ public class ConstructBuildingAction extends WorkerAction {
 	@Override
 	protected void resetSpecific() {
 		// If the worker was assigned a ConstructionJob, remove the association.
-		if (this.workerManagerConstructionJobDistribution.isAssignedConstructing(
-				(PlayerUnitWorker) this.currentlyExecutingUnit) && this.currentlyExecutingUnit != null) {
-			this.workerManagerConstructionJobDistribution.removeWorker((PlayerUnitWorker) this.currentlyExecutingUnit);
+		if (this.currentlyExecutingUnit != null) {
+			WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = ((PlayerUnitWorker) this.currentlyExecutingUnit)
+					.getWorkerManagerConstructionJobDistribution();
+
+			if (workerManagerConstructionJobDistribution
+					.isAssignedConstructing((PlayerUnitWorker) this.currentlyExecutingUnit)) {
+				workerManagerConstructionJobDistribution.removeWorker((PlayerUnitWorker) this.currentlyExecutingUnit);
+			}
 		}
 
 		this.target = new Object();
@@ -77,8 +80,11 @@ public class ConstructBuildingAction extends WorkerAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		return this.workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)
-				|| this.workerManagerConstructionJobDistribution.canConstruct();
+		WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = ((PlayerUnitWorker) goapUnit)
+				.getWorkerManagerConstructionJobDistribution();
+
+		return workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)
+				|| workerManagerConstructionJobDistribution.canConstruct();
 	}
 
 	@Override
@@ -94,7 +100,10 @@ public class ConstructBuildingAction extends WorkerAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return this.workerManagerConstructionJobDistribution.isFinishedConstructing((PlayerUnitWorker) goapUnit);
+		WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = ((PlayerUnitWorker) goapUnit)
+				.getWorkerManagerConstructionJobDistribution();
+
+		return workerManagerConstructionJobDistribution.isFinishedConstructing((PlayerUnitWorker) goapUnit);
 	}
 
 	// ------------------------------ Getter / Setter

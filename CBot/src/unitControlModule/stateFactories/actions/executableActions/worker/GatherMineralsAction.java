@@ -4,6 +4,7 @@ import bwapi.Unit;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
+import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
 
 /**
  * GatherMineralsAction.java --- Action for gathering minerals.
@@ -27,13 +28,15 @@ public class GatherMineralsAction extends GatherAction {
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
+		WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation = ((PlayerUnitWorker) goapUnit)
+				.getWorkerManagerResourceSpotAllocation();
 		boolean success = true;
 
-		if (!this.workerManagerResourceSpotAllocation.isAssignedGathering((PlayerUnitWorker) goapUnit)) {
-			success &= this.workerManagerResourceSpotAllocation.addMineralGatherer((PlayerUnitWorker) goapUnit);
+		if (!workerManagerResourceSpotAllocation.isAssignedGathering((PlayerUnitWorker) goapUnit)) {
+			success &= workerManagerResourceSpotAllocation.addMineralGatherer((PlayerUnitWorker) goapUnit);
 		}
 
-		Unit currentGatheringSource = this.workerManagerResourceSpotAllocation
+		Unit currentGatheringSource = workerManagerResourceSpotAllocation
 				.getGatheringSource((PlayerUnitWorker) goapUnit);
 
 		// If the gathering source changed, execute a new gather command.
@@ -48,15 +51,16 @@ public class GatherMineralsAction extends GatherAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
+		WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation = ((PlayerUnitWorker) goapUnit)
+				.getWorkerManagerResourceSpotAllocation();
 		boolean success = true;
 
 		// The first time only check if the Unit can be assigned. The second
 		// time check if the Unit is still assigned.
-		if (!this.workerManagerResourceSpotAllocation.isAssignedGatheringMinerals((PlayerUnitWorker) goapUnit)) {
-			success &= this.workerManagerResourceSpotAllocation.canAddMineralGatherer();
+		if (!workerManagerResourceSpotAllocation.isAssignedGatheringMinerals((PlayerUnitWorker) goapUnit)) {
+			success &= workerManagerResourceSpotAllocation.canAddMineralGatherer();
 		} else {
-			success &= this.workerManagerResourceSpotAllocation
-					.isAssignedGatheringMinerals((PlayerUnitWorker) goapUnit);
+			success &= workerManagerResourceSpotAllocation.isAssignedGatheringMinerals((PlayerUnitWorker) goapUnit);
 		}
 		return success;
 	}

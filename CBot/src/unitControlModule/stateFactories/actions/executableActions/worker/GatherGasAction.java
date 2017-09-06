@@ -4,6 +4,7 @@ import bwapi.Unit;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
+import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
 
 /**
  * GatherGasAction.java --- Action for gathering gas.
@@ -27,13 +28,15 @@ public class GatherGasAction extends GatherAction {
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
+		WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation = ((PlayerUnitWorker) goapUnit)
+				.getWorkerManagerResourceSpotAllocation();
 		boolean success = true;
 
-		if (!this.workerManagerResourceSpotAllocation.isAssignedGathering((PlayerUnitWorker) goapUnit)) {
-			success &= this.workerManagerResourceSpotAllocation.addGasGatherer((PlayerUnitWorker) goapUnit);
+		if (!workerManagerResourceSpotAllocation.isAssignedGathering((PlayerUnitWorker) goapUnit)) {
+			success &= workerManagerResourceSpotAllocation.addGasGatherer((PlayerUnitWorker) goapUnit);
 		}
 
-		Unit currentGatheringSource = this.workerManagerResourceSpotAllocation
+		Unit currentGatheringSource = workerManagerResourceSpotAllocation
 				.getGatheringSource((PlayerUnitWorker) goapUnit);
 
 		// If the gathering source changed, execute a new gather command.
@@ -48,14 +51,16 @@ public class GatherGasAction extends GatherAction {
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
+		WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation = ((PlayerUnitWorker) goapUnit)
+				.getWorkerManagerResourceSpotAllocation();
 		boolean success = true;
 
 		// The first time only check if the Unit can be assigned. The second
 		// time check if the Unit is still assigned.
-		if (!this.workerManagerResourceSpotAllocation.isAssignedGatheringGas((PlayerUnitWorker) goapUnit)) {
-			success &= this.workerManagerResourceSpotAllocation.canAddGasGatherer();
+		if (!workerManagerResourceSpotAllocation.isAssignedGatheringGas((PlayerUnitWorker) goapUnit)) {
+			success &= workerManagerResourceSpotAllocation.canAddGasGatherer();
 		} else {
-			success &= this.workerManagerResourceSpotAllocation.isAssignedGatheringGas((PlayerUnitWorker) goapUnit);
+			success &= workerManagerResourceSpotAllocation.isAssignedGatheringGas((PlayerUnitWorker) goapUnit);
 		}
 		return success;
 	}

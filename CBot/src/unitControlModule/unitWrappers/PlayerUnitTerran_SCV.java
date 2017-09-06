@@ -4,6 +4,8 @@ import bwapi.Unit;
 import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_SCV;
+import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDistribution;
+import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
 
 /**
  * PlayerUnitTerran_SCV.java --- Terran SCV Class.
@@ -13,8 +15,10 @@ import unitControlModule.stateFactories.StateFactoryTerran_SCV;
  */
 public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 
-	public PlayerUnitTerran_SCV(Unit unit, InformationStorage informationStorage) {
-		super(unit, informationStorage);
+	public PlayerUnitTerran_SCV(Unit unit, InformationStorage informationStorage,
+			WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation,
+			WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution) {
+		super(unit, informationStorage, workerManagerResourceSpotAllocation, workerManagerConstructionJobDistribution);
 	}
 
 	// -------------------- Functions
