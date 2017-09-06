@@ -76,9 +76,11 @@ public class UnitControlDisplay {
 		// collection can be shown accordingly.
 		try {
 			currentPosY = showResourceInformation(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
-			currentPosY = showWorkerInformation(OFFSET_LEFT_TOTAL, currentPosY, agents);
+			// TODO: WIP
+//			currentPosY = showWorkerInformation(OFFSET_LEFT_TOTAL, currentPosY, agents);
 			currentPosY = showBuildingInformation(OFFSET_LEFT_TOTAL, currentPosY, buildings);
-			currentPosY = showBuildingQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
+			// TODO: WIP
+//			currentPosY = showBuildingQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
 			currentPosY = showTrainingQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
 			currentPosY = showAddonQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
 			currentPosY = showUpgradeQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);

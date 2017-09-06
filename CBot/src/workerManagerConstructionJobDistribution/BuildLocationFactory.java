@@ -1,4 +1,4 @@
-package unitControlModule.stateFactories.actions.executableActions.worker;
+package workerManagerConstructionJobDistribution;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,18 +12,18 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import core.Core;
 import core.TilePositionFactory;
-import javaGOAP.IGoapUnit;
-import unitControlModule.unitWrappers.PlayerUnitWorker;
+import informationStorage.InformationStorage;
 import unitTrackerModule.EnemyUnit;
 
 /**
- * BuildLocationFinder.java --- Class for finding building locations on the map
- * and storing all special TilePositions.
+ * BuildLocationFinder.java --- Class for finding building locations on the map.
  * 
  * @author P H - 26.04.2017
  *
  */
 public class BuildLocationFactory {
+
+	private InformationStorage informationStorage;
 
 	private int maxBuildingSearchTileRadius = 5;
 	// Due to the large tile range there should not be any trouble finding a
@@ -33,8 +33,8 @@ public class BuildLocationFactory {
 	// geyser and a center building.
 	private int maxDistanceGeysers = 320;
 
-	public BuildLocationFactory() {
-
+	public BuildLocationFactory(InformationStorage informationStorage) {
+		this.informationStorage = informationStorage;
 	}
 
 	// -------------------- Functions
@@ -65,28 +65,30 @@ public class BuildLocationFactory {
 	 * @param targetTilePosition
 	 *            the TilePosition the new TilePosition is going to be
 	 *            calculated around.
-	 * @param goapUnit
-	 *            the IGoapUnit that is going to be constructing the building.
+	 * @param worker
+	 *            the ConstructionWorker that is going to be constructing the
+	 *            building.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
 	 */
-	public TilePosition generateBuildLocation(UnitType building, TilePosition targetTilePosition, IGoapUnit goapUnit) {
+	public TilePosition generateBuildLocation(UnitType building, TilePosition targetTilePosition,
+			ConstructionWorker worker) {
 		TilePosition buildLocation = null;
 
 		// If the building is a center then search specifically for a base
 		// location.
 		if (building == Core.getInstance().getPlayer().getRace().getCenter()) {
-			buildLocation = this.findCenterBuildLocation(goapUnit);
+			buildLocation = this.findCenterBuildLocation();
 		}
 		// If the Building is a refinery then search specifically for vaspene
 		// geysers.
 		else if (building == Core.getInstance().getPlayer().getRace().getRefinery()) {
-			buildLocation = this.findRefineryBuildLocation(goapUnit);
+			buildLocation = this.findRefineryBuildLocation();
 		}
 		// If none of the above match the criteria just look for a standard
 		// build location.
 		else {
-			buildLocation = this.findStandardBuildLocation(building, targetTilePosition, goapUnit);
+			buildLocation = this.findStandardBuildLocation(building, targetTilePosition, worker);
 		}
 
 		return buildLocation;
@@ -95,17 +97,15 @@ public class BuildLocationFactory {
 	/**
 	 * Function for finding a suitable building location for a center Unit.
 	 * 
-	 * @param goapUnit
-	 *            the IGoapUnit that is going to be constructing the building.
 	 * @return a TilePosition at which a new center building can be constructed.
 	 */
-	private TilePosition findCenterBuildLocation(IGoapUnit goapUnit) {
+	private TilePosition findCenterBuildLocation() {
 		BaseLocation newBaseLocation = null;
 		List<BaseLocation> freeBaseLocations = this.extractFreeBaseLocations();
 
 		// Gather information regarding the state of the game.
 		TilePosition playerStartLocation = Core.getInstance().getPlayer().getStartLocation();
-		EnemyUnit closestEnemyBuilding = this.extractClosestEnemyBuilding(goapUnit, playerStartLocation);
+		EnemyUnit closestEnemyBuilding = this.extractClosestEnemyBuilding(playerStartLocation);
 
 		// Sort the BaseLocations and set the new BaseLocation to the first
 		// element of the sorted List.
@@ -167,20 +167,16 @@ public class BuildLocationFactory {
 	 * Function for extracting the closest EnemyUnit (Building) from the
 	 * currently known ones.
 	 * 
-	 * @param goapUnit
-	 *            the IGoapUnit that will be used to gain access to the
-	 *            InformationStorage.
 	 * @param playerStartLocation
 	 *            the TilePosition the Player started at.
 	 * @return the closest enemy building to the Player's starting location.
 	 */
-	private EnemyUnit extractClosestEnemyBuilding(IGoapUnit goapUnit, TilePosition playerStartLocation) {
+	private EnemyUnit extractClosestEnemyBuilding(TilePosition playerStartLocation) {
 		EnemyUnit closestEnemyBuilding = null;
 		Double closestEnemyBuildingDistance = null;
 
 		// Get the closest known enemy building.
-		for (EnemyUnit enemyBuilding : ((PlayerUnitWorker) goapUnit).getInformationStorage().getTrackerInfo()
-				.getEnemyBuildings()) {
+		for (EnemyUnit enemyBuilding : this.informationStorage.getTrackerInfo().getEnemyBuildings()) {
 			double referenceDistance = enemyBuilding.getLastSeenTilePosition().getDistance(playerStartLocation);
 
 			if (closestEnemyBuilding == null || referenceDistance < closestEnemyBuildingDistance) {
@@ -251,22 +247,20 @@ public class BuildLocationFactory {
 	 * function since these buildings are constructed on top of a vaspene
 	 * geyser, which has to be checked individually.
 	 *
-	 * @param goapUnit
-	 *            the IGoapUnit that is going to be constructing the building.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
 	 */
-	private TilePosition findRefineryBuildLocation(IGoapUnit goapUnit) {
+	private TilePosition findRefineryBuildLocation() {
 		TilePosition buildLocation = null;
 		HashSet<Unit> freeGeysers = this.extractFreeGeysers();
-		Unit foundGeyser = this.extractGeyserNearExistingCenter(freeGeysers, goapUnit);
+		Unit foundGeyser = this.extractGeyserNearExistingCenter(freeGeysers);
 
 		// In case of no geyser being found in the first iteration, check the
 		// next center build location for a refinery build location.
 		// NOTE:
 		// The result is the closest FREE one near the next location!
 		if (foundGeyser == null) {
-			foundGeyser = this.extractGeyserNearNextCenterLocation(freeGeysers, goapUnit);
+			foundGeyser = this.extractGeyserNearNextCenterLocation(freeGeysers);
 		}
 
 		if (foundGeyser != null) {
@@ -283,17 +277,15 @@ public class BuildLocationFactory {
 	 * 
 	 * @param freeGeysers
 	 *            the HashSet of geysers without any refinery on them.
-	 * @param goapUnit
-	 *            the constructing Unit.
 	 * @return a geyser of the provided HashSet near an already existing center
 	 *         Unit that has not yet been improved.
 	 */
-	private Unit extractGeyserNearExistingCenter(HashSet<Unit> freeGeysers, IGoapUnit goapUnit) {
+	private Unit extractGeyserNearExistingCenter(HashSet<Unit> freeGeysers) {
 		// Iterate through all currently active center buildings and compare the
 		// distances to the free geysers until (hopefully) a matching one is
 		// found.
-		for (Unit center : ((PlayerUnitWorker) goapUnit).getInformationStorage().getCurrentGameInformation()
-				.getCurrentUnits().get(Core.getInstance().getPlayer().getRace().getCenter())) {
+		for (Unit center : this.informationStorage.getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getCenter())) {
 			for (Unit geyser : freeGeysers) {
 				if (center.getDistance(geyser) <= this.maxDistanceGeysers) {
 					return geyser;
@@ -309,13 +301,11 @@ public class BuildLocationFactory {
 	 * 
 	 * @param freeGeysers
 	 *            the HashSet of geysers without any refinery on them.
-	 * @param goapUnit
-	 *            the constructing Unit.
 	 * @return a geyser of the provided HashSet that is the closest one to the
 	 *         next generated center build location.
 	 */
-	private Unit extractGeyserNearNextCenterLocation(HashSet<Unit> freeGeysers, IGoapUnit goapUnit) {
-		TilePosition nextCenterBuildLocation = this.findCenterBuildLocation(goapUnit);
+	private Unit extractGeyserNearNextCenterLocation(HashSet<Unit> freeGeysers) {
+		TilePosition nextCenterBuildLocation = this.findCenterBuildLocation();
 		Unit closestGeyser = null;
 
 		// Find the closest geyser to the next center's TilePosition.
@@ -368,13 +358,14 @@ public class BuildLocationFactory {
 	 * @param targetTilePosition
 	 *            the TilePosition the new TilePosition is going to be
 	 *            calculated around.
-	 * @param goapUnit
-	 *            the IGoapUnit that is going to be constructing the building.
+	 * @param worker
+	 *            the ConstructionWorker that is going to be constructing the
+	 *            building.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
 	 */
 	private TilePosition findStandardBuildLocation(UnitType building, TilePosition targetTilePosition,
-			IGoapUnit goapUnit) {
+			ConstructionWorker worker) {
 		TilePosition buildLocation = null;
 		int counter = 0;
 
@@ -396,9 +387,9 @@ public class BuildLocationFactory {
 					// If the space is free, try changing the building's
 					// location.
 					if (Core.getInstance().getGame().canBuildHere(testPosition, building)
-							&& !this.arePlayerUnitsBlocking(neededTilePositions, goapUnit)
-							&& !this.areTilePositionsContended(neededTilePositions, ((PlayerUnitWorker) goapUnit)
-									.getInformationStorage().getMapInfo().getTilePositionContenders())) {
+							&& !this.arePlayerUnitsBlocking(neededTilePositions, worker.getUnit())
+							&& !this.areTilePositionsContended(neededTilePositions,
+									this.informationStorage.getMapInfo().getTilePositionContenders())) {
 						buildLocation = testPosition;
 					}
 				}
@@ -417,17 +408,16 @@ public class BuildLocationFactory {
 	 *            the TilePositions that are going to be checked against all
 	 *            Player Units.
 	 * @param constructor
-	 *            the IGoapUnit that is going to be building at the
-	 *            TilePosition. Needed to exclude the constructor from the
-	 *            blocking Units.
+	 *            the Unit that is going to be building at the TilePosition.
+	 *            Needed to exclude the constructor from the blocking Units.
 	 * @return true or false depending if a Player Unit is blocking the desired
 	 *         TilePosition / a desired TilePosition.
 	 */
-	protected boolean arePlayerUnitsBlocking(HashSet<TilePosition> desiredTilePositions, IGoapUnit constructor) {
+	protected boolean arePlayerUnitsBlocking(HashSet<TilePosition> desiredTilePositions, Unit constructor) {
 		// Check each player Unit except the constructor itself
 		for (TilePosition tilePosition : desiredTilePositions) {
 			for (Unit unit : Core.getInstance().getGame().getUnitsOnTile(tilePosition)) {
-				if (unit != ((PlayerUnitWorker) constructor).getUnit()) {
+				if (unit != constructor) {
 					return true;
 				}
 			}

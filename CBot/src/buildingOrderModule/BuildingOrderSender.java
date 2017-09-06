@@ -5,6 +5,7 @@ import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.CBot;
 import unitControlModule.UnitControlModule;
+import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDistribution;
 
 /**
  * BuildingOrderSender.java --- Class for sending building orders to the
@@ -16,6 +17,8 @@ import unitControlModule.UnitControlModule;
 public class BuildingOrderSender implements CommandSender {
 
 	private UnitControlModule unitControlModule = CBot.getInstance().getUnitControlModule();
+	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = CBot.getInstance()
+			.getWorkerManagerConstructionJobDistribution();
 
 	public BuildingOrderSender() {
 
@@ -28,7 +31,7 @@ public class BuildingOrderSender implements CommandSender {
 	}
 
 	public void buildBuilding(UnitType unitType) {
-		this.unitControlModule.addToBuildingQueue(unitType);
+		this.workerManagerConstructionJobDistribution.addToBuildingQueue(unitType);
 	}
 
 	@Override

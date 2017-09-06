@@ -13,6 +13,7 @@ import bwapi.Unit;
 import informationStorage.InformationStorage;
 import unitControlModule.UnitControlModule;
 import unitTrackerModule.UnitTrackerModule;
+import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDistribution;
 import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
 
 /**
@@ -23,9 +24,9 @@ import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
  *
  */
 public class CBot implements BWEventListener {
-	
+
 	private static CBot instance;
-	
+
 	private Mirror mirror = new Mirror();
 	private Game game;
 	private boolean started = false;
@@ -35,8 +36,9 @@ public class CBot implements BWEventListener {
 	private UnitTrackerModule unitTrackerModule;
 	private UnitControlModule unitControlModule;
 	private BuildingOrderModule buildingOrderModule;
-	
+
 	private WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation;
+	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution;
 
 	// Information storage across multiple modules.
 	private InformationStorage informationStorage = new InformationStorage();
@@ -127,10 +129,13 @@ public class CBot implements BWEventListener {
 			this.game = Core.getInstance().getGame();
 			this.started = true;
 
+			this.workerManagerResourceSpotAllocation = new WorkerManagerResourceSpotAllocation(this.informationStorage);
+			this.workerManagerConstructionJobDistribution = new WorkerManagerConstructionJobDistribution(
+					this.informationStorage);
+
 			this.unitTrackerModule = new UnitTrackerModule(this.informationStorage);
 			this.unitControlModule = new UnitControlModule(this.informationStorage);
 			this.buildingOrderModule = new BuildingOrderModule(this.informationStorage);
-			this.workerManagerResourceSpotAllocation = new WorkerManagerResourceSpotAllocation(this.informationStorage);
 
 			System.out.println("---STARTUP: success---");
 		} catch (Exception e) {
@@ -179,7 +184,10 @@ public class CBot implements BWEventListener {
 	@Override
 	public void onUnitCreate(Unit unit) {
 		if (this.firstFrameOver && unit.getPlayer() == this.game.self()) {
-			this.unitControlModule.addToBuildingsBeingCreated(unit);
+			if (unit.getType().isBuilding()) {
+				this.workerManagerConstructionJobDistribution.addToCurrentlyConstructedBuildings(unit);
+			}
+
 		}
 	}
 
@@ -187,9 +195,9 @@ public class CBot implements BWEventListener {
 	public void onUnitComplete(Unit unit) {
 		if (this.firstFrameOver && unit.getPlayer() == this.game.self()) {
 			this.unitControlModule.addToUnitControl(unit);
-			
+
 			// Add refineries to the manager as available gathering sources.
-			if(unit.getType().isRefinery()) {
+			if (unit.getType().isRefinery()) {
 				this.workerManagerResourceSpotAllocation.addRefinery(unit);
 			}
 		}
@@ -199,9 +207,15 @@ public class CBot implements BWEventListener {
 	public void onUnitDestroy(Unit unit) {
 		if (unit.getPlayer() == this.game.self()) {
 			this.unitControlModule.removeUnitFromUnitControl(unit);
-			
+
+			// Remove the building from the construction manager. This is due to
+			// it may be currently being in construction.
+			if (unit.isBeingConstructed()) {
+				this.workerManagerConstructionJobDistribution.removeBuilding(unit);
+			}
+
 			// Remove any destroyed refineries from the manager.
-			if(unit.getType().isRefinery()) {
+			if (unit.getType().isRefinery()) {
 				this.workerManagerResourceSpotAllocation.removeRefinery(unit);
 			}
 		}
@@ -262,7 +276,7 @@ public class CBot implements BWEventListener {
 		// Constructing a refinery is a morphing action!
 		if (this.firstFrameOver && unit.getPlayer() == this.game.self()
 				&& unit.getType() == this.game.self().getRace().getRefinery()) {
-			this.unitControlModule.addToBuildingsBeingCreated(unit);
+			this.workerManagerConstructionJobDistribution.addToCurrentlyConstructedBuildings(unit);
 		}
 	}
 
@@ -289,9 +303,13 @@ public class CBot implements BWEventListener {
 	public BuildingOrderModule getBuildingOrderModule() {
 		return buildingOrderModule;
 	}
-	
+
 	public WorkerManagerResourceSpotAllocation getWorkerManagerResourceSpotAllocation() {
 		return workerManagerResourceSpotAllocation;
+	}
+
+	public WorkerManagerConstructionJobDistribution getWorkerManagerConstructionJobDistribution() {
+		return workerManagerConstructionJobDistribution;
 	}
 
 	public InformationStorage getInformationStorage() {

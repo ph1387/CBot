@@ -3,7 +3,9 @@ package unitControlModule.unitWrappers;
 import bwapi.Position;
 import bwapi.Unit;
 import bwapi.UnitType;
+import core.CBot;
 import informationStorage.InformationStorage;
+import workerManagerConstructionJobDistribution.ConstructionWorker;
 import workerManagerResourceSpotAllocation.ResourceManagerEntry;
 
 /**
@@ -12,7 +14,7 @@ import workerManagerResourceSpotAllocation.ResourceManagerEntry;
  * @author P H - 29.03.2017
  *
  */
-public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements ResourceManagerEntry {
+public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements ResourceManagerEntry, ConstructionWorker {
 
 	protected boolean assignedToSout = false;
 
@@ -82,21 +84,19 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	 * can execute as well as shared information between all workers.
 	 */
 	protected void customUpdate() {
-		this.tryFreeingResources();
-		this.updateConstructionState();
-
-		// Scout at the beginning of the game if a certain worker count is
-		// reached.
 		if (!this.informationStorage.getWorkerConfig().isWorkerOnceAssignedScouting()
 				&& this.informationStorage.getWorkerConfig().getTotalWorkerCount() >= this.informationStorage
 						.getWorkerConfig().getWorkerScoutingTrigger()
-				&& this.currentConstructionState == ConstructionState.IDLE && this.assignedBuildingType == null
+				&& !CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
 				&& !this.unit.isGatheringGas()) {
 			this.informationStorage.getWorkerConfig().setWorkerOnceAssignedScouting(true);
 			this.assignedToSout = true;
 			this.resetActions();
 		} else if (!this.assignedToSout) {
-			this.updateCurrentActionInformation();
+			if (CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
+					&& CBot.getInstance().getWorkerManagerConstructionJobDistribution().canConstruct()) {
+				this.resetActions();
+			}
 		}
 	}
 
@@ -230,7 +230,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	}
 
 	// ------------------------------ ResourceManagerEntry
-	
+
 	@Override
 	public Position getPosition() {
 		return this.unit.getPosition();
