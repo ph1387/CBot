@@ -127,48 +127,49 @@ public class UnitControlDisplay {
 		return leaveOneLineFree(posY + 2 * LINEHEIGHT);
 	}
 
-	/**
-	 * Function for displaying all important PlayerUnitWorker information on the
-	 * screen.
-	 * 
-	 * @param posX
-	 *            the x position of the information being displayed.
-	 * @param posY
-	 *            the y position of the information being displayed.
-	 * @param agents
-	 *            the agents the PlayerUnitWorkers are extracted from.
-	 * @return the new y position the next line of text starts without
-	 *         interfering with the currently display ones.
-	 */
-	public static int showWorkerInformation(int posX, int posY, Collection<GoapAgent> agents) {
-		List<PlayerUnitWorker> workerUnits = new ArrayList<PlayerUnitWorker>();
-		int counter = 1;
-
-		// Get all worker instances
-		for (GoapAgent goapAgent : agents) {
-			if (goapAgent.getAssignedGoapUnit() instanceof PlayerUnitWorker) {
-				workerUnits.add((PlayerUnitWorker) goapAgent.getAssignedGoapUnit());
-			}
-		}
-
-		// Show all construction information
-		GAME.drawTextScreen(posX, posY, "Constructions:");
-
-		for (PlayerUnitWorker playerUnitWorker : workerUnits) {
-			if (playerUnitWorker.getAssignedBuilding() != null) {
-				int calculatedPosY = posY + counter * LINEHEIGHT;
-
-				showBarFilled(posX, calculatedPosY, BAR_WIDTH, LINEHEIGHT,
-						playerUnitWorker.getAssignedBuilding().getRemainingBuildTime(),
-						playerUnitWorker.getAssignedBuildingType().buildTime(), WORKER_INFO_BAR_COLOR);
-				GAME.drawTextScreen(posX + OFFSET_LEFT + BAR_WIDTH, calculatedPosY,
-						playerUnitWorker.getAssignedBuildingType().toString());
-				counter++;
-			}
-		}
-
-		return leaveOneLineFree(posY + counter * LINEHEIGHT);
-	}
+	// TODO: WIP
+//	/**
+//	 * Function for displaying all important PlayerUnitWorker information on the
+//	 * screen.
+//	 * 
+//	 * @param posX
+//	 *            the x position of the information being displayed.
+//	 * @param posY
+//	 *            the y position of the information being displayed.
+//	 * @param agents
+//	 *            the agents the PlayerUnitWorkers are extracted from.
+//	 * @return the new y position the next line of text starts without
+//	 *         interfering with the currently display ones.
+//	 */
+//	public static int showWorkerInformation(int posX, int posY, Collection<GoapAgent> agents) {
+//		List<PlayerUnitWorker> workerUnits = new ArrayList<PlayerUnitWorker>();
+//		int counter = 1;
+//
+//		// Get all worker instances
+//		for (GoapAgent goapAgent : agents) {
+//			if (goapAgent.getAssignedGoapUnit() instanceof PlayerUnitWorker) {
+//				workerUnits.add((PlayerUnitWorker) goapAgent.getAssignedGoapUnit());
+//			}
+//		}
+//
+//		// Show all construction information
+//		GAME.drawTextScreen(posX, posY, "Constructions:");
+//
+//		for (PlayerUnitWorker playerUnitWorker : workerUnits) {
+//			if (playerUnitWorker.getAssignedBuilding() != null) {
+//				int calculatedPosY = posY + counter * LINEHEIGHT;
+//
+//				showBarFilled(posX, calculatedPosY, BAR_WIDTH, LINEHEIGHT,
+//						playerUnitWorker.getAssignedBuilding().getRemainingBuildTime(),
+//						playerUnitWorker.getAssignedBuildingType().buildTime(), WORKER_INFO_BAR_COLOR);
+//				GAME.drawTextScreen(posX + OFFSET_LEFT + BAR_WIDTH, calculatedPosY,
+//						playerUnitWorker.getAssignedBuildingType().toString());
+//				counter++;
+//			}
+//		}
+//
+//		return leaveOneLineFree(posY + counter * LINEHEIGHT);
+//	}
 
 	/**
 	 * Function for displaying all important PlayerUnitBuilding information on
@@ -225,28 +226,29 @@ public class UnitControlDisplay {
 		return leaveOneLineFree(posY + counter * LINEHEIGHT);
 	}
 
-	/**
-	 * Function for displaying the building Queue on the screen.
-	 * 
-	 * @param posX
-	 *            the x position of the information being displayed.
-	 * @param posY
-	 *            the y position of the information being displayed.
-	 * @param informationStorage
-	 *            object that holds all important worker and resource
-	 *            information.
-	 * @return the new y position the next line of text starts without
-	 *         interfering with the currently display ones.
-	 */
-	public static int showBuildingQueue(int posX, int posY, InformationStorage informationStorage) {
-		int newPosY = posY;
-
-		if (!informationStorage.getWorkerConfig().getBuildingQueue().isEmpty()) {
-			newPosY = showIterableCollection(posX, posY, informationStorage.getWorkerConfig().getBuildingQueue(),
-					"Building Queue:");
-		}
-		return leaveOneLineFree(newPosY);
-	}
+	// TODO: WIP
+//	/**
+//	 * Function for displaying the building Queue on the screen.
+//	 * 
+//	 * @param posX
+//	 *            the x position of the information being displayed.
+//	 * @param posY
+//	 *            the y position of the information being displayed.
+//	 * @param informationStorage
+//	 *            object that holds all important worker and resource
+//	 *            information.
+//	 * @return the new y position the next line of text starts without
+//	 *         interfering with the currently display ones.
+//	 */
+//	public static int showBuildingQueue(int posX, int posY, InformationStorage informationStorage) {
+//		int newPosY = posY;
+//
+//		if (!informationStorage.getWorkerConfig().getBuildingQueue().isEmpty()) {
+//			newPosY = showIterableCollection(posX, posY, informationStorage.getWorkerConfig().getBuildingQueue(),
+//					"Building Queue:");
+//		}
+//		return leaveOneLineFree(newPosY);
+//	}
 
 	/**
 	 * Function for displaying the training Queue on the screen.
