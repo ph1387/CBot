@@ -1,6 +1,7 @@
 package workerManagerConstructionJobDistribution;
 
 import bwapi.TilePosition;
+import bwapi.Unit;
 import bwapi.UnitType;
 
 /**
@@ -11,6 +12,16 @@ import bwapi.UnitType;
  *
  */
 public interface IConstrucionInformation {
+
+	/**
+	 * Function for retrieving the building that is actually constructed by the
+	 * worker.
+	 * 
+	 * @return the Unit reference of the building being created. Therefore this
+	 *         function returns null until the construction of the building
+	 *         started. After that the reference to the building is returned.
+	 */
+	public Unit getBuilding();
 
 	/**
 	 * Function for retrieving the UnitType of the building that the worker is

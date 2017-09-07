@@ -13,6 +13,8 @@ import javaGOAP.GoapAgent;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
+import workerManagerConstructionJobDistribution.IConstrucionInformation;
+import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDistribution;
 
 /**
  * UnitControlModuleDisplay.java --- Class for displaying all important
@@ -76,11 +78,9 @@ public class UnitControlDisplay {
 		// collection can be shown accordingly.
 		try {
 			currentPosY = showResourceInformation(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
-			// TODO: WIP
-//			currentPosY = showWorkerInformation(OFFSET_LEFT_TOTAL, currentPosY, agents);
+			currentPosY = showWorkerInformation(OFFSET_LEFT_TOTAL, currentPosY, agents);
 			currentPosY = showBuildingInformation(OFFSET_LEFT_TOTAL, currentPosY, buildings);
-			// TODO: WIP
-//			currentPosY = showBuildingQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
+			currentPosY = showBuildingQueue(OFFSET_LEFT_TOTAL, currentPosY, agents);
 			currentPosY = showTrainingQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
 			currentPosY = showAddonQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
 			currentPosY = showUpgradeQueue(OFFSET_LEFT_TOTAL, currentPosY, informationStorage);
@@ -127,49 +127,59 @@ public class UnitControlDisplay {
 		return leaveOneLineFree(posY + 2 * LINEHEIGHT);
 	}
 
-	// TODO: WIP
-//	/**
-//	 * Function for displaying all important PlayerUnitWorker information on the
-//	 * screen.
-//	 * 
-//	 * @param posX
-//	 *            the x position of the information being displayed.
-//	 * @param posY
-//	 *            the y position of the information being displayed.
-//	 * @param agents
-//	 *            the agents the PlayerUnitWorkers are extracted from.
-//	 * @return the new y position the next line of text starts without
-//	 *         interfering with the currently display ones.
-//	 */
-//	public static int showWorkerInformation(int posX, int posY, Collection<GoapAgent> agents) {
-//		List<PlayerUnitWorker> workerUnits = new ArrayList<PlayerUnitWorker>();
-//		int counter = 1;
-//
-//		// Get all worker instances
-//		for (GoapAgent goapAgent : agents) {
-//			if (goapAgent.getAssignedGoapUnit() instanceof PlayerUnitWorker) {
-//				workerUnits.add((PlayerUnitWorker) goapAgent.getAssignedGoapUnit());
-//			}
-//		}
-//
-//		// Show all construction information
-//		GAME.drawTextScreen(posX, posY, "Constructions:");
-//
-//		for (PlayerUnitWorker playerUnitWorker : workerUnits) {
-//			if (playerUnitWorker.getAssignedBuilding() != null) {
-//				int calculatedPosY = posY + counter * LINEHEIGHT;
-//
-//				showBarFilled(posX, calculatedPosY, BAR_WIDTH, LINEHEIGHT,
-//						playerUnitWorker.getAssignedBuilding().getRemainingBuildTime(),
-//						playerUnitWorker.getAssignedBuildingType().buildTime(), WORKER_INFO_BAR_COLOR);
-//				GAME.drawTextScreen(posX + OFFSET_LEFT + BAR_WIDTH, calculatedPosY,
-//						playerUnitWorker.getAssignedBuildingType().toString());
-//				counter++;
-//			}
-//		}
-//
-//		return leaveOneLineFree(posY + counter * LINEHEIGHT);
-//	}
+	/**
+	 * Function for displaying all important PlayerUnitWorker information on the
+	 * screen.
+	 * 
+	 * @param posX
+	 *            the x position of the information being displayed.
+	 * @param posY
+	 *            the y position of the information being displayed.
+	 * @param agents
+	 *            the agents the PlayerUnitWorkers are extracted from.
+	 * @return the new y position the next line of text starts without
+	 *         interfering with the currently display ones.
+	 */
+	public static int showWorkerInformation(int posX, int posY, Collection<GoapAgent> agents) {
+		WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = null;
+		List<PlayerUnitWorker> workerUnits = new ArrayList<PlayerUnitWorker>();
+		int counter = 1;
+
+		// Get all worker instances.
+		for (GoapAgent goapAgent : agents) {
+			if (goapAgent.getAssignedGoapUnit() instanceof PlayerUnitWorker) {
+				workerUnits.add((PlayerUnitWorker) goapAgent.getAssignedGoapUnit());
+			}
+		}
+
+		// Get the worker manager instance.
+		if (!workerUnits.isEmpty()) {
+			workerManagerConstructionJobDistribution = workerUnits.iterator().next()
+					.getWorkerManagerConstructionJobDistribution();
+		}
+
+		// Show all construction information.
+		GAME.drawTextScreen(posX, posY, "Constructions:");
+
+		for (PlayerUnitWorker playerUnitWorker : workerUnits) {
+			if (workerManagerConstructionJobDistribution.isAssignedConstructing(playerUnitWorker)
+					&& workerManagerConstructionJobDistribution.getConstructionInformation(playerUnitWorker)
+							.constructionStarted()) {
+				IConstrucionInformation constructionInformation = workerManagerConstructionJobDistribution
+						.getConstructionInformation(playerUnitWorker);
+				int calculatedPosY = posY + counter * LINEHEIGHT;
+
+				showBarFilled(posX, calculatedPosY, BAR_WIDTH, LINEHEIGHT,
+						constructionInformation.getBuilding().getRemainingBuildTime(),
+						constructionInformation.getUnitType().buildTime(), WORKER_INFO_BAR_COLOR);
+				GAME.drawTextScreen(posX + OFFSET_LEFT + BAR_WIDTH, calculatedPosY,
+						constructionInformation.getUnitType().toString());
+				counter++;
+			}
+		}
+
+		return leaveOneLineFree(posY + counter * LINEHEIGHT);
+	}
 
 	/**
 	 * Function for displaying all important PlayerUnitBuilding information on
@@ -226,29 +236,39 @@ public class UnitControlDisplay {
 		return leaveOneLineFree(posY + counter * LINEHEIGHT);
 	}
 
-	// TODO: WIP
-//	/**
-//	 * Function for displaying the building Queue on the screen.
-//	 * 
-//	 * @param posX
-//	 *            the x position of the information being displayed.
-//	 * @param posY
-//	 *            the y position of the information being displayed.
-//	 * @param informationStorage
-//	 *            object that holds all important worker and resource
-//	 *            information.
-//	 * @return the new y position the next line of text starts without
-//	 *         interfering with the currently display ones.
-//	 */
-//	public static int showBuildingQueue(int posX, int posY, InformationStorage informationStorage) {
-//		int newPosY = posY;
-//
-//		if (!informationStorage.getWorkerConfig().getBuildingQueue().isEmpty()) {
-//			newPosY = showIterableCollection(posX, posY, informationStorage.getWorkerConfig().getBuildingQueue(),
-//					"Building Queue:");
-//		}
-//		return leaveOneLineFree(newPosY);
-//	}
+	/**
+	 * Function for displaying the building Queue on the screen.
+	 *
+	 * @param posX
+	 *            the x position of the information being displayed.
+	 * @param posY
+	 *            the y position of the information being displayed. * @param
+	 *            agents the agents the PlayerUnitWorkers are extracted from
+	 *            which are used for accessing the construction manager
+	 *            instance.
+	 * @return the new y position the next line of text starts without
+	 *         interfering with the currently display ones.
+	 */
+	public static int showBuildingQueue(int posX, int posY, Collection<GoapAgent> agents) {
+		PlayerUnitWorker referenceWorker = null;
+		int newPosY = posY;
+
+		// Get at least a single reference to a PlayerUnitWorker for accessing
+		// the construction manager instance of it.
+		for (GoapAgent goapAgent : agents) {
+			if (goapAgent.getAssignedGoapUnit() instanceof PlayerUnitWorker) {
+				referenceWorker = (PlayerUnitWorker) goapAgent.getAssignedGoapUnit();
+				break;
+			}
+		}
+
+		if (referenceWorker != null) {
+			newPosY = showIterableCollection(posX, posY,
+					referenceWorker.getWorkerManagerConstructionJobDistribution().getBuildingQueue(),
+					"Building Queue:");
+		}
+		return leaveOneLineFree(newPosY);
+	}
 
 	/**
 	 * Function for displaying the training Queue on the screen.

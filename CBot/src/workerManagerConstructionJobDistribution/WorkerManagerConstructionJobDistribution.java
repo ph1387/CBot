@@ -280,6 +280,10 @@ public class WorkerManagerConstructionJobDistribution {
 		return informationStorage;
 	}
 
+	public Queue<UnitType> getBuildingQueue() {
+		return buildingQueue;
+	}
+
 	public HashSet<Unit> getCurrentlyConstructedBuildings() {
 		return currentlyConstructedBuildings;
 	}
