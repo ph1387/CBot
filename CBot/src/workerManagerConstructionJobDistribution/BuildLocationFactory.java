@@ -3,13 +3,16 @@ package workerManagerConstructionJobDistribution;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
+import bwta.Region;
 import core.Core;
 import core.TilePositionFactory;
 import informationStorage.InformationStorage;
@@ -25,7 +28,6 @@ public class BuildLocationFactory {
 
 	private InformationStorage informationStorage;
 
-	private int maxBuildingSearchTileRadius = 5;
 	// Due to the large tile range there should not be any trouble finding a
 	// suitable building location.
 	private int maxTileRange = 50;
@@ -100,38 +102,41 @@ public class BuildLocationFactory {
 	 * @return a TilePosition at which a new center building can be constructed.
 	 */
 	private TilePosition findCenterBuildLocation() {
-		BaseLocation newBaseLocation = null;
-		List<BaseLocation> freeBaseLocations = this.extractFreeBaseLocations();
+		TilePosition playerStartingLocation = Core.getInstance().getPlayer().getStartLocation();
+		EnemyUnit closestEnemyBuilding = this.extractClosestEnemyBuilding(playerStartingLocation);
+		Region playerBaseRegion = BWTA.getStartLocation(Core.getInstance().getPlayer()).getRegion();
 
-		// Gather information regarding the state of the game.
-		TilePosition playerStartLocation = Core.getInstance().getPlayer().getStartLocation();
-		EnemyUnit closestEnemyBuilding = this.extractClosestEnemyBuilding(playerStartLocation);
+		// The Lists that are being cycled through.
+		Queue<Region> regionsToCheck = new LinkedList<>();
+		List<BaseLocation> possibleBaseLocations = new ArrayList<>();
+		regionsToCheck.add(playerBaseRegion);
+
+		// Cycle through the Queue until all necessary Regions are checked.
+		while (!regionsToCheck.isEmpty()) {
+			Region currentRegion = regionsToCheck.poll();
+			List<BaseLocation> freeBaseLocations = new ArrayList<>();
+
+			// Check each BaseLocation in the Region.
+			for (BaseLocation baseLocation : currentRegion.getBaseLocations()) {
+				if (this.isBaseLocationFree(baseLocation)) {
+					freeBaseLocations.add(baseLocation);
+				}
+			}
+
+			// No free BaseLocations in the current Region => Check adjacent
+			// ones.
+			if (freeBaseLocations.isEmpty()) {
+				regionsToCheck.addAll(this.informationStorage.getMapInfo().getBreadthAccessOrder().get(currentRegion));
+			} else {
+				possibleBaseLocations.addAll(freeBaseLocations);
+			}
+		}
 
 		// Sort the BaseLocations and set the new BaseLocation to the first
 		// element of the sorted List.
-		this.sortFreeBaseLocations(freeBaseLocations, playerStartLocation, closestEnemyBuilding);
-		newBaseLocation = freeBaseLocations.iterator().next();
+		this.sortFreeBaseLocations(possibleBaseLocations, playerStartingLocation, closestEnemyBuilding);
 
-		return newBaseLocation.getTilePosition();
-	}
-
-	/**
-	 * Function for extracting all BaseLocations at which a new center Unit can
-	 * be constructed.
-	 * 
-	 * @return a List containing all BaseLocations that are considered a valid
-	 *         construction site and therefore can be used for constructing a
-	 *         center Unit onto.
-	 */
-	private List<BaseLocation> extractFreeBaseLocations() {
-		List<BaseLocation> freeBaseLocations = new ArrayList<>();
-
-		for (BaseLocation baselocation : BWTA.getBaseLocations()) {
-			if (this.isBaseLocationFree(baselocation)) {
-				freeBaseLocations.add(baselocation);
-			}
-		}
-		return freeBaseLocations;
+		return possibleBaseLocations.iterator().next().getTilePosition();
 	}
 
 	/**
@@ -145,19 +150,15 @@ public class BuildLocationFactory {
 	 *         if one is found.
 	 */
 	private boolean isBaseLocationFree(BaseLocation baselocation) {
+		HashSet<Unit> centers = this.informationStorage.getCurrentGameInformation().getCurrentUnits()
+				.get(Core.getInstance().getPlayer().getRace().getCenter());
 		boolean locationFree = true;
 
-		for (int i = -this.maxBuildingSearchTileRadius; i <= this.maxBuildingSearchTileRadius && locationFree; i++) {
-			for (int j = -this.maxBuildingSearchTileRadius; j <= this.maxBuildingSearchTileRadius
-					&& locationFree; j++) {
-				int tileposX = baselocation.getTilePosition().getX() + i;
-				int tileposY = baselocation.getTilePosition().getY() + j;
+		for (Unit unit : centers) {
+			if (BWTA.getRegion(unit.getPosition()).equals(baselocation.getRegion())) {
+				locationFree = false;
 
-				if (tileposX <= Core.getInstance().getGame().mapWidth() && tileposX >= 0
-						&& tileposY <= Core.getInstance().getGame().mapHeight() && tileposY >= 0) {
-					locationFree = Core.getInstance().getGame().getUnitsOnTile(new TilePosition(tileposX, tileposY))
-							.isEmpty();
-				}
+				break;
 			}
 		}
 		return locationFree;
@@ -188,18 +189,12 @@ public class BuildLocationFactory {
 	}
 
 	/**
-	 * Function for sorting a List of BaseLocations based on two factors:
-	 * <ul>
-	 * <li>The Player's starting location.</li>
-	 * <li>The closest known enemy building.</li>
-	 * </ul>
-	 * At a minimum the Player's starting location is needed for this function
-	 * to properly work. The closest enemy building can be null and is then not
-	 * considered in the sorting of the List. The function sorts the
-	 * BaseLocations on their distance to the former and latter, with the goal
-	 * of a minimum distance to the starting location and a maximum distance to
-	 * the closest enemy building. Therfore sorting the List from the "best" to
-	 * the "worst" locations to build a center Unit.
+	 * Function for sorting the provided BaseLocations based on their distance
+	 * towards the closest enemy buildings known. The first element in the
+	 * resulting List is the one with the greatest distance towards this
+	 * EnemyUnit. The closest enemy building can be null and is then not
+	 * considered in the sorting of the List. In this case only the distance to
+	 * the Player's starting location matters.
 	 * 
 	 * @param freeBaseLocations
 	 *            the List of free BaseLocations that is going to be sorted.
@@ -210,32 +205,30 @@ public class BuildLocationFactory {
 	 *            the closest enemy building. Can be null and is then not
 	 *            considered in the sorting of the List.
 	 */
-	private void sortFreeBaseLocations(List<BaseLocation> freeBaseLocations, final TilePosition playerStartLocation,
+	private void sortFreeBaseLocations(List<BaseLocation> baseLocations, final TilePosition playerStartLocation,
 			final EnemyUnit closestEnemyBuilding) {
-		// Sort the free BaseLocations either based on their distance to the
-		// Player's starting location if no enemy building is known of.
+		// No enemy building => Smallest distance towards the starting location.
 		if (closestEnemyBuilding == null) {
-			freeBaseLocations.sort(new Comparator<BaseLocation>() {
+			baseLocations.sort(new Comparator<BaseLocation>() {
 
 				@Override
 				public int compare(BaseLocation baseLocationOne, BaseLocation baseLocationTwo) {
-					return Double.compare(playerStartLocation.getDistance(baseLocationOne.getTilePosition()),
-							playerStartLocation.getDistance(baseLocationTwo.getTilePosition()));
+					return Double.compare(baseLocationOne.getTilePosition().getDistance(playerStartLocation),
+							baseLocationTwo.getTilePosition().getDistance(playerStartLocation));
 				}
 			});
 		}
-		// OR take the closest enemy building in consideration when constructing
-		// the center.
+		// Enemy known => Greatest distance towards the closest enemy building.
 		else {
-			freeBaseLocations.sort(new Comparator<BaseLocation>() {
+			baseLocations.sort(new Comparator<BaseLocation>() {
 
 				@Override
 				public int compare(BaseLocation baseLocationOne, BaseLocation baseLocationTwo) {
 					return Double.compare(
-							playerStartLocation.getDistance(baseLocationOne.getTilePosition()) - baseLocationOne
-									.getTilePosition().getDistance(closestEnemyBuilding.getLastSeenTilePosition()),
-							playerStartLocation.getDistance(baseLocationTwo.getTilePosition()) - baseLocationTwo
-									.getTilePosition().getDistance(closestEnemyBuilding.getLastSeenTilePosition()));
+							baseLocationTwo.getTilePosition()
+									.getDistance(closestEnemyBuilding.getLastSeenTilePosition()),
+							baseLocationOne.getTilePosition()
+									.getDistance(closestEnemyBuilding.getLastSeenTilePosition()));
 				}
 			});
 		}

@@ -15,7 +15,7 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 
 	// Init:
 	private boolean generateDefaultContendedTilePositions = true;
-	private boolean generateReversedRegionAccessOrder = true;
+	private boolean generateRegionAccessOrder = true;
 
 	// BuildingOrderModule:
 	private boolean enableBuildingOrderModuleUpdates = true;
@@ -71,15 +71,15 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	}
 
 	@Override
-	public boolean enableGenerateReversedRegionAccessOrder() {
-		return this.generateReversedRegionAccessOrder;
+	public boolean enableGenerateRegionAccessOrder() {
+		return this.generateRegionAccessOrder;
 	}
 
 	@Override
 	public boolean enableDisplayMapBoundaries() {
 		return this.displayMapBoundaries;
 	}
-	
+
 	@Override
 	public boolean enableDisplayReservedSpacePolygons() {
 		return this.displayReservedSpacePolygons;

@@ -187,7 +187,6 @@ public class CBot implements BWEventListener {
 			if (unit.getType().isBuilding()) {
 				this.workerManagerConstructionJobDistribution.addToCurrentlyConstructedBuildings(unit);
 			}
-
 		}
 	}
 

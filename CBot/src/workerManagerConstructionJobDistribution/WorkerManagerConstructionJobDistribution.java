@@ -225,8 +225,6 @@ public class WorkerManagerConstructionJobDistribution {
 				constructionJob.getBuilding().cancelConstruction();
 			}
 
-			// TODO: WIP Can add the reference to the UnitType back into the
-			// Queue?
 			// Remove the reference to the worker as well as the construction
 			// job.
 			success = this.assignedWorkers.remove(worker) != null;

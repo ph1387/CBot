@@ -19,10 +19,14 @@ public class MapInformation {
 	private HashSet<TilePosition> tilePositionContenders = new HashSet<>();
 	private HashSet<Polygon> reservedSpace = new HashSet<>();
 	private HashSet<Pair<bwta.Region, Polygon>> mapBoundaries = new HashSet<>();
+
 	// This order determines the Regions a Unit has to move along to get towards
 	// the Player's starting location. A Region used as a key provides the
 	// Region the Unit has to move to next (value).
 	private HashMap<Region, Region> reversedRegionAccessOrder = new HashMap<>();
+	// The "standard" Region access order based on a breadth search from the
+	// Player's starting location.
+	private HashMap<Region, HashSet<Region>> breadthAccessOrder = new HashMap<>();
 
 	public MapInformation() {
 
@@ -50,5 +54,13 @@ public class MapInformation {
 
 	public void setReversedRegionAccessOrder(HashMap<Region, Region> reversedRegionAccessOrder) {
 		this.reversedRegionAccessOrder = reversedRegionAccessOrder;
+	}
+
+	public HashMap<Region, HashSet<Region>> getBreadthAccessOrder() {
+		return breadthAccessOrder;
+	}
+
+	public void setBreadthAccessOrder(HashMap<Region, HashSet<Region>> breadthAccessOrder) {
+		this.breadthAccessOrder = breadthAccessOrder;
 	}
 }

@@ -1,6 +1,7 @@
 package core;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.BiConsumer;
 
 import buildingOrderModule.simulator.TypeWrapper;
@@ -23,7 +24,7 @@ import informationStorage.InformationStorage;
  *
  */
 public class Init {
-	
+
 	private static final int UNIT_FLAG = 1;
 	private static final int GAME_SPEED = 60; // TODO: 20, 0, etc.
 	private static final int MAX_POLYGON_EDGE_LENGTH = 100;
@@ -42,7 +43,7 @@ public class Init {
 			Game game = mirror.getGame();
 
 			Core.getInstance().setMirror(mirror);
-			
+
 			// Initialize the TypeWrapper types for the Simulator.
 			TypeWrapper.init();
 
@@ -51,19 +52,22 @@ public class Init {
 			BWTA.analyze();
 
 			// Add all default contended TilePositions.
-			if(informationStorage.getiInitConfig().enableGenerateDefaultContendedTilePositions()) {
+			if (informationStorage.getiInitConfig().enableGenerateDefaultContendedTilePositions()) {
 				informationStorage.getMapInfo().getTilePositionContenders()
-				.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
-						.generateDefaultContendedTilePositions());
+						.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
+								.generateDefaultContendedTilePositions());
 			}
 
-			// Create the reversed Region access order. Reversed means that any
-			// Unit in a Region has access to the information to which Region it
-			// has to move to get to the Player's starting location.
-			if(informationStorage.getiInitConfig().enableGenerateReversedRegionAccessOrder()) {
+			if (informationStorage.getiInitConfig().enableGenerateRegionAccessOrder()) {
+				// Create the reversed Region access order. Reversed means that
+				// any Unit in a Region has access to the information to which
+				// Region it has to move to get to the Player's starting
+				// location.
 				informationStorage.getMapInfo().setReversedRegionAccessOrder(generateReversedRegionAccessOrder());
+
+				// Generate the breadth access order based on the reversed one.
+				informationStorage.getMapInfo().setBreadthAccessOrder(generateBreadthAccessOrder(informationStorage));
 			}
-			
 
 			// Add all BWTA-Polygons to the collection of Polygons in the
 			// InformationStorage.
@@ -245,5 +249,35 @@ public class Init {
 			breadthOrderRegions.put(regionFromTo.first, regionFromTo.second);
 		}
 		return breadthOrderRegions;
+	}
+
+	/**
+	 * Function for generating the order in which the different Regions are
+	 * accessible beginning at the Player's starting location. This function
+	 * basically returns a HashMap representing the breadth search equivalent
+	 * and uses the reversed access order of the different Regions of the map.
+	 * 
+	 * @param informationStorage
+	 *            the storages which provides the reversed access order of the
+	 *            Regions.
+	 * @return a HashMap containing the breadth search equivalent of the access
+	 *         order of the different map Regions.
+	 */
+	private static HashMap<Region, HashSet<Region>> generateBreadthAccessOrder(InformationStorage informationStorage) {
+		HashMap<Region, HashSet<Region>> breadthAccessOrder = new HashMap<>();
+
+		for (Region to : informationStorage.getMapInfo().getReversedRegionAccessOrder().keySet()) {
+			Region from = informationStorage.getMapInfo().getReversedRegionAccessOrder().get(to);
+
+			if (from != null) {
+				if (!breadthAccessOrder.containsKey(from)) {
+					breadthAccessOrder.put(from, new HashSet<Region>());
+				}
+
+				breadthAccessOrder.get(from).add(to);
+			}
+		}
+
+		return breadthAccessOrder;
 	}
 }

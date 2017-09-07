@@ -19,9 +19,9 @@ public interface IInitConfig {
 
 	/**
 	 *
-	 * @return true for enabling the generation of the reversed order in which
-	 *         the Regions are accessed, false for disabling it.
+	 * @return true for enabling the generation of the order in which the
+	 *         Regions are accessed, false for disabling it.
 	 */
-	public boolean enableGenerateReversedRegionAccessOrder();
+	public boolean enableGenerateRegionAccessOrder();
 
 }
