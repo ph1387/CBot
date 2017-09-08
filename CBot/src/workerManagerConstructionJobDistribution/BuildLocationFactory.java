@@ -126,12 +126,17 @@ public class BuildLocationFactory {
 			// No free BaseLocations in the current Region => Check adjacent
 			// ones.
 			if (freeBaseLocations.isEmpty()) {
-				regionsToCheck.addAll(this.informationStorage.getMapInfo().getBreadthAccessOrder().get(currentRegion));
+				HashSet<Region> regionsToAdd = this.informationStorage.getMapInfo().getBreadthAccessOrder()
+						.get(currentRegion);
+
+				if (regionsToAdd != null) {
+					regionsToCheck.addAll(regionsToAdd);
+				}
 			} else {
 				possibleBaseLocations.addAll(freeBaseLocations);
 			}
 		}
-		
+
 		// Sort the BaseLocations and set the new BaseLocation to the first
 		// element of the sorted List.
 		this.sortFreeBaseLocations(possibleBaseLocations, playerStartingLocation, closestEnemyBuilding);
