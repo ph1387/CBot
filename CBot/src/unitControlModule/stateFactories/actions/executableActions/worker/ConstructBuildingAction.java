@@ -87,7 +87,7 @@ public class ConstructBuildingAction extends WorkerAction {
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = ((PlayerUnitWorker) goapUnit)
 				.getWorkerManagerConstructionJobDistribution();
-
+		
 		return workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)
 				|| workerManagerConstructionJobDistribution.canConstruct();
 	}

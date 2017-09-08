@@ -3,6 +3,7 @@ package unitControlModule.unitWrappers;
 import bwapi.Position;
 import bwapi.Unit;
 import core.CBot;
+import core.Core;
 import informationStorage.InformationStorage;
 import workerManagerConstructionJobDistribution.ConstructionWorker;
 import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDistribution;
@@ -16,6 +17,21 @@ import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
  *
  */
 public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements ResourceManagerEntry, ConstructionWorker {
+
+	// Enum needed since the worker would otherwise constantly reset his actions
+	// ...
+	// TODO: UML ADD
+	private enum ConstructionState {
+		IDLE, APPLIED
+	};
+
+	// Information regarding the construction of different buildings:
+	// TODO: UML ADD
+	private ConstructionState currentConstrcutionState = ConstructionState.IDLE;
+	// TODO: UML ADD
+	private int constructionStateApplianceTimeStamp = 0;
+	// TODO: UML ADD
+	private int constructionStateApplianceMaxFrameDiff = 200;
 
 	private WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation;
 	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution;
@@ -34,21 +50,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 
 	// -------------------- Functions
 
-	/**
-	 * Function needs to be overwritten due to the workers actions being very
-	 * delicate processes. A simple reset is not possible since multiple actions
-	 * require information that is going to be reseted normally. Therefore the
-	 * order needs to be as follows:
-	 * <ul>
-	 * <li>Reset gets called -> information regarding various worker tasks are
-	 * being reseted
-	 * <li>Information must be restored
-	 * <li>Information can be transferred to the actions at the end of the
-	 * super.update function
-	 * </ul>
-	 * 
-	 * @see javaGOAP.GoapUnit#resetActions()
-	 */
 	@Override
 	public void resetActions() {
 		if (!this.unit.isConstructing()) {
@@ -75,17 +76,32 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	 * can execute as well as shared information between all workers.
 	 */
 	protected void customUpdate() {
+		// Reset the construction state of the worker if possible / when a
+		// specific amount of time passed.
+		if (!CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
+				&& this.currentConstrcutionState == ConstructionState.APPLIED
+				&& Core.getInstance().getGame().getFrameCount()
+						- this.constructionStateApplianceTimeStamp >= this.constructionStateApplianceMaxFrameDiff) {
+			this.currentConstrcutionState = ConstructionState.IDLE;
+		}
+
+		// Act differently if the worker is / must be assigned scouting.
 		if (!this.informationStorage.getWorkerConfig().isWorkerOnceAssignedScouting()
 				&& this.informationStorage.getWorkerConfig().getTotalWorkerCount() >= this.informationStorage
 						.getWorkerConfig().getWorkerScoutingTrigger()
 				&& !CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
-				&& !this.unit.isGatheringGas()) {
+				&& !this.unit.isGatheringGas() && !this.unit.isConstructing()
+				&& this.currentConstrcutionState == ConstructionState.IDLE) {
 			this.informationStorage.getWorkerConfig().setWorkerOnceAssignedScouting(true);
 			this.assignedToSout = true;
 			this.resetActions();
 		} else if (!this.assignedToSout) {
 			if (!CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
-					&& CBot.getInstance().getWorkerManagerConstructionJobDistribution().canConstruct()) {
+					&& CBot.getInstance().getWorkerManagerConstructionJobDistribution().canConstruct()
+					&& this.currentConstrcutionState == ConstructionState.IDLE) {
+				this.currentConstrcutionState = ConstructionState.APPLIED;
+				this.constructionStateApplianceTimeStamp = Core.getInstance().getGame().getFrameCount();
+
 				this.resetActions();
 			}
 		}

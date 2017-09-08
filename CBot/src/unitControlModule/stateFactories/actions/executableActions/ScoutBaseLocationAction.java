@@ -68,7 +68,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected void resetSpecific() {
-
+		
 	}
 
 	// -------------------- Group
