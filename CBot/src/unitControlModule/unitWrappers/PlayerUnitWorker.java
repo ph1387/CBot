@@ -94,6 +94,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 				&& this.currentConstrcutionState == ConstructionState.IDLE) {
 			this.informationStorage.getWorkerConfig().setWorkerOnceAssignedScouting(true);
 			this.assignedToSout = true;
+
 			this.resetActions();
 		} else if (!this.assignedToSout) {
 			if (!CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)

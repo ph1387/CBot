@@ -33,7 +33,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return this.isInRange(goapUnit);
+		return false;
 	}
 
 	@Override
@@ -43,12 +43,12 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
-		return 10;
+		return 10.f;
 	}
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		return this.target != null;
+		return true;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected void resetSpecific() {
-		
+
 	}
 
 	// -------------------- Group

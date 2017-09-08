@@ -64,8 +64,9 @@ public abstract class GatherAction extends WorkerAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return !this.assigningMissing && ((PlayerUnitWorker) goapUnit).getWorkerManagerResourceSpotAllocation()
-				.getGatheringSource((PlayerUnitWorker) goapUnit) == null;
+		return ((PlayerUnitWorker) goapUnit).isAssignedToSout()
+				|| (!this.assigningMissing && ((PlayerUnitWorker) goapUnit).getWorkerManagerResourceSpotAllocation()
+						.getGatheringSource((PlayerUnitWorker) goapUnit) == null);
 	}
 
 }
