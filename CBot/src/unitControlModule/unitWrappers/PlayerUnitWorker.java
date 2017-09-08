@@ -19,10 +19,12 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 
 	private WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation;
 	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution;
-	
+
 	protected boolean assignedToSout = false;
 
-	public PlayerUnitWorker(Unit unit, InformationStorage informationStorage, WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation, WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution) {
+	public PlayerUnitWorker(Unit unit, InformationStorage informationStorage,
+			WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation,
+			WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution) {
 		super(unit, informationStorage);
 
 		this.informationStorage.getWorkerConfig().incrementTotalWorkerCount();
@@ -82,7 +84,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 			this.assignedToSout = true;
 			this.resetActions();
 		} else if (!this.assignedToSout) {
-			if (CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
+			if (!CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
 					&& CBot.getInstance().getWorkerManagerConstructionJobDistribution().canConstruct()) {
 				this.resetActions();
 			}
@@ -105,7 +107,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	public WorkerManagerConstructionJobDistribution getWorkerManagerConstructionJobDistribution() {
 		return workerManagerConstructionJobDistribution;
 	}
-	
+
 	public boolean isAssignedToSout() {
 		return assignedToSout;
 	}

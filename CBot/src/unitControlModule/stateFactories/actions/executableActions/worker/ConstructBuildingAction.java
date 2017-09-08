@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
+import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
@@ -50,8 +51,12 @@ public class ConstructBuildingAction extends WorkerAction {
 			// Update the ConstructionJob first.
 			constructionInformation.update();
 
+			// Walk to the TilePosition the building is being created on when it is undiscovered.
+			if(!Core.getInstance().getGame().isExplored(constructionInformation.getTilePosition())) {
+				((PlayerUnitWorker) goapUnit).getUnit().move(constructionInformation.getTilePosition().toPosition());
+			} 
 			// Initiate the construction of the building if necessary.
-			if (!constructionInformation.constructionStarted()) {
+			else if (!constructionInformation.constructionStarted()) {
 				((PlayerUnitWorker) goapUnit).getUnit().build(constructionInformation.getUnitType(),
 						constructionInformation.getTilePosition());
 			}

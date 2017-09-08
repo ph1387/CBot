@@ -131,7 +131,7 @@ public class BuildLocationFactory {
 				possibleBaseLocations.addAll(freeBaseLocations);
 			}
 		}
-
+		
 		// Sort the BaseLocations and set the new BaseLocation to the first
 		// element of the sorted List.
 		this.sortFreeBaseLocations(possibleBaseLocations, playerStartingLocation, closestEnemyBuilding);

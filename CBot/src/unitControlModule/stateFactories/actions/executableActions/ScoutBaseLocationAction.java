@@ -85,15 +85,15 @@ public class ScoutBaseLocationAction extends BaseAction {
 	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
 		return false;
 	}
-	
+
 	@Override
 	public int defineMaxGroupSize() {
 		return 0;
 	}
-	
+
 	@Override
 	public int defineMaxLeaderTileDistance() {
 		return 0;
 	}
-	
+
 }
