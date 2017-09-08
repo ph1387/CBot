@@ -1,7 +1,3 @@
 /unitControlModule/
-/core/
-/buildingOrderModule/
-/resourceSpotsAllocationModule/
-/informationStorage/
-/workerManagerResourceSpotAllocation/
 /workerManagerConstructionJobDistribution/
+/buildingOrderModule/

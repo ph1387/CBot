@@ -7,6 +7,7 @@ import java.util.List;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.buildActionManagers.BuildActionManagerFactory;
 import bwapi.*;
+import core.CBot;
 import core.Core;
 import informationStorage.InformationStorage;
 import javaGOAP.DefaultGoapAgent;
@@ -78,9 +79,9 @@ public class BuildingOrderModule {
 			// Also only allow a certain amount of elements in the building and
 			// training Queues.
 			if (this.informationStorage.getiBuildingOrderModuleConfig().enableBuildingOrderModuleUpdates()
-					&& this.informationStorage
-							.getTrainingAndBuildingQueueSize() < this.generateMaxConcurrentQueuedElements()
-									+ this.extraQueueElements) {
+					&& CBot.getInstance().getWorkerManagerConstructionJobDistribution().getBuildingQueue().size()
+							+ this.informationStorage.getTrainingQueue().size() < this
+									.generateMaxConcurrentQueuedElements() + this.extraQueueElements) {
 				this.buildingAgent.update();
 			}
 		} catch (Exception e) {

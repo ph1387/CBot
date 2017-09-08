@@ -334,17 +334,18 @@ public class UnitControlModule implements RemoveAgentEvent {
 		}
 	}
 
-	/**
-	 * Adds a Unit to the HashSet of Units being built.
-	 * 
-	 * @param unit
-	 *            the building that is being built.
-	 */
-	public void addToBuildingsBeingCreated(Unit unit) {
-		if (unit.getType().isBuilding()) {
-			this.informationStorage.getWorkerConfig().getBuildingsBeingCreated().add(unit);
-		}
-	}
+	// TODO: UML REMOVE
+//	/**
+//	 * Adds a Unit to the HashSet of Units being built.
+//	 * 
+//	 * @param unit
+//	 *            the building that is being built.
+//	 */
+//	public void addToBuildingsBeingCreated(Unit unit) {
+//		if (unit.getType().isBuilding()) {
+//			this.informationStorage.getWorkerConfig().getBuildingsBeingCreated().add(unit);
+//		}
+//	}
 
 	/**
 	 * Function for adding a UniType to the training Queue so that a Unit of
