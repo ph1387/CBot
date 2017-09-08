@@ -1,16 +1,15 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
-import buildingOrderModule.buildActionManagers.BuildActionManager;
 import bwapi.Unit;
 import bwapi.UnitType;
+import core.CBot;
 import core.Core;
 import javaGOAP.IGoapUnit;
 
 /**
  * ManagerBaseActionPreconditionExtension.java --- Extension for the
  * ManagerBaseAction due to Upgrades, Research and Addons not being limited by
- * the limited concurrent amount of queued elements in the information
- * preserver.
+ * the limited concurrent amount of queued elements.
  * 
  * @author P H - 30.04.2017
  *
@@ -74,20 +73,9 @@ public abstract class ManagerBaseActionPreconditionExtension extends ManagerBase
 		// Then check success if any building is queued that can use the
 		// subclass's feature.
 		if (!success) {
-			for (UnitType unitType : ((BuildActionManager) goapUnit).getInformationStorage().getWorkerConfig()
+			for (UnitType unitType : CBot.getInstance().getWorkerManagerConstructionJobDistribution()
 					.getBuildingQueue()) {
 				if (this.checker.check(unitType)) {
-					success = true;
-					break;
-				}
-			}
-		}
-
-		// As well as all buildings currently being build.
-		if (!success) {
-			for (Unit unit : ((BuildActionManager) goapUnit).getInformationStorage().getWorkerConfig()
-					.getBuildingsBeingCreated()) {
-				if (this.checker.check(unit)) {
 					success = true;
 					break;
 				}

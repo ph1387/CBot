@@ -1,13 +1,5 @@
 package informationStorage;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import bwapi.Unit;
-import bwapi.UnitType;
-
 /**
  * WorkerConfiguration.java --- Configuration Class for the worker Units.
  * 
@@ -16,17 +8,20 @@ import bwapi.UnitType;
  */
 public class WorkerConfiguration {
 
-	private int constructionCounterMax = 20;
+	// TODO: UML REMOVE
+//	private int constructionCounterMax = 20;
 
 	// Initial scouting configuration
 	private int workerScoutingTrigger = 9;
 	private int totalWorkerCount = 0;
 	private boolean workerOnceAssignedScouting = false;
+	
+	// TODO: UML REMOVE
+//	private HashMap<Unit, UnitType> mappedBuildActions = new HashMap<>();
 
-	private HashMap<Unit, UnitType> mappedBuildActions = new HashMap<>();
-
-	private Queue<UnitType> buildingQueue = new LinkedList<>();
-	private HashSet<Unit> buildingsBeingCreated = new HashSet<Unit>();
+	// TODO: UML REMOVE
+//	private Queue<UnitType> buildingQueue = new LinkedList<>();
+//	private HashSet<Unit> buildingsBeingCreated = new HashSet<Unit>();
 
 	public WorkerConfiguration() {
 
@@ -44,9 +39,10 @@ public class WorkerConfiguration {
 
 	// ------------------------------ Getter / Setter
 
-	public int getConstructionCounterMax() {
-		return constructionCounterMax;
-	}
+	// TODO: UML REMOVE
+//	public int getConstructionCounterMax() {
+//		return constructionCounterMax;
+//	}
 
 	public int getWorkerScoutingTrigger() {
 		return workerScoutingTrigger;
@@ -64,15 +60,18 @@ public class WorkerConfiguration {
 		this.workerOnceAssignedScouting = workerOnceAssignedScouting;
 	}
 
-	public Queue<UnitType> getBuildingQueue() {
-		return buildingQueue;
-	}
+	// TODO: UML REMOVE
+//	public Queue<UnitType> getBuildingQueue() {
+//		return buildingQueue;
+//	}
 
-	public HashMap<Unit, UnitType> getMappedBuildActions() {
-		return mappedBuildActions;
-	}
+	// TODO: UML REMOVE
+//	public HashMap<Unit, UnitType> getMappedBuildActions() {
+//		return mappedBuildActions;
+//	}
 
-	public HashSet<Unit> getBuildingsBeingCreated() {
-		return buildingsBeingCreated;
-	}
+	// TODO: UML REMOVE
+//	public HashSet<Unit> getBuildingsBeingCreated() {
+//		return buildingsBeingCreated;
+//	}
 }

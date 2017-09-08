@@ -4,6 +4,7 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Unit;
 import bwapi.UnitType;
+import core.CBot;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -39,7 +40,7 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 	@Override
 	public boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		// Only train units if the building queue is empty
-		return ((BuildActionManager) goapUnit).getInformationStorage().getWorkerConfig().getBuildingQueue().isEmpty()
+		return CBot.getInstance().getWorkerManagerConstructionJobDistribution().getBuildingQueue().isEmpty()
 				&& this.checkProceduralSpecificPrecondition(goapUnit);
 	}
 

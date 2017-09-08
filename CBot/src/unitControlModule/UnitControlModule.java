@@ -322,17 +322,18 @@ public class UnitControlModule implements RemoveAgentEvent {
 		this.unitsToRemove.add(unit);
 	}
 
-	/**
-	 * Function for adding a Building to the building Queue.
-	 * 
-	 * @param unit
-	 *            the building that is going to be build.
-	 */
-	public void addToBuildingQueue(UnitType unitType) {
-		if (unitType.isBuilding()) {
-			this.informationStorage.getWorkerConfig().getBuildingQueue().add(unitType);
-		}
-	}
+	// TODO: UML REMOVE
+//	/**
+//	 * Function for adding a Building to the building Queue.
+//	 * 
+//	 * @param unit
+//	 *            the building that is going to be build.
+//	 */
+//	public void addToBuildingQueue(UnitType unitType) {
+//		if (unitType.isBuilding()) {
+//			this.informationStorage.getWorkerConfig().getBuildingQueue().add(unitType);
+//		}
+//	}
 
 	// TODO: UML REMOVE
 //	/**
