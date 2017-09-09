@@ -266,6 +266,7 @@ public class Simulator {
 				System.out.println(" Sequence start:");
 
 				for (ActionType actionType : currentNode.getChosenActions()) {
+					// TODO: DEBUG INFO
 					System.out.println("  - " + actionType.getClass().getSimpleName());
 					actionTypeSequence.add(actionType);
 				}

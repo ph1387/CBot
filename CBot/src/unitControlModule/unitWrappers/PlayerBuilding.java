@@ -229,28 +229,32 @@ public class PlayerBuilding {
 		// Only perform these checks on buildings that actually can perform
 		// these. This primarily excludes buildings that provide supplies.
 		if (this.unit.getType() != Core.getInstance().getPlayer().getRace().getSupplyProvider()) {
-			// Initiate the different kinds of actions the building can take
+			// Initiate the different kinds of actions the building can take.
 			if (this.state == State.TRAINING && !this.unit.isTraining() && this.trainedUnit != null
 					&& this.commandExecutable) {
-				this.unit.train(this.trainedUnit);
-				this.commandExecutable = false;
-			}
-			// TODO: Test all following functionalities
-			else if (this.state == State.CONSTRUCTING && !this.unit.isConstructing() && this.constructedAddon != null
+				this.commandExecutable = !this.unit.train(this.trainedUnit);
+			} else if (this.state == State.CONSTRUCTING && !this.unit.isConstructing() && this.constructedAddon != null
 					&& this.commandExecutable) {
-				this.unit.buildAddon(this.constructedAddon);
-				this.commandExecutable = false;
+				this.commandExecutable = !this.unit.buildAddon(this.constructedAddon);
 			} else if (this.state == State.UPGRADING && !this.unit.isUpgrading() && this.builtUpgrade != null
 					&& this.commandExecutable) {
-				this.unit.upgrade(this.builtUpgrade);
-				this.commandExecutable = false;
+				this.commandExecutable = !this.unit.upgrade(this.builtUpgrade);
 			} else if (this.state == State.RESEARCHING && !this.unit.isResearching() && this.researchedTech != null
 					&& this.commandExecutable) {
-				this.unit.research(this.researchedTech);
-				this.commandExecutable = false;
+				this.commandExecutable = !this.unit.research(this.researchedTech);
 			}
-			// Reset all information
-			else if (this.unit.isIdle()) {
+			// Reset all information. The rather complicated condition is due to
+			// the fact, that only checking for the "isIdle" parameter does not
+			// always return the exact value:
+			//
+			// "Note It is possible for a unit to remain in the training queue
+			// with no progress. In that case, this function will return false
+			// because of supply or unit count limitations. (...)"
+			//
+			// Thats why the training Queue itself must be checked if the Unit
+			// is able to train other Units.
+			else if (((this.unit.canTrain() && this.unit.getTrainingQueue().isEmpty()) || (!this.unit.canTrain()))
+					&& this.unit.isIdle() && this.state != State.IDLE) {
 				this.state = State.IDLE;
 
 				this.trainedUnit = null;

@@ -3,6 +3,7 @@ package unitControlModule;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import bwapi.Color;
@@ -141,44 +142,96 @@ public class UnitControlDisplay {
 	 *         interfering with the currently display ones.
 	 */
 	public static int showWorkerInformation(int posX, int posY, Collection<GoapAgent> agents) {
-		WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = null;
-		List<PlayerUnitWorker> workerUnits = new ArrayList<PlayerUnitWorker>();
+		List<PlayerUnitWorker> workerUnits = sortConstructionWorkers(getPerformingConstrcutionWorkers(agents));
 		int counter = 1;
-
-		// Get all worker instances.
-		for (GoapAgent goapAgent : agents) {
-			if (goapAgent.getAssignedGoapUnit() instanceof PlayerUnitWorker) {
-				workerUnits.add((PlayerUnitWorker) goapAgent.getAssignedGoapUnit());
-			}
-		}
-
-		// Get the worker manager instance.
-		if (!workerUnits.isEmpty()) {
-			workerManagerConstructionJobDistribution = workerUnits.iterator().next()
-					.getWorkerManagerConstructionJobDistribution();
-		}
 
 		// Show all construction information.
 		GAME.drawTextScreen(posX, posY, "Constructions:");
 
 		for (PlayerUnitWorker playerUnitWorker : workerUnits) {
-			if (workerManagerConstructionJobDistribution.isAssignedConstructing(playerUnitWorker)
-					&& workerManagerConstructionJobDistribution.getConstructionInformation(playerUnitWorker)
-							.constructionStarted()) {
-				IConstrucionInformation constructionInformation = workerManagerConstructionJobDistribution
-						.getConstructionInformation(playerUnitWorker);
-				int calculatedPosY = posY + counter * LINEHEIGHT;
+			IConstrucionInformation constructionInformation = playerUnitWorker
+					.getWorkerManagerConstructionJobDistribution().getConstructionInformation(playerUnitWorker);
+			int calculatedPosY = posY + counter * LINEHEIGHT;
 
-				showBarFilled(posX, calculatedPosY, BAR_WIDTH, LINEHEIGHT,
-						constructionInformation.getBuilding().getRemainingBuildTime(),
-						constructionInformation.getUnitType().buildTime(), WORKER_INFO_BAR_COLOR);
-				GAME.drawTextScreen(posX + OFFSET_LEFT + BAR_WIDTH, calculatedPosY,
-						constructionInformation.getUnitType().toString());
-				counter++;
-			}
+			showBarFilled(posX, calculatedPosY, BAR_WIDTH, LINEHEIGHT,
+					constructionInformation.getBuilding().getRemainingBuildTime(),
+					constructionInformation.getUnitType().buildTime(), WORKER_INFO_BAR_COLOR);
+			GAME.drawTextScreen(posX + OFFSET_LEFT + BAR_WIDTH, calculatedPosY,
+					constructionInformation.getUnitType().toString());
+			counter++;
 		}
 
 		return leaveOneLineFree(posY + counter * LINEHEIGHT);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting all {@link PlayerUnitWorker}s from a Collection
+	 * of {@link GoapAgent}s that are assigned a construction job and as well as
+	 * already started the construction of the building.
+	 * 
+	 * @param agents
+	 *            the Collection of {@link GoapAgent}s from which all
+	 *            {@link PlayerUnitWorker}s are extracted from.
+	 * @return a List of all {@link PlayerUnitWorker}s that are assigned a
+	 *         construction job and started the construction of the building.
+	 */
+	private static List<PlayerUnitWorker> getPerformingConstrcutionWorkers(Collection<GoapAgent> agents) {
+		List<PlayerUnitWorker> workerUnits = new ArrayList<>();
+
+		// Get all worker instances that are currently constructing a building.
+		for (GoapAgent goapAgent : agents) {
+			if (goapAgent.getAssignedGoapUnit() instanceof PlayerUnitWorker) {
+				PlayerUnitWorker playerUnitWorker = (PlayerUnitWorker) goapAgent.getAssignedGoapUnit();
+				WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = playerUnitWorker
+						.getWorkerManagerConstructionJobDistribution();
+
+				if (workerManagerConstructionJobDistribution.isAssignedConstructing(playerUnitWorker)
+						&& workerManagerConstructionJobDistribution.getConstructionInformation(playerUnitWorker)
+								.constructionStarted()) {
+					workerUnits.add(playerUnitWorker);
+				}
+			}
+		}
+		return workerUnits;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for sorting a List of {@link PlayerUnitWorker}s according to the
+	 * time that their assigned construction job requires. The ones with the
+	 * percentual least time left are moved to the beginning of the List.
+	 * 
+	 * @param workers
+	 *            the List of {@link PlayerUnitWorker}s that is going to be
+	 *            sorted.
+	 * @return a sorted List of {@link PlayerUnitWorker}s with the workers that
+	 *         are assigned the construction job requiring the least percentual
+	 *         additional time in the beginning.
+	 */
+	private static List<PlayerUnitWorker> sortConstructionWorkers(List<PlayerUnitWorker> workers) {
+		workers.sort(new Comparator<PlayerUnitWorker>() {
+
+			@Override
+			public int compare(PlayerUnitWorker puw1, PlayerUnitWorker puw2) {
+				double compareValueOne = this.getCompareValue(puw1);
+				double compareValueTwo = this.getCompareValue(puw2);
+
+				return Double.compare(compareValueOne, compareValueTwo);
+			}
+
+			private double getCompareValue(PlayerUnitWorker playerUnitWorker) {
+				WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = playerUnitWorker
+						.getWorkerManagerConstructionJobDistribution();
+				IConstrucionInformation constructionInformation = workerManagerConstructionJobDistribution
+						.getConstructionInformation(playerUnitWorker);
+
+				return Double.valueOf(constructionInformation.getBuilding().getRemainingBuildTime())
+						/ Double.valueOf(constructionInformation.getUnitType().buildTime());
+			}
+		});
+
+		return workers;
 	}
 
 	/**
@@ -195,11 +248,12 @@ public class UnitControlDisplay {
 	 *         interfering with the currently display ones.
 	 */
 	public static int showBuildingInformation(int posX, int posY, Collection<PlayerBuilding> buildings) {
+		List<PlayerBuilding> sortedCollection = sortBuildings(buildings);
 		int counter = 1;
 
 		GAME.drawTextScreen(posX, posY, "Buildings:");
 
-		for (PlayerBuilding playerBuilding : buildings) {
+		for (PlayerBuilding playerBuilding : sortedCollection) {
 			String text = null;
 			int currentValue = 0;
 			int maxValue = 0;
@@ -234,6 +288,58 @@ public class UnitControlDisplay {
 		}
 
 		return leaveOneLineFree(posY + counter * LINEHEIGHT);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for sorting a Collection of {@link PlayerBuilding}s according to
+	 * the time that their specific production / research etc. requires. The
+	 * ones with the percentual least time left are moved to the beginning of
+	 * the List.
+	 * 
+	 * @param buildings
+	 *            the Collection of {@link PlayerBuilding}s that is going to be
+	 *            sorted.
+	 * @return a sorted List of {@link PlayerBuilding}s with the buildings
+	 *         requiring the least percentual additional time in the beginning.
+	 */
+	private static List<PlayerBuilding> sortBuildings(Collection<PlayerBuilding> buildings) {
+		List<PlayerBuilding> sortedCollection = new ArrayList<PlayerBuilding>(buildings);
+
+		// Sort the collection for a better representation of the values. The
+		// ones with lesser build time left get put before the ones with more
+		// time left.
+		sortedCollection.sort(new Comparator<PlayerBuilding>() {
+
+			@Override
+			public int compare(PlayerBuilding pb1, PlayerBuilding pb2) {
+				double compareValueOne = this.getCompareValue(pb1);
+				double compareValueTwo = this.getCompareValue(pb2);
+
+				return Double.compare(compareValueOne, compareValueTwo);
+			}
+
+			private double getCompareValue(PlayerBuilding playerBuilding) {
+				double compareValue = 0;
+
+				if (playerBuilding.getTrainedUnit() != null) {
+					compareValue = Double.valueOf(playerBuilding.getUnit().getRemainingTrainTime())
+							/ Double.valueOf(playerBuilding.getTrainedUnit().buildTime());
+				} else if (playerBuilding.getConstructedAddon() != null) {
+					compareValue = Double.valueOf(playerBuilding.getUnit().getRemainingTrainTime())
+							/ Double.valueOf(playerBuilding.getConstructedAddon().buildTime());
+				} else if (playerBuilding.getBuiltUpgrade() != null) {
+					compareValue = Double.valueOf(playerBuilding.getUnit().getRemainingUpgradeTime())
+							/ Double.valueOf(playerBuilding.getBuiltUpgrade().upgradeTime());
+				} else if (playerBuilding.getResearchedTech() != null) {
+					compareValue = Double.valueOf(playerBuilding.getUnit().getRemainingResearchTime())
+							/ Double.valueOf(playerBuilding.getResearchedTech().researchTime());
+				}
+				return compareValue;
+			}
+		});
+
+		return sortedCollection;
 	}
 
 	/**
