@@ -73,14 +73,8 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 						availableActionTypes.add(actionType);
 					}
 					break;
-				// Only allow the construction of a single machine shop.
 				case "Terran_Machine_Shop":
-					if ((manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
-							.get(actionType.defineResultType().getUnitType()) == null
-							|| manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
-									.get(actionType.defineResultType().getUnitType()).equals(0))
-							&& !usedActionTypes.containsKey(actionType.defineResultType())
-							&& !forwardedActionTypes.containsKey(actionType.defineResultType())) {
+					if (this.canAddMachineShop(manager, actionType, usedActionTypes, forwardedActionTypes)) {
 						availableActionTypes.add(actionType);
 					}
 					break;
@@ -93,6 +87,57 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		}
 
 		return availableActionTypes;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for determining if a Terran_Machine_Shop can be added towards
+	 * the Queue of addons to construct. The function takes the already queued
+	 * as well as forwarded Machine_Shops into account and returns a boolean
+	 * based on the number of them in relation to the total number of factories
+	 * since a Machine_Shop needs to be added towards one.
+	 * 
+	 * @param manager
+	 *            the BuildActionManager for accessing the InformationStorage
+	 *            which contains all the current game information.
+	 * @param actionType
+	 *            the ActionType that is going to result in a Machine_Shop and
+	 *            requires a Terran_Factory.
+	 * @param usedActionTypes
+	 *            the currently queued ActionTypes that were already forwarded.
+	 * @param forwardedActionTypes
+	 *            the Queue of ActionTypes that is going to be forwarded step by
+	 *            step to the executing instance.
+	 * @return true if fewer Machine_Shops are queued / already forwarded and
+	 *         constructed than the total number of Terran_Factories, false
+	 *         otherwise.
+	 */
+	private boolean canAddMachineShop(BuildActionManager manager, ActionType actionType,
+			HashMap<TypeWrapper, Integer> usedActionTypes, HashMap<TypeWrapper, Integer> forwardedActionTypes) {
+		Integer factoryCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.get(actionType.defineRequiredType().getUnitType());
+		Integer machineShopCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.get(actionType.defineResultType().getUnitType());
+		Integer forwardedMachineShopCount = forwardedActionTypes.get(actionType.defineResultType());
+		Integer queuedMachineShopCount = usedActionTypes.get(actionType.defineResultType());
+
+		Integer totalMachineShopCount = 0;
+		if (machineShopCount != null) {
+			totalMachineShopCount += machineShopCount;
+		}
+		if (forwardedMachineShopCount != null) {
+			totalMachineShopCount += forwardedMachineShopCount;
+		}
+		if (queuedMachineShopCount != null) {
+			totalMachineShopCount += queuedMachineShopCount;
+		}
+
+		boolean factoriesExist = factoryCount != null && factoryCount > 0;
+		boolean machineShopsExist = totalMachineShopCount > 0;
+		boolean fewerMachineShopsThanFactories = (!machineShopsExist && factoriesExist)
+				|| (factoriesExist && machineShopsExist && totalMachineShopCount < factoryCount);
+
+		return fewerMachineShopsThanFactories;
 	}
 
 	@Override

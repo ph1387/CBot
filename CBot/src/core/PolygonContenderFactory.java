@@ -39,7 +39,7 @@ public class PolygonContenderFactory extends TilePositionFactory {
 	// TODO: JAVADOC
 	/**
 	 * Function for generating the Default contended Polygons that no worker is
-	 * allowed tio build on.
+	 * allowed to build on.
 	 * 
 	 * @return a HashSet containing all default contended Polygons.
 	 */
