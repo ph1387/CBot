@@ -43,11 +43,12 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	// The actions that the ScoringDirector will be updating.
 	private HashSet<ScoringAction> scoringActions;
 
+	// TODO: UML CHANGE 2
 	// Simulation frequency:
 	// The max difference of the index and the size of the action Queue. When
 	// the difference is less or equal this value a new simulation Thread is
 	// started.
-	private int maxActionQueueIndexOffsetTilEnd = 2;
+	private int maxActionQueueIndexOffsetTilEnd = 4;
 	// Time stamp of the last check of the action Queue.
 	private Integer lastSimulationTimeStampFrames = null;
 	// Time difference between the checking if the action Queue was being worked
