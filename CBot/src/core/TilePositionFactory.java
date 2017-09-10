@@ -14,6 +14,15 @@ import bwapi.UnitType;
  */
 public class TilePositionFactory {
 
+	// TODO: UML ADD
+	private static int RowAdditionTop = 1;
+	// TODO: UML ADD
+	private static int RowAdditionRight = 1;
+	// TODO: UML ADDs
+	private static int RowAdditionBottom = 1;
+	// TODO: UML ADD
+	private static int RowAdditionLeft = 1;
+
 	public TilePositionFactory() {
 
 	}
@@ -35,14 +44,9 @@ public class TilePositionFactory {
 	public static HashSet<TilePosition> generateNeededTilePositions(UnitType unitType,
 			TilePosition targetTilePosition) {
 		HashSet<TilePosition> neededTilePositions = new HashSet<TilePosition>();
-		int bottomRowAddion = 0;
 
-		if (unitType.canProduce()) {
-			bottomRowAddion = 1;
-		}
-
-		for (int i = 0; i < unitType.tileWidth(); i++) {
-			for (int j = 0; j < unitType.tileHeight() + bottomRowAddion; j++) {
+		for (int i = 0 - RowAdditionLeft; i < unitType.tileWidth() + RowAdditionRight; i++) {
+			for (int j = 0 - RowAdditionTop; j < unitType.tileHeight() + RowAdditionBottom; j++) {
 				int targetX = targetTilePosition.getX() + i;
 				int targetY = targetTilePosition.getY() + j;
 
