@@ -322,12 +322,10 @@ public class PlayerBuilding {
 
 	/**
 	 * Function for extracting an element from the provided Queue that matches
-	 * the all QueueElementCheckers conditions. The function iterates through
-	 * the whole Queue and only stops when either the Queue is cycled through
-	 * once or an element that matches all conditions is found.
+	 * the all QueueElementCheckers conditions.
 	 * 
 	 * @param checkedQueue
-	 *            the Queue that is being cycled through.
+	 *            the Queue that is being looked at.
 	 * @param elementCheker
 	 *            the conditions that an element of the Queue must fulfill.
 	 * @return an element that fulfills either all conditions of the
@@ -338,19 +336,12 @@ public class PlayerBuilding {
 		T matchingElement = null;
 
 		if (elementCheker.checkElement()) {
-			int queueSize = checkedQueue.size();
+			T element = checkedQueue.peek();
 
-			// Iterate through all stored entries and try to find one that can
-			// be worked on by this Unit.
-			for (int i = 0; i < queueSize && matchingElement == null; i++) {
-				T element = checkedQueue.poll();
-
-				if (elementCheker.checkElement(element) && elementCheker.canAfford(element)) {
-					matchingElement = element;
-				} else {
-					checkedQueue.add(element);
-				}
+			if (element != null && elementCheker.checkElement(element) && elementCheker.canAfford(element)) {
+				matchingElement = checkedQueue.poll();
 			}
+
 		}
 		return matchingElement;
 	}
