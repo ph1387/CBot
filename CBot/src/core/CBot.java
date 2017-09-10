@@ -148,7 +148,7 @@ public class CBot implements BWEventListener {
 	public void onFrame() {
 		try {
 			if (!this.addedUnits && this.started) {
-				System.out.println("Assigned Units:");
+				System.out.println("\nAssigned Units:");
 
 				// Add all known Units to the UnitControl
 				for (Unit unit : this.game.self().getUnits()) {
@@ -157,6 +157,7 @@ public class CBot implements BWEventListener {
 						System.out.println("  - " + unit.getType());
 					}
 				}
+				System.out.println("\n");
 
 				this.addedUnits = true;
 			}

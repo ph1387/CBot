@@ -15,6 +15,8 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 
 	// Init:
 	private boolean generateDefaultContendedTilePositions = true;
+	// TODO: UML ADD
+	private boolean generateDefaultContendedPolygons = true;
 	private boolean generateRegionAccessOrder = true;
 
 	// BuildingOrderModule:
@@ -68,6 +70,12 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	@Override
 	public boolean enableGenerateDefaultContendedTilePositions() {
 		return this.generateDefaultContendedTilePositions;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean enableGenerateDefaultContendedPolygons() {
+		return this.generateDefaultContendedPolygons;
 	}
 
 	@Override

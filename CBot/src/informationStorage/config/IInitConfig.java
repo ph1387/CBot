@@ -17,6 +17,14 @@ public interface IInitConfig {
 	 */
 	public boolean enableGenerateDefaultContendedTilePositions();
 
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return true for enabling the generation of the default contended
+	 *         Polygons (I.e. starting location, ChokePoints, ...).
+	 */
+	public boolean enableGenerateDefaultContendedPolygons();
+
 	/**
 	 *
 	 * @return true for enabling the generation of the order in which the

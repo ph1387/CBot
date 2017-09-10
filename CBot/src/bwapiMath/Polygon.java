@@ -95,17 +95,12 @@ public class Polygon {
 
 		if (startingPoint.type == Type.POSITION) {
 			// First clone the Point, since the actual edge of the Polygon must
-			// NOT be changed! Then add a fixed amount to the current Point's
-			// values for the coordinates actually being inside the Polygon. If
-			// this is not added, the second generated Point would directly be
-			// on the edge of the Polygon and not being counted.
+			// NOT be changed!
 			Point currentPoint = startingPoint.clone();
-			currentPoint.x += 1;
-			currentPoint.y += 1;
 
 			// Iterate through all possible TilePositions in the Polygon with a
 			// recursion
-			this.tilePositionRecursion(coveredTilePositions, currentPoint);
+			this.tilePositionRecursion(coveredTilePositions, currentPoint, true);
 
 			return coveredTilePositions;
 		} else {
@@ -130,16 +125,11 @@ public class Polygon {
 		return p;
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for performing a recursion, which finds all covered
 	 * TilePositions that are covered by this Polygon. This uses a Point, which
-	 * resembles a <b>Position (!)</b> in the Game. This is necessary since
-	 * adding a small margin at the left and top side is necessary for the
-	 * algorithm to properly work. If this margin is not added, the values
-	 * returned by the ray algorithm used to determine the intersections between
-	 * the Vectors would be null as the Point would sit directly on the Vector
-	 * itself. Therefore using a TilePosition is not wise since adding a margin
-	 * to one is not possible.
+	 * resembles a <b>Position (!)</b> in the Game.
 	 * 
 	 * @param coveredTilePositions
 	 *            the HashSet for holding all found TilePositions that are being
@@ -148,12 +138,14 @@ public class Polygon {
 	 *            the Point <b>(as Position!)</b> that the ray casting algorithm
 	 *            is testing and that is later converted to an actual
 	 *            TilePosition.
+	 * @param isStartingPoint
+	 *            used as a flag to enable the initial first recursion round.
 	 */
-	private void tilePositionRecursion(HashSet<TilePosition> coveredTilePositions, Point currentPoint)
-			throws PointTypeException {
+	private void tilePositionRecursion(HashSet<TilePosition> coveredTilePositions, Point currentPoint,
+			boolean isStartingPoint) throws PointTypeException {
 		if (currentPoint.type != Type.POSITION) {
 			throw new PointTypeException(Type.POSITION);
-		} else if (this.polygon.contains(currentPoint.x, currentPoint.y)
+		} else if ((isStartingPoint || this.polygon.contains(currentPoint.x, currentPoint.y))
 				&& !coveredTilePositions.contains(currentPoint.transformFromPositionToTilePosition())) {
 			int tileSize = Core.getInstance().getTileSize();
 
@@ -161,29 +153,29 @@ public class Polygon {
 
 			// -> left
 			tilePositionRecursion(coveredTilePositions,
-					new Point(currentPoint.x - tileSize, currentPoint.y, Type.POSITION));
+					new Point(currentPoint.x - tileSize, currentPoint.y, Type.POSITION), false);
 			// -> right
 			tilePositionRecursion(coveredTilePositions,
-					new Point(currentPoint.x + tileSize, currentPoint.y, Type.POSITION));
+					new Point(currentPoint.x + tileSize, currentPoint.y, Type.POSITION), false);
 			// -> top
 			tilePositionRecursion(coveredTilePositions,
-					new Point(currentPoint.x, currentPoint.y - tileSize, Type.POSITION));
+					new Point(currentPoint.x, currentPoint.y - tileSize, Type.POSITION), false);
 			// -> bottom
 			tilePositionRecursion(coveredTilePositions,
-					new Point(currentPoint.x, currentPoint.y + tileSize, Type.POSITION));
+					new Point(currentPoint.x, currentPoint.y + tileSize, Type.POSITION), false);
 
 			// -> top-left
 			tilePositionRecursion(coveredTilePositions,
-					new Point(currentPoint.x - tileSize, currentPoint.y - tileSize, Type.POSITION));
+					new Point(currentPoint.x - tileSize, currentPoint.y - tileSize, Type.POSITION), false);
 			// -> top-right
 			tilePositionRecursion(coveredTilePositions,
-					new Point(currentPoint.x - tileSize, currentPoint.y + tileSize, Type.POSITION));
+					new Point(currentPoint.x - tileSize, currentPoint.y + tileSize, Type.POSITION), false);
 			// -> bottom-left
 			tilePositionRecursion(coveredTilePositions,
-					new Point(currentPoint.x + tileSize, currentPoint.y - tileSize, Type.POSITION));
+					new Point(currentPoint.x + tileSize, currentPoint.y - tileSize, Type.POSITION), false);
 			// -> bottom-right
 			tilePositionRecursion(coveredTilePositions,
-					new Point(currentPoint.x + tileSize, currentPoint.y + tileSize, Type.POSITION));
+					new Point(currentPoint.x + tileSize, currentPoint.y + tileSize, Type.POSITION), false);
 		}
 	}
 

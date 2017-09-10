@@ -54,8 +54,19 @@ public class Init {
 			// Add all default contended TilePositions.
 			if (informationStorage.getiInitConfig().enableGenerateDefaultContendedTilePositions()) {
 				informationStorage.getMapInfo().getTilePositionContenders()
-						.addAll(new TilePositionContenderFactory(CBot.getInstance().getInformationStorage())
-								.generateDefaultContendedTilePositions());
+						.addAll(new TilePositionContenderFactory().generateDefaultContendedTilePositions());
+			}
+			if (informationStorage.getiInitConfig().enableGenerateDefaultContendedPolygons()) {
+				// Add the Polygons which define a non construction area to the
+				// storage.
+				informationStorage.getMapInfo().getReservedSpace()
+						.addAll(new PolygonContenderFactory().generateDefaultContendedPolygons());
+
+				// Transform all created reserved Polygons into TilePositions.
+				for (Polygon polygon : informationStorage.getMapInfo().getReservedSpace()) {
+					informationStorage.getMapInfo().getTilePositionContenders()
+							.addAll(polygon.getCoveredTilePositions());
+				}
 			}
 
 			if (informationStorage.getiInitConfig().enableGenerateRegionAccessOrder()) {
