@@ -37,10 +37,8 @@ public abstract class ActionUpdaterGeneral implements Updater {
 		// retreating Action a Unit can perform. If another one is desired, this
 		// function needs to be overwritten.
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
-			this.retreatActionSteerInRetreatVectorDirection
-					.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
-			this.retreatActionInPreviousAdjacentRegion
-					.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+			this.retreatActionSteerInRetreatVectorDirection.setTarget(this.playerUnit.getAttackingEnemyUnitToReactTo());
+			this.retreatActionInPreviousAdjacentRegion.setTarget(this.playerUnit.getAttackingEnemyUnitToReactTo());
 		}
 	}
 

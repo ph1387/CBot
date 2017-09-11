@@ -43,13 +43,8 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		}
 
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
-			Unit closesEnemytUnit = this.playerUnit.getClosestEnemyUnitInConfidenceRange();
-
-			// The player Unit has to be in range of the enemy Unit's ground
-			// weapon to be in danger.
-			if (closesEnemytUnit != null && closesEnemytUnit.isInWeaponRange(this.playerUnit.getUnit())) {
-				this.retreatActionSteerInBioUnitDirectionTerranMedic.setTarget(closestUnit);
-			}
+			this.retreatActionSteerInBioUnitDirectionTerranMedic
+					.setTarget(this.playerUnit.getAttackingEnemyUnitToReactTo());
 		}
 
 		// Get all Units that are missing health.

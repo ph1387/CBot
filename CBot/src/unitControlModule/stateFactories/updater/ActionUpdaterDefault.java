@@ -44,7 +44,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		} else {
 			this.attackMoveToNearestKnownUnitConfiguration();
 
-			this.attackUnitAction.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+			this.attackUnitAction.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
 		}
 	}
 
@@ -65,18 +65,27 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 	protected void attackMoveToNearestKnownUnitConfiguration() {
 		TilePosition closestUnitTilePosition = null;
 
-		List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(
-				this.playerUnit.getInformationStorage().getTrackerInfo().getEnemyUnits());
-		enemyUnits.addAll(this.playerUnit.getInformationStorage().getTrackerInfo().getEnemyBuildings());
+		// Either the Unit has a possible attack target,
+		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null) {
+			closestUnitTilePosition = this.playerUnit.getAttackableEnemyUnitToReactTo()
+					.getTilePosition();
+		}
+		// Or it just moves to the nearest one it knows of.
+		else {
+			List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(
+					this.playerUnit.getInformationStorage().getTrackerInfo().getEnemyUnits());
+			enemyUnits.addAll(this.playerUnit.getInformationStorage().getTrackerInfo().getEnemyBuildings());
 
-		// Find the closest unit of the known ones
-		for (EnemyUnit unit : enemyUnits) {
-			if (closestUnitTilePosition == null || this.playerUnit.getUnit()
-					.getDistance(unit.getLastSeenTilePosition().toPosition()) < this.playerUnit.getUnit()
-							.getDistance(closestUnitTilePosition.toPosition())) {
-				closestUnitTilePosition = unit.getLastSeenTilePosition();
+			// Find the closest unit of the known ones
+			for (EnemyUnit unit : enemyUnits) {
+				if (closestUnitTilePosition == null || this.playerUnit.getUnit()
+						.getDistance(unit.getLastSeenTilePosition().toPosition()) < this.playerUnit.getUnit()
+								.getDistance(closestUnitTilePosition.toPosition())) {
+					closestUnitTilePosition = unit.getLastSeenTilePosition();
+				}
 			}
 		}
+
 		this.attackMoveAction.setTarget(closestUnitTilePosition);
 	}
 

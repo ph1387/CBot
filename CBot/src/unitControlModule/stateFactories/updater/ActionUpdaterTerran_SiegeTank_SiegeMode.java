@@ -36,7 +36,8 @@ public class ActionUpdaterTerran_SiegeTank_SiegeMode extends ActionUpdaterGenera
 		// TODO: Possible Change: Only perform once.
 		this.abilityActionTerranSiegeTankTankMode.setTarget(this.playerUnit);
 
-		this.attackUnitActionTerranSiegeTankBombard.setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+		this.attackUnitActionTerranSiegeTankBombard
+				.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
 	}
 
 	@Override

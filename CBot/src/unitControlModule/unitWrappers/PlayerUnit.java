@@ -1,6 +1,7 @@
 package unitControlModule.unitWrappers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +11,8 @@ import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapi.UnitType;
+import bwapi.WeaponType;
 import bwapiMath.Point;
 import bwta.BWTA;
 import bwta.BaseLocation;
@@ -42,11 +45,39 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	// Information preserver which holds all important information
 	protected InformationStorage informationStorage;
-
 	protected Unit unit;
-	protected Unit closestEnemyUnitInConfidenceRange;
-	protected double confidence = 1.;
 
+	// TODO: UML ADD
+	protected Unit closestEnemyUnitInConfidenceRange;
+	// TODO: UML ADD
+	// The special UnitTypes that the Unit is looking out for and prioritizes in
+	// its target choosing. These are mostly sentry turrets and static buildings
+	// that can attack Units.
+	protected List<UnitType> specialUnitTypes = Arrays.asList(
+			new UnitType[] { UnitType.Terran_Bunker, UnitType.Terran_Missile_Turret, UnitType.Protoss_Photon_Cannon,
+					UnitType.Zerg_Creep_Colony, UnitType.Zerg_Spore_Colony, UnitType.Zerg_Sunken_Colony, });
+	// TODO: UML ADD
+	// The closest enemy Unit this one can attack:
+	protected Unit closestAttackableEnemyUnitInConfidenceRange;
+	// TODO: UML ADD
+	protected Unit closestAttackableEnemyUnitWithWeapon;
+	// TODO: UML ADD
+	protected Unit closestAttackableEnemySpecialUnitInConfidenceRange;
+	// TODO: UML ADD
+	protected Unit closestAttackableEnemyWorkerInConfidenceRange;
+	// TODO: UML ADD
+	protected Unit closestAttackableEnemySupplyProviderInConfidenceRange;
+	// TODO: UML ADD
+	protected Unit closestAttackableEnemyCenterInConfidenceRange;
+	// TODO: UML ADD
+	protected Unit attackableEnemyUnitToReactTo;
+	// TODO: UML ADD
+	// The closest enemy Unit that this one can be attacked by:
+	protected Unit closestAttackingEnemyUnitInConfidenceRange;
+	// TODO: UML ADD
+	protected Unit attackingEnemyUnitToReactTo;
+
+	protected double confidence = 1.;
 	// Extra distance that will be added to the enemy when determining if the
 	// Unit should retreat or not.
 	protected int extraConfidencePixelRangeToClosestUnits = 32;
@@ -175,7 +206,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * are known of.
 	 */
 	protected void actOnUnitsKnown() {
-		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(this.getAllEnemyUnitsInConfidenceRange());
+		// Update the references to the different enemy Units that are around
+		// this Unit.
+		this.updateEnemyUnitReferences();
 
 		// Always update the confidence and the states and not only when an
 		// enemy is in confidence range since this would cause the Unit to
@@ -203,6 +236,106 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for updating all references regarding enemy Units. This includes
+	 * i.e. the closest one towards this Unit.
+	 */
+	private void updateEnemyUnitReferences() {
+		HashSet<Unit> enemyUnitsInConfidenceRange = this.getAllEnemyUnitsInConfidenceRange();
+
+		// Update the currently closest enemy Unit reference:
+		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(enemyUnitsInConfidenceRange);
+
+		// Update attackable Unit references:
+		this.closestAttackableEnemyUnitWithWeapon = this
+				.getClosestUnit(this.getAttackableUnitsWithWeapons(enemyUnitsInConfidenceRange));
+		this.closestAttackableEnemyUnitInConfidenceRange = this
+				.getClosestUnit(this.getAttackableUnits(enemyUnitsInConfidenceRange));
+		this.closestAttackableEnemySpecialUnitInConfidenceRange = this
+				.getClosestUnit(this.getAttackableSpecialUnits(enemyUnitsInConfidenceRange, this.specialUnitTypes));
+		this.closestAttackableEnemyWorkerInConfidenceRange = this
+				.getClosestUnit(this.getAttackableWorkers(enemyUnitsInConfidenceRange));
+		this.closestAttackableEnemySupplyProviderInConfidenceRange = this
+				.getClosestUnit(this.getAttackableEnemySupplyProviders(enemyUnitsInConfidenceRange));
+		this.closestAttackableEnemyCenterInConfidenceRange = this
+				.getClosestUnit(this.getAttackableEnemyCenters(enemyUnitsInConfidenceRange));
+
+		this.attackableEnemyUnitToReactTo = this.generateAttackableEnemyUnitToReactTo();
+
+		// Update attacking Unit references:
+		this.closestAttackingEnemyUnitInConfidenceRange = this
+				.getClosestUnit(this.getAttackingUnits(enemyUnitsInConfidenceRange));
+
+		this.attackingEnemyUnitToReactTo = this.generateAttackingEnemyUnitToReactTo();
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating / finding the Unit that this one has to react to
+	 * when taking any offensive actions. The Unit has to chose between
+	 * different kinds of Units in it's surrounding like workers or centers.
+	 * 
+	 * @return the Unit that this one should react to when taking offensive
+	 *         actions.
+	 */
+	private Unit generateAttackableEnemyUnitToReactTo() {
+		Unit unitToReactTo = null;
+
+		// Prioritize the special Units above all other Units: In weapon range.
+		if (this.closestAttackableEnemySpecialUnitInConfidenceRange != null
+				&& this.unit.isInWeaponRange(this.closestAttackableEnemySpecialUnitInConfidenceRange)) {
+			unitToReactTo = this.closestAttackableEnemySpecialUnitInConfidenceRange;
+		}
+		// Otherwise decide based on other conditions.
+		else if (this.closestAttackableEnemyUnitInConfidenceRange != null) {
+			// Enemies with weapons.
+			if (this.closestAttackableEnemyUnitWithWeapon != null) {
+				unitToReactTo = this.closestAttackableEnemyUnitWithWeapon;
+			}
+			// Workers. (Probably never called since workers can attack ground
+			// Units)
+			else if (this.closestAttackableEnemyWorkerInConfidenceRange != null) {
+				unitToReactTo = this.closestAttackableEnemyWorkerInConfidenceRange;
+			}
+			// SupplyProvider: No enemy is able to attack this Unit.
+			else if (this.closestAttackableEnemySupplyProviderInConfidenceRange != null
+					&& this.closestAttackingEnemyUnitInConfidenceRange == null) {
+				unitToReactTo = this.closestAttackableEnemySupplyProviderInConfidenceRange;
+			}
+			// Center: No enemy is able to attack this Unit.
+			else if (this.closestAttackableEnemyCenterInConfidenceRange != null
+					&& this.closestAttackingEnemyUnitInConfidenceRange == null) {
+				unitToReactTo = this.closestAttackableEnemyCenterInConfidenceRange;
+			}
+			// No Unit prioritized => The closest one is targeted.
+			else {
+				unitToReactTo = this.closestAttackableEnemyUnitInConfidenceRange;
+			}
+		}
+
+		return unitToReactTo;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating / finding the Unit that this one has to react to
+	 * when taking any defensive actions.
+	 * 
+	 * @return the Unit that this one should react to when taking defensive
+	 *         actions.
+	 */
+	private Unit generateAttackingEnemyUnitToReactTo() {
+		Unit unitToReactTo;
+
+		if (this.closestAttackingEnemyUnitInConfidenceRange == null) {
+			unitToReactTo = this.closestEnemyUnitInConfidenceRange;
+		} else {
+			unitToReactTo = this.closestAttackingEnemyUnitInConfidenceRange;
+		}
+		return unitToReactTo;
 	}
 
 	/**
@@ -505,6 +638,196 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return playerUnits;
 	}
 
+	// TODO: UML ADD
+	/**
+	 * Function for extracting Units that match a provided List of UnitTypes
+	 * from a HashSet of Units.
+	 * 
+	 * @param units
+	 *            the Units which the matching ones are being extracted from.
+	 * @param specialUnitTypes
+	 *            the List of UnitTypes that define which Units are going to be
+	 *            extracted.
+	 * @return a HashSet of Units based on the provided units matching the
+	 *         UnitTypes of the given List.
+	 */
+	public HashSet<Unit> getAttackableSpecialUnits(HashSet<Unit> units, List<UnitType> specialUnitTypes) {
+		HashSet<Unit> attackableUnits = new HashSet<>();
+
+		for (Unit unit : units) {
+			if (specialUnitTypes.contains(unit.getType()) && this.canAttack(unit)) {
+				attackableUnits.add(unit);
+			}
+		}
+		return attackableUnits;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting workers from a provided HashSet of Units that
+	 * this Unit can attack.
+	 * 
+	 * @param units
+	 *            the Units which the workers are being extracted from.
+	 * @return a HashSet of Units which are the workers of the initial HashSet
+	 *         that this Unit can attack.
+	 */
+	public HashSet<Unit> getAttackableWorkers(HashSet<Unit> units) {
+		HashSet<Unit> attackableWorkers = new HashSet<>();
+
+		for (Unit unit : units) {
+			if (unit.getType().isWorker() && this.canAttack(unit)) {
+				attackableWorkers.add(unit);
+			}
+		}
+		return attackableWorkers;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting enemy supply providers from a provided HashSet of
+	 * Units that this Unit can attack.
+	 * 
+	 * @param units
+	 *            the Units which the supply providers are being extracted from.
+	 * @return a HashSet of Units which are the supply providers of the initial
+	 *         HashSet that this Unit can attack.
+	 */
+	public HashSet<Unit> getAttackableEnemySupplyProviders(HashSet<Unit> units) {
+		HashSet<Unit> attackableSupplyProviders = new HashSet<>();
+
+		for (Unit unit : units) {
+			if (unit.getType() == Core.getInstance().getGame().enemy().getRace().getSupplyProvider()
+					&& this.canAttack(unit)) {
+				attackableSupplyProviders.add(unit);
+			}
+		}
+		return attackableSupplyProviders;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting centers from a provided HashSet of Units that
+	 * this Unit can attack.
+	 * 
+	 * @param units
+	 *            the Units which the centers are being extracted from.
+	 * @return a HashSet of Units which are the centers of the initial HashSet
+	 *         that this Unit can attack.
+	 */
+	public HashSet<Unit> getAttackableEnemyCenters(HashSet<Unit> units) {
+		HashSet<Unit> attackableCenters = new HashSet<>();
+
+		for (Unit unit : units) {
+			if (unit.getType() == Core.getInstance().getGame().enemy().getRace().getCenter() && this.canAttack(unit)) {
+				attackableCenters.add(unit);
+			}
+		}
+		return attackableCenters;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting enemy Units that have either a ground or air
+	 * weapon from a provided HashSet of Units that this Unit can attack.
+	 * 
+	 * @param units
+	 *            the Units which the enemy Units are being extracted from.
+	 * @return a HashSet of Units which are the enemy Units with weapons of the
+	 *         initial HashSet that this Unit can attack.
+	 */
+	public HashSet<Unit> getAttackableUnitsWithWeapons(HashSet<Unit> units) {
+		HashSet<Unit> attackableUnitsWithWeapons = new HashSet<>();
+
+		for (Unit unit : units) {
+			if ((unit.getType().groundWeapon().damageAmount() > 0 || unit.getType().airWeapon().damageAmount() > 0)
+					&& this.canAttack(unit)) {
+				attackableUnitsWithWeapons.add(unit);
+			}
+		}
+		return attackableUnitsWithWeapons;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting enemy Units that this Unit can attack (Flying,
+	 * non flying) based on this Unit's weapon.
+	 * 
+	 * @param units
+	 *            the Units which the attackable Units are being extracted from.
+	 * @return a HashSet of attackable Units (Flying, non flying) of the initial
+	 *         HashSet based on this Unit's weapon.
+	 */
+	public HashSet<Unit> getAttackableUnits(HashSet<Unit> units) {
+		HashSet<Unit> attackableUnits = new HashSet<>();
+
+		for (Unit unit : units) {
+			if (this.canAttack(unit)) {
+				attackableUnits.add(unit);
+			}
+		}
+		return attackableUnits;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for getting the enemy Units in the provided HashSet that can
+	 * attack it. This does NOT include their specific weapon range, but only
+	 * the TYPE of weapon that they use. I.e. this function returns all enemies
+	 * with ground weapons that can attack a ground Unit. If the Unit is
+	 * airborne the function returns all enemy Units with air weapons that can
+	 * attack flying Units.
+	 * 
+	 * @param units
+	 *            the Units which the attacking Units are being extracted from.
+	 * @return a HashSet of enemy Units of the provided HashSet that can attack
+	 *         the Unit itself based on it's state (Flying, not flying).
+	 */
+	public HashSet<Unit> getAttackingUnits(HashSet<Unit> units) {
+		HashSet<Unit> attackingUnits = new HashSet<>();
+
+		for (Unit unit : units) {
+			if (this.canBeAttackedBy(unit)) {
+				attackingUnits.add(unit);
+			}
+		}
+		return attackingUnits;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if the Unit can attack a given Unit. This takes the
+	 * current Unit's weapon into account (Ground, air).
+	 * 
+	 * @param unit
+	 *            the Unit that this Unit's weapons are being tested against.
+	 * @return true if this Unit can attack the given one with it's weapons.
+	 */
+	public boolean canAttack(Unit unit) {
+		WeaponType groundWeapon = this.unit.getType().groundWeapon();
+		WeaponType airWeapon = this.unit.getType().airWeapon();
+
+		return !unit.isCloaked()
+				&& ((groundWeapon.targetsGround() && !unit.isFlying()) || (airWeapon.targetsAir() && unit.isFlying()));
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if the Unit can be attacked by a given Unit. This
+	 * takes the provided Unit's weapon into account (Ground, air).
+	 * 
+	 * @param unit
+	 *            the Unit whose weapons are being tested against this Unit.
+	 * @return true if this Unit can be attacked by the given one.
+	 */
+	public boolean canBeAttackedBy(Unit unit) {
+		WeaponType groundWeapon = unit.getType().groundWeapon();
+		WeaponType airWeapon = unit.getType().airWeapon();
+
+		return (groundWeapon.targetsGround() && !this.unit.isFlying())
+				|| (airWeapon.targetsAir() && this.unit.isFlying());
+	}
+
 	/**
 	 * Function for extracting the distance to the closest Player center
 	 * building on the map. This function either returns the actual distance
@@ -572,6 +895,51 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	public Unit getClosestEnemyUnitInConfidenceRange() {
 		return this.closestEnemyUnitInConfidenceRange;
+	}
+
+	// TODO: UML ADD
+	public Unit getClosestAttackableEnemyUnitWithWeapon() {
+		return closestAttackableEnemyUnitWithWeapon;
+	}
+
+	// TODO: UML ADD
+	public Unit getClosestAttackableEnemyUnitInConfidenceRange() {
+		return closestAttackableEnemyUnitInConfidenceRange;
+	}
+
+	// TODO: UML ADD
+	public Unit getClosestAttackableEnemySpecialUnitInConfidenceRange() {
+		return closestAttackableEnemySpecialUnitInConfidenceRange;
+	}
+
+	// TODO: UML ADD
+	public Unit getClosestAttackableEnemyWorkerInConfidenceRange() {
+		return closestAttackableEnemyWorkerInConfidenceRange;
+	}
+
+	// TODO: UML ADD
+	public Unit getClosestAttackableEnemySupplyProviderInConfidenceRange() {
+		return closestAttackableEnemySupplyProviderInConfidenceRange;
+	}
+
+	// TODO: UML ADD
+	public Unit getClosestAttackableEnemyCenterInConfidenceRange() {
+		return closestAttackableEnemyCenterInConfidenceRange;
+	}
+
+	// TODO: UML ADD
+	public Unit getAttackableEnemyUnitToReactTo() {
+		return attackableEnemyUnitToReactTo;
+	}
+
+	// TODO: UML ADD
+	public Unit getClosestAttackingEnemyUnitInConfidenceRange() {
+		return closestAttackingEnemyUnitInConfidenceRange;
+	}
+
+	// TODO: UML ADD
+	public Unit getAttackingEnemyUnitToReactTo() {
+		return attackingEnemyUnitToReactTo;
 	}
 
 	public InformationStorage getInformationStorage() {

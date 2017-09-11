@@ -15,6 +15,13 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ActionUpdaterTerran_Marine extends ActionUpdaterDefault {
 
+	// TODO: UML ADD
+	private AbilityActionTerranMarine_StimPack abilityActionTerranMarine_StimPack;
+	// TODO: UML ADD
+	private AttackUnitActionTerran_Marine_Stimmed attackUnitActionTerran_Marine_Stimmed;
+	// TODO: UML ADD
+	private RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed retreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed;
+
 	public ActionUpdaterTerran_Marine(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
@@ -24,13 +31,29 @@ public class ActionUpdaterTerran_Marine extends ActionUpdaterDefault {
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
-		
+
 		// TODO: Possible Change: Only perform once.
-		((AbilityActionTerranMarine_StimPack) this.getActionFromInstance(AbilityActionTerranMarine_StimPack.class)).setTarget(this.playerUnit);
-		
-		if(this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
-			((AttackUnitActionTerran_Marine_Stimmed) this.getActionFromInstance(AttackUnitActionTerran_Marine_Stimmed.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
-			((RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed) this.getActionFromInstance(RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed.class)).setTarget(this.playerUnit.getClosestEnemyUnitInConfidenceRange());
+		this.abilityActionTerranMarine_StimPack.setTarget(this.playerUnit);
+
+		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
+			attackUnitActionTerran_Marine_Stimmed.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
+			retreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed
+					.setTarget(this.playerUnit.getAttackingEnemyUnitToReactTo());
 		}
 	}
+
+	// TODO: UML ADD
+	@Override
+	protected void init() {
+		super.init();
+
+		this.abilityActionTerranMarine_StimPack = (AbilityActionTerranMarine_StimPack) this
+				.getActionFromInstance(AbilityActionTerranMarine_StimPack.class);
+
+		this.attackUnitActionTerran_Marine_Stimmed = (AttackUnitActionTerran_Marine_Stimmed) this
+				.getActionFromInstance(AttackUnitActionTerran_Marine_Stimmed.class);
+		this.retreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed = (RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed) this
+				.getActionFromInstance(RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed.class);
+	}
+
 }
