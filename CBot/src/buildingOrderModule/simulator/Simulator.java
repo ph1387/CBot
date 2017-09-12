@@ -137,7 +137,8 @@ public class Simulator {
 		// the future:
 		// => Current frame count + i * amount of frames being skipped.
 		for (int i = 0; i < stepAmount; i++) {
-			final int simulatedFrameTimeStamp = currentFrameTimeStamp + i * frameStep;
+			int simulatedFrameTimeStamp = currentFrameTimeStamp + i * frameStep;
+			int treeSpaceAvailable = this.layerNodesMaxNumber;
 
 			// Collection for the new branch layer on top of the current one. A
 			// TreeSet is being used since it provides a sorted insertion which
@@ -167,7 +168,9 @@ public class Simulator {
 			// branch layer.
 			for (Node node : this.currentLayerNodes) {
 				HashSet<ActionSequence> actionTypeSequences = this.generateAllPossibleActionTypeSequences(node,
-						simulatedFrameTimeStamp);
+						simulatedFrameTimeStamp, treeSpaceAvailable);
+				// Update the available space in the tree.
+				treeSpaceAvailable -= actionTypeSequences.size();
 
 				// Transfer a copy of the current Node into the next layer. This
 				// simulates the process of not taking any action in this
@@ -193,6 +196,11 @@ public class Simulator {
 
 					// Make the instance of the ActionSequence available again.
 					this.sequenceFactory.markSequenceAsAvailable(sequence);
+				}
+
+				// No need to continue the loop.
+				if (treeSpaceAvailable <= 0) {
+					break;
 				}
 			}
 
@@ -578,6 +586,7 @@ public class Simulator {
 		}
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for generating all possible permutations of ActionTypes a Node
 	 * can perform. This takes the available mineral and gas counts in
@@ -590,10 +599,15 @@ public class Simulator {
 	 * @param simulatedTimeStamp
 	 *            the time stamp in frames that simulates a certain moment in
 	 *            the future.
+	 * @param maxSequenceCount
+	 *            the maximum number of sequences that this function may
+	 *            generate. Needed for limiting the output and decreasing the
+	 *            complexity.
 	 * @return a Set of all possible permutations that are the result of the
 	 *         ActionTypes being taken based on the provided Node.
 	 */
-	private HashSet<ActionSequence> generateAllPossibleActionTypeSequences(Node currentNode, int simulatedTimeStamp) {
+	private HashSet<ActionSequence> generateAllPossibleActionTypeSequences(Node currentNode, int simulatedTimeStamp,
+			int maxSequenceCount) {
 		HashSet<ActionSequence> actionSequences = new HashSet<>();
 		HashSet<ActionType> possibleActionTypes = new HashSet<>();
 		Queue<ActionSequence> workingSets = new LinkedList<>();
@@ -606,7 +620,7 @@ public class Simulator {
 		// Work on the Queue of ActionType sequences until all executable
 		// permutations are found.
 		this.findAllPossibleActionTypeCombinations(currentNode, simulatedTimeStamp, possibleActionTypes, workingSets,
-				actionSequences);
+				actionSequences, maxSequenceCount);
 
 		return actionSequences;
 	}
@@ -718,6 +732,7 @@ public class Simulator {
 		return actionSequence;
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for finding all combinations of ActionTypes that can be
 	 * performed together from the specified Node. The finished products are
@@ -740,11 +755,15 @@ public class Simulator {
 	 *            the Set of all finished ActionSequences that can be performed
 	 *            from the current Node. This includes all combinations of
 	 *            possible / executable ActionTypes that were provided.
+	 * @param maxSequenceCount
+	 *            the maximum number of sequences that this function may
+	 *            generate. Needed for limiting the output and decreasing the
+	 *            complexity.
 	 */
 	private void findAllPossibleActionTypeCombinations(Node currentNode, int simulatedTimeStamp,
 			HashSet<ActionType> possibleActionTypes, Queue<ActionSequence> workingSets,
-			HashSet<ActionSequence> actionSequences) {
-		while (!workingSets.isEmpty()) {
+			HashSet<ActionSequence> actionSequences, int maxSequenceCount) {
+		while (!workingSets.isEmpty() && actionSequences.size() < maxSequenceCount) {
 			ActionSequence currentActionSequence = workingSets.poll();
 			boolean permutationFinished = true;
 

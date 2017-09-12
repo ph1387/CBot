@@ -23,6 +23,9 @@ import unitControlModule.unitWrappers.RemoveAgentEvent;
  */
 public class UnitControlModule implements RemoveAgentEvent {
 
+	// TODO: UML ADD
+	private GoapAgentFactory goapAgentFactory;
+	
 	// The HashSet(s) is / are used for displaying the content whereas the
 	// Queue(s) is / are used for updating. Not a perfect solution due to adding
 	// and removing elements from multiple Collections but functional.
@@ -43,6 +46,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 	public UnitControlModule(InformationStorage informationStorage) {
 		this.informationStorage = informationStorage;
+		this.goapAgentFactory = new GoapAgentFactory(informationStorage);
 	}
 
 	// -------------------- Functions
@@ -91,7 +95,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 					this.agentUpdateQueueBuildings.add(building);
 					this.buildings.add(building);
 				} else {
-					GoapAgent agent = GoapAgentFactory.createAgent(unit, this.informationStorage);
+					GoapAgent agent = this.goapAgentFactory.createAgent(unit);
 
 					((PlayerUnit) agent.getAssignedGoapUnit()).addAgentRemoveListener(this);
 					this.agents.add(agent);

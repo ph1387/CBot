@@ -15,39 +15,56 @@ import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
  */
 public class PlayerUnitFactory {
 
-	private static WorkerManagerResourceSpotAllocation WorkerManagerResourceSpotAllocation = CBot.getInstance()
+	// TODO: UML ADD
+	private InformationStorage informationStorage;
+
+	// TODO: UML NON STATIC RENAME
+	private WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation = CBot.getInstance()
 			.getWorkerManagerResourceSpotAllocation();
-	private static WorkerManagerConstructionJobDistribution WorkerManagerConstructionJobDistribution = CBot
-			.getInstance().getWorkerManagerConstructionJobDistribution();
+	// TODO: UML NON STATIC
+	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = CBot.getInstance()
+			.getWorkerManagerConstructionJobDistribution();
+
+	// TODO: UML ADD
+	public PlayerUnitFactory(InformationStorage informationStorage) {
+		this.informationStorage = informationStorage;
+	}
 
 	// -------------------- Functions
 
-	public static PlayerUnit createSiegeTank(Unit unit, InformationStorage informationStorage) {
-		return new PlayerUnitTerran_SiegeTank(unit, informationStorage);
+	// TODO: UML NON STATIC PARAMS
+	public PlayerUnit createSiegeTank(Unit unit) {
+		return new PlayerUnitTerran_SiegeTank(unit, this.informationStorage);
 	}
 
-	public static PlayerUnit createSiegeTankSiegeMode(Unit unit, InformationStorage informationStorage) {
-		return new PlayerUnitTerran_SiegeTank_SiegeMode(unit, informationStorage);
+	// TODO: UML NON STATIC PARAMS
+	public PlayerUnit createSiegeTankSiegeMode(Unit unit) {
+		return new PlayerUnitTerran_SiegeTank_SiegeMode(unit, this.informationStorage);
 	}
 
-	public static PlayerUnit createMarine(Unit unit, InformationStorage informationStorage) {
-		return new PlayerUnitTerran_Marine(unit, informationStorage);
+	// TODO: UML NON STATIC PARAMS
+	public PlayerUnit createMarine(Unit unit) {
+		return new PlayerUnitTerran_Marine(unit, this.informationStorage);
 	}
 
-	public static PlayerUnit createFirebat(Unit unit, InformationStorage informationStorage) {
-		return new PlayerUnitTerran_Firebat(unit, informationStorage);
+	// TODO: UML NON STATIC PARAMS
+	public PlayerUnit createFirebat(Unit unit) {
+		return new PlayerUnitTerran_Firebat(unit, this.informationStorage);
 	}
 
-	public static PlayerUnit createMedic(Unit unit, InformationStorage informationStorage) {
-		return new PlayerUnitTerran_Medic(unit, informationStorage);
+	// TODO: UML NON STATIC PARAMS
+	public PlayerUnit createMedic(Unit unit) {
+		return new PlayerUnitTerran_Medic(unit, this.informationStorage);
 	}
 
-	public static PlayerUnit createVulture(Unit unit, InformationStorage informationStorage) {
-		return new PlayerUnitTerran_Vulture(unit, informationStorage);
+	// TODO: UML NON STATIC PARAMS
+	public PlayerUnit createVulture(Unit unit) {
+		return new PlayerUnitTerran_Vulture(unit, this.informationStorage);
 	}
 
-	public static PlayerUnit createSCV(Unit unit, InformationStorage informationStorage) {
-		return new PlayerUnitTerran_SCV(unit, informationStorage, WorkerManagerResourceSpotAllocation,
-				WorkerManagerConstructionJobDistribution);
+	// TODO: UML NON STATIC PARAMS
+	public PlayerUnit createSCV(Unit unit) {
+		return new PlayerUnitTerran_SCV(unit, this.informationStorage, this.workerManagerResourceSpotAllocation,
+				this.workerManagerConstructionJobDistribution);
 	}
 }

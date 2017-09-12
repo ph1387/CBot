@@ -15,8 +15,18 @@ import unitControlModule.unitWrappers.PlayerUnitFactory;
  */
 public class GoapAgentFactory {
 
+	// TODO: UML ADD
+	private PlayerUnitFactory playerUnitFactory;
+	
+	// TODO: UML ADD
+	public GoapAgentFactory(InformationStorage informationStorage) {
+		this.playerUnitFactory = new PlayerUnitFactory(informationStorage);
+	}
+	
 	// -------------------- Functions
 
+	// TODO: UML NON STATIC PARAMS
+	// TODO: JAVADOC
 	/**
 	 * Main function for creating a GoapAgent using a Unit and a general
 	 * InformationStorage.
@@ -31,32 +41,32 @@ public class GoapAgentFactory {
 	 *             Exception indicating that the provided Unit has a not
 	 *             supported UnitType.
 	 */
-	public static GoapAgent createAgent(Unit unit, InformationStorage informationStorage)
+	public GoapAgent createAgent(Unit unit)
 			throws UnknownUnitTypeException {
 		GoapAgent agent = null;
 
 		// TODO: Add more Classes
 		switch (unit.getType().toString()) {
 		case "Terran_Marine":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createMarine(unit, informationStorage));
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createMarine(unit));
 			break;
 		case "Terran_Firebat":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createFirebat(unit, informationStorage));
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createFirebat(unit));
 			break;
 		case "Terran_Medic":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createMedic(unit, informationStorage));
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createMedic(unit));
 			break;
 		case "Terran_Vulture":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createVulture(unit, informationStorage));
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createVulture(unit));
 			break;
 		case "Terran_Siege_Tank_Tank_Mode":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createSiegeTank(unit, informationStorage));
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createSiegeTank(unit));
 			break;
 		case "Terran_Siege_Tank_Siege_Mode":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createSiegeTankSiegeMode(unit, informationStorage));
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createSiegeTankSiegeMode(unit));
 			break;
 		case "Terran_SCV":
-			agent = new DefaultGoapAgent(PlayerUnitFactory.createSCV(unit, informationStorage));
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createSCV(unit));
 			break;
 		default:
 			break;

@@ -10,6 +10,7 @@ import bwapi.Mirror;
 import bwapi.Player;
 import bwapi.Position;
 import bwapi.Unit;
+import bwta.BWTA;
 import informationStorage.InformationStorage;
 import unitControlModule.UnitControlModule;
 import unitTrackerModule.UnitTrackerModule;
@@ -17,7 +18,7 @@ import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDist
 import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
 
 /**
- * CBot.java --- The bot-class itself of which an instance gets created. This
+ * CBot.java --- The Bot-class itself of which an instance gets created. This
  * class receives all events from the BWAPI-Eventlistener.
  * 
  * @author P H - 18.03.2017
@@ -41,7 +42,7 @@ public class CBot implements BWEventListener {
 	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution;
 
 	// Information storage across multiple modules.
-	private InformationStorage informationStorage = new InformationStorage();
+	private InformationStorage informationStorage;
 
 	// Threads that must be finished before shutting down the main Thread.
 	private List<Thread> finishingThreads = new ArrayList<Thread>();
@@ -65,7 +66,7 @@ public class CBot implements BWEventListener {
 	}
 
 	/**
-	 * Run the bot.
+	 * Run the Bot.
 	 */
 	public void run() {
 		try {
@@ -122,6 +123,8 @@ public class CBot implements BWEventListener {
 	@Override
 	public void onStart() {
 		try {
+			this.informationStorage = new InformationStorage();
+			
 			if (!Init.init(this.mirror, this.informationStorage)) {
 				throw new Exception();
 			}
@@ -224,6 +227,12 @@ public class CBot implements BWEventListener {
 	@Override
 	public void onEnd(boolean isWinner) {
 		this.waitForAllThreads();
+		
+		this.started = false;
+		this.firstFrameOver = false;
+		this.addedUnits = false;
+		
+		BWTA.cleanMemory();
 	}
 
 	@Override
