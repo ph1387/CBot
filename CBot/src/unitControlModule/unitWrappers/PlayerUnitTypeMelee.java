@@ -22,7 +22,7 @@ public abstract class PlayerUnitTypeMelee extends PlayerUnit {
 
 	@Override
 	protected double generateConfidence() {
-		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyStrengths();
+		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyGroundStrengths();
 		double playerStrengthTotal = playerEnemyStrengths.first;
 		double enemyStrengthTotal = playerEnemyStrengths.second;
 

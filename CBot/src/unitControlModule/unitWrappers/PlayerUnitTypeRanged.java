@@ -23,7 +23,7 @@ public abstract class PlayerUnitTypeRanged extends PlayerUnit {
 	@Override
 	protected double generateConfidence() {
 		double generatedConfidence = 0.;
-		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyStrengths();
+		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyGroundStrengths();
 		double playerStrengthTotal = playerEnemyStrengths.first;
 		double enemyStrengthTotal = playerEnemyStrengths.second;
 

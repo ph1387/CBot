@@ -2,6 +2,7 @@ package unitControlModule.unitWrappers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
@@ -80,11 +81,11 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	protected double confidence = 1.;
 	// TODO: UML REMOVE
-//	// Extra distance that will be added to the enemy when determining if the
-//	// Unit should retreat or not.
-//	protected int extraConfidencePixelRangeToClosestUnits = 32;
+	// // Extra distance that will be added to the enemy when determining if the
+	// // Unit should retreat or not.
+	// protected int extraConfidencePixelRangeToClosestUnits = 32;
 	// TODO: UML REMOVE
-//	protected double confidenceDefault = 0.75;
+	// protected double confidenceDefault = 0.75;
 
 	// Properties used for modifying a generated confidence:
 	// The distance at which the center range confidence multiplier activates.
@@ -393,14 +394,79 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 */
 	protected abstract double generateConfidence();
 
+	// TODO: UML ADD
+	/**
+	 * Convenience function for
+	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
+	 * 
+	 * @return the air strength of the Player and the enemy in the PlayerUnit's
+	 *         confidence range.
+	 */
+	protected Pair<Double, Double> generatePlayerAndEnemyAirStrengths() {
+		return this.generatePlayerAndEnemyStrengths(
+				this.informationStorage.getTrackerInfo().getPlayerAirAttackTilePositions(),
+				this.informationStorage.getTrackerInfo().getEnemyAirAttackTilePositions());
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Convenience function for
+	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
+	 * 
+	 * @return the ground strength of the Player and the enemy in the
+	 *         PlayerUnit's confidence range.
+	 */
+	protected Pair<Double, Double> generatePlayerAndEnemyGroundStrengths() {
+		return this.generatePlayerAndEnemyStrengths(
+				this.informationStorage.getTrackerInfo().getPlayerGroundAttackTilePositions(),
+				this.informationStorage.getTrackerInfo().getEnemyGroundAttackTilePositions());
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Convenience function for
+	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
+	 * 
+	 * @return the health strength of the Player and the enemy in the
+	 *         PlayerUnit's confidence range.
+	 */
+	protected Pair<Double, Double> generatePlayerAndEnemyHealthStrengths() {
+		return this.generatePlayerAndEnemyStrengths(
+				this.informationStorage.getTrackerInfo().getPlayerHealthTilePositions(),
+				this.informationStorage.getTrackerInfo().getEnemyHealthTilePositions());
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Convenience function for
+	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
+	 * 
+	 * @return the support strength of the Player and the enemy in the
+	 *         PlayerUnit's confidence range.
+	 */
+	protected Pair<Double, Double> generatePlayerAndEnemySupportStrengths() {
+		return this.generatePlayerAndEnemyStrengths(
+				this.informationStorage.getTrackerInfo().getPlayerSupportTilePositions(),
+				this.informationStorage.getTrackerInfo().getEnemySupportTilePositions());
+	}
+
+	// TODO: UML PARAMS
 	/**
 	 * Used to determine the strength of the PlayerUnits and the enemies by
-	 * summing up their representative TileValues.
+	 * summing up their representative TileValues in the confidence radius
+	 * around the Unit.
 	 * 
+	 * @param playerHashMap
+	 *            the HashMap which provides the Player's values that are going
+	 *            to be added together.
+	 * @param enemyHashMap
+	 *            the HashMap which provides the enemy's values that are going
+	 *            to be added together.
 	 * @return the strength of the Player and the enemy in the PlayerUnit's
 	 *         confidence range.
 	 */
-	protected Pair<Double, Double> generatePlayerAndEnemyStrengths() {
+	protected Pair<Double, Double> generatePlayerAndEnemyStrengths(HashMap<TilePosition, Integer> playerHashMap,
+			HashMap<TilePosition, Integer> enemyHashMap) {
 		List<Integer> enemyStrengths = new ArrayList<Integer>();
 		List<Integer> playerStrengths = new ArrayList<Integer>();
 
@@ -411,10 +477,8 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 			for (int j = -CONFIDENCE_TILE_RADIUS; j <= CONFIDENCE_TILE_RADIUS; j++) {
 				TilePosition key = new TilePosition(this.unit.getTilePosition().getX() + i,
 						this.unit.getTilePosition().getY() + j);
-				int eStrength = this.informationStorage.getTrackerInfo().getEnemyGroundAttackTilePositions()
-						.getOrDefault(key, 0);
-				int pStrength = this.informationStorage.getTrackerInfo().getPlayerGroundAttackTilePositions()
-						.getOrDefault(key, 0);
+				int eStrength = enemyHashMap.getOrDefault(key, 0);
+				int pStrength = playerHashMap.getOrDefault(key, 0);
 
 				if (eStrength != 0) {
 					enemyStrengths.add(eStrength);
