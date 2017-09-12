@@ -26,15 +26,12 @@ public class GoapAgentFactory {
 	// -------------------- Functions
 
 	// TODO: UML NON STATIC PARAMS
-	// TODO: JAVADOC
 	/**
 	 * Main function for creating a GoapAgent using a Unit and a general
 	 * InformationStorage.
 	 * 
 	 * @param unit
 	 *            the Unit that the GoapAgent is assigned to.
-	 * @param informationStorage
-	 *            the InformationStorage that stores all important information.
 	 * @return a GoapAgent based on the provided information or null if the
 	 *         UnitType of the provided Unit is not known.
 	 * @throws UnknownUnitTypeException
