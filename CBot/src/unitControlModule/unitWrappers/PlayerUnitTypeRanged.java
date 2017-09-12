@@ -26,33 +26,13 @@ public abstract class PlayerUnitTypeRanged extends PlayerUnit {
 		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyStrengths();
 		double playerStrengthTotal = playerEnemyStrengths.first;
 		double enemyStrengthTotal = playerEnemyStrengths.second;
-		// TODO: Possible Change: Change the way the life offset is calculated.
-		// Calculate the offset of the confidence based on the current Units
-		// health.
-		double lifeConfidenceMultiplicator = (double) (this.unit.getHitPoints())
-				/ (double) (this.unit.getType().maxHitPoints());
 
 		// Calculate the confidence based on the strength difference:
 		// No enemy = Maximum confidence.
 		if (enemyStrengthTotal == 0.) {
 			generatedConfidence = 1.;
 		} else {
-			// TODO: Possible Change: AirWeapon Implementation
-			// Allow kiting if the PlayerUnit is outside of the other Unit's
-			// attack range. Also this allows Units to further attack and not
-			// running around aimlessly when they are on low health.
-			// -> PlayerUnit in range of enemy Unit + extra
-			if (this.closestEnemyUnitInConfidenceRange != null
-					&& this.closestEnemyUnitInConfidenceRange.getType().groundWeapon().maxRange()
-							+ this.extraConfidencePixelRangeToClosestUnits >= this.getUnit()
-									.getDistance(this.closestEnemyUnitInConfidenceRange)) {
-				generatedConfidence = (playerStrengthTotal / enemyStrengthTotal) * lifeConfidenceMultiplicator
-						* this.confidenceDefault;
-			}
-			// -> PlayerUnit out of range of the enemy Unit
-			else {
-				generatedConfidence = (playerStrengthTotal / enemyStrengthTotal) * this.confidenceDefault;
-			}
+			generatedConfidence = playerStrengthTotal / enemyStrengthTotal;
 		}
 
 		return generatedConfidence;
