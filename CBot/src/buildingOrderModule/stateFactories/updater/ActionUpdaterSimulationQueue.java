@@ -49,9 +49,10 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	private int maxActionQueueIndexOffsetTilEnd = 2;
 	// Time stamp of the last check of the action Queue.
 	private Integer lastSimulationTimeStampFrames = null;
+	// TODO: UML CHANGE 1000
 	// Time difference between the checking if the action Queue was being worked
 	// on.
-	private int nextSimulationTimeStampDifferenceFrames = 1000;
+	private int nextSimulationTimeStampDifferenceFrames = 300;
 
 	// TODO: UML REMOVE
 	// private ConcurrentLinkedQueue<ArrayList<ActionType>>
