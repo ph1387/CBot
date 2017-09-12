@@ -25,10 +25,6 @@ public class PlayerUnitTerran_Vulture extends PlayerUnitTypeRanged {
 
 	public PlayerUnitTerran_Vulture(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
-
-		// TODO: Possible Change: Update confidenceDefaultRange based on the
-		// closestEnemy's weapon range
-		this.extraConfidencePixelRangeToClosestUnits = 112;
 	}
 
 	// -------------------- Functions

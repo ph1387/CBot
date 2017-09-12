@@ -79,10 +79,12 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	protected Unit attackingEnemyUnitToReactTo;
 
 	protected double confidence = 1.;
-	// Extra distance that will be added to the enemy when determining if the
-	// Unit should retreat or not.
-	protected int extraConfidencePixelRangeToClosestUnits = 32;
-	protected double confidenceDefault = 0.75;
+	// TODO: UML REMOVE
+//	// Extra distance that will be added to the enemy when determining if the
+//	// Unit should retreat or not.
+//	protected int extraConfidencePixelRangeToClosestUnits = 32;
+	// TODO: UML REMOVE
+//	protected double confidenceDefault = 0.75;
 
 	// Properties used for modifying a generated confidence:
 	// The distance at which the center range confidence multiplier activates.
