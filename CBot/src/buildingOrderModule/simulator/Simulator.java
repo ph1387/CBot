@@ -46,6 +46,10 @@ public class Simulator {
 
 	// The maximum number of Nodes in a layer.
 	private int layerNodesMaxNumber = 100;
+	// TODO: UML ADD
+	// The maximum size of an action sequence. Necessary since the while loop
+	// could otherwise lead to extremely long cycles.
+	private int actionSequenceMaxSize = 6;
 
 	/**
 	 * @param actionTypes
@@ -787,8 +791,12 @@ public class Simulator {
 
 				// Count below threshold.
 				if (appearanceCount < this.maxActionTypesOccurrences.get(actionType)) {
-					permutationFinished = this.tryFinalizingNewActionSequencePermutation(currentActionSequence,
-							actionType, currentNode, simulatedTimeStamp, workingSets);
+					// Either no further permutations are possible or the
+					// maximum size of the sequence is reached.
+					permutationFinished = currentActionSequence.getActionTypeSequence()
+							.size() >= this.actionSequenceMaxSize
+							|| this.tryFinalizingNewActionSequencePermutation(currentActionSequence, actionType,
+									currentNode, simulatedTimeStamp, workingSets);
 				}
 				// Threshold for ActionType reached -> Sequence finished.
 				else {

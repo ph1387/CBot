@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bwapi.Pair;
 import bwapi.Unit;
@@ -12,41 +11,48 @@ import bwapi.UnitType;
 
 /**
  * SimulationStarter.java --- Class used for starting a simulation with the
- * currently available and provided information. The results are then added
- * towards a given concurrent Queue.
+ * currently available and provided information.
  * 
  * @author P H - 15.07.2017
  *
  */
 public class SimulationStarter {
 
-	private Simulator simulator;
-	private Thread simulationThread;
+	private Simulator simulator = new Simulator(new HashSet<ActionType>());
+	// TODO: UML REMOVE
+	// private SimulatorThread simulationThread;
 
-	private ConcurrentLinkedQueue<ArrayList<ActionType>> generatedActionTypeSequences;
+	// TODO: UML REMOVE
+	// private ConcurrentLinkedQueue<ArrayList<ActionType>>
+	// generatedActionTypeSequences;
 
-	public SimulationStarter(ConcurrentLinkedQueue<ArrayList<ActionType>> generatedActionTypeSequences) {
-		this.generatedActionTypeSequences = generatedActionTypeSequences;
+	// Simulation values:
+	private int simulationFrameStep = 300;
+	private int simulationStepAmount = 3;
+	private int simulationIdleScorePenalty = 10;
+	private int simulationConsecutiveActionsBonus = 10;
+	private boolean simulationAllowIdle = true;
 
-		this.simulator = new Simulator(new HashSet<ActionType>());
+	public SimulationStarter() {
+
 	}
 
 	// -------------------- Functions
 
-	/**
-	 * Function for testing if the simulation Thread is currently active /
-	 * running.
-	 * 
-	 * @return true if the Thread is running, false if not.
-	 */
-	public boolean isRunning() {
-		return this.simulationThread != null && this.simulationThread.isAlive();
-	}
+	// TODO: UML REMOVE
+	// /**
+	// * Function for testing if the simulation Thread is currently active /
+	// * running.
+	// *
+	// * @return true if the Thread is running, false if not.
+	// */
+	// public boolean isRunning() {
+	// return this.simulationThread != null && this.simulationThread.isAlive();
+	// }
 
+	// TODO: UML PARAMS
 	/**
-	 * Function for starting a new simulation Thread. This function only works /
-	 * returns true if the previous Thread is finished or if none was started
-	 * before.
+	 * Function for starting a new simulation in the {@link Simulator} instance.
 	 * 
 	 * @param actionTypes
 	 *            the ActionTypes that are going to be used in the simulation.
@@ -62,47 +68,24 @@ public class SimulationStarter {
 	 *            the UnitType that defines the worker. Different for all Races.
 	 * @param currentFrameTimeStamp
 	 *            the current time stamp in frames.
-	 * @return true if a simulation Thread was started, false if not.
+	 * @return the ArrayList that is the result of the {@link Simulator}
+	 *         simulation.
 	 */
-	public boolean runStarter(HashSet<ActionType> actionTypes, List<Unit> units, int currentMinerals, int currentGas,
-			UnitType workerUnitType, int currentFrameTimeStamp) {
-		boolean success = false;
+	public ArrayList<ActionType> runStarter(HashSet<ActionType> actionTypes, List<Unit> units, int currentMinerals,
+			int currentGas, UnitType workerUnitType, int currentFrameTimeStamp) {
+		HashMap<TypeWrapper, Integer> simulationTypesFree = new HashMap<>();
+		HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationTypesWorking = new HashMap<>();
+		TypeWrapper workerType = TypeWrapper.generateFrom(workerUnitType);
 
-		// The previous SimulatorThread must have finished before a new one can
-		// be started.
-		if (this.simulationThread == null || this.simulationThread.getState() == Thread.State.TERMINATED) {
-			// Remove the Thread from the pool of Threads that must be waited
-			// for at the end of the game.
-			if (this.simulationThread != null) {
-				core.CBot.getInstance().removeFromThreadFinishing(this.simulationThread);
-			}
+		// Fill the HashMaps with the current information regarding the
+		// Units etc.
+		extractFreeAndWorkingTypeWrappers(units, simulationTypesFree, simulationTypesWorking, currentFrameTimeStamp);
 
-			this.simulator.setActionTypes(actionTypes);
-			TypeWrapper workerType = TypeWrapper.generateFrom(workerUnitType);
+		this.simulator.setActionTypes(actionTypes);
 
-			// Fill the HashMaps with the current information regarding the
-			// Units etc.
-			HashMap<TypeWrapper, Integer> simulationTypesFree = new HashMap<>();
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationTypesWorking = new HashMap<>();
-
-			extractFreeAndWorkingTypeWrappers(units, simulationTypesFree, simulationTypesWorking,
-					currentFrameTimeStamp);
-
-			// TODO: Possible Change: Setter instead of creating new instances.
-			// Start a new Thread with the provided information.
-			this.simulationThread = new SimulatorThread(this.simulator, this.generatedActionTypeSequences, workerType,
-					simulationTypesFree, simulationTypesWorking, currentMinerals, currentGas, currentFrameTimeStamp);
-			this.simulationThread.start();
-
-			// The Thread got started and no errors occurred.
-			success = true;
-
-			// Add the new Thread to the List of Threads that must be waited
-			// for.
-			core.CBot.getInstance().addToThreadFinishing(this.simulationThread);
-		}
-
-		return success;
+		return this.simulator.simulate(currentFrameTimeStamp, this.simulationFrameStep, this.simulationStepAmount,
+				currentMinerals, currentGas, simulationTypesFree, simulationTypesWorking, workerType,
+				this.simulationIdleScorePenalty, this.simulationConsecutiveActionsBonus, this.simulationAllowIdle);
 	}
 
 	/**

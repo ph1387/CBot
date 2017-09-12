@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringAction;
@@ -43,21 +42,21 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	// The actions that the ScoringDirector will be updating.
 	private HashSet<ScoringAction> scoringActions;
 
-	// TODO: UML CHANGE 2
 	// Simulation frequency:
 	// The max difference of the index and the size of the action Queue. When
-	// the difference is less or equal this value a new simulation Thread is
+	// the difference is less or equal this value a new simulation is
 	// started.
-	private int maxActionQueueIndexOffsetTilEnd = 4;
+	private int maxActionQueueIndexOffsetTilEnd = 2;
 	// Time stamp of the last check of the action Queue.
 	private Integer lastSimulationTimeStampFrames = null;
 	// Time difference between the checking if the action Queue was being worked
 	// on.
 	private int nextSimulationTimeStampDifferenceFrames = 1000;
 
-	// Multithreading for the building order simulation:
-	private ConcurrentLinkedQueue<ArrayList<ActionType>> generatedActionTypeSequences = new ConcurrentLinkedQueue<>();
-	private SimulationStarter simulationActionStarter = new SimulationStarter(generatedActionTypeSequences);
+	// TODO: UML REMOVE
+	// private ConcurrentLinkedQueue<ArrayList<ActionType>>
+	// generatedActionTypeSequences = new ConcurrentLinkedQueue<>();
+	private SimulationStarter simulationActionStarter = new SimulationStarter();
 
 	public ActionUpdaterSimulationQueue(BuildActionManager buildActionManager) {
 		super(buildActionManager);
@@ -114,45 +113,44 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 		}
 
-		// React on any results of the simulation Thread and update it if
-		// necessary.
-		if (!this.generatedActionTypeSequences.isEmpty()) {
-			this.actOnSimulationThreadResult();
-		}
 		this.updateSimulationStarter(manager);
 	}
 
-	/**
-	 * Function for acting upon a generated action Queue by the SimulatorThread
-	 * itself. The ActionTypes are transformed into ManagerBaseActions and then
-	 * added to the existing action Queue of the ActionQueueSimulationResults
-	 * Action.
-	 */
-	private void actOnSimulationThreadResult() {
-		ArrayList<ActionType> generatedResult = this.generatedActionTypeSequences.poll();
-		ArrayList<ManagerBaseAction> transformedResult = new ArrayList<>();
-
-		// Transform the ActionTypes back into ManagerBaseActions.
-		for (ActionType actionType : generatedResult) {
-			transformedResult.add((ManagerBaseAction) actionType);
-		}
-
-		// Forward the transformed ActionTypes towards the Action itself.
-		this.actionQueueSimulationResults.addToActionQueue(transformedResult);
-
-		// TODO: DEBUG INFO
-		System.out.println("\nACT ON RESULT:");
-		for (ActionType actionType : generatedResult) {
-			System.out.println("  - " + actionType.getClass().getSimpleName());
-		}
-		System.out.println("\n");
-	}
+	// TODO: UML REMOVE
+	// /**
+	// * Function for acting upon a generated action Queue by the
+	// SimulatorThread
+	// * itself. The ActionTypes are transformed into ManagerBaseActions and
+	// then
+	// * added to the existing action Queue of the ActionQueueSimulationResults
+	// * Action.
+	// */
+	// private void actOnSimulationThreadResult() {
+	// ArrayList<ActionType> generatedResult =
+	// this.generatedActionTypeSequences.poll();
+	// ArrayList<ManagerBaseAction> transformedResult = new ArrayList<>();
+	//
+	// // Transform the ActionTypes back into ManagerBaseActions.
+	// for (ActionType actionType : generatedResult) {
+	// transformedResult.add((ManagerBaseAction) actionType);
+	// }
+	//
+	// // Forward the transformed ActionTypes towards the Action itself.
+	// this.actionQueueSimulationResults.addToActionQueue(transformedResult);
+	//
+	// // TODO: DEBUG INFO
+	// System.out.println("\nACT ON RESULT:");
+	// for (ActionType actionType : generatedResult) {
+	// System.out.println(" - " + actionType.getClass().getSimpleName());
+	// }
+	// System.out.println("\n");
+	// }
 
 	/**
 	 * Function for updating all information regarding the SimulationStarter.
 	 * Either resetting existing action Queues of the
-	 * ActionqueueSimulationResults instance itself when no progress is being
-	 * made (fast enough) or starting a new SimulatorThread when the existing
+	 * {@link ActionQueueSimulationResults} instance itself when no progress is
+	 * being made (fast enough) or starting a new simulation when the existing
 	 * action Queue is near its end and a new Queue is needed to further
 	 * progress into the game.
 	 * 
@@ -184,7 +182,9 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 
 		// Check if the index of the action Queue is nearly at the end of the
 		// Queue. If it is, start a new simulation.
-		if (this.isActionQueueNearlyFinished() && !this.simulationActionStarter.isRunning()) {
+		if (this.isActionQueueNearlyFinished()) {
+			ArrayList<ManagerBaseAction> transformedResult = new ArrayList<>();
+
 			// Extract all currently relevant information.
 			int currentFrameTimeStamp = Core.getInstance().getGame().getFrameCount();
 			int currentMinerals = Core.getInstance().getPlayer().minerals();
@@ -197,12 +197,22 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 			this.scoringDirector.update(this.scoringActions, manager);
 
-			// Try running a simulation. If successful change the time stamp of
-			// the last simulation that was run.
-			if (this.simulationActionStarter.runStarter(this.actionTypes, units, currentMinerals, currentGas,
-					workerUnitType, currentFrameTimeStamp)) {
-				this.lastSimulationTimeStampFrames = currentFrameTimeStamp;
+			// TODO: DEBUG INFO
+			long start = System.nanoTime();
+
+			// Transform the ActionTypes back into ManagerBaseActions.
+			for (ActionType actionType : this.simulationActionStarter.runStarter(this.actionTypes, units,
+					currentMinerals, currentGas, workerUnitType, currentFrameTimeStamp)) {
+				transformedResult.add((ManagerBaseAction) actionType);
 			}
+
+			// Forward the transformed ActionTypes towards the Action itself.
+			this.actionQueueSimulationResults.addToActionQueue(transformedResult);
+			this.lastSimulationTimeStampFrames = currentFrameTimeStamp;
+
+			// TODO: DEBUG INFO
+			System.out.println(
+					"Simulation + forwarding time: " + ((double) (System.nanoTime() - start) / 1000000) + "ms\n");
 		}
 	}
 
