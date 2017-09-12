@@ -1,6 +1,7 @@
 package unitTrackerModule;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,14 +26,24 @@ import informationStorage.UnitTrackerInformation;
  */
 public class UnitTrackerModule {
 
-	private static final double FLAT_DPS_MULTIPLIER = 100.;
+	// TODO: UML REMOVE
+	// private static final double FLAT_DPS_MULTIPLIER = 100.;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
 	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
+	// TODO: UML ADD
+	private HashMap<TilePosition, Integer> playerHealthTilePositions = new HashMap<>();
+	// TODO: UML ADD
+	private HashMap<TilePosition, Integer> playerSupportTilePositions = new HashMap<>();
+
 	private HashMap<TilePosition, Integer> enemyAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> enemyGroundAttackTilePositions = new HashMap<>();
+	// TODO: UML ADD
+	private HashMap<TilePosition, Integer> enemyHealthTilePositions = new HashMap<>();
+	// TODO: UML ADD
+	private HashMap<TilePosition, Integer> enemySupportTilePositions = new HashMap<>();
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
@@ -54,6 +65,23 @@ public class UnitTrackerModule {
 	// here. The bigger the number, the stronger the effect of a shorter range
 	// is.
 	private int generalMultiplier = 41;
+	// TODO: UML ADD
+	private int generalDPSMultiplier = 100;
+	// TODO: UML ADD
+	// The general health multiplier that will be used by the Player's Units as
+	// well as the enemy ones.
+	private int generalHealthMultiplier = 1000;
+	// The general support multiplier that will be used by the Player's Units as
+	// well as the enemy ones.
+	private int generalSupportMultiplier = 250;
+	// TODO: UML ADD
+	// The tile range that each support Unit will use as radius for it's effect.
+	private int supportEffectTileRange = 3;
+	// TODO: UML ADD
+	// The UnitTypes that are considered support Units.
+	private List<UnitType> supportUnitTypes = Arrays
+			.asList(new UnitType[] { UnitType.Terran_Medic, UnitType.Terran_Science_Vessel, UnitType.Zerg_Queen,
+					UnitType.Zerg_Defiler, UnitType.Protoss_Corsair, UnitType.Protoss_Arbiter });
 	// The generated dividers that are / were used for calculating the
 	// multipliers for the different attack ranges. These can be stored and do
 	// not need to be calculated again since they are the same for each inserted
@@ -72,6 +100,7 @@ public class UnitTrackerModule {
 	public void update() {
 		this.updateCurrentGameInformation();
 		this.updateEnemyUnitLists();
+		this.updateTilePositionInformation();
 		this.forwardInformation();
 
 		UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
@@ -81,11 +110,30 @@ public class UnitTrackerModule {
 		// air forces of the enemy and the player. Player has to the shown
 		// first, since the enemy list might be empty which would result in none
 		// of them being shown.
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerStrength()) {
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerAirStrength()) {
+			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerAirAttackTilePositions);
+		}
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerGroundStrength()) {
 			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
 		}
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyStrength()) {
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerHealthStrength()) {
+			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerHealthTilePositions);
+		}
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerSupportStrength()) {
+			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerSupportTilePositions);
+		}
+
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyAirStrength()) {
+			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyAirAttackTilePositions);
+		}
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyGroundStrength()) {
 			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
+		}
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyHealthStrength()) {
+			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyHealthTilePositions);
+		}
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemySupportStrength()) {
+			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemySupportTilePositions);
 		}
 	}
 
@@ -143,11 +191,6 @@ public class UnitTrackerModule {
 		this.addVisibleUnits(this.enemyUnits, this.enemyBuildings);
 
 		this.removeOutdatedEntries(this.enemyUnits);
-
-		this.enemyAirAttackTilePositions = this.generateEnemyAirAttackTilePositions();
-		this.enemyGroundAttackTilePositions = this.generateEnemyGroundAttackTilePositions();
-		this.playerAirAttackTilePositions = this.generatePlayerAirAttackTilePositions();
-		this.playerGroundAttackTilePositions = this.generatePlayerGroundAttackTilePositions();
 	}
 
 	/**
@@ -161,8 +204,12 @@ public class UnitTrackerModule {
 		// Forward the UnitTrackerModule information.
 		trackerInfo.setPlayerAirAttackTilePositions(this.playerAirAttackTilePositions);
 		trackerInfo.setPlayerGroundAttackTilePositions(this.playerGroundAttackTilePositions);
+		trackerInfo.setPlayerHealthTilePositions(this.playerHealthTilePositions);
+		trackerInfo.setPlayerSupportTilePositions(this.playerSupportTilePositions);
 		trackerInfo.setEnemyAirAttackTilePositions(this.enemyAirAttackTilePositions);
 		trackerInfo.setEnemyGroundAttackTilePositions(this.enemyGroundAttackTilePositions);
+		trackerInfo.setEnemyHealthTilePositions(this.enemyHealthTilePositions);
+		trackerInfo.setEnemySupportTilePositions(this.enemySupportTilePositions);
 		trackerInfo.setEnemyBuildings(this.enemyBuildings);
 		trackerInfo.setEnemyUnits(this.enemyUnits);
 
@@ -290,145 +337,332 @@ public class UnitTrackerModule {
 		}
 	}
 
-	// TODO: Possible Change: Add following functions together
-	/**
-	 * Function used to generate the table of value tiles showing the air forces
-	 * strength of the player units.
-	 *
-	 * @return a HashMap containing ValueTilePositions that represent the
-	 *         players air strength.
-	 */
-	private HashMap<TilePosition, Integer> generatePlayerAirAttackTilePositions() {
-		HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
+	// TODO: UML REMOVE FF
+	// // TODO: Possible Change: Add following functions together
+	// /**
+	// * Function used to generate the table of value tiles showing the air
+	// forces
+	// * strength of the player units.
+	// *
+	// * @return a HashMap containing ValueTilePositions that represent the
+	// * players air strength.
+	// */
+	// private HashMap<TilePosition, Integer>
+	// generatePlayerAirAttackTilePositions() {
+	// HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
+	//
+	// for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+	// if (unit.isCompleted() && unit.getType().airWeapon() != null
+	// && unit.getType().airWeapon().damageAmount() > 0) {
+	// this.addValueInAreaToTilePositionValue(unit.getTilePosition(),
+	// valueTiles,
+	// this.generateUnitMultiplier(unit), unit.getType().airWeapon());
+	// }
+	// }
+	// return valueTiles;
+	// }
+	//
+	// /**
+	// * Function used to generate the table of value tiles showing the ground
+	// * forces strength of the player units.
+	// *
+	// * @return a HashMap containing ValueTilePositions that represent the
+	// * players air strength.
+	// */
+	// private HashMap<TilePosition, Integer>
+	// generatePlayerGroundAttackTilePositions() {
+	// HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
+	//
+	// for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+	// if (unit.isCompleted() && unit.getType().groundWeapon() != null
+	// && unit.getType().groundWeapon().damageAmount() > 0) {
+	// this.addValueInAreaToTilePositionValue(unit.getTilePosition(),
+	// valueTiles,
+	// this.generateUnitMultiplier(unit), unit.getType().groundWeapon());
+	// }
+	// }
+	// return valueTiles;
+	// }
+	//
+	// /**
+	// * Function used to generate the table of value tiles showing the air
+	// forces
+	// * strength of the enemy units and buildings.
+	// *
+	// * @return a HashMap containing ValueTilePositions that represent the
+	// * enemies air strength.
+	// */
+	// private HashMap<TilePosition, Integer>
+	// generateEnemyAirAttackTilePositions() {
+	// HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
+	//
+	// // Units
+	// for (EnemyUnit enemyUnit : this.enemyUnits) {
+	// if (enemyUnit.getUnitType().airWeapon() != null &&
+	// enemyUnit.getUnitType().airWeapon().damageAmount() > 0
+	// && enemyUnit.getUnit().isCompleted()) {
+	// if (enemyUnit.getUnit() != null) {
+	// this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(),
+	// valueTiles,
+	// this.generateUnitMultiplier(enemyUnit.getUnit()),
+	// enemyUnit.getUnitType().airWeapon());
+	// } else {
+	// this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(),
+	// valueTiles,
+	// this.generateEnemyUnitMultiplier(enemyUnit),
+	// enemyUnit.getUnitType().airWeapon());
+	// }
+	// }
+	// }
+	//
+	// // Buildings
+	// for (EnemyUnit enemyBuilding : this.enemyBuildings) {
+	// try {
+	// // Buildings must provide a air weapon.
+	// if (enemyBuilding.getUnitType().airWeapon() != null
+	// && enemyBuilding.getUnitType().airWeapon().damageAmount() > 0) {
+	// if (enemyBuilding.getUnit().isCompleted() && enemyBuilding.getUnit() !=
+	// null) {
+	// this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(),
+	// valueTiles,
+	// this.generateUnitMultiplier(enemyBuilding.getUnit()),
+	// enemyBuilding.getUnitType().airWeapon());
+	// }
+	// // Since the building is currently not visible, but has a
+	// // weapon, keep adding the default enemy Unit multiplier.
+	// else {
+	// this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(),
+	// valueTiles,
+	// this.generateEnemyUnitMultiplier(enemyBuilding),
+	// enemyBuilding.getUnitType().airWeapon());
+	// }
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// return valueTiles;
+	// }
+	//
+	// /**
+	// * Function used to generate the table of value tiles showing the ground
+	// * forces strength of the enemy units and buildings.
+	// *
+	// * @return a HashMap containing ValueTilePositions that represent the
+	// * enemies ground strength.
+	// */
+	// private HashMap<TilePosition, Integer>
+	// generateEnemyGroundAttackTilePositions() {
+	// HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
+	//
+	// // Units
+	// for (EnemyUnit enemyUnit : this.enemyUnits) {
+	// if (enemyUnit.getUnitType().groundWeapon() != null
+	// && enemyUnit.getUnitType().groundWeapon().damageAmount() > 0 &&
+	// enemyUnit.getUnit().isCompleted()) {
+	// if (enemyUnit.getUnit() != null) {
+	// this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(),
+	// valueTiles,
+	// this.generateUnitMultiplier(enemyUnit.getUnit()),
+	// enemyUnit.getUnitType().groundWeapon());
+	// } else {
+	// this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(),
+	// valueTiles,
+	// this.generateEnemyUnitMultiplier(enemyUnit),
+	// enemyUnit.getUnitType().groundWeapon());
+	// }
+	// }
+	// }
+	//
+	// // Buildings
+	// for (EnemyUnit enemyBuilding : this.enemyBuildings) {
+	// try {
+	// // Buildings must provide a ground weapon.
+	// if (enemyBuilding.getUnitType().groundWeapon() != null
+	// && enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0) {
+	// if (enemyBuilding.getUnit().isCompleted() && enemyBuilding.getUnit() !=
+	// null) {
+	// this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(),
+	// valueTiles,
+	// this.generateUnitMultiplier(enemyBuilding.getUnit()),
+	// enemyBuilding.getUnitType().groundWeapon());
+	// }
+	// // Since the building is currently not visible, but has a
+	// // weapon, keep adding the default enemy Unit multiplier.
+	// else {
+	// this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(),
+	// valueTiles,
+	// this.generateEnemyUnitMultiplier(enemyBuilding),
+	// enemyBuilding.getUnitType().groundWeapon());
+	// }
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// return valueTiles;
+	// }
 
+	// TODO: UML ADD
+	/**
+	 * Function for updating all information regarding the Player's and the
+	 * enemy's different strengths on the TilePositions.
+	 */
+	private void updateTilePositionInformation() {
+		this.updatePlayerTilePositionInformation();
+		this.updateEnemyTilePositionInformation();
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for updating all information regarding the Player's strengths.
+	 */
+	private void updatePlayerTilePositionInformation() {
+		HashMap<TilePosition, Integer> playerAir = new HashMap<>();
+		HashMap<TilePosition, Integer> playerGround = new HashMap<>();
+		HashMap<TilePosition, Integer> playerHealth = new HashMap<>();
+		HashMap<TilePosition, Integer> playerSupport = new HashMap<>();
+
+		// Generate all Player strengths.
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+			double unitHealthMultiplier = this.generateUnitMultiplier(unit);
+
+			// TODO: Possible Change: Consider upgrades.
+			// Player Air:
 			if (unit.isCompleted() && unit.getType().airWeapon() != null
 					&& unit.getType().airWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles,
-						this.generateUnitMultiplier(unit), unit.getType().airWeapon());
+				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerAir,
+						this.generateAttackGenerationInformation(unit.getType().airWeapon(), unitHealthMultiplier));
 			}
-		}
-		return valueTiles;
-	}
 
-	/**
-	 * Function used to generate the table of value tiles showing the ground
-	 * forces strength of the player units.
-	 * 
-	 * @return a HashMap containing ValueTilePositions that represent the
-	 *         players air strength.
-	 */
-	private HashMap<TilePosition, Integer> generatePlayerGroundAttackTilePositions() {
-		HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
-
-		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
+			// TODO: Possible Change: Consider upgrades.
+			// Player Ground:
 			if (unit.isCompleted() && unit.getType().groundWeapon() != null
 					&& unit.getType().groundWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), valueTiles,
-						this.generateUnitMultiplier(unit), unit.getType().groundWeapon());
+				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerGround,
+						this.generateAttackGenerationInformation(unit.getType().groundWeapon(), unitHealthMultiplier));
+			}
+
+			// TODO: Possible Change: Consider upgrades.
+			// Player Health:
+			if (unit.isCompleted()
+					&& ((unit.getType().groundWeapon() != null && unit.getType().groundWeapon().damageAmount() > 0)
+							|| (unit.getType().airWeapon() != null && unit.getType().airWeapon().damageAmount() > 0))) {
+				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerHealth,
+						this.generateHealthGenerationInformation(unit.getType(), unitHealthMultiplier));
+			}
+
+			// TODO: Possible Change: Consider upgrades.
+			// Player Support:
+			if (this.supportUnitTypes.contains(unit.getType()) && unit.isCompleted()) {
+				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerSupport,
+						this.generateSupportGenerationInformation(unitHealthMultiplier));
 			}
 		}
-		return valueTiles;
+
+		this.playerAirAttackTilePositions = playerAir;
+		this.playerGroundAttackTilePositions = playerGround;
+		this.playerHealthTilePositions = playerHealth;
+		this.playerSupportTilePositions = playerSupport;
 	}
 
+	// TODO: UML ADD
 	/**
-	 * Function used to generate the table of value tiles showing the air forces
-	 * strength of the enemy units and buildings.
-	 *
-	 * @return a HashMap containing ValueTilePositions that represent the
-	 *         enemies air strength.
+	 * Function for updating all information regarding the enemy's strengths.
+	 * This includes buildings as well as Units.
 	 */
-	private HashMap<TilePosition, Integer> generateEnemyAirAttackTilePositions() {
-		HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
+	private void updateEnemyTilePositionInformation() {
+		HashMap<TilePosition, Integer> enemyAir = new HashMap<>();
+		HashMap<TilePosition, Integer> enemyGround = new HashMap<>();
+		HashMap<TilePosition, Integer> enemyHealth = new HashMap<>();
+		HashMap<TilePosition, Integer> enemySupport = new HashMap<>();
 
-		// Units
+		// Generate all enemy strengths. Differentiate between buildings and
+		// Units.
+		// Units:
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
-			if (enemyUnit.getUnitType().airWeapon() != null && enemyUnit.getUnitType().airWeapon().damageAmount() > 0
-					&& enemyUnit.getUnit().isCompleted()) {
-				if (enemyUnit.getUnit() != null) {
-					this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
-							this.generateUnitMultiplier(enemyUnit.getUnit()), enemyUnit.getUnitType().airWeapon());
-				} else {
-					this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
-							this.generateEnemyUnitMultiplier(enemyUnit), enemyUnit.getUnitType().airWeapon());
-				}
-			}
+			this.generateEnemyUnitTilePositions(enemyUnit, enemyAir, enemyGround, enemyHealth, enemySupport);
 		}
 
-		// Buildings
+		// Buildings:
 		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
-			try {
-				// Buildings must provide a air weapon.
-				if (enemyBuilding.getUnitType().airWeapon() != null
-						&& enemyBuilding.getUnitType().airWeapon().damageAmount() > 0) {
-					if (enemyBuilding.getUnit().isCompleted() && enemyBuilding.getUnit() != null) {
-						this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-								this.generateUnitMultiplier(enemyBuilding.getUnit()),
-								enemyBuilding.getUnitType().airWeapon());
-					}
-					// Since the building is currently not visible, but has a
-					// weapon, keep adding the default enemy Unit multiplier.
-					else {
-						this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-								this.generateEnemyUnitMultiplier(enemyBuilding),
-								enemyBuilding.getUnitType().airWeapon());
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.generateEnemyUnitTilePositions(enemyBuilding, enemyAir, enemyGround, enemyHealth, enemySupport);
 		}
-		return valueTiles;
+
+		this.enemyAirAttackTilePositions = enemyAir;
+		this.enemyGroundAttackTilePositions = enemyGround;
+		this.enemyHealthTilePositions = enemyHealth;
+		this.enemySupportTilePositions = enemySupport;
 	}
 
+	// TODO: UML ADD
 	/**
-	 * Function used to generate the table of value tiles showing the ground
-	 * forces strength of the enemy units and buildings.
-	 *
-	 * @return a HashMap containing ValueTilePositions that represent the
-	 *         enemies ground strength.
+	 * Function for actually updating the values of the different types of
+	 * strengths the enemy possesses which are added towards the provided
+	 * HashMaps.
+	 * 
+	 * @param enemyUnit
+	 *            the EnemyUnit whose strengths are going to be added towards
+	 *            the different HashMaps
+	 * @param enemyAir
+	 *            the HashMap containing the values regarding the enemy's air
+	 *            strengths.
+	 * @param enemyGround
+	 *            the HashMap containing the values regarding the enemy's ground
+	 *            strengths.
+	 * @param enemyHealth
+	 *            the HashMap containing the values regarding the enemy's health
+	 *            strengths.
+	 * @param enemySupport
+	 *            the HashMap containing the values regarding the enemy's
+	 *            support strengths.
 	 */
-	private HashMap<TilePosition, Integer> generateEnemyGroundAttackTilePositions() {
-		HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
+	private void generateEnemyUnitTilePositions(EnemyUnit enemyUnit, HashMap<TilePosition, Integer> enemyAir,
+			HashMap<TilePosition, Integer> enemyGround, HashMap<TilePosition, Integer> enemyHealth,
+			HashMap<TilePosition, Integer> enemySupport) {
+		double unitHealthMultiplier;
 
-		// Units
-		for (EnemyUnit enemyUnit : this.enemyUnits) {
-			if (enemyUnit.getUnitType().groundWeapon() != null
-					&& enemyUnit.getUnitType().groundWeapon().damageAmount() > 0 && enemyUnit.getUnit().isCompleted()) {
-				if (enemyUnit.getUnit() != null) {
-					this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
-							this.generateUnitMultiplier(enemyUnit.getUnit()), enemyUnit.getUnitType().groundWeapon());
-				} else {
-					this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), valueTiles,
-							this.generateEnemyUnitMultiplier(enemyUnit), enemyUnit.getUnitType().groundWeapon());
-				}
-			}
+		// Unit can currently not be seen.
+		if (enemyUnit.getUnit() == null) {
+			unitHealthMultiplier = this.generateEnemyUnitMultiplier(enemyUnit);
+		} else {
+			unitHealthMultiplier = this.generateUnitMultiplier(enemyUnit.getUnit());
 		}
 
-		// Buildings
-		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
-			try {
-				// Buildings must provide a ground weapon.
-				if (enemyBuilding.getUnitType().groundWeapon() != null
-						&& enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0) {
-					if (enemyBuilding.getUnit().isCompleted() && enemyBuilding.getUnit() != null) {
-						this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-								this.generateUnitMultiplier(enemyBuilding.getUnit()),
-								enemyBuilding.getUnitType().groundWeapon());
-					}
-					// Since the building is currently not visible, but has a
-					// weapon, keep adding the default enemy Unit multiplier.
-					else {
-						this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(), valueTiles,
-								this.generateEnemyUnitMultiplier(enemyBuilding),
-								enemyBuilding.getUnitType().groundWeapon());
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		// TODO: Possible Change: Consider upgrades.
+		// Enemy Air:
+		if (enemyUnit.getUnitType().airWeapon() != null && enemyUnit.getUnitType().airWeapon().damageAmount() > 0
+				&& enemyUnit.getUnit().isCompleted()) {
+			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyAir, this
+					.generateAttackGenerationInformation(enemyUnit.getUnitType().airWeapon(), unitHealthMultiplier));
 		}
-		return valueTiles;
+
+		// TODO: Possible Change: Consider upgrades.
+		// Enemy Ground:
+		if (enemyUnit.getUnitType().groundWeapon() != null && enemyUnit.getUnitType().groundWeapon().damageAmount() > 0
+				&& enemyUnit.getUnit().isCompleted()) {
+			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyGround, this
+					.generateAttackGenerationInformation(enemyUnit.getUnitType().groundWeapon(), unitHealthMultiplier));
+		}
+
+		// TODO: Possible Change: Consider upgrades.
+		// Enemy Health:
+		if (((enemyUnit.getUnit() != null && enemyUnit.getUnit().isCompleted()) || enemyUnit == null)
+				&& ((enemyUnit.getUnitType().groundWeapon() != null
+						&& enemyUnit.getUnitType().groundWeapon().damageAmount() > 0)
+						|| (enemyUnit.getUnitType().airWeapon() != null
+								&& enemyUnit.getUnitType().airWeapon().damageAmount() > 0))) {
+			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyHealth,
+					this.generateHealthGenerationInformation(enemyUnit.getUnitType(), unitHealthMultiplier));
+		}
+
+		// TODO: Possible Change: Consider upgrades.
+		// Enemy Support:
+		if (((enemyUnit.getUnit() != null && enemyUnit.getUnit().isCompleted()) || enemyUnit == null)
+				&& this.supportUnitTypes.contains(enemyUnit.getUnitType())) {
+			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemySupport,
+					this.generateSupportGenerationInformation(unitHealthMultiplier));
+		}
 	}
 
 	/**
@@ -467,7 +701,147 @@ public class UnitTrackerModule {
 		return multiplier;
 	}
 
-	// TODO: Possible Change: Simplify function call
+	// TODO: UML ADD
+	/**
+	 * Function for generating a {@link TilePositionValueGenerationInformation}
+	 * instance containing the attack value of a UnitType based on the provided
+	 * {@link WeaponType}.
+	 * 
+	 * @param weaponType
+	 *            the weapon type on which the
+	 *            {@link TilePositionValueGenerationInformation} instance's
+	 *            multiplier will be based on.
+	 * @param unitHealthMultiplier
+	 *            the health multiplier of the Unit that is going to be
+	 *            associated with the provided {@link WeaponType}.
+	 * @return a {@link TilePositionValueGenerationInformation} instance
+	 *         containing the range of the {@link WeaponType} as well as a
+	 *         multiplier matching the strength of the Unit combined with the
+	 *         provided {@link WeaponType}.
+	 */
+	private TilePositionValueGenerationInformation generateAttackGenerationInformation(WeaponType weaponType,
+			double unitHealthMultiplier) {
+		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange())
+				/ Double.valueOf(Core.getInstance().getTileSize()));
+
+		// If the unit is a melee unit, the attack range is 0 and there will be
+		// no calculations regarding the ValueTile lists. So the range has to be
+		// set to 1.
+		maxAttackTileRange = (int) (Math.max(maxAttackTileRange, 1));
+
+		// The dps multiplier for each Unit.
+		double dpsMultiplier = Double.valueOf(this.generalDPSMultiplier)
+				* new Double(weaponType.damageAmount() * weaponType.damageFactor())
+				/ new Double(weaponType.damageCooldown());
+
+		// The multiplier that is going to be used in the strength calculations
+		// for the different TilePositions.
+		double multiplier = new Double(this.generalMultiplier * dpsMultiplier * unitHealthMultiplier)
+				/ this.generateDivider(maxAttackTileRange);
+
+		return new TilePositionValueGenerationInformation(maxAttackTileRange, multiplier);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating a {@link TilePositionValueGenerationInformation}
+	 * instance containing the health value of a UnitType based on the provided
+	 * {@link UnitType}.
+	 * 
+	 * @param unitType
+	 *            the {@link UnitType} on which the
+	 *            {@link TilePositionValueGenerationInformation} instance's
+	 *            multiplier will be based on.
+	 * @param unitHealthMultiplier
+	 *            the health multiplier of the Unit that is going to be
+	 *            associated with the provided {@link UnitType}.
+	 * @return a {@link TilePositionValueGenerationInformation} instance
+	 *         containing the provided {@link UnitType}s health and shield
+	 *         values combined with the provided health multiplier of the Unit.
+	 */
+	private TilePositionValueGenerationInformation generateHealthGenerationInformation(UnitType unitType,
+			double unitHealthMultiplier) {
+		int tileRange = (int) ((Math.max(unitType.airWeapon().maxRange(), unitType.groundWeapon().maxRange()))
+				/ (double) (Core.getInstance().getTileSize()));
+
+		// Prevent division by 0.
+		tileRange = (int) (Math.max(tileRange, 1));
+
+		double multiplier = (Double.valueOf(this.generalHealthMultiplier) * unitHealthMultiplier)
+				/ this.generateDivider(tileRange);
+
+		return new TilePositionValueGenerationInformation(tileRange, multiplier);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating a {@link TilePositionValueGenerationInformation}
+	 * instance containing the fixed support value of a UnitType based.
+	 * 
+	 * @param unitHealthMultiplier
+	 *            the health multiplier of the Unit that is going to be
+	 *            associated with this instance.
+	 * @return a {@link TilePositionValueGenerationInformation} instance
+	 *         containing the provided multiplier as well as a fixed tile range.
+	 */
+	private TilePositionValueGenerationInformation generateSupportGenerationInformation(double unitHealthMultiplier) {
+		double multiplier = Double.valueOf(this.generalSupportMultiplier)
+				/ this.generateDivider(this.supportEffectTileRange);
+
+		return new TilePositionValueGenerationInformation(this.supportEffectTileRange, multiplier);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating a matching divider for the function
+	 * {@link #addValueInAreaToTilePositionValue(TilePosition, HashMap, TilePositionValueGenerationInformation)}
+	 * given the <b>same</b> tile range.
+	 * 
+	 * @param input
+	 *            the range for which a matching divider will be generated.
+	 * @return a matching divider for the provided range / input that can be
+	 *         used with the named function (With the same range!).
+	 */
+	private double generateDivider(int input) {
+		// No need to generate the same values over and over.
+		if (!this.generatedDividers.containsKey(input)) {
+			this.generatedDividers.put(input, (double) (8. * Math.pow(input, 2) * Math.sin(1.)));
+		}
+
+		return this.generatedDividers.get(input);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * TilePositionValueGenerationInformation.java --- Class for storing
+	 * temporary information that will be used for generating the different
+	 * values that will be added towards the HashMaps representing the strengths
+	 * of both the Player as well as the enemy in different kinds of fields.
+	 * 
+	 * @author P H - 13.09.2017
+	 *
+	 */
+	private class TilePositionValueGenerationInformation {
+
+		private int tileRange;
+		private double multiplier;
+
+		public TilePositionValueGenerationInformation(int tileRange, double multiplier) {
+			this.tileRange = tileRange;
+			this.multiplier = multiplier;
+		}
+
+		public int getTileRange() {
+			return tileRange;
+		}
+
+		public double getMultiplier() {
+			return multiplier;
+		}
+
+	}
+
+	// TODO: UML ADD PARAMS
 	/**
 	 * Function for adding a units strength to the corresponding
 	 * ValueTilePosition table. The added strength and the range at which these
@@ -477,45 +851,18 @@ public class UnitTrackerModule {
 	 *            the TilePosition the calculations are being done around.
 	 * @param valueTiles
 	 *            the table of all ValueTiles the function can work with.
-	 * @param unitSpecificMultiplier
-	 *            the multiplier which will be used to calculate another
-	 *            multiplier used by the strength calculation of the Unit's 3d
-	 *            cone.
-	 * @param weaponType
-	 *            the WeaponType of the Unit.
+	 * @param generationInformation
+	 *            the storage instance that holds information regarding the tile
+	 *            range and the multiplier that are going to be used in the
+	 *            following calculations.
 	 */
 	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, HashMap<TilePosition, Integer> valueTiles,
-			double unitSpecificMultiplier, WeaponType weaponType) {
-		int maxAttackTileRange = (int) (Double.valueOf(weaponType.maxRange())
-				/ Double.valueOf(Core.getInstance().getTileSize()));
+			TilePositionValueGenerationInformation generationInformation) {
+		int maxTileRange = generationInformation.getTileRange();
 
-		// If the unit is a melee unit, the attack range is 0 and there will be
-		// no calculations regarding the ValueTile lists. So the range has to be
-		// set to 1.
-		if (maxAttackTileRange == 0) {
-			maxAttackTileRange = 1;
-		}
-
-		// The dps multiplier for each Unit.
-		double dpsMultiplier = FLAT_DPS_MULTIPLIER * new Double(weaponType.damageAmount() * weaponType.damageFactor())
-				/ new Double(weaponType.damageCooldown());
-
-		// If the HashMap does not contain the max attack tile range of the
-		// weapon type, generate the value and insert it.
-		if (!this.generatedDividers.containsKey(maxAttackTileRange)) {
-			this.generatedDividers.put(maxAttackTileRange,
-					(double) (8. * Math.pow(maxAttackTileRange, 2) * Math.sin(1.)));
-		}
-
-		// The multiplier that is going to be used in the strength calculations
-		// for the different TilePositions.
-		double multiplier = new Double(this.generalMultiplier * dpsMultiplier * unitSpecificMultiplier)
-				/ this.generatedDividers.get(maxAttackTileRange);
-
-		// Fill the tiles which the Unit can reach with it's weapon range with
-		// the appropriate values.
-		for (int i = -maxAttackTileRange; i <= maxAttackTileRange; i++) {
-			for (int j = -maxAttackTileRange; j <= maxAttackTileRange; j++) {
+		// Fill the tiles which the Unit can reach with the appropriate values.
+		for (int i = -maxTileRange; i <= maxTileRange; i++) {
+			for (int j = -maxTileRange; j <= maxTileRange; j++) {
 				if (tilePosition.getX() + i >= 0 && tilePosition.getY() + j >= 0) {
 					TilePosition mappedTilePosition = new TilePosition(tilePosition.getX() + i,
 							tilePosition.getY() + j);
@@ -532,14 +879,13 @@ public class UnitTrackerModule {
 					// integral is the damage of the unit multiplied by the
 					// general multiplier. Therefore the units strength is
 					// accurately displayed in a circle around itself based on
-					// the strength of the unit and the range of its attack.
+					// the "strength" of the unit and the range (of its attack).
 					// Using this method ranged units do not get inaccurate
 					// strength values regarding their superior range as their
 					// strength is proportionally mapped to it using a general
 					// multiplier.
-					Integer sum = foundIntegerValue
-							+ (int) ((Math.cos(i / maxAttackTileRange) + Math.cos(j / maxAttackTileRange))
-									* multiplier);
+					Integer sum = foundIntegerValue + (int) ((Math.cos(i / maxTileRange) + Math.cos(j / maxTileRange))
+							* generationInformation.getMultiplier());
 					valueTiles.put(mappedTilePosition, sum);
 				}
 			}
@@ -564,6 +910,16 @@ public class UnitTrackerModule {
 		return this.playerGroundAttackTilePositions;
 	}
 
+	// TODO: UML ADD
+	public HashMap<TilePosition, Integer> getPlayerHealthTilePositions() {
+		return playerHealthTilePositions;
+	}
+
+	// TODO: UML ADD
+	public HashMap<TilePosition, Integer> getPlayerSupportTilePositions() {
+		return playerSupportTilePositions;
+	}
+
 	public HashMap<TilePosition, Integer> getEnemyAirAttackTilePositions() {
 		return this.enemyAirAttackTilePositions;
 	}
@@ -571,4 +927,15 @@ public class UnitTrackerModule {
 	public HashMap<TilePosition, Integer> getEnemyGroundAttackTilePositions() {
 		return this.enemyGroundAttackTilePositions;
 	}
+
+	// TODO: UML ADD
+	public HashMap<TilePosition, Integer> getEnemyHealthTilePositions() {
+		return enemyHealthTilePositions;
+	}
+
+	// TODO: UML ADD
+	public HashMap<TilePosition, Integer> getEnemySupportTilePositions() {
+		return enemySupportTilePositions;
+	}
+
 }

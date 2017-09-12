@@ -14,22 +14,40 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// Disable following properties on custom maps!
 
 	// Init:
-	private boolean generateDefaultContendedTilePositions = true;
+	private boolean generateDefaultContendedTilePositions = false;
 	// TODO: UML ADD
-	private boolean generateDefaultContendedPolygons = true;
-	private boolean generateRegionAccessOrder = true;
+	private boolean generateDefaultContendedPolygons = false;
+	private boolean generateRegionAccessOrder = false;
 
 	// BuildingOrderModule:
-	private boolean enableBuildingOrderModuleUpdates = true;
+	private boolean enableBuildingOrderModuleUpdates = false;
 
 	// PlayerUnit:
-	private boolean allowModifiedConfidenceGeneration = true;
+	private boolean allowModifiedConfidenceGeneration = false;
 
 	// ----- Display / Debug functionalities:
 
 	// UnitTrackerModule:
-	private boolean displayPlayerStrength = false;
-	private boolean displayEnemyStrength = false;
+	// TODO: UML REMOVE
+	// private boolean displayPlayerStrength = true;
+	// TODO: UML REMOVE
+	// private boolean displayEnemyStrength = true;
+	// TODO: UML ADD
+	private boolean displayPlayerAirStrength = false;
+	// TODO: UML ADD
+	private boolean displayPlayerGroundStrength = false;
+	// TODO: UML ADD
+	private boolean displayPlayerHealthStrength = false;
+	// TODO: UML ADD
+	private boolean displayPlayerSupportStrength = false;
+	// TODO: UML ADD
+	private boolean displayEnemyAirStrength = false;
+	// TODO: UML ADD
+	private boolean displayEnemyGroundStrength = false;
+	// TODO: UML ADD
+	private boolean displayEnemyHealthStrength = false;
+	// TODO: UML ADD
+	private boolean displayEnemySupportStrength = false;
 
 	// Display:
 	private boolean displayMapBoundaries = false;
@@ -42,14 +60,52 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 
 	// -------------------- Functions
 
+	// TODO: UML ADD
 	@Override
-	public boolean enableDisplayPlayerStrength() {
-		return this.displayPlayerStrength;
+	public boolean enableDisplayPlayerAirStrength() {
+		return this.displayPlayerAirStrength;
 	}
 
+	// TODO: UML ADD
 	@Override
-	public boolean enableDisplayEnemyStrength() {
-		return this.displayEnemyStrength;
+	public boolean enableDisplayPlayerGroundStrength() {
+		return this.displayPlayerGroundStrength;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayPlayerHealthStrength() {
+		return this.displayPlayerHealthStrength;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayPlayerSupportStrength() {
+		return this.displayPlayerSupportStrength;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayEnemyAirStrength() {
+		return this.displayEnemyAirStrength;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayEnemyGroundStrength() {
+		return this.displayEnemyGroundStrength;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayEnemyHealthStrength() {
+		return this.displayEnemyHealthStrength;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayEnemySupportStrength() {
+		return this.displayEnemySupportStrength;
 	}
 
 	@Override
