@@ -2,7 +2,6 @@ package unitControlModule.unitWrappers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
@@ -41,7 +40,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	private static final int CONFIDENCE_TILE_RADIUS = 15;
 
-	protected static HashMap<BaseLocation, Integer> BaselocationsSearched = new HashMap<>();
+	// TODO: UML REMOVE
+	// protected static HashMap<BaseLocation, Integer> BaselocationsSearched =
+	// new HashMap<>();
 
 	// Information preserver which holds all important information
 	protected InformationStorage informationStorage;
@@ -144,9 +145,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		this.setAvailableActions(this.stateFactory.generateAvailableActions());
 
 		// Set default values in the beginning.
-		if (BaselocationsSearched.size() == 0) {
+		if (this.informationStorage.getBaselocationsSearched().size() == 0) {
 			for (BaseLocation location : BWTA.getBaseLocations()) {
-				BaselocationsSearched.put(location, 0);
+				this.informationStorage.getBaselocationsSearched().put(location, 0);
 			}
 		}
 	}
@@ -469,7 +470,8 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	protected void updateBaseLocationsSearched() {
 		for (BaseLocation location : BWTA.getBaseLocations()) {
 			if (this.isNearTilePosition(location.getRegion().getCenter().toTilePosition(), null)) {
-				BaselocationsSearched.put(location, Core.getInstance().getGame().elapsedTime());
+				this.informationStorage.getBaselocationsSearched().put(location,
+						Core.getInstance().getGame().elapsedTime());
 			}
 		}
 	}
@@ -889,9 +891,10 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return confidence;
 	}
 
-	public static HashMap<BaseLocation, Integer> getBaselocationsSearched() {
-		return BaselocationsSearched;
-	}
+	// TODO: UML REMOVE
+	// public static HashMap<BaseLocation, Integer> getBaselocationsSearched() {
+	// return BaselocationsSearched;
+	// }
 
 	public Unit getClosestEnemyUnitInConfidenceRange() {
 		return this.closestEnemyUnitInConfidenceRange;

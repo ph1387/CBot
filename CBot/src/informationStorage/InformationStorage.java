@@ -1,11 +1,13 @@
 package informationStorage;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import bwapi.TechType;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
+import bwta.BaseLocation;
 import informationStorage.config.GameConfig;
 import informationStorage.config.IBuildingOrderModuleConfig;
 import informationStorage.config.IDisplayConfig;
@@ -23,17 +25,21 @@ import informationStorage.config.IUnitTrackerModuleConfig;
  */
 public class InformationStorage {
 
-	// Training / Building related collections
+	// Training / Building related collections.
 	private Queue<UnitType> trainingQueue = new LinkedList<UnitType>();
 	private Queue<UnitType> addonQueue = new LinkedList<UnitType>();
 	private Queue<UpgradeType> upgradeQueue = new LinkedList<UpgradeType>();
 	private Queue<TechType> researchQueue = new LinkedList<TechType>();
 
-	// Worker specific stuff
+	// TODO: UML ADD
+	// Scouting.
+	private HashMap<BaseLocation, Integer> baselocationsSearched = new HashMap<>();
+
+	// Worker specific stuff.
 	private ResourceReserver resourceReserver;
 	private WorkerConfiguration workerConfig;
 
-	// Tracking information
+	// Tracking information.
 	private UnitTrackerInformation trackerInfo;
 
 	// Map information
@@ -76,35 +82,36 @@ public class InformationStorage {
 	// -------------------- Functions
 
 	// TODO: UML REMOVE
-//	/**
-//	 * Function for counting all concurrent actions, that are currently being
-//	 * stored.
-//	 * 
-//	 * @return the number of all currently stored actions for the
-//	 *         UnitControlModule to take.
-//	 */
-//	public int getConcurrentQueuedElementCount() {
-//		int count = 0;
-//
-//		count += this.trainingQueue.size();
-//		count += this.upgradeQueue.size();
-//		count += this.addonQueue.size();
-//		count += this.researchQueue.size();
-//		count += this.workerConfig.getBuildingQueue().size();
-//
-//		return count;
-//	}
+	// /**
+	// * Function for counting all concurrent actions, that are currently being
+	// * stored.
+	// *
+	// * @return the number of all currently stored actions for the
+	// * UnitControlModule to take.
+	// */
+	// public int getConcurrentQueuedElementCount() {
+	// int count = 0;
+	//
+	// count += this.trainingQueue.size();
+	// count += this.upgradeQueue.size();
+	// count += this.addonQueue.size();
+	// count += this.researchQueue.size();
+	// count += this.workerConfig.getBuildingQueue().size();
+	//
+	// return count;
+	// }
 
 	// TODO: UML REMOVE
-//	/**
-//	 * Function for retrieving the amount of elements that reside in the
-//	 * training and building queues.
-//	 * 
-//	 * @return the amount of elements inside the training and building queues.
-//	 */
-//	public int getTrainingAndBuildingQueueSize() {
-//		return (this.trainingQueue.size() + this.workerConfig.getBuildingQueue().size());
-//	}
+	// /**
+	// * Function for retrieving the amount of elements that reside in the
+	// * training and building queues.
+	// *
+	// * @return the amount of elements inside the training and building queues.
+	// */
+	// public int getTrainingAndBuildingQueueSize() {
+	// return (this.trainingQueue.size() +
+	// this.workerConfig.getBuildingQueue().size());
+	// }
 
 	// ------------------------------ Getter / Setter
 
@@ -122,6 +129,11 @@ public class InformationStorage {
 
 	public Queue<TechType> getResearchQueue() {
 		return researchQueue;
+	}
+
+	// TODO: UML ADD
+	public HashMap<BaseLocation, Integer> getBaselocationsSearched() {
+		return baselocationsSearched;
 	}
 
 	public ResourceReserver getResourceReserver() {

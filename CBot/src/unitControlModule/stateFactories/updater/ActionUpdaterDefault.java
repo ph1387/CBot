@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.updater;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import bwapi.Position;
@@ -67,8 +68,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 		// Either the Unit has a possible attack target,
 		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null) {
-			closestUnitTilePosition = this.playerUnit.getAttackableEnemyUnitToReactTo()
-					.getTilePosition();
+			closestUnitTilePosition = this.playerUnit.getAttackableEnemyUnitToReactTo().getTilePosition();
 		}
 		// Or it just moves to the nearest one it knows of.
 		else {
@@ -108,17 +108,18 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 	 */
 	protected Position findClosestReachableBasePosition() {
 		Position closestReachableBasePosition = null;
+		HashMap<BaseLocation, Integer> baselocationsSearched = this.playerUnit.getInformationStorage()
+				.getBaselocationsSearched();
 
 		for (BaseLocation location : BWTA.getBaseLocations()) {
 			Region baseRegion = ((BaseLocation) location).getRegion();
 
-			if (PlayerUnit.getBaselocationsSearched().get(location) != null
+			if (baselocationsSearched.get(location) != null
 					&& this.playerUnit.getUnit().hasPath(baseRegion.getCenter())) {
 				if ((closestReachableBasePosition == null && Core.getInstance().getGame().elapsedTime()
-						- PlayerUnit.getBaselocationsSearched().get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED)
+						- baselocationsSearched.get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED)
 						|| (Core.getInstance().getGame().elapsedTime()
-								- PlayerUnit.getBaselocationsSearched()
-										.get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED
+								- baselocationsSearched.get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED
 								&& this.playerUnit.getUnit().getDistance(location) < this.playerUnit.getUnit()
 										.getDistance(closestReachableBasePosition))) {
 					closestReachableBasePosition = baseRegion.getCenter();
