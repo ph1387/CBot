@@ -79,13 +79,31 @@ public class TilePositionFactory {
 	 */
 	public static void addAdditionalAddonSpace(UnitType unitType, TilePosition targetTilePosition,
 			HashSet<TilePosition> neededTilePositions) {
-		// TODO: Possible Change: Directly get the addon from the type.
-		// Differentiate between the different UnitTypes.
-		if (unitType == UnitType.Terran_Factory) {
-			// The Machine_Shop is build in the bottom right corner of the
+		UnitType addon = null;
+
+		// TODO: Possible Change: Add ability to contend CovertOps and
+		// NuclearSilo space.
+		// TODO: Possible Change: Add ability to contend PhysicsLab space.
+		// Find the matching addon to the given UnitType.
+		// NOTE:
+		// Some addons are not listed due to them being too specific and not
+		// useful in the general Bot match.
+		switch (unitType.toString()) {
+		case "Terran_Factory":
+			addon = UnitType.Terran_Machine_Shop;
+			break;
+		case "Terran_Command_Center":
+			addon = UnitType.Terran_Comsat_Station;
+			break;
+		case "Terran_Starport":
+			addon = UnitType.Terran_Control_Tower;
+			break;
+		}
+
+		if (addon != null) {
+			// The addons are build in the bottom right corner of the
 			// Factory. Therefore the tile height is subtracted by 1 since the
 			// TilePositions start in the upper left corner.
-			UnitType addon = UnitType.Terran_Machine_Shop;
 			TilePosition bottomRightCorner = new TilePosition(targetTilePosition.getX() + unitType.tileWidth(),
 					targetTilePosition.getY() + unitType.tileHeight() - 1);
 
@@ -95,8 +113,6 @@ public class TilePositionFactory {
 							.add(new TilePosition(bottomRightCorner.getX() + i, bottomRightCorner.getY() - j));
 				}
 			}
-		} else {
-			// TODO: Needed Change: Add the missing addons.
 		}
 	}
 
