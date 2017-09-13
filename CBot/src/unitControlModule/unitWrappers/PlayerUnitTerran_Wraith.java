@@ -5,7 +5,6 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_Wraith;
 
-// TODO: UML ADD
 /**
  * PlayerUnitTerran_Wraith.java --- Terran_Wraith Class.
  * 

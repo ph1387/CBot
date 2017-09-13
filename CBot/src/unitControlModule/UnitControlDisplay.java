@@ -164,7 +164,6 @@ public class UnitControlDisplay {
 		return leaveOneLineFree(posY + counter * LINEHEIGHT);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all {@link PlayerUnitWorker}s from a Collection
 	 * of {@link GoapAgent}s that are assigned a construction job and as well as
@@ -196,7 +195,6 @@ public class UnitControlDisplay {
 		return workerUnits;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for sorting a List of {@link PlayerUnitWorker}s according to the
 	 * time that their assigned construction job requires. The ones with the
@@ -290,7 +288,6 @@ public class UnitControlDisplay {
 		return leaveOneLineFree(posY + counter * LINEHEIGHT);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for sorting a Collection of {@link PlayerBuilding}s according to
 	 * the time that their specific production / research etc. requires. The

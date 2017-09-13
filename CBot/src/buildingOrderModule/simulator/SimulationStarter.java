@@ -19,12 +19,6 @@ import bwapi.UnitType;
 public class SimulationStarter {
 
 	private Simulator simulator = new Simulator(new HashSet<ActionType>());
-	// TODO: UML REMOVE
-	// private SimulatorThread simulationThread;
-
-	// TODO: UML REMOVE
-	// private ConcurrentLinkedQueue<ArrayList<ActionType>>
-	// generatedActionTypeSequences;
 
 	// Simulation values:
 	private int simulationFrameStep = 300;
@@ -39,18 +33,6 @@ public class SimulationStarter {
 
 	// -------------------- Functions
 
-	// TODO: UML REMOVE
-	// /**
-	// * Function for testing if the simulation Thread is currently active /
-	// * running.
-	// *
-	// * @return true if the Thread is running, false if not.
-	// */
-	// public boolean isRunning() {
-	// return this.simulationThread != null && this.simulationThread.isAlive();
-	// }
-
-	// TODO: UML PARAMS
 	/**
 	 * Function for starting a new simulation in the {@link Simulator} instance.
 	 * 

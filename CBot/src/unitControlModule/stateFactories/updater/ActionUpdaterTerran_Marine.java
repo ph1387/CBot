@@ -15,11 +15,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ActionUpdaterTerran_Marine extends ActionUpdaterDefault {
 
-	// TODO: UML ADD
 	private AbilityActionTerranMarine_StimPack abilityActionTerranMarine_StimPack;
-	// TODO: UML ADD
 	private AttackUnitActionTerran_Marine_Stimmed attackUnitActionTerran_Marine_Stimmed;
-	// TODO: UML ADD
 	private RetreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed retreatActionSteerInRetreatVectorDirectionTerran_Marine_Stimmed;
 
 	public ActionUpdaterTerran_Marine(PlayerUnit playerUnit) {
@@ -42,7 +39,6 @@ public class ActionUpdaterTerran_Marine extends ActionUpdaterDefault {
 		}
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected void init() {
 		super.init();

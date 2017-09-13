@@ -45,8 +45,7 @@ public class Simulator {
 	private HashMap<ActionType, Integer> maxActionTypesOccurrences;
 
 	// The maximum number of Nodes in a layer.
-	private int layerNodesMaxNumber = 100;
-	// TODO: UML ADD
+	private int layerNodesMaxCount = 100;
 	// The maximum size of an action sequence. Necessary since the while loop
 	// could otherwise lead to extremely long cycles.
 	private int actionSequenceMaxSize = 6;
@@ -142,7 +141,7 @@ public class Simulator {
 		// => Current frame count + i * amount of frames being skipped.
 		for (int i = 0; i < stepAmount; i++) {
 			int simulatedFrameTimeStamp = currentFrameTimeStamp + i * frameStep;
-			int treeSpaceAvailable = this.layerNodesMaxNumber;
+			int treeSpaceAvailable = this.layerNodesMaxCount;
 
 			// Collection for the new branch layer on top of the current one. A
 			// TreeSet is being used since it provides a sorted insertion which
@@ -518,7 +517,6 @@ public class Simulator {
 		return newNode;
 	}
 
-	// TODO: Needed Change: Multiple equal Actions must be penalized.
 	/**
 	 * Function for generating an Node based on another super Node. This
 	 * function takes a sequence of ActionTypes that represent the Actions being
@@ -581,7 +579,7 @@ public class Simulator {
 	 *            the TreeSet from which Nodes are removed.
 	 */
 	private void removeNodesUntilSizeMatches(TreeSet<Node> nodes) {
-		int nodesToRemove = nodes.size() - this.layerNodesMaxNumber;
+		int nodesToRemove = nodes.size() - this.layerNodesMaxCount;
 
 		// Remove a fixed amount of Nodes from the end of the TreeSet leaving
 		// only the "best" ones behind.
@@ -590,7 +588,6 @@ public class Simulator {
 		}
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for generating all possible permutations of ActionTypes a Node
 	 * can perform. This takes the available mineral and gas counts in
@@ -736,7 +733,6 @@ public class Simulator {
 		return actionSequence;
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for finding all combinations of ActionTypes that can be
 	 * performed together from the specified Node. The finished products are

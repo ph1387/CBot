@@ -31,7 +31,6 @@ public class InformationStorage {
 	private Queue<UpgradeType> upgradeQueue = new LinkedList<UpgradeType>();
 	private Queue<TechType> researchQueue = new LinkedList<TechType>();
 
-	// TODO: UML ADD
 	// Scouting.
 	private HashMap<BaseLocation, Integer> baselocationsSearched = new HashMap<>();
 
@@ -81,38 +80,6 @@ public class InformationStorage {
 
 	// -------------------- Functions
 
-	// TODO: UML REMOVE
-	// /**
-	// * Function for counting all concurrent actions, that are currently being
-	// * stored.
-	// *
-	// * @return the number of all currently stored actions for the
-	// * UnitControlModule to take.
-	// */
-	// public int getConcurrentQueuedElementCount() {
-	// int count = 0;
-	//
-	// count += this.trainingQueue.size();
-	// count += this.upgradeQueue.size();
-	// count += this.addonQueue.size();
-	// count += this.researchQueue.size();
-	// count += this.workerConfig.getBuildingQueue().size();
-	//
-	// return count;
-	// }
-
-	// TODO: UML REMOVE
-	// /**
-	// * Function for retrieving the amount of elements that reside in the
-	// * training and building queues.
-	// *
-	// * @return the amount of elements inside the training and building queues.
-	// */
-	// public int getTrainingAndBuildingQueueSize() {
-	// return (this.trainingQueue.size() +
-	// this.workerConfig.getBuildingQueue().size());
-	// }
-
 	// ------------------------------ Getter / Setter
 
 	public Queue<UnitType> getTrainingQueue() {
@@ -131,7 +98,6 @@ public class InformationStorage {
 		return researchQueue;
 	}
 
-	// TODO: UML ADD
 	public HashMap<BaseLocation, Integer> getBaselocationsSearched() {
 		return baselocationsSearched;
 	}

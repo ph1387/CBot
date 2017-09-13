@@ -8,7 +8,6 @@ import unitControlModule.stateFactories.updater.ActionUpdaterTerran_Wraith;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * StateFactoryTerran_Wraith.java --- A StateFactory used for generating all
  * necessary Objects for the Terran_Wraith.

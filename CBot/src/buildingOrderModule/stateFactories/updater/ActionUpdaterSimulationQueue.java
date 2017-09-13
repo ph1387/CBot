@@ -49,14 +49,10 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	private int maxActionQueueIndexOffsetTilEnd = 2;
 	// Time stamp of the last check of the action Queue.
 	private Integer lastSimulationTimeStampFrames = null;
-	// TODO: UML CHANGE 1000
 	// Time difference between the checking if the action Queue was being worked
 	// on.
 	private int nextSimulationTimeStampDifferenceFrames = 300;
 
-	// TODO: UML REMOVE
-	// private ConcurrentLinkedQueue<ArrayList<ActionType>>
-	// generatedActionTypeSequences = new ConcurrentLinkedQueue<>();
 	private SimulationStarter simulationActionStarter = new SimulationStarter();
 
 	public ActionUpdaterSimulationQueue(BuildActionManager buildActionManager) {
@@ -116,36 +112,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 
 		this.updateSimulationStarter(manager);
 	}
-
-	// TODO: UML REMOVE
-	// /**
-	// * Function for acting upon a generated action Queue by the
-	// SimulatorThread
-	// * itself. The ActionTypes are transformed into ManagerBaseActions and
-	// then
-	// * added to the existing action Queue of the ActionQueueSimulationResults
-	// * Action.
-	// */
-	// private void actOnSimulationThreadResult() {
-	// ArrayList<ActionType> generatedResult =
-	// this.generatedActionTypeSequences.poll();
-	// ArrayList<ManagerBaseAction> transformedResult = new ArrayList<>();
-	//
-	// // Transform the ActionTypes back into ManagerBaseActions.
-	// for (ActionType actionType : generatedResult) {
-	// transformedResult.add((ManagerBaseAction) actionType);
-	// }
-	//
-	// // Forward the transformed ActionTypes towards the Action itself.
-	// this.actionQueueSimulationResults.addToActionQueue(transformedResult);
-	//
-	// // TODO: DEBUG INFO
-	// System.out.println("\nACT ON RESULT:");
-	// for (ActionType actionType : generatedResult) {
-	// System.out.println(" - " + actionType.getClass().getSimpleName());
-	// }
-	// System.out.println("\n");
-	// }
 
 	/**
 	 * Function for updating all information regarding the SimulationStarter.

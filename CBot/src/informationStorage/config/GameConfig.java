@@ -15,7 +15,6 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 
 	// Init:
 	private boolean generateDefaultContendedTilePositions = true;
-	// TODO: UML ADD
 	private boolean generateDefaultContendedPolygons = true;
 	private boolean generateRegionAccessOrder = true;
 
@@ -28,25 +27,13 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// ----- Display / Debug functionalities:
 
 	// UnitTrackerModule:
-	// TODO: UML REMOVE
-	// private boolean displayPlayerStrength = true;
-	// TODO: UML REMOVE
-	// private boolean displayEnemyStrength = true;
-	// TODO: UML ADD
 	private boolean displayPlayerAirStrength = false;
-	// TODO: UML ADD
 	private boolean displayPlayerGroundStrength = false;
-	// TODO: UML ADD
 	private boolean displayPlayerHealthStrength = false;
-	// TODO: UML ADD
 	private boolean displayPlayerSupportStrength = false;
-	// TODO: UML ADD
 	private boolean displayEnemyAirStrength = false;
-	// TODO: UML ADD
 	private boolean displayEnemyGroundStrength = false;
-	// TODO: UML ADD
 	private boolean displayEnemyHealthStrength = false;
-	// TODO: UML ADD
 	private boolean displayEnemySupportStrength = false;
 
 	// Display:
@@ -60,49 +47,41 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayPlayerAirStrength() {
 		return this.displayPlayerAirStrength;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayPlayerGroundStrength() {
 		return this.displayPlayerGroundStrength;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayPlayerHealthStrength() {
 		return this.displayPlayerHealthStrength;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayPlayerSupportStrength() {
 		return this.displayPlayerSupportStrength;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayEnemyAirStrength() {
 		return this.displayEnemyAirStrength;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayEnemyGroundStrength() {
 		return this.displayEnemyGroundStrength;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayEnemyHealthStrength() {
 		return this.displayEnemyHealthStrength;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayEnemySupportStrength() {
 		return this.displayEnemySupportStrength;
@@ -128,7 +107,6 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 		return this.generateDefaultContendedTilePositions;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableGenerateDefaultContendedPolygons() {
 		return this.generateDefaultContendedPolygons;

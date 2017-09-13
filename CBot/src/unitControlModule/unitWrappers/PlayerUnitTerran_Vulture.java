@@ -13,14 +13,10 @@ import unitControlModule.stateFactories.StateFactory;
  */
 public class PlayerUnitTerran_Vulture extends PlayerUnitTypeRanged {
 
-	// TODO: UML ADD
 	// The distance below which the Unit's confidence drastically decreases.
 	private int minDistance = 64;
-	// TODO: UML ADD
 	private double notInMinDistanceConfidenceMultiplier = 0.2;
-	// TODO: UML ADD
 	private double vultureOutRangesMultiplier = 1.5;
-	// TODO: UML ADD
 	private double vultureOutRangedMultiplier = 0.75;
 
 	public PlayerUnitTerran_Vulture(Unit unit, InformationStorage informationStorage) {
@@ -29,7 +25,6 @@ public class PlayerUnitTerran_Vulture extends PlayerUnitTypeRanged {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected double generateConfidence() {
 		double generatedConfidence = super.generateConfidence();

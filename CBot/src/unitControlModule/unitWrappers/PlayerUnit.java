@@ -41,52 +41,30 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	private static final int CONFIDENCE_TILE_RADIUS = 15;
 
-	// TODO: UML REMOVE
-	// protected static HashMap<BaseLocation, Integer> BaselocationsSearched =
-	// new HashMap<>();
-
 	// Information preserver which holds all important information
 	protected InformationStorage informationStorage;
 	protected Unit unit;
 
-	// TODO: UML ADD
 	protected Unit closestEnemyUnitInConfidenceRange;
-	// TODO: UML ADD
 	// The special UnitTypes that the Unit is looking out for and prioritizes in
 	// its target choosing. These are mostly sentry turrets and static buildings
 	// that can attack Units.
 	protected List<UnitType> specialUnitTypes = Arrays.asList(
 			new UnitType[] { UnitType.Terran_Bunker, UnitType.Terran_Missile_Turret, UnitType.Protoss_Photon_Cannon,
 					UnitType.Zerg_Creep_Colony, UnitType.Zerg_Spore_Colony, UnitType.Zerg_Sunken_Colony, });
-	// TODO: UML ADD
 	// The closest enemy Unit this one can attack:
 	protected Unit closestAttackableEnemyUnitInConfidenceRange;
-	// TODO: UML ADD
 	protected Unit closestAttackableEnemyUnitWithWeapon;
-	// TODO: UML ADD
 	protected Unit closestAttackableEnemySpecialUnitInConfidenceRange;
-	// TODO: UML ADD
 	protected Unit closestAttackableEnemyWorkerInConfidenceRange;
-	// TODO: UML ADD
 	protected Unit closestAttackableEnemySupplyProviderInConfidenceRange;
-	// TODO: UML ADD
 	protected Unit closestAttackableEnemyCenterInConfidenceRange;
-	// TODO: UML ADD
 	protected Unit attackableEnemyUnitToReactTo;
-	// TODO: UML ADD
 	// The closest enemy Unit that this one can be attacked by:
 	protected Unit closestAttackingEnemyUnitInConfidenceRange;
-	// TODO: UML ADD
 	protected Unit attackingEnemyUnitToReactTo;
 
 	protected double confidence = 1.;
-	// TODO: UML REMOVE
-	// // Extra distance that will be added to the enemy when determining if the
-	// // Unit should retreat or not.
-	// protected int extraConfidencePixelRangeToClosestUnits = 32;
-	// TODO: UML REMOVE
-	// protected double confidenceDefault = 0.75;
-
 	// Properties used for modifying a generated confidence:
 	// The distance at which the center range confidence multiplier activates.
 	private int maxCenterPixelDistanceConfidenceBoost = 320;
@@ -242,7 +220,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for updating all references regarding enemy Units. This includes
 	 * i.e. the closest one towards this Unit.
@@ -276,7 +253,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		this.attackingEnemyUnitToReactTo = this.generateAttackingEnemyUnitToReactTo();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating / finding the Unit that this one has to react to
 	 * when taking any offensive actions. The Unit has to chose between
@@ -323,7 +299,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return unitToReactTo;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating / finding the Unit that this one has to react to
 	 * when taking any defensive actions.
@@ -394,7 +369,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 */
 	protected abstract double generateConfidence();
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -408,7 +382,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 				this.informationStorage.getTrackerInfo().getEnemyAirAttackTilePositions());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -422,7 +395,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 				this.informationStorage.getTrackerInfo().getEnemyGroundAttackTilePositions());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -436,7 +408,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 				this.informationStorage.getTrackerInfo().getEnemyHealthTilePositions());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -450,7 +421,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 				this.informationStorage.getTrackerInfo().getEnemySupportTilePositions());
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Used to determine the strength of the PlayerUnits and the enemies by
 	 * summing up their representative TileValues in the confidence radius
@@ -470,7 +440,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		List<Integer> enemyStrengths = new ArrayList<Integer>();
 		List<Integer> playerStrengths = new ArrayList<Integer>();
 
-		// TODO: Possible Change: AirStrength Implementation
 		// Sum the total strength of the player and the enemy in a given radius
 		// around the unit.
 		for (int i = -CONFIDENCE_TILE_RADIUS; i <= CONFIDENCE_TILE_RADIUS; i++) {
@@ -706,7 +675,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return playerUnits;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting Units that match a provided List of UnitTypes
 	 * from a HashSet of Units.
@@ -730,7 +698,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return attackableUnits;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting workers from a provided HashSet of Units that
 	 * this Unit can attack.
@@ -751,7 +718,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return attackableWorkers;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting enemy supply providers from a provided HashSet of
 	 * Units that this Unit can attack.
@@ -773,7 +739,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return attackableSupplyProviders;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting centers from a provided HashSet of Units that
 	 * this Unit can attack.
@@ -794,7 +759,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return attackableCenters;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting enemy Units that have either a ground or air
 	 * weapon from a provided HashSet of Units that this Unit can attack.
@@ -816,7 +780,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return attackableUnitsWithWeapons;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting enemy Units that this Unit can attack (Flying,
 	 * non flying) based on this Unit's weapon.
@@ -837,7 +800,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return attackableUnits;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for getting the enemy Units in the provided HashSet that can
 	 * attack it. This does NOT include their specific weapon range, but only
@@ -862,7 +824,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return attackingUnits;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if the Unit can attack a given Unit. This takes the
 	 * current Unit's weapon into account (Ground, air).
@@ -879,7 +840,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 				&& ((groundWeapon.targetsGround() && !unit.isFlying()) || (airWeapon.targetsAir() && unit.isFlying()));
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if the Unit can be attacked by a given Unit. This
 	 * takes the provided Unit's weapon into account (Ground, air).
@@ -957,56 +917,42 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return confidence;
 	}
 
-	// TODO: UML REMOVE
-	// public static HashMap<BaseLocation, Integer> getBaselocationsSearched() {
-	// return BaselocationsSearched;
-	// }
-
 	public Unit getClosestEnemyUnitInConfidenceRange() {
 		return this.closestEnemyUnitInConfidenceRange;
 	}
 
-	// TODO: UML ADD
 	public Unit getClosestAttackableEnemyUnitWithWeapon() {
 		return closestAttackableEnemyUnitWithWeapon;
 	}
 
-	// TODO: UML ADD
 	public Unit getClosestAttackableEnemyUnitInConfidenceRange() {
 		return closestAttackableEnemyUnitInConfidenceRange;
 	}
 
-	// TODO: UML ADD
 	public Unit getClosestAttackableEnemySpecialUnitInConfidenceRange() {
 		return closestAttackableEnemySpecialUnitInConfidenceRange;
 	}
 
-	// TODO: UML ADD
 	public Unit getClosestAttackableEnemyWorkerInConfidenceRange() {
 		return closestAttackableEnemyWorkerInConfidenceRange;
 	}
 
-	// TODO: UML ADD
 	public Unit getClosestAttackableEnemySupplyProviderInConfidenceRange() {
 		return closestAttackableEnemySupplyProviderInConfidenceRange;
 	}
 
-	// TODO: UML ADD
 	public Unit getClosestAttackableEnemyCenterInConfidenceRange() {
 		return closestAttackableEnemyCenterInConfidenceRange;
 	}
 
-	// TODO: UML ADD
 	public Unit getAttackableEnemyUnitToReactTo() {
 		return attackableEnemyUnitToReactTo;
 	}
 
-	// TODO: UML ADD
 	public Unit getClosestAttackingEnemyUnitInConfidenceRange() {
 		return closestAttackingEnemyUnitInConfidenceRange;
 	}
 
-	// TODO: UML ADD
 	public Unit getAttackingEnemyUnitToReactTo() {
 		return attackingEnemyUnitToReactTo;
 	}

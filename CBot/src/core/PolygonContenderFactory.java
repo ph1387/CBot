@@ -15,7 +15,6 @@ import bwapiMath.Point.Type;
 import bwta.BWTA;
 import bwta.Chokepoint;
 
-// TODO: UML ADD
 /**
  * PolygonContenderFactory.java --- Class for generating Polygons which define a
  * area in which no worker is allowed to construct buildings in.
@@ -25,9 +24,7 @@ import bwta.Chokepoint;
  */
 public class PolygonContenderFactory extends TilePositionFactory {
 
-	// TODO: UML ADD
 	private double chokePointVectorLength = 64;
-	// TODO: UML ADD
 	private int chokePointVectorRotation = 90;
 
 	public PolygonContenderFactory() {
@@ -67,9 +64,6 @@ public class PolygonContenderFactory extends TilePositionFactory {
 		return contendedPolygons;
 	}
 
-	// TODO: UML PARAMS
-	// TODO: UML VISIBILITIY
-	// TODO: UML RENAME contendTilePositionsInStartingLocation
 	/**
 	 * Function for generating a Polygon located at the Player's starting
 	 * location that includes the space in between the center and the mineral
@@ -356,7 +350,6 @@ public class PolygonContenderFactory extends TilePositionFactory {
 		return p;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating {@link Polygon}s around {@link Chokepoint}s and
 	 * adding them to a provided HashSet.
@@ -373,7 +366,6 @@ public class PolygonContenderFactory extends TilePositionFactory {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a Polygon around a ChokePoint.
 	 * 

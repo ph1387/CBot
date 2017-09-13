@@ -8,7 +8,6 @@ import bwapi.TilePosition;
 import bwapi.Unit;
 import bwta.BWTA;
 
-// TODO: UML MOVE FUNCTIONS
 /**
  * TilePositionContenderGenerator.java --- Class for generating the default
  * contended construction spots on the map, on which no worker can construct a
@@ -23,12 +22,8 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 	private int contendedTileRangeMinerals = 3;
 	private int contendedTileRangeGeysers = 3;
 
-	// TODO: UML REMOVE
-//	private InformationStorage informationStorage;
-
-	// TODO: UML PARAMS
 	public TilePositionContenderFactory() {
-		
+
 	}
 
 	// -------------------- Functions
@@ -56,7 +51,6 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 		return defaultContendedTilePositions;
 	}
 
-	// TODO: UML VISIBILITIY
 	/**
 	 * Function for contending all TilePositions in a specific area around each
 	 * mineral spot on the map.
@@ -92,7 +86,6 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 		}
 	}
 
-	// TODO: UML VISIBILITIY
 	/**
 	 * Function for contending all TilePositions in a specific area around each
 	 * geyser on the map.
@@ -128,7 +121,6 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 		}
 	}
 
-	// TODO: UML VISIBILITIY
 	/**
 	 * Function for contending all TilePositions in a specific area at the map
 	 * edge.

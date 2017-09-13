@@ -10,7 +10,6 @@ import bwapi.UnitType;
  */
 public class UnknownUnitTypeException extends Exception {
 
-	// TODO: UML PARAMS
 	public UnknownUnitTypeException(UnitType unitType) {
 		super("Unknown / Undefined UnitType: " + unitType);
 	}

@@ -11,15 +11,6 @@ import unitTrackerModule.UnitTrackerModule;
  */
 public interface IUnitTrackerModuleConfig {
 
-	// TODO: UML REMOVE
-	// /**
-	// *
-	// * @return true for enabling the highlight of the TilePositions containing
-	// * Player strength influences, false for disabling it.
-	// */
-	// public boolean enableDisplayPlayerStrength();
-
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing
@@ -27,7 +18,6 @@ public interface IUnitTrackerModuleConfig {
 	 */
 	public boolean enableDisplayPlayerAirStrength();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing
@@ -35,7 +25,6 @@ public interface IUnitTrackerModuleConfig {
 	 */
 	public boolean enableDisplayPlayerGroundStrength();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing
@@ -43,7 +32,6 @@ public interface IUnitTrackerModuleConfig {
 	 */
 	public boolean enableDisplayPlayerHealthStrength();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing
@@ -51,15 +39,6 @@ public interface IUnitTrackerModuleConfig {
 	 */
 	public boolean enableDisplayPlayerSupportStrength();
 
-	// TODO: UML REMOVE
-	// /**
-	// *
-	// * @return true for enabling the highlight of the TilePositions containing
-	// * enemy Unit strength influences, false for disabling it.
-	// */
-	// public boolean enableDisplayEnemyStrength();
-
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing
@@ -67,7 +46,6 @@ public interface IUnitTrackerModuleConfig {
 	 */
 	public boolean enableDisplayEnemyAirStrength();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing
@@ -75,7 +53,6 @@ public interface IUnitTrackerModuleConfig {
 	 */
 	public boolean enableDisplayEnemyGroundStrength();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing
@@ -83,7 +60,6 @@ public interface IUnitTrackerModuleConfig {
 	 */
 	public boolean enableDisplayEnemyHealthStrength();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing

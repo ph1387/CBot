@@ -14,13 +14,9 @@ import bwapi.UnitType;
  */
 public class TilePositionFactory {
 
-	// TODO: UML ADD
 	private static int RowAdditionTop = 1;
-	// TODO: UML ADD
 	private static int RowAdditionRight = 1;
-	// TODO: UML ADDs
 	private static int RowAdditionBottom = 1;
-	// TODO: UML ADD
 	private static int RowAdditionLeft = 1;
 
 	public TilePositionFactory() {

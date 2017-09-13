@@ -26,23 +26,17 @@ import informationStorage.UnitTrackerInformation;
  */
 public class UnitTrackerModule {
 
-	// TODO: UML REMOVE
-	// private static final double FLAT_DPS_MULTIPLIER = 100.;
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
 	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<TilePosition, Integer> playerHealthTilePositions = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<TilePosition, Integer> playerSupportTilePositions = new HashMap<>();
 
 	private HashMap<TilePosition, Integer> enemyAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> enemyGroundAttackTilePositions = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<TilePosition, Integer> enemyHealthTilePositions = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<TilePosition, Integer> enemySupportTilePositions = new HashMap<>();
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
@@ -65,19 +59,15 @@ public class UnitTrackerModule {
 	// here. The bigger the number, the stronger the effect of a shorter range
 	// is.
 	private int generalMultiplier = 41;
-	// TODO: UML ADD
 	private int generalDPSMultiplier = 100;
-	// TODO: UML ADD
 	// The general health multiplier that will be used by the Player's Units as
 	// well as the enemy ones.
 	private int generalHealthMultiplier = 1000;
 	// The general support multiplier that will be used by the Player's Units as
 	// well as the enemy ones.
 	private int generalSupportMultiplier = 250;
-	// TODO: UML ADD
 	// The tile range that each support Unit will use as radius for it's effect.
 	private int supportEffectTileRange = 3;
-	// TODO: UML ADD
 	// The UnitTypes that are considered support Units.
 	private List<UnitType> supportUnitTypes = Arrays
 			.asList(new UnitType[] { UnitType.Terran_Medic, UnitType.Terran_Science_Vessel, UnitType.Zerg_Queen,
@@ -337,173 +327,6 @@ public class UnitTrackerModule {
 		}
 	}
 
-	// TODO: UML REMOVE FF
-	// // TODO: Possible Change: Add following functions together
-	// /**
-	// * Function used to generate the table of value tiles showing the air
-	// forces
-	// * strength of the player units.
-	// *
-	// * @return a HashMap containing ValueTilePositions that represent the
-	// * players air strength.
-	// */
-	// private HashMap<TilePosition, Integer>
-	// generatePlayerAirAttackTilePositions() {
-	// HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
-	//
-	// for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-	// if (unit.isCompleted() && unit.getType().airWeapon() != null
-	// && unit.getType().airWeapon().damageAmount() > 0) {
-	// this.addValueInAreaToTilePositionValue(unit.getTilePosition(),
-	// valueTiles,
-	// this.generateUnitMultiplier(unit), unit.getType().airWeapon());
-	// }
-	// }
-	// return valueTiles;
-	// }
-	//
-	// /**
-	// * Function used to generate the table of value tiles showing the ground
-	// * forces strength of the player units.
-	// *
-	// * @return a HashMap containing ValueTilePositions that represent the
-	// * players air strength.
-	// */
-	// private HashMap<TilePosition, Integer>
-	// generatePlayerGroundAttackTilePositions() {
-	// HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
-	//
-	// for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-	// if (unit.isCompleted() && unit.getType().groundWeapon() != null
-	// && unit.getType().groundWeapon().damageAmount() > 0) {
-	// this.addValueInAreaToTilePositionValue(unit.getTilePosition(),
-	// valueTiles,
-	// this.generateUnitMultiplier(unit), unit.getType().groundWeapon());
-	// }
-	// }
-	// return valueTiles;
-	// }
-	//
-	// /**
-	// * Function used to generate the table of value tiles showing the air
-	// forces
-	// * strength of the enemy units and buildings.
-	// *
-	// * @return a HashMap containing ValueTilePositions that represent the
-	// * enemies air strength.
-	// */
-	// private HashMap<TilePosition, Integer>
-	// generateEnemyAirAttackTilePositions() {
-	// HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
-	//
-	// // Units
-	// for (EnemyUnit enemyUnit : this.enemyUnits) {
-	// if (enemyUnit.getUnitType().airWeapon() != null &&
-	// enemyUnit.getUnitType().airWeapon().damageAmount() > 0
-	// && enemyUnit.getUnit().isCompleted()) {
-	// if (enemyUnit.getUnit() != null) {
-	// this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(),
-	// valueTiles,
-	// this.generateUnitMultiplier(enemyUnit.getUnit()),
-	// enemyUnit.getUnitType().airWeapon());
-	// } else {
-	// this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(),
-	// valueTiles,
-	// this.generateEnemyUnitMultiplier(enemyUnit),
-	// enemyUnit.getUnitType().airWeapon());
-	// }
-	// }
-	// }
-	//
-	// // Buildings
-	// for (EnemyUnit enemyBuilding : this.enemyBuildings) {
-	// try {
-	// // Buildings must provide a air weapon.
-	// if (enemyBuilding.getUnitType().airWeapon() != null
-	// && enemyBuilding.getUnitType().airWeapon().damageAmount() > 0) {
-	// if (enemyBuilding.getUnit().isCompleted() && enemyBuilding.getUnit() !=
-	// null) {
-	// this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(),
-	// valueTiles,
-	// this.generateUnitMultiplier(enemyBuilding.getUnit()),
-	// enemyBuilding.getUnitType().airWeapon());
-	// }
-	// // Since the building is currently not visible, but has a
-	// // weapon, keep adding the default enemy Unit multiplier.
-	// else {
-	// this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(),
-	// valueTiles,
-	// this.generateEnemyUnitMultiplier(enemyBuilding),
-	// enemyBuilding.getUnitType().airWeapon());
-	// }
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// return valueTiles;
-	// }
-	//
-	// /**
-	// * Function used to generate the table of value tiles showing the ground
-	// * forces strength of the enemy units and buildings.
-	// *
-	// * @return a HashMap containing ValueTilePositions that represent the
-	// * enemies ground strength.
-	// */
-	// private HashMap<TilePosition, Integer>
-	// generateEnemyGroundAttackTilePositions() {
-	// HashMap<TilePosition, Integer> valueTiles = new HashMap<>();
-	//
-	// // Units
-	// for (EnemyUnit enemyUnit : this.enemyUnits) {
-	// if (enemyUnit.getUnitType().groundWeapon() != null
-	// && enemyUnit.getUnitType().groundWeapon().damageAmount() > 0 &&
-	// enemyUnit.getUnit().isCompleted()) {
-	// if (enemyUnit.getUnit() != null) {
-	// this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(),
-	// valueTiles,
-	// this.generateUnitMultiplier(enemyUnit.getUnit()),
-	// enemyUnit.getUnitType().groundWeapon());
-	// } else {
-	// this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(),
-	// valueTiles,
-	// this.generateEnemyUnitMultiplier(enemyUnit),
-	// enemyUnit.getUnitType().groundWeapon());
-	// }
-	// }
-	// }
-	//
-	// // Buildings
-	// for (EnemyUnit enemyBuilding : this.enemyBuildings) {
-	// try {
-	// // Buildings must provide a ground weapon.
-	// if (enemyBuilding.getUnitType().groundWeapon() != null
-	// && enemyBuilding.getUnitType().groundWeapon().damageAmount() > 0) {
-	// if (enemyBuilding.getUnit().isCompleted() && enemyBuilding.getUnit() !=
-	// null) {
-	// this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(),
-	// valueTiles,
-	// this.generateUnitMultiplier(enemyBuilding.getUnit()),
-	// enemyBuilding.getUnitType().groundWeapon());
-	// }
-	// // Since the building is currently not visible, but has a
-	// // weapon, keep adding the default enemy Unit multiplier.
-	// else {
-	// this.addValueInAreaToTilePositionValue(enemyBuilding.getLastSeenTilePosition(),
-	// valueTiles,
-	// this.generateEnemyUnitMultiplier(enemyBuilding),
-	// enemyBuilding.getUnitType().groundWeapon());
-	// }
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// return valueTiles;
-	// }
-
-	// TODO: UML ADD
 	/**
 	 * Function for updating all information regarding the Player's and the
 	 * enemy's different strengths on the TilePositions.
@@ -513,7 +336,6 @@ public class UnitTrackerModule {
 		this.updateEnemyTilePositionInformation();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for updating all information regarding the Player's strengths.
 	 */
@@ -566,7 +388,6 @@ public class UnitTrackerModule {
 		this.playerSupportTilePositions = playerSupport;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for updating all information regarding the enemy's strengths.
 	 * This includes buildings as well as Units.
@@ -595,7 +416,6 @@ public class UnitTrackerModule {
 		this.enemySupportTilePositions = enemySupport;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for actually updating the values of the different types of
 	 * strengths the enemy possesses which are added towards the provided
@@ -701,7 +521,6 @@ public class UnitTrackerModule {
 		return multiplier;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a {@link TilePositionValueGenerationInformation}
 	 * instance containing the attack value of a UnitType based on the provided
@@ -742,7 +561,6 @@ public class UnitTrackerModule {
 		return new TilePositionValueGenerationInformation(maxAttackTileRange, multiplier);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a {@link TilePositionValueGenerationInformation}
 	 * instance containing the health value of a UnitType based on the provided
@@ -773,7 +591,6 @@ public class UnitTrackerModule {
 		return new TilePositionValueGenerationInformation(tileRange, multiplier);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a {@link TilePositionValueGenerationInformation}
 	 * instance containing the fixed support value of a UnitType based.
@@ -791,7 +608,6 @@ public class UnitTrackerModule {
 		return new TilePositionValueGenerationInformation(this.supportEffectTileRange, multiplier);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a matching divider for the function
 	 * {@link #addValueInAreaToTilePositionValue(TilePosition, HashMap, TilePositionValueGenerationInformation)}
@@ -811,7 +627,6 @@ public class UnitTrackerModule {
 		return this.generatedDividers.get(input);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * TilePositionValueGenerationInformation.java --- Class for storing
 	 * temporary information that will be used for generating the different
@@ -841,7 +656,6 @@ public class UnitTrackerModule {
 
 	}
 
-	// TODO: UML ADD PARAMS
 	/**
 	 * Function for adding a units strength to the corresponding
 	 * ValueTilePosition table. The added strength and the range at which these
@@ -910,12 +724,10 @@ public class UnitTrackerModule {
 		return this.playerGroundAttackTilePositions;
 	}
 
-	// TODO: UML ADD
 	public HashMap<TilePosition, Integer> getPlayerHealthTilePositions() {
 		return playerHealthTilePositions;
 	}
 
-	// TODO: UML ADD
 	public HashMap<TilePosition, Integer> getPlayerSupportTilePositions() {
 		return playerSupportTilePositions;
 	}
@@ -928,12 +740,10 @@ public class UnitTrackerModule {
 		return this.enemyGroundAttackTilePositions;
 	}
 
-	// TODO: UML ADD
 	public HashMap<TilePosition, Integer> getEnemyHealthTilePositions() {
 		return enemyHealthTilePositions;
 	}
 
-	// TODO: UML ADD
 	public HashMap<TilePosition, Integer> getEnemySupportTilePositions() {
 		return enemySupportTilePositions;
 	}

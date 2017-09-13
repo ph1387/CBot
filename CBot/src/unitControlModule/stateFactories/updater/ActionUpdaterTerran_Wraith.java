@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.updater;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Wraith;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterTerran_Wraith.java --- Updater for updating an
  * {@link AvailableActionsTerran_Wraith} instance.

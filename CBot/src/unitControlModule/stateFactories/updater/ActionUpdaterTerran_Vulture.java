@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.updater;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Vulture;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterTerran_Vulture.java --- Updater for updating an
  * {@link AvailableActionsTerran_Vulture} instance.

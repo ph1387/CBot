@@ -89,7 +89,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		return availableActionTypes;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for determining if a Terran_Machine_Shop can be added towards
 	 * the Queue of addons to construct. The function takes the already queued

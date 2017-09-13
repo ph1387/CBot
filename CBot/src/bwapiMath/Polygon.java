@@ -125,7 +125,6 @@ public class Polygon {
 		return p;
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for performing a recursion, which finds all covered
 	 * TilePositions that are covered by this Polygon. This uses a Point, which

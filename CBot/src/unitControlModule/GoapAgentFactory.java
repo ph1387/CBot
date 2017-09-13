@@ -15,17 +15,14 @@ import unitControlModule.unitWrappers.PlayerUnitFactory;
  */
 public class GoapAgentFactory {
 
-	// TODO: UML ADD
 	private PlayerUnitFactory playerUnitFactory;
 
-	// TODO: UML ADD
 	public GoapAgentFactory(InformationStorage informationStorage) {
 		this.playerUnitFactory = new PlayerUnitFactory(informationStorage);
 	}
 
 	// -------------------- Functions
 
-	// TODO: UML NON STATIC PARAMS
 	/**
 	 * Main function for creating a GoapAgent using a Unit and a general
 	 * InformationStorage.

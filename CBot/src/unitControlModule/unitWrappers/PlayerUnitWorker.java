@@ -20,17 +20,13 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 
 	// Enum needed since the worker would otherwise constantly reset his actions
 	// ...
-	// TODO: UML ADD
 	private enum ConstructionState {
 		IDLE, APPLIED
 	};
 
 	// Information regarding the construction of different buildings:
-	// TODO: UML ADD
 	private ConstructionState currentConstrcutionState = ConstructionState.IDLE;
-	// TODO: UML ADD
 	private int constructionStateApplianceTimeStamp = 0;
-	// TODO: UML ADD
 	private int constructionStateApplianceMaxFrameDiff = 200;
 
 	private WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation;

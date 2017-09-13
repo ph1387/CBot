@@ -18,16 +18,12 @@ public class UnitTrackerInformation {
 
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<TilePosition, Integer> playerHealthTilePositions = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<TilePosition, Integer> playerSupportTilePositions = new HashMap<>();
 
 	private HashMap<TilePosition, Integer> enemyAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> enemyGroundAttackTilePositions = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<TilePosition, Integer> enemyHealthTilePositions = new HashMap<>();
-	// TODO: UML ADD
 	private HashMap<TilePosition, Integer> enemySupportTilePositions = new HashMap<>();
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
@@ -56,22 +52,18 @@ public class UnitTrackerInformation {
 		this.playerGroundAttackTilePositions = playerGroundAttackTilePositions;
 	}
 
-	// TODO: UML ADD
 	public HashMap<TilePosition, Integer> getPlayerHealthTilePositions() {
 		return playerHealthTilePositions;
 	}
 
-	// TODO: UML ADD
 	public void setPlayerHealthTilePositions(HashMap<TilePosition, Integer> playerHealthTilePositions) {
 		this.playerHealthTilePositions = playerHealthTilePositions;
 	}
 
-	// TODO: UML ADD
 	public HashMap<TilePosition, Integer> getPlayerSupportTilePositions() {
 		return playerSupportTilePositions;
 	}
 
-	// TODO: UML ADD
 	public void setPlayerSupportTilePositions(HashMap<TilePosition, Integer> playerSupportTilePositions) {
 		this.playerSupportTilePositions = playerSupportTilePositions;
 	}
@@ -92,22 +84,18 @@ public class UnitTrackerInformation {
 		this.enemyGroundAttackTilePositions = enemyGroundAttackTilePositions;
 	}
 
-	// TODO: UML ADD
 	public HashMap<TilePosition, Integer> getEnemyHealthTilePositions() {
 		return enemyHealthTilePositions;
 	}
 
-	// TODO: UML ADD
 	public void setEnemyHealthTilePositions(HashMap<TilePosition, Integer> enemyHealthTilePositions) {
 		this.enemyHealthTilePositions = enemyHealthTilePositions;
 	}
 
-	// TODO: UML ADD
 	public HashMap<TilePosition, Integer> getEnemySupportTilePositions() {
 		return enemySupportTilePositions;
 	}
 
-	// TODO: UML ADD
 	public void setEnemySupportTilePositions(HashMap<TilePosition, Integer> enemySupportTilePositions) {
 		this.enemySupportTilePositions = enemySupportTilePositions;
 	}

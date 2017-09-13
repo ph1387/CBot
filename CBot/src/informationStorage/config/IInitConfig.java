@@ -17,7 +17,6 @@ public interface IInitConfig {
 	 */
 	public boolean enableGenerateDefaultContendedTilePositions();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the generation of the default contended
