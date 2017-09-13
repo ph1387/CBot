@@ -4,17 +4,18 @@ import bwapi.Pair;
 import bwapi.Unit;
 import informationStorage.InformationStorage;
 
+// TODO: UML ADD
 /**
- * PlayerUnitTypeMelee.java --- Class for melee Units. This class provides basic
- * functionalities that these types of Units require (confidence calculation
- * etc.).
+ * PlayerUnitTypeFlying.java --- Class for flying Units. This class provides
+ * basic functionalities that these types of Units require (confidence
+ * calculation etc.).
  * 
- * @author P H - 01.08.2017
+ * @author P H - 13.09.2017
  *
  */
-public abstract class PlayerUnitTypeMelee extends PlayerUnit {
+public abstract class PlayerUnitTypeFlying extends PlayerUnit {
 
-	public PlayerUnitTypeMelee(Unit unit, InformationStorage informationStorage) {
+	public PlayerUnitTypeFlying(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
 	}
 
@@ -23,7 +24,7 @@ public abstract class PlayerUnitTypeMelee extends PlayerUnit {
 	@Override
 	protected double generateConfidence() {
 		double generatedConfidence = 0.;
-		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyGroundStrengths();
+		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyAirStrengths();
 		double playerStrengthTotal = playerEnemyStrengths.first;
 		double enemyStrengthTotal = playerEnemyStrengths.second;
 

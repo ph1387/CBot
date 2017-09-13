@@ -67,4 +67,9 @@ public class PlayerUnitFactory {
 		return new PlayerUnitTerran_SCV(unit, this.informationStorage, this.workerManagerResourceSpotAllocation,
 				this.workerManagerConstructionJobDistribution);
 	}
+
+	// TODO: UML ADD
+	public PlayerUnit createWraith(Unit unit) {
+		return new PlayerUnitTerran_Wraith(unit, this.informationStorage);
+	}
 }

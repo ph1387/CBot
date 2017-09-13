@@ -17,12 +17,12 @@ public class GoapAgentFactory {
 
 	// TODO: UML ADD
 	private PlayerUnitFactory playerUnitFactory;
-	
+
 	// TODO: UML ADD
 	public GoapAgentFactory(InformationStorage informationStorage) {
 		this.playerUnitFactory = new PlayerUnitFactory(informationStorage);
 	}
-	
+
 	// -------------------- Functions
 
 	// TODO: UML NON STATIC PARAMS
@@ -38,8 +38,7 @@ public class GoapAgentFactory {
 	 *             Exception indicating that the provided Unit has a not
 	 *             supported UnitType.
 	 */
-	public GoapAgent createAgent(Unit unit)
-			throws UnknownUnitTypeException {
+	public GoapAgent createAgent(Unit unit) throws UnknownUnitTypeException {
 		GoapAgent agent = null;
 
 		// TODO: Add more Classes
@@ -65,12 +64,15 @@ public class GoapAgentFactory {
 		case "Terran_SCV":
 			agent = new DefaultGoapAgent(this.playerUnitFactory.createSCV(unit));
 			break;
+		case "Terran_Wraith":
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createWraith(unit));
+			break;
 		default:
 			break;
 		}
 
 		if (agent == null) {
-			throw new UnknownUnitTypeException();
+			throw new UnknownUnitTypeException(unit.getType());
 		} else {
 			return agent;
 		}

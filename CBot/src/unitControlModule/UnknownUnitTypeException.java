@@ -1,5 +1,7 @@
 package unitControlModule;
 
+import bwapi.UnitType;
+
 /**
  * UnknownUnitTypeException.java --- Exception for handling unknown UnitTypes.
  * 
@@ -8,7 +10,8 @@ package unitControlModule;
  */
 public class UnknownUnitTypeException extends Exception {
 
-	public UnknownUnitTypeException() {
-		super("Unknown / Undefined UnitType.");
+	// TODO: UML PARAMS
+	public UnknownUnitTypeException(UnitType unitType) {
+		super("Unknown / Undefined UnitType: " + unitType);
 	}
 }
