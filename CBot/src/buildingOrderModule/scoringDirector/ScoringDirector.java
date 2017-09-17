@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueue;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
@@ -36,6 +38,8 @@ import bwapi.UpgradeType;
  */
 public abstract class ScoringDirector {
 
+	private ScoreGeneratorFactory scoreGeneratorFactory;
+
 	// Base multiplier which all Actions use to generate their score and ensure
 	// better / more results (No values below 1.0 are discarded).
 	private double basePointMultiplier = 10.;
@@ -51,6 +55,10 @@ public abstract class ScoringDirector {
 	// are chosen does not change. Therefore multipliers can be stored (Dynamic
 	// programming) to improve the performance.
 	private HashMap<ScoringAction, Double> storedScoringMultipliers = new HashMap<>();
+
+	public ScoringDirector(BuildActionManager manager) {
+		this.scoreGeneratorFactory = this.defineScoreGeneratorFactory(manager);
+	}
 
 	// -------------------- Functions
 
@@ -106,58 +114,22 @@ public abstract class ScoringDirector {
 		// provided.
 		for (GameState gameState : usedGameStates) {
 			gameState.updateScore(this, manager);
+			gameState.updateDivider(this, manager);
 		}
 	}
 
 	/**
-	 * Function for specifying the desired percentage of buildings that the Bot
-	 * should have. </br>
-	 * <b>Note:</b></br>
-	 * Should not be larger than 0.5 to prevent the maximum score from exceeding
-	 * 1.0.
+	 * Function for defining the {@link ScoreGeneratorFactory} that will be
+	 * providing all necessary {@link ScoreGenerator}s.
 	 * 
-	 * @return the percentage of buildings the Bot should try to keep.
+	 * @param manager
+	 *            the BuildActionManager that contains all important
+	 *            information.
+	 * @return a {@link ScoreGeneratorFactory} that will provide all necessary
+	 *         {@link ScoreGenerator}s which will be used for generating the
+	 *         scores of the {@link GameState}s / actions.
 	 */
-	protected abstract double defineDesiredBuildingsPercent();
-
-	/**
-	 * Function for specifying the desired percentage of combat Units that the
-	 * Bot should have. </br>
-	 * <b>Note:</b></br>
-	 * Should not be larger than 0.5 to prevent the maximum score from exceeding
-	 * 1.0.
-	 * 
-	 * @return the percentage of combat Units the Bot should try to keep.
-	 */
-	protected abstract double defineDesiredCombatUnitsPercent();
-
-	/**
-	 * Function for defining the fixed score for Bio-Units.
-	 * 
-	 * @return the score for Bio-Units.
-	 */
-	protected abstract double defineFixedScoreUnitsBio();
-
-	/**
-	 * Function for defining the fixed score for flying Units.
-	 * 
-	 * @return the score for flying Units.
-	 */
-	protected abstract double defineFixedScoreUnitsFlying();
-
-	/**
-	 * Function for defining the fixed score for healer Units.
-	 * 
-	 * @return the score for healer Units.
-	 */
-	protected abstract double defineFixedScoreUnitsHealer();
-
-	/**
-	 * Function for defining the fixed score for support Units.
-	 * 
-	 * @return the score for support Units.
-	 */
-	protected abstract double defineFixedScoreUnitsSupport();
+	protected abstract ScoreGeneratorFactory defineScoreGeneratorFactory(BuildActionManager manager);
 
 	/**
 	 * Function for updating the scores of the given ScoringActions.
@@ -172,11 +144,11 @@ public abstract class ScoringDirector {
 		for (ScoringAction scoringAction : updatableActions) {
 			double gameStateDivider = 0.;
 			double gameStateSum = 0.;
-
+			
 			// Get the sum of all used GameStates of the action.
 			for (GameState gameState : scoringAction.defineUsedGameStates()) {
 				gameStateSum += gameState.getCurrentScore();
-				gameStateDivider += gameState.defineDivider();
+				gameStateDivider += gameState.getCurrentDivider();
 			}
 
 			// Divide the total sum by the number of GameStates added together
@@ -283,5 +255,9 @@ public abstract class ScoringDirector {
 	}
 
 	// ------------------------------ Getter / Setter
+
+	public ScoreGeneratorFactory getScoreGeneratorFactory() {
+		return scoreGeneratorFactory;
+	}
 
 }

@@ -2,6 +2,8 @@ package buildingOrderModule.scoringDirector;
 
 import java.util.HashSet;
 
+import buildingOrderModule.scoringDirector.gameState.GameState;
+
 /**
  * ScoringAction.java --- A Interface for all Actions that a
  * {@link ScoringDirector} will be able to update.

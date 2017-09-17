@@ -141,7 +141,7 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 
 	@Override
 	protected ScoringDirector defineScoringDirector() {
-		return new ScoringDirectorTerran_Bio();
+		return new ScoringDirectorTerran_Bio(this.buildActionManager);
 	}
 
 }

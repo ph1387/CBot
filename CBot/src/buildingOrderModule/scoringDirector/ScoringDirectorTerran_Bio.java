@@ -1,5 +1,7 @@
 package buildingOrderModule.scoringDirector;
 
+import buildingOrderModule.buildActionManagers.BuildActionManager;
+
 /**
  * ScoringDirectorTerran_Bio.java --- A ScoringDirector whose goal is to score
  * Bio Units and the corresponding upgrades / technologies.
@@ -11,34 +13,13 @@ public class ScoringDirectorTerran_Bio extends ScoringDirector {
 
 	// -------------------- Functions
 
-	@Override
-	protected double defineDesiredBuildingsPercent() {
-		return 0.33;
+	public ScoringDirectorTerran_Bio(BuildActionManager manager) {
+		super(manager);
 	}
 
 	@Override
-	protected double defineDesiredCombatUnitsPercent() {
-		return 0.50;
-	}
-
-	@Override
-	protected double defineFixedScoreUnitsBio() {
-		return 1.0;
-	}
-
-	@Override
-	protected double defineFixedScoreUnitsFlying() {
-		return 0.;
-	}
-
-	@Override
-	protected double defineFixedScoreUnitsHealer() {
-		return 1.0;
-	}
-
-	@Override
-	protected double defineFixedScoreUnitsSupport() {
-		return 1.0;
+	protected ScoreGeneratorFactory defineScoreGeneratorFactory(BuildActionManager manager) {
+		return new ScoreGeneratorFactoryTerran_Bio(manager);
 	}
 
 	// ------------------------------ Getter / Setter

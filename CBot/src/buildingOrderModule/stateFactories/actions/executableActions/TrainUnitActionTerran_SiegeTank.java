@@ -1,6 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
-import buildingOrderModule.scoringDirector.GameState;
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
@@ -24,6 +24,7 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Expensive_Units);
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Combat_Units);
+		this.addToGameStates(GameState.Machine_Units);
 		
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Factory);
 	}

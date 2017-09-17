@@ -2,8 +2,8 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 
 import java.util.HashSet;
 
-import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.scoringDirector.ScoringAction;
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.ActionType;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;

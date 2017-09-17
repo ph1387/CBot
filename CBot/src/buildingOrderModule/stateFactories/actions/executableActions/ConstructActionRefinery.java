@@ -1,6 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
-import buildingOrderModule.scoringDirector.GameState;
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 import core.Core;
 

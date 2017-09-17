@@ -1,6 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
-import buildingOrderModule.scoringDirector.GameState;
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 import core.Core;
 
@@ -24,6 +24,8 @@ public class ConstructActionCenter extends ConstructBaseAction {
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Expansion_Focused);
 		this.addToGameStates(GameState.Expensive_Units);
+		
+		this.addToGameStates(GameState.IdleTrainingFacility_Center);
 	}
 
 	// -------------------- Functions

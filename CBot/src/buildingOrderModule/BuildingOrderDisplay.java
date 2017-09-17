@@ -4,8 +4,8 @@ import java.text.DecimalFormat;
 import java.util.HashSet;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
-import buildingOrderModule.scoringDirector.GameState;
 import buildingOrderModule.scoringDirector.ScoringAction;
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.ActionType;
 import bwapi.Game;
 import core.Core;

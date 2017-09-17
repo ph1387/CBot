@@ -1,6 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
-import buildingOrderModule.scoringDirector.GameState;
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
 /**
@@ -23,6 +23,9 @@ public class ConstrucActionTerran_Factory extends ConstructBaseAction {
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Expensive_Units);
+		this.addToGameStates(GameState.Machine_Units);
+		
+		this.addToGameStates(GameState.IdleTrainingFacility_Terran_Factory);
 	}
 
 	// -------------------- Functions
