@@ -1,6 +1,6 @@
 package buildingOrderModule.scoringDirector.ScoreGenerator;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
@@ -16,28 +16,29 @@ import bwapi.UnitType;
  */
 public class ScoreGeneratorHealerTerran extends ScoreGeneratorProportionUnitTypes {
 
+	private int denominatorMultiplier = 8;
+
 	public ScoreGeneratorHealerTerran(BuildActionManager manager) {
 		super(manager);
 	}
 
 	// -------------------- Functions
 
-	// TODO: WIP ADD
 	@Override
 	protected List<UnitType> defineNumeratorUnitTypes() {
-		return new ArrayList<>();
+		// TODO: Possible Change: Add Ghosts.
+		// SCVs and Medics are ignored due to them not being combat Units.
+		return Arrays.asList(new UnitType[] { UnitType.Terran_Marine, UnitType.Terran_Firebat });
 	}
 
-	// TODO: WIP ADD
 	@Override
 	protected List<UnitType> defineDenominatorUnitTypes() {
-		return new ArrayList<>();
+		return Arrays.asList(new UnitType[] { UnitType.Terran_Medic });
 	}
 
-	// TODO: WIP ADD
 	@Override
 	protected int defineDenominatorMultiplier() {
-		return 1;
+		return this.denominatorMultiplier;
 	}
 
 }

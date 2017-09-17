@@ -1,6 +1,6 @@
 package buildingOrderModule.scoringDirector.ScoreGenerator;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
@@ -16,28 +16,34 @@ import bwapi.UnitType;
  */
 public class ScoreGeneratorSupportTerran extends ScoreGeneratorProportionUnitTypes {
 
+	private int denominatorMultiplier = 20;
+
 	public ScoreGeneratorSupportTerran(BuildActionManager manager) {
 		super(manager);
 	}
 
 	// -------------------- Functions
 
-	// TODO: WIP ADD
 	@Override
 	protected List<UnitType> defineNumeratorUnitTypes() {
-		return new ArrayList<>();
+		// Nearly every UnitType profits from the existence of a
+		// Terran_Science_Vessel.
+		return Arrays.asList(new UnitType[] { UnitType.Terran_Battlecruiser, UnitType.Terran_Dropship,
+				UnitType.Terran_Firebat, UnitType.Terran_Ghost, UnitType.Terran_Goliath, UnitType.Terran_Marine,
+				UnitType.Terran_Siege_Tank_Tank_Mode, UnitType.Terran_Siege_Tank_Siege_Mode, UnitType.Terran_Valkyrie,
+				UnitType.Terran_Vulture, UnitType.Terran_Wraith });
 	}
 
-	// TODO: WIP ADD
 	@Override
 	protected List<UnitType> defineDenominatorUnitTypes() {
-		return new ArrayList<>();
+		// Medics are ignored due to them being bio Unit specific. They use the
+		// healer ScoreGenerator.
+		return Arrays.asList(new UnitType[] { UnitType.Terran_Science_Vessel });
 	}
 
-	// TODO: WIP ADD
 	@Override
 	protected int defineDenominatorMultiplier() {
-		return 1;
+		return this.denominatorMultiplier;
 	}
 
 }
