@@ -1,8 +1,8 @@
 package buildingOrderModule.stateFactories.actions.executableActions.actionQueues;
 
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Barracks;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Factory;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Barracks;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
@@ -36,14 +36,14 @@ public class ActionQueueStartingTerranRaxFE extends ActionQueueStarting {
 		super(target);
 
 		this.actionQueue.add(new TrainUnitActionWorker(6));
-		this.actionQueue.add(new ConstrucActionTerran_Barracks(1));
+		this.actionQueue.add(new ConstructActionTerran_Barracks(1));
 		this.actionQueue.add(new TrainUnitActionWorker(4));
 		this.actionQueue.add(new ConstructActionCenter(1));
 		this.actionQueue.add(new TrainUnitActionWorker(1));
 		this.actionQueue.add(new ConstructActionRefinery(1));
 		this.actionQueue.add(new TrainUnitActionTerran_Marine(2));
 		this.actionQueue.add(new TrainUnitActionWorker(5));
-		this.actionQueue.add(new ConstrucActionTerran_Factory(1));
+		this.actionQueue.add(new ConstructActionTerran_Factory(1));
 		this.actionQueue.add(new BuildAddonTerran_MachineShop(1));
 
 		// Standard version

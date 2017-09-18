@@ -4,19 +4,19 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
 /**
- * ConstrucActionTerran_Factory.java --- Construction action for a
+ * ConstructActionTerran_Factory.java --- Construction action for a
  * Terran_Factory Unit.
  * 
  * @author P H - 30.04.2017
  *
  */
-public class ConstrucActionTerran_Factory extends ConstructBaseAction {
+public class ConstructActionTerran_Factory extends ConstructBaseAction {
 
 	/**
 	 * @param target
 	 *            type: Integer
 	 */
-	public ConstrucActionTerran_Factory(Object target) {
+	public ConstructActionTerran_Factory(Object target) {
 		super(target);
 
 		this.addToGameStates(GameState.Building_Units);
@@ -24,7 +24,7 @@ public class ConstrucActionTerran_Factory extends ConstructBaseAction {
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Expensive_Units);
 		this.addToGameStates(GameState.Machine_Units);
-		
+
 		this.addToGameStates(GameState.IdleTrainingFacility_Terran_Factory);
 	}
 
