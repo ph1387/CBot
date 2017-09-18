@@ -1,19 +1,13 @@
 package buildingOrderModule.scoringDirector;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.gameState.GameState;
-import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueue;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
 import buildingOrderModule.stateFactories.updater.ActionUpdaterSimulationQueue;
-import bwapi.TechType;
-import bwapi.UpgradeType;
 
 /**
  * ScoringDirector.java --- A director that updates the scores of provided
@@ -44,17 +38,18 @@ public abstract class ScoringDirector {
 	// better / more results (No values below 1.0 are discarded).
 	private double basePointMultiplier = 10.;
 
-	// HashMap for all scoring multipliers that are extracted from the
-	// BuildActionManager which includes the order in which the different
-	// technologies and upgrades should be researched / performed. This
-	// combination is transformed into a multiplier which can be applied to the
-	// scoring actions to affect the order in which they are chosen by the
-	// Simulator.
-	//
-	// Having a HashMap for this is helpful since the order in which these types
-	// are chosen does not change. Therefore multipliers can be stored (Dynamic
-	// programming) to improve the performance.
-	private HashMap<ScoringAction, Double> storedScoringMultipliers = new HashMap<>();
+	// TODO: UML REMOVE
+//	// HashMap for all scoring multipliers that are extracted from the
+//	// BuildActionManager which includes the order in which the different
+//	// technologies and upgrades should be researched / performed. This
+//	// combination is transformed into a multiplier which can be applied to the
+//	// scoring actions to affect the order in which they are chosen by the
+//	// Simulator.
+//	//
+//	// Having a HashMap for this is helpful since the order in which these types
+//	// are chosen does not change. Therefore multipliers can be stored (Dynamic
+//	// programming) to improve the performance.
+//	private HashMap<ScoringAction, Double> storedScoringMultipliers = new HashMap<>();
 
 	public ScoringDirector(BuildActionManager manager) {
 		this.scoreGeneratorFactory = this.defineScoreGeneratorFactory(manager);
@@ -157,102 +152,99 @@ public abstract class ScoringDirector {
 			// below 1.0 are missing (Casted to int!).
 			double score = (double) (scoringAction.defineMineralCost() + scoringAction.defineGasCost())
 					* (gameStateSum / Math.max(gameStateDivider, 1.)) * this.basePointMultiplier;
-			// Depending if the action is a technology or a upgrade apply a
-			// multiplier to it.
-			if (isUpgradeOrTechnology(scoringAction)) {
-				scoringAction
-						.setScore((int) (score * this.generateUpgradeOrTechnologyMultiplier(manager, scoringAction)));
-			} else {
-				scoringAction.setScore((int) (score));
-			}
+			
+			scoringAction.setScore((int) (score));
 		}
 	}
 
-	/**
-	 * Function for checking if a ScoringAction results in either a TechType or
-	 * UpgradeType.
-	 * 
-	 * @param action
-	 *            the ScoringAction that is going to be checked.
-	 * @return true if the ScoringAction results either in a TechType or a
-	 *         UpgradeType. Else it returns false.
-	 */
-	private static boolean isUpgradeOrTechnology(ScoringAction action) {
-		return ((ActionType) action).defineResultType().isTechType()
-				|| ((ActionType) action).defineResultType().isUpgradeType();
-	}
+	// TODO: UML REMOVE
+//	/**
+//	 * Function for checking if a ScoringAction results in either a TechType or
+//	 * UpgradeType.
+//	 * 
+//	 * @param action
+//	 *            the ScoringAction that is going to be checked.
+//	 * @return true if the ScoringAction results either in a TechType or a
+//	 *         UpgradeType. Else it returns false.
+//	 */
+//	private static boolean isUpgradeOrTechnology(ScoringAction action) {
+//		return ((ActionType) action).defineResultType().isTechType()
+//				|| ((ActionType) action).defineResultType().isUpgradeType();
+//	}
 
-	/**
-	 * Function for generating a multiplier for a ScoringAction that results in
-	 * either a TechType or a UpgradeType. This takes the order in which they
-	 * are initially specified into account and generates a score for them.
-	 * 
-	 * @param manager
-	 *            the BuildActionManager that contains all relevant information
-	 *            regarding the order in which these types are added.
-	 * @param action
-	 *            the ScoringAction for which a multiplier is either returned or
-	 *            first generated and then returned.
-	 * @return a multiplier for the given ScoringAction that represents its
-	 *         importance / order in which it was added.
-	 */
-	private double generateUpgradeOrTechnologyMultiplier(BuildActionManager manager, ScoringAction action) {
-		// Test if the scoring action must be inserted into the HashMap first.
-		if (!this.storedScoringMultipliers.containsKey(action)) {
-			int index;
-			int max;
+	// TODO: UML REMOVE
+//	/**
+//	 * Function for generating a multiplier for a ScoringAction that results in
+//	 * either a TechType or a UpgradeType. This takes the order in which they
+//	 * are initially specified into account and generates a score for them.
+//	 * 
+//	 * @param manager
+//	 *            the BuildActionManager that contains all relevant information
+//	 *            regarding the order in which these types are added.
+//	 * @param action
+//	 *            the ScoringAction for which a multiplier is either returned or
+//	 *            first generated and then returned.
+//	 * @return a multiplier for the given ScoringAction that represents its
+//	 *         importance / order in which it was added.
+//	 */
+//	private double generateUpgradeOrTechnologyMultiplier(BuildActionManager manager, ScoringAction action) {
+//		// Test if the scoring action must be inserted into the HashMap first.
+//		if (!this.storedScoringMultipliers.containsKey(action)) {
+//			int index;
+//			int max;
+//
+//			// Search the desired technologies for the type.
+//			if (((ActionType) action).defineResultType().isTechType()) {
+//				TechType tech = ((ActionType) action).defineResultType().getTechType();
+//				index = manager.getDesiredTechs().indexOf(tech);
+//				max = manager.getDesiredTechs().size();
+//			}
+//			// Search the desired upgrades for the type.
+//			else if (((ActionType) action).defineResultType().isUpgradeType()) {
+//				// Transform the keys of the Collection into an ArrayList.
+//				UpgradeType[] desiredUpgradesArray = new UpgradeType[manager.getDesiredUpgrades().keySet().size()];
+//				manager.getDesiredUpgrades().keySet().toArray(desiredUpgradesArray);
+//				ArrayList<UpgradeType> desiredUpgrades = (ArrayList<UpgradeType>) Arrays.asList(desiredUpgradesArray);
+//
+//				UpgradeType upgrade = ((ActionType) action).defineResultType().getUpgradeType();
+//				index = desiredUpgrades.indexOf(upgrade);
+//				max = desiredUpgrades.size();
+//			}
+//			// Return 0. since the type could not be found. This ensures that no
+//			// error is thrown.
+//			else {
+//				return 0.;
+//			}
+//
+//			// Generate a multiplier that is inserted into the HashMap.
+//			this.storedScoringMultipliers.put(action, this.generateMultiplier(index, max));
+//		}
+//
+//		return this.storedScoringMultipliers.get(action);
+//	}
 
-			// Search the desired technologies for the type.
-			if (((ActionType) action).defineResultType().isTechType()) {
-				TechType tech = ((ActionType) action).defineResultType().getTechType();
-				index = manager.getDesiredTechs().indexOf(tech);
-				max = manager.getDesiredTechs().size();
-			}
-			// Search the desired upgrades for the type.
-			else if (((ActionType) action).defineResultType().isUpgradeType()) {
-				// Transform the keys of the Collection into an ArrayList.
-				UpgradeType[] desiredUpgradesArray = new UpgradeType[manager.getDesiredUpgrades().keySet().size()];
-				manager.getDesiredUpgrades().keySet().toArray(desiredUpgradesArray);
-				ArrayList<UpgradeType> desiredUpgrades = (ArrayList<UpgradeType>) Arrays.asList(desiredUpgradesArray);
-
-				UpgradeType upgrade = ((ActionType) action).defineResultType().getUpgradeType();
-				index = desiredUpgrades.indexOf(upgrade);
-				max = desiredUpgrades.size();
-			}
-			// Return 0. since the type could not be found. This ensures that no
-			// error is thrown.
-			else {
-				return 0.;
-			}
-
-			// Generate a multiplier that is inserted into the HashMap.
-			this.storedScoringMultipliers.put(action, this.generateMultiplier(index, max));
-		}
-
-		return this.storedScoringMultipliers.get(action);
-	}
-
-	/**
-	 * Function for the actual generation of the multiplier which is associated
-	 * with a ScoringAction. This function takes an index, which is the position
-	 * the ScoringAction has, and a max value, which represents the maximum
-	 * number of positions there are. From these two values a multiplier is
-	 * generated:</br>
-	 * <ul>
-	 * <li>1-(index/max)</li>
-	 * </ul>
-	 * 
-	 * @param index
-	 *            the position of the ScoringAction.
-	 * @param max
-	 *            the total / max number of positions.
-	 * @return a multiplier that represents the position of the given index in
-	 *         relation to the maximum number of positions (Smaller indices
-	 *         produce higher values).
-	 */
-	private double generateMultiplier(double index, double max) {
-		return 1. - (index / max);
-	}
+	// TODO: UML REMOVE
+//	/**
+//	 * Function for the actual generation of the multiplier which is associated
+//	 * with a ScoringAction. This function takes an index, which is the position
+//	 * the ScoringAction has, and a max value, which represents the maximum
+//	 * number of positions there are. From these two values a multiplier is
+//	 * generated:</br>
+//	 * <ul>
+//	 * <li>1-(index/max)</li>
+//	 * </ul>
+//	 * 
+//	 * @param index
+//	 *            the position of the ScoringAction.
+//	 * @param max
+//	 *            the total / max number of positions.
+//	 * @return a multiplier that represents the position of the given index in
+//	 *         relation to the maximum number of positions (Smaller indices
+//	 *         produce higher values).
+//	 */
+//	private double generateMultiplier(double index, double max) {
+//		return 1. - (index / max);
+//	}
 
 	// ------------------------------ Getter / Setter
 
