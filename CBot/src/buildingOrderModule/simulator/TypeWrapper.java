@@ -35,8 +35,12 @@ public class TypeWrapper {
 	public static final TypeWrapper UnitType_Terran_Vulture = new TypeWrapper(UnitType.Terran_Vulture);
 	public static final TypeWrapper UnitType_Terran_Refinery = new TypeWrapper(UnitType.Terran_Refinery);
 	public static final TypeWrapper UnitType_Terran_Supply_Depot = new TypeWrapper(UnitType.Terran_Supply_Depot);
-
+	// TODO: UML ADD
+	public static final TypeWrapper UnitType_Terran_Academy = new TypeWrapper(UnitType.Terran_Academy);
+	
 	// UpgradeType wrappers:
+	// TODO: UML ADD
+	public static final TypeWrapper UpgradeType_U_238_Shells = new TypeWrapper(UpgradeType.U_238_Shells);
 
 	// TechType wrappers:
 	public static final TypeWrapper TechType_Stim_Packs = new TypeWrapper(TechType.Stim_Packs);
@@ -95,8 +99,10 @@ public class TypeWrapper {
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Vulture, UnitType_Terran_Vulture);
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Refinery, UnitType_Terran_Refinery);
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Supply_Depot, UnitType_Terran_Supply_Depot);
+		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Academy, UnitType_Terran_Academy);
 
 		// UpgradeType wrappers:
+		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.U_238_Shells, UpgradeType_U_238_Shells);
 
 		// TechType wrappers:
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Stim_Packs, TechType_Stim_Packs);

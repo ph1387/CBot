@@ -5,6 +5,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActi
 import buildingOrderModule.stateFactories.actions.executableActions.ConstrucActionTerran_Factory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
@@ -24,11 +25,12 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 	public AvailableActionsSimulationQueueTerran() {
 		this.add(new ActionQueueStartingTerranRaxFE(1));
 
+		this.add(new ConstructActionCenter(1));
+		this.add(new ConstructActionRefinery(1));
 		this.add(new ConstrucActionTerran_Barracks(1));
 		this.add(new ConstrucActionTerran_Factory(1));
-		this.add(new ConstructActionCenter(1));
-
-		this.add(new ConstructActionRefinery(1));
+		this.add(new ConstructActionTerran_Academy(1));
+		
 		this.add(new TrainUnitActionWorker(1));
 		this.add(new TrainUnitActionTerran_Marine(1));
 		this.add(new TrainUnitActionTerran_SiegeTank(1));

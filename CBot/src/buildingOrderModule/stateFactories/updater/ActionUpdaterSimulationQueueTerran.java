@@ -78,6 +78,16 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 						availableActionTypes.add(actionType);
 					}
 					break;
+				case "Terran_Academy":
+					Integer playerAcademyCount = manager.getInformationStorage().getCurrentGameInformation()
+							.getCurrentUnitCounts().get(actionType.defineResultType());
+
+					if (!usedActionTypes.containsKey(actionType.defineResultType())
+							&& !forwardedActionTypes.containsKey(actionType.defineResultType())
+							&& (playerAcademyCount == null || playerAcademyCount.equals(0))) {
+						availableActionTypes.add(actionType);
+					}
+					break;
 				default:
 					availableActionTypes.add(actionType);
 				}
