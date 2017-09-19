@@ -3,6 +3,7 @@ package unitControlModule.stateFactories.updater;
 import java.util.HashSet;
 
 import bwapi.Unit;
+import bwapi.UnitType;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.actions.executableActions.ProtectMoveActionSteerTowardsClosestDamagedUnit;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInBioUnitDirectionTerran_Medic;
@@ -33,8 +34,7 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		HashSet<Unit> possibleUnits = new HashSet<>();
-		Unit closestUnit = null;
+		Unit closestUnit = this.getClosestHealableDamagedUnit(playerUnit);
 
 		// Get the references to all used actions.
 		if (this.initializationMissing) {
@@ -47,19 +47,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 					.setTarget(this.playerUnit.getAttackingEnemyUnitToReactTo());
 		}
 
-		// Get all Units that are missing health.
-		for (Unit unit : core.Core.getInstance().getPlayer().getUnits()) {
-			if (unit != playerUnit.getUnit() && unit.getHitPoints() < unit.getType().maxHitPoints()) {
-				// Add the Unit to the possible Units if the Terran_Medic can
-				// heal it.
-				if (PlayerUnitTerran_Medic.isHealableUnit(unit)) {
-					possibleUnits.add(unit);
-				}
-			}
-		}
-
-		// Find the closest one of the Units missing health to heal it.
-		closestUnit = BaseAction.getClosestUnit(possibleUnits, playerUnit.getUnit());
 		this.protectMoveActionSteerTowardsClosesDamagedUnit.setTarget(closestUnit);
 		this.abilityActionTerranMedicHeal.setTarget(closestUnit);
 	}
@@ -74,5 +61,36 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 				.getActionFromInstance(ProtectMoveActionSteerTowardsClosestDamagedUnit.class));
 		this.abilityActionTerranMedicHeal = ((AbilityActionTerranMedic_Heal) this
 				.getActionFromInstance(AbilityActionTerranMedic_Heal.class));
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for finding the closest damaged Unit that can be healed by the
+	 * provided one.
+	 * 
+	 * @param playerUnit
+	 *            the Unit that is going to heal the other Unit.
+	 * @return the closest damaged Unit that can be healed by the provided one.
+	 */
+	private Unit getClosestHealableDamagedUnit(PlayerUnit playerUnit) {
+		HashSet<Unit> possibleHealableUnits = new HashSet<>();
+		HashSet<Unit> possibleUnits = new HashSet<>();
+
+		// Get all the Units that match the defined UnitTypes except the one
+		// that is currently executing the Action.
+		for (UnitType unitType : PlayerUnitTerran_Medic.getHealableUnitTypes()) {
+			possibleHealableUnits.addAll(playerUnit.getInformationStorage().getCurrentGameInformation()
+					.getCurrentUnits().getOrDefault(unitType, new HashSet<Unit>()));
+		}
+		possibleHealableUnits.remove(playerUnit.getUnit());
+
+		// Extract the ones that are injured.
+		for (Unit unit : possibleHealableUnits) {
+			if (unit.isCompleted() && unit.getHitPoints() < unit.getType().maxHitPoints()) {
+				possibleUnits.add(unit);
+			}
+		}
+
+		return BaseAction.getClosestUnit(possibleUnits, playerUnit.getUnit());
 	}
 }

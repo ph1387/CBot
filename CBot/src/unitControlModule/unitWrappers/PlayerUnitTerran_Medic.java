@@ -1,6 +1,10 @@
 package unitControlModule.unitWrappers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import bwapi.Unit;
+import bwapi.UnitType;
 import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_Medic;
@@ -13,6 +17,10 @@ import unitControlModule.stateFactories.StateFactoryTerran_Medic;
  *
  */
 public class PlayerUnitTerran_Medic extends PlayerUnitTypeRanged {
+
+	// TODO: UML ADD
+	private static List<UnitType> HealableUnitTypes = Arrays
+			.asList(new UnitType[] { UnitType.Terran_Firebat, UnitType.Terran_Marine, UnitType.Terran_Medic });
 
 	public PlayerUnitTerran_Medic(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
@@ -35,27 +43,13 @@ public class PlayerUnitTerran_Medic extends PlayerUnitTypeRanged {
 	 *         provided Unit.
 	 */
 	public static boolean isHealableUnit(Unit unit) {
-		boolean isBioUnit = false;
+		return HealableUnitTypes.contains(unit.getType());
+	}
 
-		// Unit is a Bio-Unit.
-		switch (unit.getType().toString()) {
-		case "Terran_SCV ":
-			isBioUnit = true;
-			break;
-		case "Terran_Marine":
-			isBioUnit = true;
-			break;
-		case "Terran_Firebat":
-			isBioUnit = true;
-			break;
-		case "Terran_Medic":
-			isBioUnit = true;
-			break;
-		case "Terran_Ghost":
-			isBioUnit = true;
-			break;
-		}
+	// ------------------------------ Getter / Setter
 
-		return isBioUnit;
+	// TODO: UML ADD
+	public static List<UnitType> getHealableUnitTypes() {
+		return HealableUnitTypes;
 	}
 }
