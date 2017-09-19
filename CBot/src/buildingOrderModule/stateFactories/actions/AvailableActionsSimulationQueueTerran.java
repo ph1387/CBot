@@ -3,6 +3,7 @@ package buildingOrderModule.stateFactories.actions;
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Barracks;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Starport;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
@@ -32,6 +33,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ConstructActionTerran_Barracks(1));
 		this.add(new ConstructActionTerran_Factory(1));
 		this.add(new ConstructActionTerran_Academy(1));
+		this.add(new ConstructActionTerran_Starport(1));
 		
 		this.add(new TrainUnitActionWorker(1));
 		this.add(new TrainUnitActionTerran_Marine(1));
