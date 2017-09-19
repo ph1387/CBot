@@ -4,38 +4,40 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
+// TODO: UML ADD
 /**
- * TrainUnitActionTerran_Marine.java --- Class for training a Terran_Marine.
+ * TrainUnitActionTerran_Medic.java --- Class for training a Terran_Medic.
  * 
- * @author P H - 29.04.2017
+ * @author P H - 19.09.2017
  *
  */
-public class TrainUnitActionTerran_Marine extends TrainUnitBaseAction {
+public class TrainUnitActionTerran_Medic extends TrainUnitBaseAction {
 
 	/**
 	 * @param target
 	 *            type: Integer
 	 */
-	public TrainUnitActionTerran_Marine(Object target) {
+	public TrainUnitActionTerran_Medic(Object target) {
 		super(target);
 
 		this.addToGameStates(GameState.Cheap_Units);
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Bio_Units);
-		this.addToGameStates(GameState.Combat_Units);
-		
+		this.addToGameStates(GameState.Healer_Units);
+
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Barracks);
 	}
 
 	// -------------------- Functions
 
 	@Override
-	protected UnitType defineType() {
-		return UnitType.Terran_Marine;
+	public TypeWrapper defineRequiredType() {
+		return TypeWrapper.generateFrom(UnitType.Terran_Academy);
 	}
 
 	@Override
-	public TypeWrapper defineRequiredType() {
-		return TypeWrapper.generateFrom(UnitType.Terran_Barracks);
+	protected UnitType defineType() {
+		return UnitType.Terran_Medic;
 	}
+
 }

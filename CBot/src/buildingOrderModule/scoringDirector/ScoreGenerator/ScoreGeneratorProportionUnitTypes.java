@@ -50,14 +50,15 @@ public abstract class ScoreGeneratorProportionUnitTypes extends ScoreGeneratorPr
 
 	@Override
 	protected int defineDenominator() {
-		return this.generateUnitTypeSum(this.defineDenominatorUnitTypes())
+		return Math.max(this.generateUnitTypeSum(this.defineDenominatorUnitTypes()), 1)
 				* Math.max(this.defineDenominatorMultiplier(), 1);
 	}
 
 	/**
 	 * Function for defining the UnitTypes that are used as denominators in the
 	 * score generation. The number of current accessible Units of the defined
-	 * types are summed up, multiplied by a value and utilized (Units that provide profit).
+	 * types are summed up, multiplied by a value and utilized (Units that
+	 * provide profit).
 	 * 
 	 * @return a List defining the UnitTypes whose current ingame counts are
 	 *         used as denominator in the score generation.

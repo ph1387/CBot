@@ -10,8 +10,10 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_StimPacks;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
+import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Medic;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Vulture;
+import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Wraith;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_U_238_Shells;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueStartingTerranRaxFE;
@@ -34,17 +36,19 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ConstructActionTerran_Factory(1));
 		this.add(new ConstructActionTerran_Academy(1));
 		this.add(new ConstructActionTerran_Starport(1));
-		
+
 		this.add(new TrainUnitActionWorker(1));
 		this.add(new TrainUnitActionTerran_Marine(1));
 		this.add(new TrainUnitActionTerran_SiegeTank(1));
 		this.add(new TrainUnitActionTerran_Vulture(1));
+		this.add(new TrainUnitActionTerran_Medic(1));
+		this.add(new TrainUnitActionTerran_Wraith(1));
 
 		this.add(new BuildAddonTerran_MachineShop(1));
 
 		this.add(new ResearchActionTerran_SiegeMode(1));
 		this.add(new ResearchActionTerran_StimPacks(1));
-		
+
 		this.add(new UpgradeActionTerran_U_238_Shells(1));
 	}
 }
