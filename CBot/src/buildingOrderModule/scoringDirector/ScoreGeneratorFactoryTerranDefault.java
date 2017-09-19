@@ -19,15 +19,15 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorTraining
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorUpgradeFocused;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorWorker;
 
-// TODO: WIP FOCUS ON BIO UNITS
+// TODO: UML RENAME ScoreGeneratorFactoryTerran_Bio
 /**
- * ScoreGeneratorFactoryTerran_Bio.java --- a {@link ScoreGeneratorFactory} for
- * the Terran Race utilizing /focusing on mainly Bio-Units.
+ * ScoreGeneratorFactoryTerranDefault.java --- a {@link ScoreGeneratorFactory} for
+ * the Terran Race.
  * 
  * @author P H - 15.09.2017
  *
  */
-public class ScoreGeneratorFactoryTerran_Bio implements ScoreGeneratorFactory {
+public class ScoreGeneratorFactoryTerranDefault implements ScoreGeneratorFactory {
 
 	private BuildActionManager manager;
 
@@ -42,7 +42,7 @@ public class ScoreGeneratorFactoryTerran_Bio implements ScoreGeneratorFactory {
 	// TODO: UML ADD
 	private ScoreGenerator scoreGeneratorFlying;
 
-	public ScoreGeneratorFactoryTerran_Bio(BuildActionManager manager) {
+	public ScoreGeneratorFactoryTerranDefault(BuildActionManager manager) {
 		this.manager = manager;
 
 		this.scoreGeneratorExpansionFocused = new ScoreGeneratorExpansionFocused(this.manager);
@@ -89,7 +89,6 @@ public class ScoreGeneratorFactoryTerran_Bio implements ScoreGeneratorFactory {
 
 	@Override
 	public ScoreGenerator generateCombatScoreGenerator() {
-		// TODO: WIP ADD OTHER CLASS
 		return new ScoreGeneratorFixed_One(this.manager);
 	}
 
@@ -120,13 +119,11 @@ public class ScoreGeneratorFactoryTerran_Bio implements ScoreGeneratorFactory {
 
 	@Override
 	public ScoreGenerator generateBioScoreGenerator() {
-		// TODO: WIP ADD OTHER CLASS
 		return new ScoreGeneratorFixed_One(this.manager);
 	}
 
 	@Override
 	public ScoreGenerator generateMachineScoreGenerator() {
-		// TODO: WIP ADD OTHER CLASS
 		return new ScoreGeneratorFixed_One(this.manager);
 	}
 

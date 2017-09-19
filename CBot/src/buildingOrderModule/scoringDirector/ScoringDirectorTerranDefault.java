@@ -2,24 +2,25 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
+// TODO: UML RENAME ScoringDirectorTerran_Bio
 /**
- * ScoringDirectorTerran_Bio.java --- A ScoringDirector whose goal is to score
- * Bio Units and the corresponding upgrades / technologies.
+ * ScoringDirectorTerranDefault.java --- A ScoringDirector providing the default
+ * Terran {@link ScoreGeneratorFactory}.
  * 
  * @author P H - 17.07.2017
  *
  */
-public class ScoringDirectorTerran_Bio extends ScoringDirector {
+public class ScoringDirectorTerranDefault extends ScoringDirector {
 
 	// -------------------- Functions
 
-	public ScoringDirectorTerran_Bio(BuildActionManager manager) {
+	public ScoringDirectorTerranDefault(BuildActionManager manager) {
 		super(manager);
 	}
 
 	@Override
 	protected ScoreGeneratorFactory defineScoreGeneratorFactory(BuildActionManager manager) {
-		return new ScoreGeneratorFactoryTerran_Bio(manager);
+		return new ScoreGeneratorFactoryTerranDefault(manager);
 	}
 
 	// ------------------------------ Getter / Setter
