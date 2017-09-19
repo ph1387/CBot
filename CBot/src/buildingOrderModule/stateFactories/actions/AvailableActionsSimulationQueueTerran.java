@@ -7,10 +7,12 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
+import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_StimPacks;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Vulture;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
+import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_U_238_Shells;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueStartingTerranRaxFE;
 
 /**
@@ -39,5 +41,8 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new BuildAddonTerran_MachineShop(1));
 
 		this.add(new ResearchActionTerran_SiegeMode(1));
+		this.add(new ResearchActionTerran_StimPacks(1));
+		
+		this.add(new UpgradeActionTerran_U_238_Shells(1));
 	}
 }

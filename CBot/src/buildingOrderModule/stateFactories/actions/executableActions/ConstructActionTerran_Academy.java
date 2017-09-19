@@ -22,6 +22,7 @@ public class ConstructActionTerran_Academy extends ConstructBaseAction {
 		super(target);
 
 		this.addToGameStates(GameState.Expensive_Units);
+		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Bio_Units);
 		this.addToGameStates(GameState.Technology_Focused);
 		this.addToGameStates(GameState.Upgrade_Focused);

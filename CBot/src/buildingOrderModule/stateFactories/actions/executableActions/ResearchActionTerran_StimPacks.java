@@ -3,26 +3,26 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.TechType;
 
+// TODO: UML ADD
 /**
- * ResearchActionTerran_SiegeMode.java --- Action for researching the Siege_Mode
- * for Terran_SiegeTanks at the Terran_Machine_Shop.
- * 
- * @author P H - 30.04.2017
+ * ResearchActionTerran_StimPacks.java --- Action for researching the Stim_Packs
+ * for Terran_Marines at the Terran_Academy.
+ * @author P H - 18.09.2017
  *
  */
-public class ResearchActionTerran_SiegeMode extends ResearchBaseAction {
+public class ResearchActionTerran_StimPacks extends ResearchBaseAction {
 
 	/**
 	 * @param target
 	 *            type: Integer
 	 */
-	public ResearchActionTerran_SiegeMode(Object target) {
+	public ResearchActionTerran_StimPacks(Object target) {
 		super(target);
 		
 		this.addToGameStates(GameState.Expensive_Units);
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Gas_Units);
-		this.addToGameStates(GameState.Machine_Units);
+		this.addToGameStates(GameState.Bio_Units);
 		this.addToGameStates(GameState.Technology_Focused);
 	}
 
@@ -30,7 +30,7 @@ public class ResearchActionTerran_SiegeMode extends ResearchBaseAction {
 
 	@Override
 	protected TechType defineType() {
-		return TechType.Tank_Siege_Mode;
+		return TechType.Stim_Packs;
 	}
 	
 }
