@@ -125,7 +125,8 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 
 	@Override
 	public int defineMaxSimulationOccurrences() {
-		return -1;
+		return CBot.getInstance().getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(this.defineRequiredType().getUnitType(), 0);
 	}
 
 }

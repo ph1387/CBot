@@ -14,17 +14,20 @@ import core.Core;
  */
 public class TrainUnitActionWorker extends TrainUnitBaseAction {
 
+	// TODO: UML ADD
+	private double occurrenceMultiplier = 2.;
+
 	/**
 	 * @param target
 	 *            type: Integer
 	 */
 	public TrainUnitActionWorker(Object target) {
 		super(target);
-		
+
 		this.addToGameStates(GameState.Worker_Units);
 		this.addToGameStates(GameState.Cheap_Units);
 		this.addToGameStates(GameState.Mineral_Units);
-		
+
 		this.addToGameStates(GameState.FreeTrainingFacility_Center);
 	}
 
@@ -38,6 +41,12 @@ public class TrainUnitActionWorker extends TrainUnitBaseAction {
 	@Override
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(Core.getInstance().getPlayer().getRace().getCenter());
+	}
+
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return (int) (this.occurrenceMultiplier * super.defineMaxSimulationOccurrences());
 	}
 
 }
