@@ -9,7 +9,7 @@ import bwapi.UpgradeType;
 
 /**
  * ScoreGeneratorUpgradeFocused.java --- A {@link ScoreGenerator} focused on
- * expansion. Increases it's score until the number of upgrades changes or no
+ * upgrades. Increases it's score until the number of upgrades changes or no
  * more upgrades can be applied.
  * 
  * @author P H - 16.09.2017

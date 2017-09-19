@@ -6,7 +6,7 @@ import core.Core;
 
 /**
  * ScoreGeneratorRefinery.java --- A {@link ScoreGenerator} focused on
- * expansion. Increases it's score until the number of refineries changes.
+ * refineries. Increases it's score until the number of refineries changes.
  * 
  * @author P H - 16.09.2017
  *

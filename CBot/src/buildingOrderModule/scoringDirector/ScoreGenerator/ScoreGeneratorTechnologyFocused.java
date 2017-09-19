@@ -5,8 +5,8 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 
 /**
  * ScoreGeneratorTechnologyFocused.java --- A {@link ScoreGenerator} focused on
- * expansion. Increases it's score until the number of technologies changes or
- * no more technologies can be researched.
+ * technologies. Increases it's score until the number of technologies changes
+ * or no more technologies can be researched.
  * 
  * @author P H - 16.09.2017
  *
