@@ -23,7 +23,6 @@ public class TrainUnitActionTerran_Wraith extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Expensive_Units);
-		this.addToGameStates(GameState.Machine_Units);
 		this.addToGameStates(GameState.Flying_Units);
 
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Starport);

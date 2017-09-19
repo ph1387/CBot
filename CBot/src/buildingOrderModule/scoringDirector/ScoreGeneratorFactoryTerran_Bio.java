@@ -7,6 +7,7 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorCheap;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorExpansionFocused;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorExpensive;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorFixed_One;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorFlying;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorGas;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorHealerTerran;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorMineral;
@@ -38,6 +39,8 @@ public class ScoreGeneratorFactoryTerran_Bio implements ScoreGeneratorFactory {
 	private ScoreGenerator scoreGeneratorBuilding;
 	private ScoreGenerator scoreGeneratorCheap;
 	private ScoreGenerator scoreGeneratorExpensive;
+	// TODO: UML ADD
+	private ScoreGenerator scoreGeneratorFlying;
 
 	public ScoreGeneratorFactoryTerran_Bio(BuildActionManager manager) {
 		this.manager = manager;
@@ -49,6 +52,7 @@ public class ScoreGeneratorFactoryTerran_Bio implements ScoreGeneratorFactory {
 		this.scoreGeneratorBuilding = new ScoreGeneratorBuildingTerran(this.manager);
 		this.scoreGeneratorCheap = new ScoreGeneratorCheap(this.manager);
 		this.scoreGeneratorExpensive = new ScoreGeneratorExpensive(this.manager);
+		this.scoreGeneratorFlying = new ScoreGeneratorFlying(this.manager);
 	}
 
 	// -------------------- Functions
@@ -111,8 +115,7 @@ public class ScoreGeneratorFactoryTerran_Bio implements ScoreGeneratorFactory {
 
 	@Override
 	public ScoreGenerator generateFlyingScoreGenerator() {
-		// TODO: WIP ADD OTHER CLASS
-		return new ScoreGeneratorFixed_One(this.manager);
+		return this.scoreGeneratorFlying;
 	}
 
 	@Override

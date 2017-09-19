@@ -25,7 +25,6 @@ public class ConstructActionTerran_Starport extends ConstructBaseAction {
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Expensive_Units);
-		this.addToGameStates(GameState.Machine_Units);
 		this.addToGameStates(GameState.Flying_Units);
 
 		this.addToGameStates(GameState.IdleTrainingFacility_Terran_Starport);
