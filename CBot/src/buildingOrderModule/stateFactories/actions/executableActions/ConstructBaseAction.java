@@ -99,7 +99,7 @@ public abstract class ConstructBaseAction extends ManagerBaseAction {
 
 	@Override
 	public int defineMaxSimulationOccurrences() {
-		return -1;
+		return 1;
 	}
 
 }

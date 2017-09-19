@@ -40,4 +40,11 @@ public class ConstructActionTerran_Academy extends ConstructBaseAction {
 	public TypeWrapper defineRequiredType() {
 		return TypeWrapper.generateFrom(UnitType.Terran_Barracks);
 	}
+
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return 1;
+	}
+
 }
