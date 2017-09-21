@@ -26,6 +26,9 @@ public class BuildingOrderModule {
 	// The elements that are allowed in the queue regardless of the generated
 	// result.
 	private int extraQueueElements = 1;
+	// TODO: UML ADD
+	// The maximum number of queued elements in the training and building Queue.
+	private int maxQueuedElements = 5;
 
 	// The Terran Unit production facilities that are tested in the generation
 	// of the allowed Queue elements.
@@ -138,7 +141,7 @@ public class BuildingOrderModule {
 			maxQueuedNumber = -1;
 		}
 
-		return maxQueuedNumber;
+		return Math.min(maxQueuedNumber, this.maxQueuedElements);
 	}
 
 	/**
