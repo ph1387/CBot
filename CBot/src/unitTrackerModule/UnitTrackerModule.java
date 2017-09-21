@@ -54,6 +54,15 @@ public class UnitTrackerModule {
 	// The container holding all information.
 	private InformationStorage informationStorage;
 
+	// TODO: UML ADD
+	// The multiplier that is applied to the enemy buildings that have a weapon.
+	// This is needed since stationary turrets etc. must NOT be rushed into!
+	private double enemyBuildingMultiplier = 1.5;
+	// TODO: UML ADD
+	// The tile range which gets added towards each Unit's default weapon range.
+	// Using this value Units can react sooner to incoming threats.
+	private int extraTileRange = 2;
+
 	// Needed for increasing the multiplier in the calculations that generates
 	// the total value of the weapon types. Any positive number can be inserted
 	// here. The bigger the number, the stronger the effect of a shorter range
@@ -494,7 +503,13 @@ public class UnitTrackerModule {
 	 * @return a multiplier for an EnemyUnit which resembles it's strength.
 	 */
 	private double generateEnemyUnitMultiplier(EnemyUnit enemyUnit) {
-		return 1.;
+		double multiplier = 1.;
+
+		if (enemyUnit.getUnitType().isBuilding()) {
+			multiplier *= this.enemyBuildingMultiplier;
+		}
+
+		return multiplier;
 	}
 
 	/**
@@ -508,14 +523,20 @@ public class UnitTrackerModule {
 	private double generateUnitMultiplier(Unit unit) {
 		double multiplier;
 
-		// The Unit has a shield and therefore its value must be considered.
-		if (unit.getType().maxShields() > 0) {
-			multiplier = (double) (unit.getHitPoints() + unit.getShields())
-					/ (double) (unit.getType().maxHitPoints() + unit.getType().maxShields());
-		}
-		// The Unit has no shield and only its health matters.
-		else {
-			multiplier = (double) (unit.getHitPoints()) / (double) (unit.getType().maxHitPoints());
+		// Only account the health + shield difference for non building Units!
+		// This is due to defensive structures being a constant threat.
+		if (unit.getType().isBuilding()) {
+			multiplier = this.enemyBuildingMultiplier;
+		} else {
+			// The Unit has a shield and therefore its value must be considered.
+			if (unit.getType().maxShields() > 0) {
+				multiplier = (double) (unit.getHitPoints() + unit.getShields())
+						/ (double) (unit.getType().maxHitPoints() + unit.getType().maxShields());
+			}
+			// The Unit has no shield and only its health matters.
+			else {
+				multiplier = (double) (unit.getHitPoints()) / (double) (unit.getType().maxHitPoints());
+			}
 		}
 
 		return multiplier;
@@ -672,7 +693,7 @@ public class UnitTrackerModule {
 	 */
 	private void addValueInAreaToTilePositionValue(TilePosition tilePosition, HashMap<TilePosition, Integer> valueTiles,
 			TilePositionValueGenerationInformation generationInformation) {
-		int maxTileRange = generationInformation.getTileRange();
+		int maxTileRange = generationInformation.getTileRange() + this.extraTileRange;
 
 		// Fill the tiles which the Unit can reach with the appropriate values.
 		for (int i = -maxTileRange; i <= maxTileRange; i++) {
