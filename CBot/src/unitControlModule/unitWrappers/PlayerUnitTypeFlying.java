@@ -23,9 +23,10 @@ public abstract class PlayerUnitTypeFlying extends PlayerUnit {
 	@Override
 	protected double generateConfidence() {
 		double generatedConfidence = 0.;
-		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyAirStrengths();
-		double playerStrengthTotal = playerEnemyStrengths.first;
-		double enemyStrengthTotal = playerEnemyStrengths.second;
+		Pair<Double, Double> playerEnemyAirStrengths = this.generatePlayerAndEnemyAirStrengths();
+		Pair<Double, Double> playerEnemyHealthStrengths = this.generatePlayerAndEnemyHealthStrengths();
+		double playerStrengthTotal = playerEnemyAirStrengths.first + playerEnemyHealthStrengths.first;
+		double enemyStrengthTotal = playerEnemyAirStrengths.second + playerEnemyHealthStrengths.second;
 
 		// Calculate the confidence based on the strength difference:
 		// No enemy = Maximum confidence.

@@ -23,9 +23,10 @@ public abstract class PlayerUnitTypeMelee extends PlayerUnit {
 	@Override
 	protected double generateConfidence() {
 		double generatedConfidence = 0.;
-		Pair<Double, Double> playerEnemyStrengths = this.generatePlayerAndEnemyGroundStrengths();
-		double playerStrengthTotal = playerEnemyStrengths.first;
-		double enemyStrengthTotal = playerEnemyStrengths.second;
+		Pair<Double, Double> playerEnemyGroundStrengths = this.generatePlayerAndEnemyGroundStrengths();
+		Pair<Double, Double> playerEnemyHealthStrengths = this.generatePlayerAndEnemyHealthStrengths();
+		double playerStrengthTotal = playerEnemyGroundStrengths.first + playerEnemyHealthStrengths.first;
+		double enemyStrengthTotal = playerEnemyGroundStrengths.second + playerEnemyHealthStrengths.second;
 
 		// Calculate the confidence based on the strength difference:
 		// No enemy = Maximum confidence.
