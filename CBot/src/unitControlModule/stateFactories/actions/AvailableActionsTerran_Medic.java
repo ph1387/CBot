@@ -13,7 +13,6 @@ import unitControlModule.stateFactories.actions.executableActions.abilities.Abil
 public class AvailableActionsTerran_Medic extends AvailableActionsGeneral {
 
 	public AvailableActionsTerran_Medic() {
-
 		this.add(new AbilityActionTerranMedic_Heal(null));
 		this.add(new FollowActionTerran_Medic(null));
 	}

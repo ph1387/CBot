@@ -36,6 +36,10 @@ public class ActionQueueStartingTerranRaxFE extends ActionQueueStarting {
 		this.actionQueue.add(new TrainUnitActionWorker(6));
 		this.actionQueue.add(new ConstructActionTerran_Barracks(1));
 		this.actionQueue.add(new TrainUnitActionWorker(4));
+
+		// Custom addition against rushes.
+		this.actionQueue.add(new TrainUnitActionTerran_Marine(2));
+
 		this.actionQueue.add(new ConstructActionCenter(1));
 		this.actionQueue.add(new TrainUnitActionWorker(1));
 		this.actionQueue.add(new ConstructActionRefinery(1));

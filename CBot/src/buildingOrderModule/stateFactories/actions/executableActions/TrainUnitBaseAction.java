@@ -125,8 +125,18 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 
 	@Override
 	public int defineMaxSimulationOccurrences() {
-		return CBot.getInstance().getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
-				.getOrDefault(this.defineRequiredType().getUnitType(), 0);
+		int maxPossTrainingCount = CBot.getInstance().getInformationStorage().getCurrentGameInformation()
+				.getCurrentUnitCounts().getOrDefault(this.defineRequiredType().getUnitType(), 0);
+		int queuedTrainingCount = 0;
+
+		// Count the number of times the UnitType is already queued.
+		for (UnitType unitType : CBot.getInstance().getInformationStorage().getTrainingQueue()) {
+			if (unitType == this.defineType()) {
+				queuedTrainingCount++;
+			}
+		}
+
+		return maxPossTrainingCount - queuedTrainingCount;
 	}
 
 }

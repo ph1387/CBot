@@ -25,7 +25,7 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Combat_Units);
 		this.addToGameStates(GameState.Machine_Units);
-		
+
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Factory);
 	}
 
