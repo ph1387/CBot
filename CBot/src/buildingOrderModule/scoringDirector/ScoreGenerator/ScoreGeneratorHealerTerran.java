@@ -16,7 +16,8 @@ import bwapi.UnitType;
  */
 public class ScoreGeneratorHealerTerran extends ScoreGeneratorProportionUnitTypes {
 
-	private int denominatorMultiplier = 8;
+	// TODO: UML CHANGE 8
+	private int denominatorMultiplier = 16;
 
 	public ScoreGeneratorHealerTerran(BuildActionManager manager) {
 		super(manager);
