@@ -59,7 +59,6 @@ class ResourceManager<T extends GatheringSource> implements IResourceManager {
 	private boolean assignWorker(final ResourceManagerEntry worker) {
 		boolean assignmentMissing = true;
 
-		// TODO: WIP Base on the centers and future ones!
 		// Sort the possible gathering sources based on the distance towards the
 		// worker. Then iterate through them until one is found, that has
 		// available space and can take the worker. Due to the previous sorting

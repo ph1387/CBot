@@ -13,12 +13,12 @@ import unitControlModule.unitWrappers.PlayerUnit;
 public abstract class AbilityActionTechTargetNone extends AbilityActionGeneralSuperclass {
 
 	/**
+	 * Abilities with no target require the Unit to assign itself as a target.
+	 * 
 	 * @param target
 	 *            type: Null
 	 */
 	public AbilityActionTechTargetNone(Object target) {
-		// Abilities with no target require the Unit to assign itself as a
-		// target.
 		super(target);
 	}
 

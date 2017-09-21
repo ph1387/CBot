@@ -15,6 +15,7 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationEnemiesInConfidenceRange;
 import unitControlModule.unitWrappers.PlayerUnit;
 
+@Deprecated
 /**
  * ProtectMoveActionGeneralSuperclass.java --- Superclass for all Actions
  * involving customized protected steering towards certain Units. These kind of

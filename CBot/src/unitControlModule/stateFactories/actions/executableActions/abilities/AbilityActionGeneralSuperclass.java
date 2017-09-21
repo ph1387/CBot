@@ -43,7 +43,8 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	protected void resetSpecific() {
-
+		// Needs to be reset due to the Action only being executed once!
+		this.actionChangeTrigger = false;
 	}
 
 	@Override
@@ -71,7 +72,7 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
 		// Exactly perform the ability one single time.
-		return this.actionChangeTrigger;
+		return this.target == null || this.actionChangeTrigger;
 	}
 
 	@Override
@@ -108,12 +109,12 @@ public abstract class AbilityActionGeneralSuperclass extends BaseAction {
 	public int defineMaxGroupSize() {
 		return 0;
 	}
-	
+
 	@Override
 	public int defineMaxLeaderTileDistance() {
 		return 0;
 	}
-	
+
 	// ------------------------------ Getter / Setter
 
 }

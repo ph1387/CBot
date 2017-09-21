@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import javaGOAP.GoapState;
 
+@Deprecated
 /**
  * ProtectMoveActionSteerTowardsClosestDamagedUnit.java --- A Action for a
  * PlayerUnit (!) with which it moves towards the closest injured Unit. This

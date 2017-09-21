@@ -1,6 +1,9 @@
 package unitControlModule.stateFactories.updater;
 
+import java.util.HashSet;
+
 import bwapi.Unit;
+import bwapi.UnitType;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
@@ -13,13 +16,16 @@ import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
  */
 public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUpdaterAbilityUsingUnits {
 
-	// Has to be larger than the minimum distance at which the protect Action is
-	// finished. This is needed to safely move from one state to another.
-	// NOTICE:
-	// This value can be set lower than the protect Action since the WorldState
-	// is only accounted for in the GoapPlanner and has not to actually apply
-	// immediately.
-	private static final int RANGE_TO_UNITS = 96;
+	// TODO: UML REMOVE
+	// // Has to be larger than the minimum distance at which the protect Action
+	// is
+	// // finished. This is needed to safely move from one state to another.
+	// // NOTICE:
+	// // This value can be set lower than the protect Action since the
+	// WorldState
+	// // is only accounted for in the GoapPlanner and has not to actually apply
+	// // immediately.
+	// private static final int RANGE_TO_UNITS = 96;
 
 	public WorldStateUpdaterAbilityUsingUnitsTerran_Medic(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -34,22 +40,29 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUp
 
 		// Find a Unit around the currently executing one that is missing
 		// health and is supportable by the Terran_Medic.
-		for (Unit unit : playerUnit.getAllPlayerUnitsInRange(RANGE_TO_UNITS)) {
-			boolean isSupportable = PlayerUnitTerran_Medic.isHealableUnit(unit);
+		for (UnitType unitType : PlayerUnitTerran_Medic.getHealableUnitTypes()) {
+			HashSet<Unit> units = playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
+					.getOrDefault(unitType, new HashSet<Unit>());
 
-			// The Unit is one of the supportable ones.
-			if(!supportableUnitNear && isSupportable) {
-				supportableUnitNear = true;
-			}
-			
-			// The Unit is supportable and missing health.
-			if (!healableUnitNear && isSupportable && unit.getHitPoints() < unit.getType().maxHitPoints()) {
-				healableUnitNear = true;
-			}
+			for (Unit unit : units) {
+				boolean isNearUnit = playerUnit.isNearPosition(unit.getPosition(),
+						PlayerUnitTerran_Medic.getHealPixelDistance());
+				boolean unitIsDamaged = unit.isCompleted() && unit.getHitPoints() < unit.getType().maxHitPoints();
 
-			// Break the loop if both conditions applied.
-			if (supportableUnitNear && healableUnitNear) {
-				break;
+				// Find a Unit (Other than the executing one) that is
+				// supportable (= Every listed healable UnitType).
+				if (!supportableUnitNear && unit != playerUnit.getUnit() && isNearUnit) {
+					supportableUnitNear = true;
+				}
+
+				// Find a Unit (Other than the executing one) that is healable.
+				// This excludes the Terran_Medic UnitType since the Medics
+				// would otherwise clump together and not move since this world
+				// state is used for following Units around.
+				if (!healableUnitNear && unit != playerUnit.getUnit() && unitType != UnitType.Terran_Medic & isNearUnit
+						&& unitIsDamaged) {
+					healableUnitNear = true;
+				}
 			}
 		}
 

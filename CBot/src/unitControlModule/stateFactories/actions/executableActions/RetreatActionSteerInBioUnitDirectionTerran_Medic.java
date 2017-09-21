@@ -11,6 +11,7 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
+@Deprecated
 /**
  * RetreatActionSteerInBioUnitDirectionTerran_Medic.java --- A Retreat Action
  * with which a PlayerUnit (!) moves towards a friendly Bio-Unit like Firebats
