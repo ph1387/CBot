@@ -43,8 +43,7 @@ public class BuildingOrderDisplay {
 	public static void showInformation(BuildActionManager manager) {
 		int currentPosY = LINEHEIGHT;
 
-		// TODO: WIP
-//		currentPosY = showGameStates(manager, currentPosY);
+		currentPosY = showGameStates(manager, currentPosY);
 		currentPosY = showGeneratedScores(manager, currentPosY);
 	}
 

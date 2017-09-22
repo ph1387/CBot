@@ -30,11 +30,12 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_SiegeTank extends WorldSta
 			this.changeWorldStateEffect("isSieged", false);
 		}
 
-		// Mark it if the closest enemy Unit is in siege range.
-		Unit closestEnemyUnitInConfidenceRange = playerUnit.getClosestEnemyUnitInConfidenceRange();
+		// Mark it if the enemy Unit that the tank has to react to is in siege
+		// range.
+		Unit attackableEnemyUnitToReactTo = playerUnit.getAttackableEnemyUnitToReactTo();
 
-		if (closestEnemyUnitInConfidenceRange != null
-				&& ((PlayerUnitTerran_SiegeTank) playerUnit).isInSiegeRange(closestEnemyUnitInConfidenceRange)) {
+		if (attackableEnemyUnitToReactTo != null
+				&& ((PlayerUnitTerran_SiegeTank) playerUnit).isInSiegeRange(attackableEnemyUnitToReactTo)) {
 			this.changeWorldStateEffect("inSiegeRange", true);
 		} else {
 			this.changeWorldStateEffect("inSiegeRange", false);
