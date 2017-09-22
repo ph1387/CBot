@@ -1,7 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.scoringDirector.gameState.GameState;
-import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
 // TODO: UML ADD
@@ -35,12 +34,6 @@ public class ConstructActionTerran_Starport extends ConstructBaseAction {
 	@Override
 	protected UnitType defineType() {
 		return UnitType.Terran_Starport;
-	}
-
-	// TODO: UML ADD
-	@Override
-	public TypeWrapper defineRequiredType() {
-		return TypeWrapper.generateFrom(UnitType.Terran_Factory);
 	}
 
 }

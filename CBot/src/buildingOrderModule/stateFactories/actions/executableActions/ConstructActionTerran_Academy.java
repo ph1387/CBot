@@ -1,7 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
 import buildingOrderModule.scoringDirector.gameState.GameState;
-import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
 // TODO: UML ADD
@@ -34,13 +33,7 @@ public class ConstructActionTerran_Academy extends ConstructBaseAction {
 	protected UnitType defineType() {
 		return UnitType.Terran_Academy;
 	}
-
-	// TODO: UML ADD
-	@Override
-	public TypeWrapper defineRequiredType() {
-		return TypeWrapper.generateFrom(UnitType.Terran_Barracks);
-	}
-
+	
 	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {

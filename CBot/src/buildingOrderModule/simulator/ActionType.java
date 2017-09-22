@@ -10,7 +10,18 @@ package buildingOrderModule.simulator;
 public interface ActionType {
 
 	/**
-	 *
+	 * Function for defining the {@link TypeWrapper} that is required for
+	 * performing / performing the Action itself. I.e.:
+	 * <ul>
+	 * <li>Construction actions require a worker to work.</li>
+	 * <li>Addon actions require the type of building that they are being
+	 * constructed at.</li>
+	 * <li>Research actions require the type of building that they are being
+	 * researched at.</li>
+	 * <li>Training actions require teh type of building that they are being
+	 * trained at.</li>
+	 * </ul>
+	 * 
 	 * @return the Type that is required for performing the Action.
 	 */
 	public TypeWrapper defineRequiredType();

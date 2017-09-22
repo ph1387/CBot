@@ -10,8 +10,10 @@ import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.simulator.TypeWrapper;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueueTerran;
 import bwapi.Player;
+import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
+import bwapi.UpgradeType;
 import core.Core;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapAction;
@@ -55,76 +57,67 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 
 				// Some ActionTypes required special treatment regarding the
 				// adding towards the available ActionTypes HashSet.
-				switch (actionType.defineResultType().toString()) {
-				// ----- Buildings:
-				case "Terran_Command_Center":
-					if (!this.wasForwardedOrQueued(actionType)) {
-						availableActionTypes.add(actionType);
-					}
-					break;
-				case "Terran_Refinery":
-					Player player = Core.getInstance().getPlayer();
-					Integer playerCenterCount = manager.getCurrentGameInformation().getCurrentUnitCounts()
-							.getOrDefault(player.getRace().getCenter(), 0);
-					Integer playerRefineryCount = manager.getCurrentGameInformation().getCurrentUnitCounts()
-							.getOrDefault(player.getRace().getRefinery(), 0);
-
-					if (!this.wasForwardedOrQueued(actionType)
-							&& (playerRefineryCount.equals(0) || (playerCenterCount > playerRefineryCount))) {
-						availableActionTypes.add(actionType);
-					}
-					break;
-				case "Terran_Academy":
-					Integer playerAcademyCount = manager.getInformationStorage().getCurrentGameInformation()
-							.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Academy, 0);
-
-					if (!this.wasForwardedOrQueued(actionType) && playerAcademyCount.equals(0)) {
-						availableActionTypes.add(actionType);
-					}
-					break;
-				case "Terran_Engineering_Bay":
-					Integer playerEngineeringBayCount = manager.getInformationStorage().getCurrentGameInformation()
-							.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Engineering_Bay, 0);
-
-					if (!this.wasForwardedOrQueued(actionType) && playerEngineeringBayCount.equals(0)) {
-						availableActionTypes.add(actionType);
-					}
-					break;
-				// ----- Addons:
-				case "Terran_Machine_Shop":
-					if (this.canAddMachineShop(manager, actionType)) {
-						availableActionTypes.add(actionType);
-					}
-					break;
-				// ----- Technologies:
-				case "Tank_Siege_Mode":
+				if (actionType.defineResultType().isTechType()) {
 					if (this.canResearchTechnology(manager, actionType)) {
 						availableActionTypes.add(actionType);
 					}
-					break;
-				case "Stim_Packs":
-					if (this.canResearchTechnology(manager, actionType)) {
-						availableActionTypes.add(actionType);
-					}
-					break;
-				// ----- Upgrades:
-				case "U_238_Shells":
+				} else if (actionType.defineResultType().isUpgradeType()) {
 					if (this.canUpgrade(manager, actionType)) {
 						availableActionTypes.add(actionType);
 					}
-					break;
-				case "Terran_Infantry_Armor":
-					if (this.canUpgrade(manager, actionType)) {
+				}
+				// Different UnitTypes require different kinds of other
+				// UnitTypes before they can be either constructed or trained!
+				else if (actionType.defineResultType().isUnitType()
+						&& this.doesRequiredUnitExist(manager, actionType.defineResultType().getUnitType())
+						&& this.doesRequiredTechExist(manager, actionType.defineResultType().getUnitType())) {
+					switch (actionType.defineResultType().toString()) {
+
+					// ----- Buildings:
+					case "Terran_Command_Center":
+						if (!this.wasForwardedOrQueued(actionType)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
+					case "Terran_Refinery":
+						Player player = Core.getInstance().getPlayer();
+						Integer playerCenterCount = manager.getCurrentGameInformation().getCurrentUnitCounts()
+								.getOrDefault(player.getRace().getCenter(), 0);
+						Integer playerRefineryCount = manager.getCurrentGameInformation().getCurrentUnitCounts()
+								.getOrDefault(player.getRace().getRefinery(), 0);
+
+						if (!this.wasForwardedOrQueued(actionType)
+								&& (playerRefineryCount.equals(0) || (playerCenterCount > playerRefineryCount))) {
+							availableActionTypes.add(actionType);
+						}
+						break;
+					case "Terran_Academy":
+						Integer playerAcademyCount = manager.getInformationStorage().getCurrentGameInformation()
+								.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Academy, 0);
+
+						if (!this.wasForwardedOrQueued(actionType) && playerAcademyCount.equals(0)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
+					case "Terran_Engineering_Bay":
+						Integer playerEngineeringBayCount = manager.getInformationStorage().getCurrentGameInformation()
+								.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Engineering_Bay, 0);
+
+						if (!this.wasForwardedOrQueued(actionType) && playerEngineeringBayCount.equals(0)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
+
+					// ----- Addons:
+					case "Terran_Machine_Shop":
+						if (this.canAddMachineShop(manager, actionType)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
+
+					default:
 						availableActionTypes.add(actionType);
 					}
-					break;
-				case "Terran_Infantry_Weapons":
-					if (this.canUpgrade(manager, actionType)) {
-						availableActionTypes.add(actionType);
-					}
-					break;
-				default:
-					availableActionTypes.add(actionType);
 				}
 			}
 			// Casting of action Queues and starting Queues: Conversion to
@@ -152,6 +145,8 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 	 * <li>Test if the {@link ActionType} was not already forwarded or is
 	 * currently in the research Queue.</li>
 	 * <li>Test if an idling, required research facility exists.</li>
+	 * <li>Test if the required UnitType of the stored TechType exists at least
+	 * once.</li>
 	 * </ul>
 	 * 
 	 * @param manager
@@ -172,8 +167,10 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		boolean requiredTypeExist = this.doesRequiredTypeExist(manager, actionType);
 		boolean notForwardedOrQueued = !this.wasForwardedOrQueued(actionType);
 		boolean idleFacilitiyExists = this.isOneProducingFacilityIdle(manager, actionType);
+		boolean requiredUnitExist = this.doesRequiredUnitExist(manager, actionType.defineResultType().getTechType());
 
-		return notResearched && notResearching && requiredTypeExist && notForwardedOrQueued && idleFacilitiyExists;
+		return notResearched && notResearching && requiredTypeExist && notForwardedOrQueued && idleFacilitiyExists
+				&& requiredUnitExist;
 	}
 
 	// TODO: UML ADD
@@ -190,6 +187,8 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 	 * <li>Test if the {@link ActionType} was not already forwarded or is
 	 * currently in the upgrade Queue.</li>
 	 * <li>Test if an idling, required upgrade facility exists.</li>
+	 * <li>Test if the required UnitType of the stored UpgradeType of the
+	 * current level exists at least once.</li>
 	 * </ul>
 	 * 
 	 * @param manager
@@ -211,8 +210,10 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		boolean requiredTypeExist = this.doesRequiredTypeExist(manager, actionType);
 		boolean notForwardedOrQueued = !this.wasForwardedOrQueued(actionType);
 		boolean idleFacilitiyExists = this.isOneProducingFacilityIdle(manager, actionType);
+		boolean requiredUnitExist = this.doesRequiredUnitExist(manager, actionType.defineResultType().getUpgradeType());
 
-		return maxLevelNotReached && notUpgrading && requiredTypeExist && notForwardedOrQueued && idleFacilitiyExists;
+		return maxLevelNotReached && notUpgrading && requiredTypeExist && notForwardedOrQueued && idleFacilitiyExists
+				&& requiredUnitExist;
 	}
 
 	// TODO: UML ADD
@@ -285,6 +286,109 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		}
 
 		return prodcuingFacilityIdles;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if a provided TechType's required UnitType is
+	 * present on the map at least once.
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param techType
+	 *            the TechType whose required UnitType is going to be checked.
+	 * @return true if the required UnitType of the provided TechType is present
+	 *         on the map at least once.
+	 */
+	private boolean doesRequiredUnitExist(BuildActionManager manager, TechType techType) {
+		boolean exist = true;
+
+		if (techType.requiredUnit() != UnitType.None) {
+			exist &= manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+					.getOrDefault(techType.requiredUnit(), 0) > 0;
+		}
+
+		return exist;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if a provided UpgradeType's required UnitTypes are
+	 * present on the map at least once. These are based on the current level of
+	 * the UpgradeType and must be matched before upgrading to the next level is
+	 * possible.
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param upgradeType
+	 *            the UpgradeType whose required UnitTypes are going to be
+	 *            checked.
+	 * @return true if the required UnitType of the provided UpgradeType is
+	 *         present on the map at least once for the next level.
+	 */
+	private boolean doesRequiredUnitExist(BuildActionManager manager, UpgradeType upgradeType) {
+		int currentUpgradeLevel = manager.getCurrentGameInformation().getCurrentUpgrades().getOrDefault(upgradeType, 0);
+		boolean exist = true;
+
+		// Make sure the required UnitType exists at least once and is NOT None!
+		if (currentUpgradeLevel > 0 && upgradeType.whatsRequired(currentUpgradeLevel + 1) != UnitType.None) {
+			exist &= manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+					.getOrDefault(upgradeType.whatsRequired(currentUpgradeLevel + 1), 0) > 0;
+		} else if (upgradeType.whatsRequired() != UnitType.None) {
+			exist &= manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+					.getOrDefault(upgradeType.whatsRequired(), 0) > 0;
+		}
+
+		return exist;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if a provided UnitType's required UnitTypes are
+	 * present on the map at least once.
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param unitType
+	 *            the UnitType whose required UnitTypes are going to be checked.
+	 * @return true if the required UnitTypes of the provided UnitType are
+	 *         present on the map at least once.
+	 */
+	private boolean doesRequiredUnitExist(BuildActionManager manager, UnitType unitType) {
+		boolean exist = true;
+
+		for (UnitType requiredUnitType : unitType.requiredUnits().keySet()) {
+			exist &= unitType.requiredUnits().get(requiredUnitType) <= manager.getInformationStorage()
+					.getCurrentGameInformation().getCurrentUnitCounts().getOrDefault(requiredUnitType, 0);
+		}
+
+		return exist;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if a provided UnitType's required TechType was
+	 * already researched by the Player.
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param unitType
+	 *            the UnitType whose required TechType is going to be checked.
+	 * @return if the required TechType of the provided UnitType was already
+	 *         researched.
+	 */
+	private boolean doesRequiredTechExist(BuildActionManager manager, UnitType unitType) {
+		boolean exist = true;
+
+		if (unitType.requiredTech() != TechType.None) {
+			exist &= manager.getCurrentGameInformation().getCurrentTechs().contains(unitType.requiredTech());
+		}
+
+		return exist;
 	}
 
 	// TODO: UML PARAMS
