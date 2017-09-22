@@ -107,6 +107,14 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 							availableActionTypes.add(actionType);
 						}
 						break;
+					case "Terran_Science_Facility":
+						Integer playerScienceFacilityCount = manager.getInformationStorage().getCurrentGameInformation()
+								.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Science_Facility, 0);
+
+						if (!this.wasForwardedOrQueued(actionType) && playerScienceFacilityCount.equals(0)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
 
 					// ----- Addons:
 					case "Terran_Machine_Shop":
