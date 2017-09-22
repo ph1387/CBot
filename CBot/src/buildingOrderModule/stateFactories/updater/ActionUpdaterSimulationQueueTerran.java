@@ -82,6 +82,14 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 						availableActionTypes.add(actionType);
 					}
 					break;
+				case "Terran_Engineering_Bay":
+					Integer playerEngineeringBayCount = manager.getInformationStorage().getCurrentGameInformation()
+							.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Engineering_Bay, 0);
+
+					if (!this.wasForwardedOrQueued(actionType) && playerEngineeringBayCount.equals(0)) {
+						availableActionTypes.add(actionType);
+					}
+					break;
 				// ----- Addons:
 				case "Terran_Machine_Shop":
 					if (this.canAddMachineShop(manager, actionType)) {
