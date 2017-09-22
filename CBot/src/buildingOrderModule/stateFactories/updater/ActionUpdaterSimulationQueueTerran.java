@@ -113,6 +113,16 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 						availableActionTypes.add(actionType);
 					}
 					break;
+				case "Terran_Infantry_Armor":
+					if (this.canUpgrade(manager, actionType)) {
+						availableActionTypes.add(actionType);
+					}
+					break;
+				case "Terran_Infantry_Weapons":
+					if (this.canUpgrade(manager, actionType)) {
+						availableActionTypes.add(actionType);
+					}
+					break;
 				default:
 					availableActionTypes.add(actionType);
 				}

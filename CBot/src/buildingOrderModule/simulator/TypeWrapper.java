@@ -47,6 +47,12 @@ public class TypeWrapper {
 	// UpgradeType wrappers:
 	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_U_238_Shells = new TypeWrapper(UpgradeType.U_238_Shells);
+	// TODO: UML ADD
+	public static final TypeWrapper UpgradeType_Terran_Infantry_Armor = new TypeWrapper(
+			UpgradeType.Terran_Infantry_Armor);
+	// TODO: UML ADD
+	public static final TypeWrapper UpgradeType_Terran_Infantry_Weapons = new TypeWrapper(
+			UpgradeType.Terran_Infantry_Weapons);
 
 	// TechType wrappers:
 	public static final TypeWrapper TechType_Stim_Packs = new TypeWrapper(TechType.Stim_Packs);
@@ -112,6 +118,8 @@ public class TypeWrapper {
 
 		// UpgradeType wrappers:
 		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.U_238_Shells, UpgradeType_U_238_Shells);
+		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.Terran_Infantry_Armor, UpgradeType_Terran_Infantry_Armor);
+		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.Terran_Infantry_Weapons, UpgradeType_Terran_Infantry_Weapons);
 
 		// TechType wrappers:
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Stim_Packs, TechType_Stim_Packs);

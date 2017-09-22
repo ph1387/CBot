@@ -16,6 +16,8 @@ import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitAct
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Vulture;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Wraith;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
+import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_InfantryArmor;
+import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_InfantryWeapons;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_U_238_Shells;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueStartingTerranRaxFE;
 
@@ -52,5 +54,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ResearchActionTerran_StimPacks(1));
 
 		this.add(new UpgradeActionTerran_U_238_Shells(1));
+		this.add(new UpgradeActionTerran_InfantryArmor(1));
+		this.add(new UpgradeActionTerran_InfantryWeapons(1));
 	}
 }
