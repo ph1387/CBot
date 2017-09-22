@@ -9,6 +9,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Armory;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_StimPacks;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
@@ -42,6 +43,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ConstructActionTerran_Starport(1));
 		this.add(new ConstructActionTerran_EngineeringBay(1));
 		this.add(new ConstructActionTerran_ScienceFacilitiy(1));
+		this.add(new ConstructActionTerran_Armory(1));
 
 		this.add(new TrainUnitActionWorker(1));
 		this.add(new TrainUnitActionTerran_Marine(1));

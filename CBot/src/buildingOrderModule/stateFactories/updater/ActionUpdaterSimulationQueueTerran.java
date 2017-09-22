@@ -115,6 +115,14 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 							availableActionTypes.add(actionType);
 						}
 						break;
+					case "Terran_Armory":
+						Integer playerArmoryCount = manager.getInformationStorage().getCurrentGameInformation()
+								.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Armory, 0);
+
+						if (!this.wasForwardedOrQueued(actionType) && playerArmoryCount.equals(0)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
 
 					// ----- Addons:
 					case "Terran_Machine_Shop":
