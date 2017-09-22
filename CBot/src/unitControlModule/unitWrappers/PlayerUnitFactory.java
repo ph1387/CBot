@@ -60,4 +60,9 @@ public class PlayerUnitFactory {
 	public PlayerUnit createWraith(Unit unit) {
 		return new PlayerUnitTerran_Wraith(unit, this.informationStorage);
 	}
+
+	// TODO: UML ADD
+	public PlayerUnit createGoliath(Unit unit) {
+		return new PlayerUnitTerran_Goliath(unit, this.informationStorage);
+	}
 }

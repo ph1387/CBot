@@ -64,6 +64,9 @@ public class GoapAgentFactory {
 		case "Terran_Wraith":
 			agent = new DefaultGoapAgent(this.playerUnitFactory.createWraith(unit));
 			break;
+		case "Terran_Goliath":
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createGoliath(unit));
+			break;
 		default:
 			break;
 		}
