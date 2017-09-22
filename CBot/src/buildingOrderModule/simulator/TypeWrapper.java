@@ -48,6 +48,8 @@ public class TypeWrapper {
 			UnitType.Terran_Science_Facility);
 	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Armory = new TypeWrapper(UnitType.Terran_Armory);
+	// TODO: UML ADD
+	public static final TypeWrapper UnitType_Terran_Goliath = new TypeWrapper(UnitType.Terran_Goliath);
 
 	// UpgradeType wrappers:
 	// TODO: UML ADD
@@ -128,6 +130,7 @@ public class TypeWrapper {
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Engineering_Bay, UnitType_Terran_Engineering_Bay);
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Science_Facility, UnitType_Terran_Science_Facility);
 		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Armory, UnitType_Terran_Armory);
+		UNITTYPE_TO_TYPEWRAPPER.put(UnitType.Terran_Goliath, UnitType_Terran_Goliath);
 
 		// UpgradeType wrappers:
 		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.U_238_Shells, UpgradeType_U_238_Shells);
