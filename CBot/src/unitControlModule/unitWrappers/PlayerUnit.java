@@ -35,9 +35,10 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	// The timer after a BaseLocation might be searched again.
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
+	// TODO: UML CHANGE 0.7
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
 	// own parameters
-	protected static final double CONFIDENCE_THRESHHOLD = 0.7;
+	protected static final double CONFIDENCE_THRESHHOLD = 0.5;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	private static final int CONFIDENCE_TILE_RADIUS = 15;
 

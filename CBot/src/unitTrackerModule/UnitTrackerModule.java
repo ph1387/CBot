@@ -57,11 +57,11 @@ public class UnitTrackerModule {
 	// TODO: UML ADD
 	// The multiplier that is applied to the enemy buildings that have a weapon.
 	// This is needed since stationary turrets etc. must NOT be rushed into!
-	private double enemyBuildingMultiplier = 1.5;
+	private double buildingMultiplier = 2.5;
 	// TODO: UML ADD
 	// The tile range which gets added towards each Unit's default weapon range.
 	// Using this value Units can react sooner to incoming threats.
-	private int extraTileRange = 2;
+	private int extraTileRange = 3;
 
 	// Needed for increasing the multiplier in the calculations that generates
 	// the total value of the weapon types. Any positive number can be inserted
@@ -506,7 +506,7 @@ public class UnitTrackerModule {
 		double multiplier = 1.;
 
 		if (enemyUnit.getUnitType().isBuilding()) {
-			multiplier *= this.enemyBuildingMultiplier;
+			multiplier *= this.buildingMultiplier;
 		}
 
 		return multiplier;
@@ -526,7 +526,7 @@ public class UnitTrackerModule {
 		// Only account the health + shield difference for non building Units!
 		// This is due to defensive structures being a constant threat.
 		if (unit.getType().isBuilding()) {
-			multiplier = this.enemyBuildingMultiplier;
+			multiplier = this.buildingMultiplier;
 		} else {
 			// The Unit has a shield and therefore its value must be considered.
 			if (unit.getType().maxShields() > 0) {
