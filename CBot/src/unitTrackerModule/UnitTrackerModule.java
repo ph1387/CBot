@@ -62,6 +62,10 @@ public class UnitTrackerModule {
 	// The tile range which gets added towards each Unit's default weapon range.
 	// Using this value Units can react sooner to incoming threats.
 	private int extraTileRange = 3;
+	// TODO: UML ADD
+	// The multiplier for workers since they are normally not used as combat
+	// Units. Therefore their strength must be adjusted.
+	private double workerMultiplier = 0.3;
 
 	// Needed for increasing the multiplier in the calculations that generates
 	// the total value of the weapon types. Any positive number can be inserted
@@ -507,6 +511,8 @@ public class UnitTrackerModule {
 
 		if (enemyUnit.getUnitType().isBuilding()) {
 			multiplier *= this.buildingMultiplier;
+		} else if (enemyUnit.getUnitType().isWorker()) {
+			multiplier *= this.workerMultiplier;
 		}
 
 		return multiplier;
@@ -527,6 +533,8 @@ public class UnitTrackerModule {
 		// This is due to defensive structures being a constant threat.
 		if (unit.getType().isBuilding()) {
 			multiplier = this.buildingMultiplier;
+		} else if (unit.getType().isWorker()) {
+			multiplier = this.workerMultiplier;
 		} else {
 			// The Unit has a shield and therefore its value must be considered.
 			if (unit.getType().maxShields() > 0) {
