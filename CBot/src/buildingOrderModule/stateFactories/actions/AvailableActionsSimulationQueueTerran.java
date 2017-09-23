@@ -15,6 +15,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.ResearchActi
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Goliath;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Medic;
+import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_ScienceVessel;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Vulture;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Wraith;
@@ -55,6 +56,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new TrainUnitActionTerran_Medic(1));
 		this.add(new TrainUnitActionTerran_Wraith(1));
 		this.add(new TrainUnitActionTerran_Goliath(1));
+		this.add(new TrainUnitActionTerran_ScienceVessel(1));
 
 		this.add(new BuildAddonTerran_MachineShop(1));
 
