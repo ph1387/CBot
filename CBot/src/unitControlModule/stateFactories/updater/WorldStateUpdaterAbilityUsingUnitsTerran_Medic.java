@@ -8,8 +8,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
 /**
- * WorldStateUpdaterAbilityUsingUnitsTerran_Medic.java ---WorldState updater for
- * Terran_Medic WorldStates.
+ * WorldStateUpdaterAbilityUsingUnitsTerran_Medic.java --- WorldState updater
+ * for Terran_Medic WorldStates.
  * 
  * @author P H - 27.06.2017
  *
@@ -36,7 +36,6 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUp
 	@Override
 	protected void updateAbilitiyWorldState(PlayerUnit playerUnit) {
 		boolean healableUnitNear = false;
-		boolean supportableUnitNear = false;
 
 		// Find a Unit around the currently executing one that is missing
 		// health and is supportable by the Terran_Medic.
@@ -48,12 +47,6 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUp
 				boolean isNearUnit = playerUnit.isNearPosition(unit.getPosition(),
 						PlayerUnitTerran_Medic.getHealPixelDistance());
 				boolean unitIsDamaged = unit.isCompleted() && unit.getHitPoints() < unit.getType().maxHitPoints();
-
-				// Find a Unit (Other than the executing one) that is
-				// supportable (= Every listed healable UnitType).
-				if (!supportableUnitNear && unit != playerUnit.getUnit() && isNearUnit) {
-					supportableUnitNear = true;
-				}
 
 				// Find a Unit (Other than the executing one) that is healable.
 				// This excludes the Terran_Medic UnitType since the Medics
@@ -72,13 +65,6 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUp
 			this.changeWorldStateEffect("isNearHealableUnit", true);
 		} else {
 			this.changeWorldStateEffect("isNearHealableUnit", false);
-		}
-
-		// WorldState changes also apply towards the support of other Units.
-		if (supportableUnitNear) {
-			this.changeWorldStateEffect("isNearSupportableUnit", true);
-		} else {
-			this.changeWorldStateEffect("isNearSupportableUnit", false);
 		}
 	}
 }

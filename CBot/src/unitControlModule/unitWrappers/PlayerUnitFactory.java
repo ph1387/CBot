@@ -65,4 +65,9 @@ public class PlayerUnitFactory {
 	public PlayerUnit createGoliath(Unit unit) {
 		return new PlayerUnitTerran_Goliath(unit, this.informationStorage);
 	}
+
+	// TODO: UML ADD
+	public PlayerUnit createScienceVessel(Unit unit) {
+		return new PlayerUnitTerran_ScienceVessel(unit, this.informationStorage);
+	}
 }

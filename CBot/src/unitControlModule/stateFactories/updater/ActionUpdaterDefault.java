@@ -41,7 +41,8 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		super.update(playerUnit);
 
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_MISSING) {
-			this.baselocationScoutingConfiguration();
+			// TODO: WIP ENABLE
+//			this.baselocationScoutingConfiguration();
 		} else {
 			this.attackMoveToNearestKnownUnitConfiguration();
 
@@ -55,8 +56,9 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 		this.attackUnitAction = ((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class));
 		this.attackMoveAction = ((AttackMoveAction) this.getActionFromInstance(AttackMoveAction.class));
-		this.scoutBaseLocationAction = ((ScoutBaseLocationAction) this
-				.getActionFromInstance(ScoutBaseLocationAction.class));
+		// TODO: WIP ENABLE
+//		this.scoutBaseLocationAction = ((ScoutBaseLocationAction) this
+//				.getActionFromInstance(ScoutBaseLocationAction.class));
 	}
 
 	/**

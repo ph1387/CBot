@@ -67,14 +67,13 @@ public class GoapAgentFactory {
 		case "Terran_Goliath":
 			agent = new DefaultGoapAgent(this.playerUnitFactory.createGoliath(unit));
 			break;
-		default:
+		case "Terran_Science_Vessel":
+			agent = new DefaultGoapAgent(this.playerUnitFactory.createScienceVessel(unit));
 			break;
+		default:
+			throw new UnknownUnitTypeException(unit.getType());
 		}
 
-		if (agent == null) {
-			throw new UnknownUnitTypeException(unit.getType());
-		} else {
-			return agent;
-		}
+		return agent;
 	}
 }

@@ -19,7 +19,7 @@ import unitControlModule.stateFactories.StateFactoryTerran_Medic;
 public class PlayerUnitTerran_Medic extends PlayerUnitTypeRanged {
 
 	// TODO: UML ADD
-	private static final int HEAL_PIXEL_DISTANCE = 92;
+	private static final int HEAL_PIXEL_DISTANCE = 96;
 
 	// TODO: UML ADD
 	private static List<UnitType> HealableUnitTypes = Arrays

@@ -14,15 +14,15 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// Disable following properties on custom maps!
 
 	// Init:
-	private boolean generateDefaultContendedTilePositions = true;
-	private boolean generateDefaultContendedPolygons = true;
-	private boolean generateRegionAccessOrder = true;
+	private boolean generateDefaultContendedTilePositions = false;
+	private boolean generateDefaultContendedPolygons = false;
+	private boolean generateRegionAccessOrder = false;
 
 	// BuildingOrderModule:
-	private boolean enableBuildingOrderModuleUpdates = true;
+	private boolean enableBuildingOrderModuleUpdates = false;
 
 	// PlayerUnit:
-	private boolean allowModifiedConfidenceGeneration = true;
+	private boolean allowModifiedConfidenceGeneration = false;
 
 	// ----- Display / Debug functionalities:
 

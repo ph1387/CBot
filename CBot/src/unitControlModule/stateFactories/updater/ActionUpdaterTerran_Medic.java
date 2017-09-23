@@ -23,7 +23,8 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 	private boolean initializationMissing = true;
 
 	// TODO: UML REMOVE
-//	private RetreatActionSteerInBioUnitDirectionTerran_Medic retreatActionSteerInBioUnitDirectionTerranMedic;
+	// private RetreatActionSteerInBioUnitDirectionTerran_Medic
+	// retreatActionSteerInBioUnitDirectionTerranMedic;
 	// TODO: UML REMOVE
 	// private ProtectMoveActionSteerTowardsClosestDamagedUnit
 	// protectMoveActionSteerTowardsClosesDamagedUnit;
@@ -39,6 +40,11 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
+		// Call super.update() when the Units should react independently to
+		// enemy Units and retreat on their own. Init() should not be called
+		// then!
+		// super.update(playerUnit);
+
 		// Get the references to all used actions.
 		if (this.initializationMissing) {
 			this.init();
