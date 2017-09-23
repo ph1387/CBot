@@ -84,6 +84,12 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 					closestSupportableUnitDistance = currentDistance;
 				}
 			}
+
+			// The order in which the UnitTypes are listed in the ScienceVessel
+			// do matter!
+			if (closestSupportableUnit != null) {
+				break;
+			}
 		}
 
 		return closestSupportableUnit;
