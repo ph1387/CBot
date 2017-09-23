@@ -4,26 +4,27 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
+// TODO: UML ADD
 /**
- * BuildAddonTerran_MachineShop.java --- Action for building a
- * Terran_MachineShop at a Factory.
+ * BuildAddonTerran_ControlTower.java --- Action for building a
+ * Terran_Control_Tower at a Starport.
  * 
- * @author P H - 30.04.2017
+ * @author P H - 23.09.2017
  *
  */
-public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
+public class BuildAddonTerran_ControlTower extends BuildAddonBaseAction {
 
 	/**
 	 * @param target
 	 *            type: Integer
 	 */
-	public BuildAddonTerran_MachineShop(Object target) {
+	public BuildAddonTerran_ControlTower(Object target) {
 		super(target);
 
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Cheap_Units);
-		this.addToGameStates(GameState.Machine_Units);
+		this.addToGameStates(GameState.Flying_Units);
 		this.addToGameStates(GameState.Upgrade_Focused);
 		this.addToGameStates(GameState.Technology_Focused);
 	}
@@ -31,15 +32,16 @@ public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
 	// -------------------- Functions
 
 	@Override
-	protected UnitType defineType() {
-		return UnitType.Terran_Machine_Shop;
+	public TypeWrapper defineRequiredType() {
+		return TypeWrapper.generateFrom(UnitType.Terran_Starport);
 	}
 
 	@Override
-	public TypeWrapper defineRequiredType() {
-		return TypeWrapper.generateFrom(UnitType.Terran_Factory);
+	protected UnitType defineType() {
+		return UnitType.Terran_Control_Tower;
 	}
 
+	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return 1;

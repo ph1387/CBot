@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions.executableActions;
 
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
@@ -19,13 +20,21 @@ public class TrainUnitActionTerran_ScienceVessel extends TrainUnitBaseAction {
 	 */
 	public TrainUnitActionTerran_ScienceVessel(Object target) {
 		super(target);
+
+		this.addToGameStates(GameState.Mineral_Units);
+		this.addToGameStates(GameState.Expensive_Units);
+		this.addToGameStates(GameState.Gas_Units);
+		this.addToGameStates(GameState.Support_Units);
+		this.addToGameStates(GameState.Flying_Units);
+
+		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Starport);
 	}
 
 	// -------------------- Functions
 
 	@Override
 	public TypeWrapper defineRequiredType() {
-		return TypeWrapper.generateFrom(UnitType.Terran_Starport);
+		return TypeWrapper.generateFrom(UnitType.Terran_Control_Tower);
 	}
 
 	@Override

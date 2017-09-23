@@ -1,5 +1,6 @@
 package buildingOrderModule.stateFactories.actions;
 
+import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_ControlTower;
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Barracks;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_EngineeringBay;
@@ -59,6 +60,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new TrainUnitActionTerran_ScienceVessel(1));
 
 		this.add(new BuildAddonTerran_MachineShop(1));
+		this.add(new BuildAddonTerran_ControlTower(1));
 
 		this.add(new ResearchActionTerran_SiegeMode(1));
 		this.add(new ResearchActionTerran_StimPacks(1));

@@ -130,6 +130,14 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 							availableActionTypes.add(actionType);
 						}
 						break;
+					case "Terran_Control_Tower":
+						Integer playerControlTowerCount = manager.getInformationStorage().getCurrentGameInformation()
+								.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Control_Tower, 0);
+
+						if (!this.wasForwardedOrQueued(actionType) && playerControlTowerCount.equals(0)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
 
 					default:
 						availableActionTypes.add(actionType);
