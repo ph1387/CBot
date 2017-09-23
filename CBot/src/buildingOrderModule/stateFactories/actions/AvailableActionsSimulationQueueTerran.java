@@ -21,8 +21,10 @@ import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitAct
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Vulture;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Wraith;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
+import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_CharonBoosters;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_InfantryArmor;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_InfantryWeapons;
+import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_IonThrusters;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_U_238_Shells;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_VehiclePlating;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_VehicleWeapons;
@@ -70,5 +72,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new UpgradeActionTerran_InfantryWeapons(1));
 		this.add(new UpgradeActionTerran_VehiclePlating(1));
 		this.add(new UpgradeActionTerran_VehicleWeapons(1));
+		this.add(new UpgradeActionTerran_IonThrusters(1));
+		this.add(new UpgradeActionTerran_CharonBoosters(1));
 	}
 }

@@ -70,6 +70,10 @@ public class TypeWrapper {
 	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_Terran_Vehicle_Weapons = new TypeWrapper(
 			UpgradeType.Terran_Vehicle_Weapons);
+	// TODO: UML ADD
+	public static final TypeWrapper UpgradeType_Ion_Thrusters = new TypeWrapper(UpgradeType.Ion_Thrusters);
+	// TODO: UML ADD
+	public static final TypeWrapper UpgradeType_Charon_Boosters = new TypeWrapper(UpgradeType.Charon_Boosters);
 
 	// TechType wrappers:
 	public static final TypeWrapper TechType_Stim_Packs = new TypeWrapper(TechType.Stim_Packs);
@@ -144,6 +148,8 @@ public class TypeWrapper {
 		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.Terran_Infantry_Weapons, UpgradeType_Terran_Infantry_Weapons);
 		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.Terran_Vehicle_Plating, UpgradeType_Terran_Vehicle_Plating);
 		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.Terran_Vehicle_Weapons, UpgradeType_Terran_Vehicle_Weapons);
+		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.Ion_Thrusters, UpgradeType_Ion_Thrusters);
+		UPGRADETYPE_TO_TYPEWRAPPER.put(UpgradeType.Charon_Boosters, UpgradeType_Charon_Boosters);
 
 		// TechType wrappers:
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Stim_Packs, TechType_Stim_Packs);
