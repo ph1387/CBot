@@ -12,6 +12,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Armory;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
+import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SpiderMines;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_StimPacks;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Goliath;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
@@ -66,6 +67,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 
 		this.add(new ResearchActionTerran_SiegeMode(1));
 		this.add(new ResearchActionTerran_StimPacks(1));
+		this.add(new ResearchActionTerran_SpiderMines(1));
 
 		this.add(new UpgradeActionTerran_U_238_Shells(1));
 		this.add(new UpgradeActionTerran_InfantryArmor(1));

@@ -78,6 +78,8 @@ public class TypeWrapper {
 	// TechType wrappers:
 	public static final TypeWrapper TechType_Stim_Packs = new TypeWrapper(TechType.Stim_Packs);
 	public static final TypeWrapper TechType_Tank_Siege_Mode = new TypeWrapper(TechType.Tank_Siege_Mode);
+	// TODO: UML ADD
+	public static final TypeWrapper TechType_Spider_Mines = new TypeWrapper(TechType.Spider_Mines);
 
 	// Precomputed HashMaps for an easy conversion from the different types to a
 	// TypeWrapper.
@@ -154,6 +156,7 @@ public class TypeWrapper {
 		// TechType wrappers:
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Stim_Packs, TechType_Stim_Packs);
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Tank_Siege_Mode, TechType_Tank_Siege_Mode);
+		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Spider_Mines, TechType_Spider_Mines);
 	}
 
 	/**
