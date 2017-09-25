@@ -1,8 +1,5 @@
-/unitControlModule/
-/workerManagerConstructionJobDistribution/
 /buildingOrderModule/
-/informationStorage/
-/core/
 /bwapiMath/
-/unitTrackerModule/
-/workerManagerResourceSpotAllocation/
+/core/
+/informationStorage/
+/unitControlModule/

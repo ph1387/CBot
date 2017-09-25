@@ -25,6 +25,12 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	private boolean allowModifiedConfidenceGeneration = true;
 
 	// ----- Display / Debug functionalities:
+	
+	// BuildingOrderModule:
+	// TODO: UML ADD
+	private boolean displayGameStates = false;
+	// TODO: UML ADD
+	private boolean displayGeneratedScores = true;
 
 	// UnitTrackerModule:
 	private boolean displayPlayerAirStrength = false;
@@ -46,6 +52,18 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	private boolean displayUnitConfidence = true;
 
 	// -------------------- Functions
+	
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayGameStates() {
+		return this.displayGameStates;
+	}
+	
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayGeneratedScores() {
+		return this.displayGeneratedScores;
+	}
 
 	@Override
 	public boolean enableDisplayPlayerAirStrength() {

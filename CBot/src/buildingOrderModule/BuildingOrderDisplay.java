@@ -43,9 +43,13 @@ public class BuildingOrderDisplay {
 	public static void showInformation(BuildActionManager manager) {
 		int currentPosY = LINEHEIGHT;
 
-		// TODO: WIP ENABLE
-//		currentPosY = showGameStates(manager, currentPosY);
-		currentPosY = showGeneratedScores(manager, currentPosY);
+		// Display functionalities:
+		if (manager.getInformationStorage().getiBuildingOrderModuleConfig().enableDisplayGameStates()) {
+			currentPosY = showGameStates(manager, currentPosY);
+		}
+		if (manager.getInformationStorage().getiBuildingOrderModuleConfig().enableDisplayGeneratedScores()) {
+			currentPosY = showGeneratedScores(manager, currentPosY);
+		}
 	}
 
 	// TODO: Possible Change: Combine with the UnitControlDisplay.
