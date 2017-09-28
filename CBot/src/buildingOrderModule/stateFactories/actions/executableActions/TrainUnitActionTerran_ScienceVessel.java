@@ -3,6 +3,7 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
+import core.CBot;
 
 // TODO: UML ADD
 /**
@@ -34,12 +35,19 @@ public class TrainUnitActionTerran_ScienceVessel extends TrainUnitBaseAction {
 
 	@Override
 	public TypeWrapper defineRequiredType() {
-		return TypeWrapper.generateFrom(UnitType.Terran_Control_Tower);
+		return TypeWrapper.generateFrom(UnitType.Terran_Starport);
 	}
 
 	@Override
 	protected UnitType defineType() {
 		return UnitType.Terran_Science_Vessel;
+	}
+
+	// TODO: UML ADD
+	@Override
+	protected int defineMaxTrainingCount() {
+		return CBot.getInstance().getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Control_Tower, 0);
 	}
 
 }

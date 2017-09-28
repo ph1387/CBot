@@ -3,6 +3,7 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
+import core.CBot;
 
 /**
  * TrainUnitActionTerran_SiegeTank.java --- Action for training a
@@ -38,7 +39,13 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 
 	@Override
 	public TypeWrapper defineRequiredType() {
-		return TypeWrapper.generateFrom(UnitType.Terran_Machine_Shop);
+		return TypeWrapper.generateFrom(UnitType.Terran_Factory);
 	}
 
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return CBot.getInstance().getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Machine_Shop, 0);
+	}
 }

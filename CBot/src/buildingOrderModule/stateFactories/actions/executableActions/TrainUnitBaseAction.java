@@ -125,8 +125,7 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 
 	@Override
 	public int defineMaxSimulationOccurrences() {
-		int maxPossTrainingCount = CBot.getInstance().getInformationStorage().getCurrentGameInformation()
-				.getCurrentUnitCounts().getOrDefault(this.defineRequiredType().getUnitType(), 0);
+		int maxPossTrainingCount = this.defineMaxTrainingCount();
 		int queuedTrainingCount = 0;
 
 		// Count the number of times the UnitType is already queued.
@@ -137,6 +136,23 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 		}
 
 		return maxPossTrainingCount - queuedTrainingCount;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for defining the maximum number of times the UnitType may be
+	 * queued for training. This function is necessary since some Units
+	 * (Terran_Science_Vessel, Terran_Siege_Tank, etc.) require additional
+	 * addons connected to their training facility, therefore limiting the
+	 * maximum number of simultaneously queued elements not to the number of
+	 * training facilities, but to the number of addons!
+	 * 
+	 * @return the maximum number of times the UnitType may be used in a single
+	 *         simulation cycle.
+	 */
+	protected int defineMaxTrainingCount() {
+		return CBot.getInstance().getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(this.defineRequiredType().getUnitType(), 0);
 	}
 
 }
