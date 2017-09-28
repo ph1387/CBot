@@ -28,6 +28,12 @@ public class UnitTrackerModule {
 
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
+	// TODO: UML ADD
+	// The frame difference after which the Class performs the update.
+	private static final int FRAME_UPDATE_DIFF = 24;
+	// TODO: UML ADD
+	private int lastUpdateTimeStamp = 0;
+
 	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
@@ -49,7 +55,7 @@ public class UnitTrackerModule {
 	private double currentWorkerPercent;
 	private double currentBuildingsPercent;
 	private double currentCombatUnitsPercent;
-	private HashMap<UnitType, HashSet<Unit>> currentUnits;
+	private HashMap<UnitType, HashSet<Unit>> currentUnits = new HashMap<>();
 
 	// The container holding all information.
 	private InformationStorage informationStorage;
@@ -101,10 +107,17 @@ public class UnitTrackerModule {
 	 * Used for updating all information regarding enemy Units in the game.
 	 */
 	public void update() {
-		this.updateCurrentGameInformation();
-		this.updateEnemyUnitLists();
-		this.updateTilePositionInformation();
-		this.forwardInformation();
+		// Use a fixed update cycle to prevent the tracker from taking too many
+		// CPU resources and therefore slowing the frame rate of the game down
+		// (m*O(n) instead of O(n*m)).
+		if (Core.getInstance().getGame().getFrameCount() - this.lastUpdateTimeStamp >= FRAME_UPDATE_DIFF) {
+			this.updateCurrentGameInformation();
+			this.updateEnemyUnitLists();
+			this.updateTilePositionInformation();
+			this.forwardInformation();
+
+			this.lastUpdateTimeStamp = Core.getInstance().getGame().getFrameCount();
+		}
 
 		UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
 		UnitTrackerDisplay.showUnitsLastPosition(this.enemyUnits);

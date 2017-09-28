@@ -76,7 +76,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("isScout", false);
 
 			// Only allow gathering if the Unit is near a center building.
-			if (closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter) {
+			if (closestCenterDistance != null && closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter) {
 				this.changeWorldStateEffect("allowGathering", true);
 			} else {
 				this.changeWorldStateEffect("allowGathering", false);

@@ -2,6 +2,7 @@ package unitControlModule.unitWrappers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -157,14 +158,14 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		if (!this.hollowUpdatesEnabled) {
 			// FSM worldState changes in one cycle.
 			if (this.currentState == UnitStates.ENEMY_MISSING
-					&& (this.informationStorage.getTrackerInfo().getEnemyUnits().size() != 0
-							|| this.informationStorage.getTrackerInfo().getEnemyBuildings().size() != 0)) {
+					&& (!this.informationStorage.getTrackerInfo().getEnemyUnits().isEmpty()
+							|| !this.informationStorage.getTrackerInfo().getEnemyBuildings().isEmpty())) {
 				this.resetActions();
 				this.currentState = UnitStates.ENEMY_KNOWN;
 			}
 			if (this.currentState == UnitStates.ENEMY_KNOWN) {
-				if (this.informationStorage.getTrackerInfo().getEnemyUnits().size() == 0
-						&& this.informationStorage.getTrackerInfo().getEnemyBuildings().size() == 0) {
+				if (this.informationStorage.getTrackerInfo().getEnemyUnits().isEmpty()
+						&& this.informationStorage.getTrackerInfo().getEnemyBuildings().isEmpty()) {
 					this.resetActions();
 					this.currentState = UnitStates.ENEMY_MISSING;
 				} else {
@@ -226,32 +227,150 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * i.e. the closest one towards this Unit.
 	 */
 	private void updateEnemyUnitReferences() {
-		HashSet<Unit> enemyUnitsInConfidenceRange = this.getAllEnemyUnitsInConfidenceRange();
+		List<Unit> sortedEnemyUnitsInConfidenceRange = this
+				.sortByDistance(new ArrayList<Unit>(this.getAllEnemyUnitsInConfidenceRange()));
 
-		// Update the currently closest enemy Unit reference:
-		this.closestEnemyUnitInConfidenceRange = this.getClosestUnit(enemyUnitsInConfidenceRange);
+		// Reset all references set in the previous iteration.
+		this.resetUnitReferences();
 
-		// Update attackable Unit references:
-		this.closestAttackableEnemyUnitWithWeapon = this
-				.getClosestUnit(this.getAttackableUnitsWithWeapons(enemyUnitsInConfidenceRange));
-		this.closestAttackableEnemyUnitInConfidenceRange = this
-				.getClosestUnit(this.getAttackableUnits(enemyUnitsInConfidenceRange));
-		this.closestAttackableEnemySpecialUnitInConfidenceRange = this
-				.getClosestUnit(this.getAttackableSpecialUnits(enemyUnitsInConfidenceRange, this.specialUnitTypes));
-		this.closestAttackableEnemyWorkerInConfidenceRange = this
-				.getClosestUnit(this.getAttackableWorkers(enemyUnitsInConfidenceRange));
-		this.closestAttackableEnemySupplyProviderInConfidenceRange = this
-				.getClosestUnit(this.getAttackableEnemySupplyProviders(enemyUnitsInConfidenceRange));
-		this.closestAttackableEnemyCenterInConfidenceRange = this
-				.getClosestUnit(this.getAttackableEnemyCenters(enemyUnitsInConfidenceRange));
+		// Reassign all references to the various enemy Units around the current
+		// one based on their distance.
+		this.reassignUnitReferences(sortedEnemyUnitsInConfidenceRange);
 
+		// Set the most important references of this Unit: The ones that it must
+		// react to!
 		this.attackableEnemyUnitToReactTo = this.generateAttackableEnemyUnitToReactTo();
-
-		// Update attacking Unit references:
-		this.closestAttackingEnemyUnitInConfidenceRange = this
-				.getClosestUnit(this.getAttackingUnits(enemyUnitsInConfidenceRange));
-
 		this.attackingEnemyUnitToReactTo = this.generateAttackingEnemyUnitToReactTo();
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for resetting all references regarding the different possible
+	 * types of enemy Units.
+	 */
+	private void resetUnitReferences() {
+		this.closestEnemyUnitInConfidenceRange = null;
+		this.closestAttackableEnemyUnitInConfidenceRange = null;
+		this.closestAttackableEnemyUnitWithWeapon = null;
+		this.closestAttackableEnemySpecialUnitInConfidenceRange = null;
+		this.closestAttackableEnemyWorkerInConfidenceRange = null;
+		this.closestAttackableEnemySupplyProviderInConfidenceRange = null;
+		this.closestAttackableEnemyCenterInConfidenceRange = null;
+		this.attackableEnemyUnitToReactTo = null;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for sorting a given List of Units based on their distance
+	 * towards the current instance's Unit.
+	 * 
+	 * @param inputList
+	 *            the List of Units that is going to be sorted.
+	 * @return the provided List's instance sorted based on the different Unit
+	 *         distances towards the current one calling this function.
+	 */
+	private List<Unit> sortByDistance(List<Unit> inputList) {
+		final Unit referenceUnit = this.unit;
+
+		inputList.sort(new Comparator<Unit>() {
+
+			@Override
+			public int compare(Unit u1, Unit u2) {
+				return Integer.compare(referenceUnit.getDistance(u1), referenceUnit.getDistance(u2));
+			}
+		});
+		return inputList;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for reassigning the different types of enemy Unit references
+	 * based on different criteria. The provided List must contain a selection
+	 * of Units that can be chosen by this one as targets or ones to generally
+	 * react to. This function will take the first matching Unit found in the
+	 * provided List. Therefore the order in which the Units are places in the
+	 * List matters! <br>
+	 * (-> Sort by distance to make the executing Unit always choose the nearest
+	 * possible match for each criteria!)
+	 * 
+	 * @param sortedList
+	 *            the List from which the different Unit references are being
+	 *            taken if they match the criteria.
+	 */
+	private void reassignUnitReferences(List<Unit> sortedList) {
+		boolean running = true;
+		int currentIndex = 0;
+
+		// Flags for an efficient assigning of the different references. (O(n)
+		// instead of O(n*n)!).
+		boolean closestEnemyUnitInConfidenceRangeAssigned = false;
+		boolean closestAttackableEnemyUnitWithWeaponAssigned = false;
+		boolean closestAttackableEnemyUnitInConfidenceRangeAssigned = false;
+		boolean closestAttackableEnemySpecialUnitInConfidenceRangeAssigned = false;
+		boolean closestAttackableEnemyWorkerInConfidenceRangeAssigned = false;
+		boolean closestAttackableEnemySupplyProviderInConfidenceRangeAssigned = false;
+		boolean closestAttackableEnemyCenterInConfidenceRangeAssigned = false;
+
+		boolean closestAttackingEnemyUnitInConfidenceRangeAssigned = false;
+
+		// Try assigning each reference to a Unit. Always choose the first one
+		// matching since this is the one closest to the Unit!
+		while (currentIndex < sortedList.size() && running) {
+			Unit currentUnit = sortedList.get(currentIndex);
+
+			// ---------- Attackable enemy Units:
+			if (!closestEnemyUnitInConfidenceRangeAssigned) {
+				this.closestEnemyUnitInConfidenceRange = currentUnit;
+				closestEnemyUnitInConfidenceRangeAssigned = true;
+			}
+			if (!closestAttackableEnemyUnitWithWeaponAssigned && this.hasWeapon(currentUnit)
+					&& this.canAttack(currentUnit)) {
+				this.closestAttackableEnemyUnitWithWeapon = currentUnit;
+				closestAttackableEnemyUnitWithWeaponAssigned = true;
+			}
+			if (!closestAttackableEnemyUnitInConfidenceRangeAssigned && this.canAttack(currentUnit)) {
+				this.closestAttackableEnemyUnitInConfidenceRange = currentUnit;
+				closestAttackableEnemyUnitInConfidenceRangeAssigned = true;
+			}
+			if (!closestAttackableEnemySpecialUnitInConfidenceRangeAssigned
+					&& specialUnitTypes.contains(currentUnit.getType()) && this.canAttack(currentUnit)) {
+				this.closestAttackableEnemySpecialUnitInConfidenceRange = currentUnit;
+				closestAttackableEnemySpecialUnitInConfidenceRangeAssigned = true;
+			}
+			if (!closestAttackableEnemyWorkerInConfidenceRangeAssigned && currentUnit.getType().isWorker()
+					&& this.canAttack(currentUnit)) {
+				this.closestAttackableEnemyWorkerInConfidenceRange = currentUnit;
+				closestAttackableEnemyWorkerInConfidenceRangeAssigned = true;
+			}
+			if (!closestAttackableEnemySupplyProviderInConfidenceRangeAssigned
+					&& currentUnit.getType() == Core.getInstance().getGame().enemy().getRace().getSupplyProvider()
+					&& this.canAttack(currentUnit)) {
+				this.closestAttackableEnemySupplyProviderInConfidenceRange = currentUnit;
+				closestAttackableEnemySupplyProviderInConfidenceRangeAssigned = true;
+			}
+			if (!closestAttackableEnemyCenterInConfidenceRangeAssigned
+					&& currentUnit.getType() == Core.getInstance().getGame().enemy().getRace().getCenter()
+					&& this.canAttack(currentUnit)) {
+				this.closestAttackableEnemyCenterInConfidenceRange = currentUnit;
+				closestAttackableEnemyCenterInConfidenceRangeAssigned = true;
+			}
+
+			// ---------- Attacking enemy Units:
+			if (!closestAttackingEnemyUnitInConfidenceRangeAssigned && this.canBeAttackedBy(currentUnit)) {
+				this.closestAttackingEnemyUnitInConfidenceRange = currentUnit;
+				closestAttackingEnemyUnitInConfidenceRangeAssigned = true;
+			}
+
+			// Stop when each reference was updated.
+			running = !(closestEnemyUnitInConfidenceRangeAssigned && closestAttackableEnemyUnitWithWeaponAssigned
+					&& closestAttackableEnemyUnitInConfidenceRangeAssigned
+					&& closestAttackableEnemySpecialUnitInConfidenceRangeAssigned
+					&& closestAttackableEnemyWorkerInConfidenceRangeAssigned
+					&& closestAttackableEnemySupplyProviderInConfidenceRangeAssigned
+					&& closestAttackableEnemyCenterInConfidenceRangeAssigned
+					&& closestAttackingEnemyUnitInConfidenceRangeAssigned);
+			currentIndex++;
+		}
 	}
 
 	/**
@@ -773,8 +892,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		HashSet<Unit> attackableUnitsWithWeapons = new HashSet<>();
 
 		for (Unit unit : units) {
-			if ((unit.getType().groundWeapon().damageAmount() > 0 || unit.getType().airWeapon().damageAmount() > 0)
-					&& this.canAttack(unit)) {
+			if (this.hasWeapon(unit) && this.canAttack(unit)) {
 				attackableUnitsWithWeapons.add(unit);
 			}
 		}
@@ -823,6 +941,20 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 			}
 		}
 		return attackingUnits;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for checking if the provided Unit has either an air or a ground
+	 * weapon to attack with.
+	 * 
+	 * @param unit
+	 *            the Unit that is going to be checked.
+	 * @return true if the Unit has either an air weapon or a ground weapon,
+	 *         otherwise false.
+	 */
+	public boolean hasWeapon(Unit unit) {
+		return (unit.getType().groundWeapon().damageAmount() > 0 || unit.getType().airWeapon().damageAmount() > 0);
 	}
 
 	/**

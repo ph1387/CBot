@@ -25,6 +25,16 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 	private GoapAgentFactory goapAgentFactory;
 
+	// TODO: UML ADD
+	// Information regarding the updates of the different kinds of Units.
+	// Workers and combat Units are updated in an alternating fashion.
+	private enum UpdateCycle {
+		WORKER, COMBAT_UNIT
+	};
+
+	// TODO: UML ADD
+	private UpdateCycle currentUpdateCycle = UpdateCycle.WORKER;
+
 	// The HashSet(s) is / are used for displaying the content whereas the
 	// Queue(s) is / are used for updating. Not a perfect solution due to adding
 	// and removing elements from multiple Collections but functional.
@@ -39,9 +49,10 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 	private InformationStorage informationStorage;
 
+	// TODO: UML REMOVE
 	// The percentage of combat Units that are updated in one single iteration.
 	// Higher values equal a stronger impact on the CPU.
-	private double combatUnitUpdatePercentage = 0.2;
+	// private double combatUnitUpdatePercentage = 0.2;
 
 	public UnitControlModule(InformationStorage informationStorage) {
 		this.informationStorage = informationStorage;
@@ -58,15 +69,14 @@ public class UnitControlModule implements RemoveAgentEvent {
 		this.addNewTrackedUnits();
 		this.removeTrackedUnits();
 
-		// TODO: DEBUG INFO
-		// Display the targets of all registered Units.
-		for (GoapAgent goapAgent : this.agents) {
-			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
-		}
-
 		// Update the instances in the specified Queues.
-		this.updateCombatUnitQueue();
-		this.updateWorkerQueue();
+		if (this.currentUpdateCycle == UpdateCycle.COMBAT_UNIT) {
+			this.updateCombatUnitQueue();
+			this.currentUpdateCycle = UpdateCycle.WORKER;
+		} else {
+			this.updateWorkerQueue();
+			this.currentUpdateCycle = UpdateCycle.COMBAT_UNIT;
+		}
 		this.updateBuildingUnitQueue();
 
 		// Display of various information on the screen and on the map.
@@ -75,6 +85,12 @@ public class UnitControlModule implements RemoveAgentEvent {
 		}
 		if (this.informationStorage.getiUnitControlModuleConfig().enableDisplayUnitConfidence()) {
 			UnitControlDisplay.showConfidence(this.agents);
+		}
+
+		// TODO: DEBUG INFO
+		// Display the targets of all registered Units.
+		for (GoapAgent goapAgent : this.agents) {
+			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
 		}
 	}
 
@@ -133,18 +149,13 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 * Function for updating an amount of combat Units.
 	 */
 	private void updateCombatUnitQueue() {
-		int maxIterations = (int) (Math
-				.ceil((double) (this.agentUpdateQueueCombatUnits.size()) * this.combatUnitUpdatePercentage));
+		// Update a single GoapAgent from the currently stored ones and place
+		// him at the end of the Queue.
+		GoapAgent currentAgent = this.agentUpdateQueueCombatUnits.poll();
 
-		// Update a fixed percentage of combat Units and place them at the end
-		// of the Queue afterwards.
-		for (int i = 0; i < maxIterations; i++) {
-			GoapAgent currentAgent = this.agentUpdateQueueCombatUnits.poll();
-
-			if (currentAgent != null) {
-				this.updateGoapAgentProcedure(currentAgent);
-				this.agentUpdateQueueCombatUnits.add(currentAgent);
-			}
+		if (currentAgent != null) {
+			this.updateGoapAgentProcedure(currentAgent);
+			this.agentUpdateQueueCombatUnits.add(currentAgent);
 		}
 	}
 
