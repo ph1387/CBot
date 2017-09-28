@@ -474,7 +474,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		// that the enemy is right inside the base and MUST be destroyed since
 		// this is the only possible way to maybe win.
 		else if (closestCenterDistance == null) {
-			modifiedConfidence = Double.MAX_VALUE;
+			modifiedConfidence = 1.;
 		}
 
 		return modifiedConfidence;
