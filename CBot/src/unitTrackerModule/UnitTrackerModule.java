@@ -34,6 +34,11 @@ public class UnitTrackerModule {
 	// TODO: UML ADD
 	private int lastUpdateTimeStamp = 0;
 
+	// TODO: UML ADD
+	// The UnitTypes that are ignored in all tracking instances. This does
+	// include the ground / air strength as well as the health and other types!
+	private List<UnitType> ignoredUnitTypes = Arrays.asList(new UnitType[] { UnitType.Terran_Vulture_Spider_Mine });
+
 	// Tracking information
 	private HashMap<TilePosition, Integer> playerAirAttackTilePositions = new HashMap<>();
 	private HashMap<TilePosition, Integer> playerGroundAttackTilePositions = new HashMap<>();
@@ -373,38 +378,40 @@ public class UnitTrackerModule {
 
 		// Generate all Player strengths.
 		for (Unit unit : Core.getInstance().getPlayer().getUnits()) {
-			double unitHealthMultiplier = this.generateUnitMultiplier(unit);
+			if (!this.ignoredUnitTypes.contains(unit.getType())) {
+				double unitHealthMultiplier = this.generateUnitMultiplier(unit);
 
-			// TODO: Possible Change: Consider upgrades.
-			// Player Air:
-			if (unit.isCompleted() && unit.getType().airWeapon() != null
-					&& unit.getType().airWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerAir,
-						this.generateAttackGenerationInformation(unit.getType().airWeapon(), unitHealthMultiplier));
-			}
+				// TODO: Possible Change: Consider upgrades.
+				// Player Air:
+				if (unit.isCompleted() && unit.getType().airWeapon() != null
+						&& unit.getType().airWeapon().damageAmount() > 0) {
+					this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerAir,
+							this.generateAttackGenerationInformation(unit.getType().airWeapon(), unitHealthMultiplier));
+				}
 
-			// TODO: Possible Change: Consider upgrades.
-			// Player Ground:
-			if (unit.isCompleted() && unit.getType().groundWeapon() != null
-					&& unit.getType().groundWeapon().damageAmount() > 0) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerGround,
-						this.generateAttackGenerationInformation(unit.getType().groundWeapon(), unitHealthMultiplier));
-			}
+				// TODO: Possible Change: Consider upgrades.
+				// Player Ground:
+				if (unit.isCompleted() && unit.getType().groundWeapon() != null
+						&& unit.getType().groundWeapon().damageAmount() > 0) {
+					this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerGround, this
+							.generateAttackGenerationInformation(unit.getType().groundWeapon(), unitHealthMultiplier));
+				}
 
-			// TODO: Possible Change: Consider upgrades.
-			// Player Health:
-			if (unit.isCompleted()
-					&& ((unit.getType().groundWeapon() != null && unit.getType().groundWeapon().damageAmount() > 0)
-							|| (unit.getType().airWeapon() != null && unit.getType().airWeapon().damageAmount() > 0))) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerHealth,
-						this.generateHealthGenerationInformation(unit.getType(), unitHealthMultiplier));
-			}
+				// TODO: Possible Change: Consider upgrades.
+				// Player Health:
+				if (unit.isCompleted() && ((unit.getType().groundWeapon() != null
+						&& unit.getType().groundWeapon().damageAmount() > 0)
+						|| (unit.getType().airWeapon() != null && unit.getType().airWeapon().damageAmount() > 0))) {
+					this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerHealth,
+							this.generateHealthGenerationInformation(unit.getType(), unitHealthMultiplier));
+				}
 
-			// TODO: Possible Change: Consider upgrades.
-			// Player Support:
-			if (this.supportUnitTypes.contains(unit.getType()) && unit.isCompleted()) {
-				this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerSupport,
-						this.generateSupportGenerationInformation(unitHealthMultiplier));
+				// TODO: Possible Change: Consider upgrades.
+				// Player Support:
+				if (this.supportUnitTypes.contains(unit.getType()) && unit.isCompleted()) {
+					this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerSupport,
+							this.generateSupportGenerationInformation(unitHealthMultiplier));
+				}
 			}
 		}
 
@@ -428,12 +435,16 @@ public class UnitTrackerModule {
 		// Units.
 		// Units:
 		for (EnemyUnit enemyUnit : this.enemyUnits) {
-			this.generateEnemyUnitTilePositions(enemyUnit, enemyAir, enemyGround, enemyHealth, enemySupport);
+			if (!this.ignoredUnitTypes.contains(enemyUnit.getUnitType())) {
+				this.generateEnemyUnitTilePositions(enemyUnit, enemyAir, enemyGround, enemyHealth, enemySupport);
+			}
 		}
 
 		// Buildings:
 		for (EnemyUnit enemyBuilding : this.enemyBuildings) {
-			this.generateEnemyUnitTilePositions(enemyBuilding, enemyAir, enemyGround, enemyHealth, enemySupport);
+			if (!this.ignoredUnitTypes.contains(enemyBuilding.getUnitType())) {
+				this.generateEnemyUnitTilePositions(enemyBuilding, enemyAir, enemyGround, enemyHealth, enemySupport);
+			}
 		}
 
 		this.enemyAirAttackTilePositions = enemyAir;

@@ -1,7 +1,9 @@
 package unitControlModule;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import bwapi.*;
@@ -24,6 +26,13 @@ import unitControlModule.unitWrappers.RemoveAgentEvent;
 public class UnitControlModule implements RemoveAgentEvent {
 
 	private GoapAgentFactory goapAgentFactory;
+
+	// TODO: UML ADD
+	// The UnitTypes that are not going to be added to the different update sets
+	// and is therefore ignored. The GoapAgentFactory does not need to provide a
+	// GoapAgent instance for Units of this UnitType. A UnitType should only be
+	// added towards this List if it performs it's actions on it's own.
+	private List<UnitType> ignoredUnitTypes = Arrays.asList(new UnitType[] { UnitType.Terran_Vulture_Spider_Mine });
 
 	// TODO: UML ADD
 	// Information regarding the updates of the different kinds of Units.
@@ -321,7 +330,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 *            the Unit that is going to be controlled.
 	 */
 	public void addToUnitControl(Unit unit) {
-		if (unit.getPlayer() == Core.getInstance().getPlayer()) {
+		if (unit.getPlayer() == Core.getInstance().getPlayer() && !this.ignoredUnitTypes.contains(unit.getType())) {
 			this.unitsToAdd.add(unit);
 		}
 	}
@@ -333,7 +342,9 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 *            the Unit that is going to be removed.
 	 */
 	public void removeUnitFromUnitControl(Unit unit) {
-		this.unitsToRemove.add(unit);
+		if (!this.ignoredUnitTypes.contains(unit.getType())) {
+			this.unitsToRemove.add(unit);
+		}
 	}
 
 	/**
