@@ -187,7 +187,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		return this.target != null && this.checkProceduralSpecificPrecondition(goapUnit)
-				&& ((PlayerUnit) goapUnit).getClosestEnemyUnitInConfidenceRange() != null;
+				&& ((PlayerUnit) goapUnit).getAttackingEnemyUnitToReactTo() != null;
 	}
 
 	/**
@@ -207,7 +207,7 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	 */
 	private void updateVectors(IGoapUnit goapUnit) {
 		this.vecEU = this.generateVectorFromEnemyToUnit(goapUnit,
-				((PlayerUnit) goapUnit).getClosestEnemyUnitInConfidenceRange());
+				((PlayerUnit) goapUnit).getAttackingEnemyUnitToReactTo());
 		this.vecUTP = this.generateVectorUnitToRetreatPosition(this.vecEU, goapUnit);
 	}
 

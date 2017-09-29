@@ -22,7 +22,7 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Marine extends WorldStateU
 
 	@Override
 	protected void updateAbilitiyWorldState(PlayerUnit playerUnit) {
-		Unit closestEnemy = playerUnit.getClosestEnemyUnitInConfidenceRange();
+		Unit closestEnemy = playerUnit.getAttackingEnemyUnitToReactTo();
 
 		// StimPack effect
 		if (playerUnit.getUnit().isStimmed()) {

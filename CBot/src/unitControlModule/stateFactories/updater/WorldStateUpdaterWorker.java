@@ -61,7 +61,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 		// null).
 		if ((closestCenterDistance == null)
 				|| (closestCenterDistance != null && closestCenterDistance <= this.maxPixelAttackDistanceToCenter
-						&& (this.playerUnit.getClosestEnemyUnitInConfidenceRange()) != null)
+						&& (this.playerUnit.getAttackableEnemyUnitToReactTo()) != null)
 				|| (((PlayerUnitWorker) playerUnit).isAssignedToSout())) {
 			this.changeWorldStateEffect("allowFighting", true);
 		} else {
