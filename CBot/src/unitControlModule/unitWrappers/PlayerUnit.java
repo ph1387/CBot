@@ -1024,14 +1024,46 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return closestCenter;
 	}
 
+	/**
+	 * Function for defining the StateFactory that will be used to determine the
+	 * available actions, the world-and goal-states as well as the associated
+	 * updaters.
+	 * 
+	 * @return the StateFactory that will be used for this PlayerUnit instance.
+	 */
 	protected abstract StateFactory createFactory();
 
+	/**
+	 * Function for testing if the confidence of the Unit is below the set
+	 * threshold.
+	 * 
+	 * @return true if the confidence is below the set threshold, otherwise
+	 *         false.
+	 */
 	public boolean isConfidenceBelowThreshold() {
 		return this.confidence < CONFIDENCE_THRESHHOLD;
 	}
 
+	/**
+	 * Function for testing if the confidence of the Unit is above the set
+	 * threshold.
+	 * 
+	 * @return true if the confidence is above the set threshold, otherwise
+	 *         false.
+	 */
 	public boolean isConfidenceAboveThreshold() {
 		return this.confidence >= CONFIDENCE_THRESHHOLD;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for manually resetting all current actions of the PlayerUnit.
+	 * This is the equivalent of the Unit itself calling the
+	 * {@link #resetActions()} function. Therefore this function should not be
+	 * excessively used!
+	 */
+	public void manuallyResetActions() {
+		this.resetActions();
 	}
 
 	// -------------------- RetreatUnit

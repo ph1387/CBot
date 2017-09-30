@@ -1,7 +1,5 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
-import java.util.HashSet;
-
 import bwapi.Color;
 import bwapi.Pair;
 import bwapi.Position;
@@ -56,9 +54,11 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	// The distance at which isDone() returns true.
 	protected int minDistanceToGatheringPoint = 2 * Core.getInstance().getTileSize();
 
+	// TODO: UML REMOVE
 	// All generated retreat Positions. Each Unit that generates one stores it
 	// in this HashSet. When the Action is finished it is removed again.
-	protected static HashSet<Position> GatheringPoints = new HashSet<Position>();
+	// protected static HashSet<Position> GatheringPoints = new
+	// HashSet<Position>();
 
 	// Generated Positions by this specific Unit (Temporary and final).
 	protected Position generatedTempRetreatPosition = null;
@@ -94,18 +94,15 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		// Either no target is present or the retreat Position was set and the
-		// Unit is near it => Remove the Position from the Collection of retreat
-		// Positions.
-		if (this.target == null || (this.retreatPosition != null
-				&& ((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, minDistanceToGatheringPoint))) {
-			RetreatActionGeneralSuperclass.GatheringPoints.remove(this.retreatPosition);
-		}
+		boolean isNearTargetPosition = false;
 
-		// A retreat Position was set and is now no longer inside the Collection
-		// of gathering Points => Got removed.
-		return this.retreatPosition != null
-				&& !RetreatActionGeneralSuperclass.GatheringPoints.contains(this.retreatPosition);
+		// Either no target is present or the retreat Position was set and the
+		// Unit is near it.
+		if (this.target == null || (this.retreatPosition != null
+				&& ((PlayerUnit) goapUnit).isNearPosition(this.retreatPosition, this.minDistanceToGatheringPoint))) {
+			isNearTargetPosition = true;
+		}
+		return this.retreatPosition != null && isNearTargetPosition;
 	}
 
 	@Override
@@ -130,18 +127,11 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 		}
 
 		// Only override the current retreatPosition if the action trigger is
-		// set and move towards it. This enables the ability of storing the
-		// Positions inside a HashSet and moving other Units towards them
-		// instead of constantly updating them, which would result in a Unit
-		// only following them in one general direction. Once a Position is set,
-		// stick with it.
+		// set and move towards it.
 		if (this.actionChangeTrigger && this.generatedTempRetreatPosition != null) {
 			// The first ever found Position has to be added as temporary
-			// retreat Position. This ensures, that isDone() returns false and
-			// the action gets actually executed. The actual retreatPosition
-			// gets set when performAction() gets called.
+			// retreat Position.
 			this.retreatPosition = this.generatedTempRetreatPosition;
-			RetreatActionGeneralSuperclass.GatheringPoints.add(this.generatedTempRetreatPosition);
 
 			// Generate the PositionValidator for the applied retreat Position
 			// and the associated retreat cluster.
@@ -282,17 +272,27 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	@Override
 	public boolean performGrouped(IGoapUnit groupLeader, IGoapUnit groupMember) {
+		boolean success = false;
+
 		// Add the Unit to the cluster if it was missing before.
 		if (!this.retreatPositionCluster.containsRetreatUnit((RetreatUnit) groupMember)) {
 			this.retreatPositionCluster.addUnit((RetreatUnit) groupMember);
 		}
 
-		// TODO: DEBUG INFO POSITION
-		this.retreatPositionCluster.display();
+		// Reset each member separately if they arrived at the target location.
+		if (this.isDone(groupMember)) {
+			((PlayerUnit) groupMember).manuallyResetActions();
+			success = true;
+		} else {
+			// Move the Unit to it's assigned location.
+			Point position = this.retreatPositionCluster.getAssignedPosition((RetreatUnit) groupMember);
+			success = ((PlayerUnit) groupMember).getUnit().move(new Position(position.getX(), position.getY()));
 
-		// Move the Unit to it's assigned location.
-		Point position = this.retreatPositionCluster.getAssignedPosition((RetreatUnit) groupMember);
-		return ((PlayerUnit) groupMember).getUnit().move(new Position(position.getX(), position.getY()));
+			// TODO: DEBUG INFO POSITION
+			this.retreatPositionCluster.display();
+		}
+
+		return success;
 	}
 
 	@Override

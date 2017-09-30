@@ -15,8 +15,7 @@ import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocat
 public class AvailableActionsDefault extends AvailableActionsGeneral {
 
 	public AvailableActionsDefault() {
-		// TODO: WIP ENABLE
-//		this.add(this.defineScoutingAction());
+		this.add(this.defineScoutingAction());
 		this.add(new AttackMoveAction(null));
 		this.add(new AttackUnitAction(null));
 	}
