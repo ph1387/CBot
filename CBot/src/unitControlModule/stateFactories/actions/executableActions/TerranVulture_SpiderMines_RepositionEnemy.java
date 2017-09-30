@@ -29,7 +29,7 @@ public class TerranVulture_SpiderMines_RepositionEnemy extends BaseAction {
 
 	// The distance to the target Unit that is required to place a mine. If this
 	// pixel distance is exceeded the "isDone" function returns true.
-	private int minPixelDistanceToTarget = 256;
+	private int minPixelDistanceToTarget = 192;
 	// The distance to the generated Position at which a new one is being
 	// generated.
 	private int minPixelDistanceToGeneratedPosition = 32;

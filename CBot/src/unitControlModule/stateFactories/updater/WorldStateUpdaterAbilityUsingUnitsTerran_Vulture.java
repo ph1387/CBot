@@ -20,12 +20,12 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Vulture extends WorldState
 	private int enemyGroupPixelRadius = 96;
 	// The number of enemy Units that must surround the target one in order to
 	// be considered a group.
-	private int enemyGroupMinSize = 3;
+	private int enemyGroupMinSize = 2;
 
 	// The distance to other spider mines that this Unit must have in order to
 	// be allowed to place another one. This is to prevent the Unit from
 	// stacking all of it's mines on top of each other.
-	private int minDistanceToSpiderMines = 32;
+	private int minDistanceToSpiderMines = 16;
 
 	public WorldStateUpdaterAbilityUsingUnitsTerran_Vulture(PlayerUnit playerUnit) {
 		super(playerUnit);
