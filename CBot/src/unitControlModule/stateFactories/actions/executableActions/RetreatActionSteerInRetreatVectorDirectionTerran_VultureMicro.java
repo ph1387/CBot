@@ -36,7 +36,14 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 	private boolean issuedPatrolCommand = false;
 	private int turnAngle = 15;
 
+	// The distance that the enemy must be away from the executing Unit before
+	// the patrol command is issued.
 	private int minEnemyDistance = 48;
+
+	// The additional range that is added towards the executing Unit's range.
+	// The lower this value the less Unit's can be targeted by this action. This
+	// is necessary to prevent the Unit from being attacked while microing!
+	private int rangeOffset = -1;
 
 	/**
 	 * @param target
@@ -123,8 +130,9 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 		// Make sure only Units with a smaller range are considered for microing
 		// against!
 		if (this.target != null) {
-			matchingUnitTargeted = ((Unit) this.target).getType().groundWeapon().maxRange() < ((PlayerUnit) goapUnit)
-					.getUnit().getType().groundWeapon().maxRange();
+			matchingUnitTargeted = ((Unit) this.target).getType().groundWeapon()
+					.maxRange() < ((PlayerUnit) goapUnit).getUnit().getType().groundWeapon().maxRange()
+							+ this.rangeOffset;
 		}
 
 		return superPreconditions && matchingUnitTargeted;
