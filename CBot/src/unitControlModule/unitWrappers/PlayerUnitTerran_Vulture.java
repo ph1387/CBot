@@ -25,6 +25,26 @@ public class PlayerUnitTerran_Vulture extends PlayerUnitTypeRanged {
 
 	// -------------------- Functions
 
+	// TODO: UML ADD
+	/**
+	 * Removed the Action reset(s) due to them interfering with the kiting
+	 * action of the Terran_Vulture. These cause the Unit to stop and therefore
+	 * rendering the action useless.
+	 * 
+	 * @see unitControlModule.unitWrappers.PlayerUnit#updateConfidenceState()
+	 */
+	@Override
+	protected void updateConfidenceState() {
+		if (this.currentConfidenceState == ConfidenceState.UNDER_THRESHOLD
+				&& this.confidence >= CONFIDENCE_THRESHHOLD) {
+			this.currentConfidenceState = ConfidenceState.ABOVE_THRESHOLD;
+		} else if (this.currentConfidenceState == ConfidenceState.ABOVE_THRESHOLD
+				&& this.confidence < CONFIDENCE_THRESHHOLD) {
+			this.currentConfidenceState = ConfidenceState.UNDER_THRESHOLD;
+			this.resetActions();
+		}
+	}
+
 	@Override
 	protected double generateConfidence() {
 		double generatedConfidence = super.generateConfidence();
