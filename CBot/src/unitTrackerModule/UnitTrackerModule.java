@@ -477,46 +477,43 @@ public class UnitTrackerModule {
 	private void generateEnemyUnitTilePositions(EnemyUnit enemyUnit, HashMap<TilePosition, Integer> enemyAir,
 			HashMap<TilePosition, Integer> enemyGround, HashMap<TilePosition, Integer> enemyHealth,
 			HashMap<TilePosition, Integer> enemySupport) {
+		// TODO: Possible Change: Consider upgrades. (+ Health and support!)
+		boolean enemyIsKnownOf = enemyUnit.getUnit().isVisible() && enemyUnit.getUnit().isCompleted()
+				|| !enemyUnit.getUnit().isVisible();
+		boolean hasValidGroundWeapon = enemyUnit.getUnitType().groundWeapon() != null
+				&& enemyUnit.getUnitType().groundWeapon().damageAmount() > 0;
+		boolean hasValidAirWeapon = enemyUnit.getUnitType().airWeapon() != null
+				&& enemyUnit.getUnitType().airWeapon().damageAmount() > 0;
 		double unitHealthMultiplier;
 
-		// Unit can currently not be seen.
-		if (enemyUnit.getUnit() == null) {
-			unitHealthMultiplier = this.generateEnemyUnitMultiplier(enemyUnit);
-		} else {
+		// Generate different multipliers based on the visibility of the enemy
+		// Unit.
+		if (enemyUnit.getUnit().isVisible()) {
 			unitHealthMultiplier = this.generateUnitMultiplier(enemyUnit.getUnit());
+		} else {
+			unitHealthMultiplier = this.generateEnemyUnitMultiplier(enemyUnit);
 		}
 
-		// TODO: Possible Change: Consider upgrades.
 		// Enemy Air:
-		if (enemyUnit.getUnitType().airWeapon() != null && enemyUnit.getUnitType().airWeapon().damageAmount() > 0
-				&& enemyUnit.getUnit().isCompleted()) {
+		if (hasValidAirWeapon && enemyIsKnownOf) {
 			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyAir, this
 					.generateAttackGenerationInformation(enemyUnit.getUnitType().airWeapon(), unitHealthMultiplier));
 		}
 
-		// TODO: Possible Change: Consider upgrades.
 		// Enemy Ground:
-		if (enemyUnit.getUnitType().groundWeapon() != null && enemyUnit.getUnitType().groundWeapon().damageAmount() > 0
-				&& enemyUnit.getUnit().isCompleted()) {
+		if (hasValidGroundWeapon && enemyIsKnownOf) {
 			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyGround, this
 					.generateAttackGenerationInformation(enemyUnit.getUnitType().groundWeapon(), unitHealthMultiplier));
 		}
 
-		// TODO: Possible Change: Consider upgrades.
 		// Enemy Health:
-		if (((enemyUnit.getUnit() != null && enemyUnit.getUnit().isCompleted()) || enemyUnit == null)
-				&& ((enemyUnit.getUnitType().groundWeapon() != null
-						&& enemyUnit.getUnitType().groundWeapon().damageAmount() > 0)
-						|| (enemyUnit.getUnitType().airWeapon() != null
-								&& enemyUnit.getUnitType().airWeapon().damageAmount() > 0))) {
+		if (enemyIsKnownOf && (hasValidGroundWeapon || hasValidAirWeapon)) {
 			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyHealth,
 					this.generateHealthGenerationInformation(enemyUnit.getUnitType(), unitHealthMultiplier));
 		}
 
-		// TODO: Possible Change: Consider upgrades.
 		// Enemy Support:
-		if (((enemyUnit.getUnit() != null && enemyUnit.getUnit().isCompleted()) || enemyUnit == null)
-				&& this.supportUnitTypes.contains(enemyUnit.getUnitType())) {
+		if (enemyIsKnownOf && this.supportUnitTypes.contains(enemyUnit.getUnitType())) {
 			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemySupport,
 					this.generateSupportGenerationInformation(unitHealthMultiplier));
 		}

@@ -23,7 +23,8 @@ public class EnemyUnit {
 	 *            the TilePosition the unit was last seen at.
 	 * @param unit
 	 *            the unit which was seen. -> If the unit is in the fog of war
-	 *            this value becomes null.
+	 *            values returned by this reference are most likely obfuscated /
+	 *            distorted!
 	 * @param timestampLastSeen
 	 *            the time the unit was last seen.
 	 */
