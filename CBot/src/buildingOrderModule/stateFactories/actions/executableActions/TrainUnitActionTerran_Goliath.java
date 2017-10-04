@@ -27,6 +27,8 @@ public class TrainUnitActionTerran_Goliath extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Machine_Units);
 
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Factory);
+		
+		this.addToGameStates(GameState.SpecificUnit_Terran_Goliath);
 	}
 
 	// -------------------- Functions

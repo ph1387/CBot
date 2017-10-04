@@ -1,8 +1,11 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
+import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.ScoreGeneratorGradualChangeMax;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 
+// TODO: UML PACKAGE
 /**
  * ScoreGeneratorGradualChangeTarget.java --- A {@link ScoreGenerator} applying
  * a constant rate to an existing score targeting a specific value. The

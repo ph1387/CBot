@@ -3,6 +3,7 @@ package buildingOrderModule.scoringDirector.ScoreGenerator;
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.ScoreGeneratorGradualChangeMaxReset;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 

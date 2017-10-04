@@ -1,8 +1,11 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.fixed;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorDefault;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 
+// TODO: UML PACKAGE
 /**
  * ScoreGeneratorFixed.java --- A {@link ScoreGenerator} based on returning a
  * fixed value as score.

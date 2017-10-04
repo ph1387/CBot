@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
-import buildingOrderModule.scoringDirector.ScoringDirectorTerranDefault;
+import buildingOrderModule.scoringDirector.ScoringDirectorTerranMachines;
 import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.simulator.TypeWrapper;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueueTerran;
@@ -454,7 +454,7 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 
 	@Override
 	protected ScoringDirector defineScoringDirector() {
-		return new ScoringDirectorTerranDefault(this.buildActionManager);
+		return new ScoringDirectorTerranMachines(this.buildActionManager);
 	}
 
 }

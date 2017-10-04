@@ -2,6 +2,7 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 
+// TODO: UML ORDER
 /**
  * ScoreGeneratorFactory.java --- A Interface defining a factory for
  * {@link ScoreGenerator}s (Abstract Factory Pattern). </br>
@@ -13,23 +14,13 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
  */
 public interface ScoreGeneratorFactory {
 
+	// -------------------- Macro: General behavior of the Bot.
+
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for expansion.
 	 */
 	public ScoreGenerator generateExpansionFocusedScoreGenerator();
-
-	/**
-	 *
-	 * @return a {@link ScoreGenerator} for technologies.
-	 */
-	public ScoreGenerator generateTechnologyFocusedScoreGenerator();
-
-	/**
-	 *
-	 * @return a {@link ScoreGenerator} for upgrades.
-	 */
-	public ScoreGenerator generateUpgradeFocusedScoreGenerator();
 
 	/**
 	 *
@@ -109,6 +100,66 @@ public interface ScoreGeneratorFactory {
 	 */
 	public ScoreGenerator generateHealerScoreGenerator();
 
+	// ------------------------------ Technologies
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for technologies.
+	 */
+	public ScoreGenerator generateTechnologyFocusedScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for researching machine Unit
+	 *         technologies.
+	 */
+	public ScoreGenerator generateResearchMachinesScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for researching bio Unit technologies.
+	 */
+	public ScoreGenerator generateResearchBioScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for researching flying Unit
+	 *         technologies.
+	 */
+	public ScoreGenerator generateResearchFlyingScoreGenerator();
+
+	// ------------------------------ Upgrades
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for upgrades.
+	 */
+	public ScoreGenerator generateUpgradeFocusedScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for upgrading machine Units.
+	 */
+	public ScoreGenerator generateUpgradesMachinesScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for upgrading bio Units.
+	 */
+	public ScoreGenerator generateUpgradesBioScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for upgrading flying Units.
+	 */
+	public ScoreGenerator generateUpgradesFlyingScoreGenerator();
+
+	// -------------------- Micro: Targeted at specific features.
+
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for free training facilities (In a
@@ -124,5 +175,35 @@ public interface ScoreGeneratorFactory {
 	 *         the score.
 	 */
 	public ScoreGenerator generateIdleTrainingFacilityScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for specific TechTypes.
+	 */
+	public ScoreGenerator generateSpecificTechScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for specific UpgradeTypes.
+	 */
+	public ScoreGenerator generateSpecificUpgradeScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for specific UnitTypes.
+	 */
+	public ScoreGenerator generateSpecificUnitScoreGenerator();
+
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return a {@link ScoreGenerator} for specific improvement facilities
+	 *         which are used to either research new technologies or upgrade
+	 *         existing ones.
+	 */
+	public ScoreGenerator generateSpecificImprovementFacilityGenerator();
 
 }

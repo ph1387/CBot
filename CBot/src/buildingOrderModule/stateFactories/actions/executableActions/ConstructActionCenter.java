@@ -24,8 +24,6 @@ public class ConstructActionCenter extends ConstructBaseAction {
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Expansion_Focused);
 		this.addToGameStates(GameState.Expensive_Units);
-		
-		this.addToGameStates(GameState.IdleTrainingFacility_Center);
 	}
 
 	// -------------------- Functions

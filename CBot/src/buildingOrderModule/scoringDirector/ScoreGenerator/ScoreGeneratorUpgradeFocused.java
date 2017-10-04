@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.function.BiConsumer;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.ScoreGeneratorGradualChangeMaxReset;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UpgradeType;
 

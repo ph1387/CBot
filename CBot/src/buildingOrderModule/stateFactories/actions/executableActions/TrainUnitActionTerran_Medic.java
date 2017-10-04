@@ -26,6 +26,8 @@ public class TrainUnitActionTerran_Medic extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Healer_Units);
 
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Barracks);
+		
+		this.addToGameStates(GameState.SpecificUnit_Terran_Medic);
 	}
 
 	// -------------------- Functions

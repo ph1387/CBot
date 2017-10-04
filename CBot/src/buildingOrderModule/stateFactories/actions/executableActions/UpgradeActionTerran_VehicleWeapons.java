@@ -25,6 +25,9 @@ public class UpgradeActionTerran_VehicleWeapons extends UpgradeBaseAction {
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Machine_Units);
 		this.addToGameStates(GameState.Upgrade_Focused);
+		
+		this.addToGameStates(GameState.UpgradeMachineUnits);
+		this.addToGameStates(GameState.SpecificUpgrade_Terran_Vehicle_Weapons);
 	}
 
 	// -------------------- Functions

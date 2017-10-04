@@ -29,6 +29,8 @@ public class TrainUnitActionTerran_ScienceVessel extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Flying_Units);
 
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Starport);
+		
+		this.addToGameStates(GameState.SpecificUnit_Terran_Siege_Tank_Tank_Mode);
 	}
 
 	// -------------------- Functions

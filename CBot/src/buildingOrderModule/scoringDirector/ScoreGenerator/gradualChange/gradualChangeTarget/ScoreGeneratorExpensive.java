@@ -1,7 +1,10 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 
+//TODO: UML MARK
+@Deprecated
 /**
  * ScoreGeneratorExpensive.java --- A {@link ScoreGenerator} regarding expensive
  * Units.

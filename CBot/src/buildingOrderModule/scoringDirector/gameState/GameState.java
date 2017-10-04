@@ -2,7 +2,9 @@ package buildingOrderModule.scoringDirector.gameState;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
+import bwapi.TechType;
 import bwapi.UnitType;
+import bwapi.UpgradeType;
 import core.Core;
 
 /**
@@ -63,15 +65,97 @@ public abstract class GameState {
 	public static final GameState IdleTrainingFacility_Terran_Starport = new GameStateUnits_TrainingFacilitiesIdle(
 			UnitType.Terran_Starport);
 
+	// GameStates focused on researching technologies in a specific field. I.e.
+	// technologies for machine Units.
+	// TODO: UML ADD
+	public static final GameState ResearchBioUnits = new GameStateResearch_BioUnits();
+	// TODO: UML ADD
+	public static final GameState ResearchMachineUnits = new GameStateResearch_MachineUnits();
+	// TODO: UML ADD
+	public static final GameState ResearchFlyingUnits = new GameStateResearch_FlyingUnits();
+
+	// GameStates focused on upgrading properties in a specific field. I.e.
+	// upgrades for machine Units.
+	// TODO: UML ADD
+	public static final GameState UpgradeBioUnits = new GameStateUpgrade_BioUnits();
+	// TODO: UML ADD
+	public static final GameState UpgradeMachineUnits = new GameStateUpgrade_MachineUnits();
+	// TODO: UML ADD
+	public static final GameState UpgradeFlyingUnits = new GameStateUpgrade_FlyingUnits();
+
+	// Specific GameStates for different Terran Units, Upgrades, Technologies
+	// and improvement facilities.
+	// Units:
+	// TODO: UML ADD
+	public static final GameState SpecificUnit_Terran_Goliath = new GameStateSpecific_Unit(UnitType.Terran_Goliath);
+	// TODO: UML ADD
+	public static final GameState SpecificUnit_Terran_Marine = new GameStateSpecific_Unit(UnitType.Terran_Marine);
+	// TODO: UML ADD
+	public static final GameState SpecificUnit_Terran_Medic = new GameStateSpecific_Unit(UnitType.Terran_Medic);
+	// TODO: UML ADD
+	public static final GameState SpecificUnit_Terran_Science_Vessel = new GameStateSpecific_Unit(
+			UnitType.Terran_Science_Vessel);
+	// TODO: UML ADD
+	public static final GameState SpecificUnit_Terran_Siege_Tank_Tank_Mode = new GameStateSpecific_Unit(
+			UnitType.Terran_Siege_Tank_Tank_Mode);
+	// TODO: UML ADD
+	public static final GameState SpecificUnit_Terran_Vulture = new GameStateSpecific_Unit(UnitType.Terran_Vulture);
+	// TODO: UML ADD
+	public static final GameState SpecificUnit_Terran_Wraith = new GameStateSpecific_Unit(UnitType.Terran_Wraith);
+	// Upgrades:
+	// TODO: UML ADD
+	public static final GameState SpecificUpgrade_Terran_Infantry_Armor = new GameStateSpecific_Upgrade(
+			UpgradeType.Terran_Infantry_Armor);
+	// TODO: UML ADD
+	public static final GameState SpecificUpgrade_Terran_Infantry_Weapons = new GameStateSpecific_Upgrade(
+			UpgradeType.Terran_Infantry_Weapons);
+	// TODO: UML ADD
+	public static final GameState SpecificUpgrade_Terran_Vehicle_Plating = new GameStateSpecific_Upgrade(
+			UpgradeType.Terran_Vehicle_Plating);
+	// TODO: UML ADD
+	public static final GameState SpecificUpgrade_Terran_Vehicle_Weapons = new GameStateSpecific_Upgrade(
+			UpgradeType.Terran_Vehicle_Weapons);
+	// TODO: UML ADD
+	public static final GameState SpecificUpgrade_Ion_Thrusters = new GameStateSpecific_Upgrade(
+			UpgradeType.Ion_Thrusters);
+	// TODO: UML ADD
+	public static final GameState SpecificUpgrade_Charon_Boosters = new GameStateSpecific_Upgrade(
+			UpgradeType.Charon_Boosters);
+	// TODO: UML ADD
+	public static final GameState SpecificUpgrade_U_238_Shells = new GameStateSpecific_Upgrade(
+			UpgradeType.U_238_Shells);
+	// Technologies:
+	// TODO: UML ADD
+	public static final GameState SpecificTech_Stim_Packs = new GameStateSpecific_Tech(TechType.Stim_Packs);
+	// TODO: UML ADD
+	public static final GameState SpecificTech_Tank_Siege_Mode = new GameStateSpecific_Tech(TechType.Tank_Siege_Mode);
+	// TODO: UML ADD
+	public static final GameState SpecificTech_Spider_Mines = new GameStateSpecific_Tech(TechType.Spider_Mines);
+	// Improvement facilities:
+	// TODO: UML ADD
+	public static final GameState SpecificImprovementFacility_Terran_Academy = new GameStateSpecific_ImprovementFacility(
+			UnitType.Terran_Academy);
+	// TODO: UML ADD
+	public static final GameState SpecificImprovementFacility_Terran_Engineering_Bay = new GameStateSpecific_ImprovementFacility(
+			UnitType.Terran_Engineering_Bay);
+	// TODO: UML ADD
+	public static final GameState SpecificImprovementFacility_Terran_Science_Facility = new GameStateSpecific_ImprovementFacility(
+			UnitType.Terran_Science_Facility);
+	// TODO: UML ADD
+	public static final GameState SpecificImprovementFacility_Terran_Armory = new GameStateSpecific_ImprovementFacility(
+			UnitType.Terran_Armory);
+
 	// The current score this state holds.
 	private double currentScore = 0.;
 	// The number of times the state is going to be divided.
 	private int currentDivider = 1;
-	// The frame time stamp of the last score / divider update.
+	// The frame time stamp of the last score update.
 	protected int lastUpdateTimeStampScore = 0;
+	// The frames that have passed since the last score update.
 	protected int updateFramesPassedScore = 0;
-	// The frame time stamp of the last score / divider update.
+	// The frame time stamp of the last divider update.
 	protected int lastUpdateTimeStampDivider = 0;
+	// The frames that have passed since the last divider update.
 	protected int updateFramesPassedDivider = 0;
 
 	public GameState() {

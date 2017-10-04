@@ -24,8 +24,15 @@ public class ConstructActionTerran_Armory extends ConstructBaseAction {
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Machine_Units);
+		this.addToGameStates(GameState.Flying_Units);
 		this.addToGameStates(GameState.Expensive_Units);
 		this.addToGameStates(GameState.Upgrade_Focused);
+		
+		this.addToGameStates(GameState.ResearchMachineUnits);
+		this.addToGameStates(GameState.UpgradeMachineUnits);
+		this.addToGameStates(GameState.ResearchFlyingUnits);
+		this.addToGameStates(GameState.UpgradeFlyingUnits);
+		this.addToGameStates(GameState.SpecificImprovementFacility_Terran_Armory);
 	}
 
 	// -------------------- Functions

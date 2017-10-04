@@ -1,11 +1,20 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorDefault;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 
+//TODO: UML PACKAGE
 /**
  * ScoreGeneratorGradualChange.java --- A {@link ScoreGenerator} applying a
- * constant rate to an existing score.
+ * constant rate to an existing score. <br>
+ * <b>Note:</b> <br>
+ * Instances of this class used in for generating scores <b>must</b> be saved!
+ * This is due to them relying on the {@link #extraFramesFromLastIteration}
+ * field which keeps the score from not changing at all when the required frame
+ * difference is not met. The frames, that are not used, are stored in this
+ * reference and are applied to the next iteration!
  * 
  * @author P H - 15.09.2017
  *

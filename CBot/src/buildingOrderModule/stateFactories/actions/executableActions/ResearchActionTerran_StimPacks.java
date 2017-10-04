@@ -24,6 +24,9 @@ public class ResearchActionTerran_StimPacks extends ResearchBaseAction {
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Bio_Units);
 		this.addToGameStates(GameState.Technology_Focused);
+		
+		this.addToGameStates(GameState.ResearchBioUnits);
+		this.addToGameStates(GameState.SpecificTech_Stim_Packs);
 	}
 
 	// -------------------- Functions

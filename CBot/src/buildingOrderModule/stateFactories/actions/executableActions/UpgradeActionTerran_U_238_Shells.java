@@ -25,6 +25,9 @@ public class UpgradeActionTerran_U_238_Shells extends UpgradeBaseAction {
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Bio_Units);
 		this.addToGameStates(GameState.Upgrade_Focused);
+		
+		this.addToGameStates(GameState.UpgradeBioUnits);
+		this.addToGameStates(GameState.SpecificUpgrade_U_238_Shells);
 	}
 
 	// -------------------- Functions

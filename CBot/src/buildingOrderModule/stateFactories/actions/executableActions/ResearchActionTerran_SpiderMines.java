@@ -25,6 +25,9 @@ public class ResearchActionTerran_SpiderMines extends ResearchBaseAction {
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Machine_Units);
 		this.addToGameStates(GameState.Technology_Focused);
+		
+		this.addToGameStates(GameState.ResearchMachineUnits);
+		this.addToGameStates(GameState.SpecificTech_Spider_Mines);
 	}
 
 	// -------------------- Functions

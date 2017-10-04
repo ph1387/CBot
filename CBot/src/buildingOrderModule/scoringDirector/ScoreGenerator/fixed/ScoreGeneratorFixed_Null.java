@@ -1,6 +1,7 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.fixed;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 
 /**
  * ScoreGeneratorFixed_Null.java --- A {@link ScoreGenerator} returning zero as

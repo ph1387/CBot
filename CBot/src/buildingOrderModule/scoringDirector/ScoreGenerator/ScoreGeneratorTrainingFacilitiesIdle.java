@@ -36,19 +36,19 @@ public class ScoreGeneratorTrainingFacilitiesIdle extends ScoreGeneratorDefault 
 	public int generateDivider(GameState gameState, int framesPassed) {
 		int divider = 0;
 
-		if (gameState instanceof GameStateUnits_TrainingFacilitiesIdle) {
+		try {
 			UnitType facilityType = ((GameStateUnits_TrainingFacilitiesIdle) gameState).getFacilityType();
 			HashSet<Unit> facilities = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
-					.get(facilityType);
+					.getOrDefault(facilityType, new HashSet<Unit>());
 
 			// Count the idling facilities.
-			if (facilities != null) {
-				for (Unit facility : facilities) {
-					if (!facility.isTraining()) {
-						divider++;
-					}
+			for (Unit facility : facilities) {
+				if (!facility.isTraining()) {
+					divider++;
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return divider;

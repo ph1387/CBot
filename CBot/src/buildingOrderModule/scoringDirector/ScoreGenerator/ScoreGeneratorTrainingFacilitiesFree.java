@@ -31,19 +31,19 @@ public class ScoreGeneratorTrainingFacilitiesFree extends ScoreGeneratorDefault 
 	public double generateScore(GameState gameState, int framesPassed) {
 		double score = 0.;
 
-		if (gameState instanceof GameStateUnits_TrainingFacilitiesFree) {
+		try {
 			UnitType facilityType = ((GameStateUnits_TrainingFacilitiesFree) gameState).getFacilityType();
 			HashSet<Unit> facilities = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
-					.get(facilityType);
+					.getOrDefault(facilityType, new HashSet<Unit>());
 
 			// Count the idling facilities.
-			if (facilities != null) {
-				for (Unit facility : facilities) {
-					if (!facility.isTraining()) {
-						score++;
-					}
+			for (Unit facility : facilities) {
+				if (!facility.isTraining()) {
+					score++;
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return score;

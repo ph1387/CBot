@@ -1,9 +1,10 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.proportion;
 
 import java.util.Arrays;
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import bwapi.UnitType;
 
 /**

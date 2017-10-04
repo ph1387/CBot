@@ -24,6 +24,10 @@ public class ConstructActionTerran_EngineeringBay extends ConstructBaseAction {
 		this.addToGameStates(GameState.Mineral_Units);
 		this.addToGameStates(GameState.Bio_Units);
 		this.addToGameStates(GameState.Upgrade_Focused);
+		
+		this.addToGameStates(GameState.ResearchBioUnits);
+		this.addToGameStates(GameState.UpgradeBioUnits);
+		this.addToGameStates(GameState.SpecificImprovementFacility_Terran_Engineering_Bay);
 	}
 
 	// -------------------- Functions

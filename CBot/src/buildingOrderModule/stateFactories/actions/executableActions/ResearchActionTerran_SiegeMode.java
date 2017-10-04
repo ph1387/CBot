@@ -24,6 +24,9 @@ public class ResearchActionTerran_SiegeMode extends ResearchBaseAction {
 		this.addToGameStates(GameState.Gas_Units);
 		this.addToGameStates(GameState.Machine_Units);
 		this.addToGameStates(GameState.Technology_Focused);
+		
+		this.addToGameStates(GameState.ResearchMachineUnits);
+		this.addToGameStates(GameState.SpecificTech_Tank_Siege_Mode);
 	}
 
 	// -------------------- Functions

@@ -27,6 +27,9 @@ public class BuildAddonTerran_ControlTower extends BuildAddonBaseAction {
 		this.addToGameStates(GameState.Flying_Units);
 		this.addToGameStates(GameState.Upgrade_Focused);
 		this.addToGameStates(GameState.Technology_Focused);
+		
+		this.addToGameStates(GameState.UpgradeFlyingUnits);
+		this.addToGameStates(GameState.ResearchFlyingUnits);
 	}
 
 	// -------------------- Functions

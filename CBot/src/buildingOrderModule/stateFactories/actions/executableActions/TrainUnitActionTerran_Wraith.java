@@ -27,6 +27,8 @@ public class TrainUnitActionTerran_Wraith extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Flying_Units);
 
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Starport);
+		
+		this.addToGameStates(GameState.SpecificUnit_Terran_Wraith);
 	}
 
 	// -------------------- Functions
