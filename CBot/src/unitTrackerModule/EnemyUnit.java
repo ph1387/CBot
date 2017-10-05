@@ -37,6 +37,18 @@ public class EnemyUnit {
 
 	// -------------------- Functions
 
+	// TODO: UML ADD
+	/**
+	 * Function for testing if an EnemyUnit is invulnerable. This is the case if
+	 * the Unit is burrowed or cloaked and no detector Unit is near it.
+	 * Therefore the Player's Units are unable to attack it => Invulnerable.
+	 * 
+	 * @return
+	 */
+	public boolean isInvulnerable() {
+		return (this.unit.isBurrowed() || this.unit.isCloaked()) && !this.unit.isDetected();
+	}
+
 	// -------------------- Getter / Setter
 
 	public TilePosition getLastSeenTilePosition() {

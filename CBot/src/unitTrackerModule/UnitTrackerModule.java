@@ -66,6 +66,12 @@ public class UnitTrackerModule {
 	private InformationStorage informationStorage;
 
 	// TODO: UML ADD
+	// The multiplier for either cloaked or burrowed Units that are not detected
+	// by a detector Unit. Therefore the Player's Units are unable to attack
+	// them.
+	private double invulnerableMultiplier = 5.0;
+
+	// TODO: UML ADD
 	// The multiplier that is applied to the enemy buildings that have a weapon.
 	// This is needed since stationary turrets etc. must NOT be rushed into!
 	private double buildingMultiplier = 2.5;
@@ -534,6 +540,8 @@ public class UnitTrackerModule {
 			multiplier *= this.buildingMultiplier;
 		} else if (enemyUnit.getUnitType().isWorker()) {
 			multiplier *= this.workerMultiplier;
+		} else if (enemyUnit.isInvulnerable()) {
+			multiplier *= this.invulnerableMultiplier;
 		}
 
 		return multiplier;
@@ -565,6 +573,11 @@ public class UnitTrackerModule {
 			// The Unit has no shield and only its health matters.
 			else {
 				multiplier = (double) (unit.getHitPoints()) / (double) (unit.getType().maxHitPoints());
+			}
+
+			// The Unit can not be targeted by the Player's Units.
+			if ((unit.isBurrowed() || unit.isCloaked()) && !unit.isDetected()) {
+				multiplier += this.invulnerableMultiplier;
 			}
 		}
 
