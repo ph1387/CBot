@@ -155,8 +155,10 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 
 			// Extract all currently relevant information.
 			int currentFrameTimeStamp = Core.getInstance().getGame().getFrameCount();
-			int currentMinerals = Core.getInstance().getPlayer().minerals();
-			int currentGas = Core.getInstance().getPlayer().gas();
+			int currentMinerals = Core.getInstance().getPlayer().minerals()
+					- manager.getInformationStorage().getResourceReserver().getReservedMinerals();
+			int currentGas = Core.getInstance().getPlayer().gas()
+					- manager.getInformationStorage().getResourceReserver().getReservedGas();
 			UnitType workerUnitType = Core.getInstance().getPlayer().getRace().getWorker();
 			List<Unit> units = Core.getInstance().getPlayer().getUnits();
 
