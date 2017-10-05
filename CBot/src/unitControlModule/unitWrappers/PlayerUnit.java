@@ -973,7 +973,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		WeaponType groundWeapon = this.unit.getType().groundWeapon();
 		WeaponType airWeapon = this.unit.getType().airWeapon();
 
-		return !unit.isCloaked()
+		return !isInvulnerable(unit)
 				&& ((groundWeapon.targetsGround() && !unit.isFlying()) || (airWeapon.targetsAir() && unit.isFlying()));
 	}
 
