@@ -15,6 +15,7 @@ import core.Core;
 import informationStorage.CurrentGameInformation;
 import informationStorage.InformationStorage;
 import informationStorage.UnitTrackerInformation;
+import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
  * UnitTrackerModule.java --- Module for tracking enemy units and storing
@@ -540,7 +541,7 @@ public class UnitTrackerModule {
 			multiplier *= this.buildingMultiplier;
 		} else if (enemyUnit.getUnitType().isWorker()) {
 			multiplier *= this.workerMultiplier;
-		} else if (enemyUnit.isInvulnerable()) {
+		} else if (PlayerUnit.isInvulnerable(enemyUnit.getUnit())) {
 			multiplier *= this.invulnerableMultiplier;
 		}
 

@@ -473,7 +473,11 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		// with all force possible since no center remains. This probably means
 		// that the enemy is right inside the base and MUST be destroyed since
 		// this is the only possible way to maybe win.
-		else if (closestCenterDistance == null) {
+		// OR
+		// If the Unit is invulnerable (No enemy is able to attack it) then set
+		// the confidence to 1.0 since it can do whatever it wants (More
+		// specifically can attack whatever it wants!).
+		else if (closestCenterDistance == null || this.isInvulnerable()) {
 			modifiedConfidence = 1.;
 		}
 
@@ -1064,6 +1068,35 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 */
 	public void manuallyResetActions() {
 		this.resetActions();
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if the Unit itself is currently invulnerable. This
+	 * is the case if the Unit is burrowed or cloaked and no enemy detector Unit
+	 * is near it. Therefore no enemies are able to attack it => Invulnerable.
+	 * 
+	 * @return true if the Unit is invulnerable and not attackable, false if
+	 *         not.
+	 */
+	public boolean isInvulnerable() {
+		return isInvulnerable(this.unit);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if an Unit is currently invulnerable. This is the
+	 * case if the Unit is burrowed or cloaked and no detector Unit of the other
+	 * Player is near it. Therefore no enemies are able to attack it =>
+	 * Invulnerable.
+	 * 
+	 * @param unit
+	 *            the Unit that is going to be checked.
+	 * @return true if the Unit is invulnerable and not attackable, false if
+	 *         not.
+	 */
+	public static boolean isInvulnerable(Unit unit) {
+		return (unit.isBurrowed() || unit.isCloaked()) && !unit.isDetected();
 	}
 
 	// -------------------- RetreatUnit
