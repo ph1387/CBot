@@ -44,8 +44,9 @@ public class Simulator {
 	// The amount each ActionType may be used in the simulation.
 	private HashMap<ActionType, Integer> maxActionTypesOccurrences;
 
+	// TODO: UML CHANGE 100
 	// The maximum number of Nodes in a layer.
-	private int layerNodesMaxCount = 100;
+	private int layerNodesMaxCount = 10;
 	// The maximum size of an action sequence. Necessary since the while loop
 	// could otherwise lead to extremely long cycles.
 	private int actionSequenceMaxSize = 6;
