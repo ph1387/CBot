@@ -19,7 +19,8 @@ import bwapi.UpgradeType;
 public class ScoreGeneratorUpgradeFocused extends ScoreGeneratorGradualChangeMaxReset {
 
 	private static double DefaultRate = 0.1;
-	private static double DefaultFrameDiff = 200;
+	// TODO: UML CHANGE 200
+	private static double DefaultFrameDiff = 400;
 	private static double DefaultResetValue = 0.;
 
 	// The number of upgrades performed by the Bot.

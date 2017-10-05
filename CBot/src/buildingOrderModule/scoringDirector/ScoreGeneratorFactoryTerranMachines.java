@@ -5,8 +5,8 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_Null;
 import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_One;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorFlying;
-import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseFast;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseSlow;
+import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseVerySlow;
 import buildingOrderModule.scoringDirector.ScoreGenerator.proportion.ScoreGeneratorHealerTerran;
 import buildingOrderModule.scoringDirector.ScoreGenerator.proportion.ScoreGeneratorSupportTerran;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificImprovementFacilityTerranMachines;
@@ -39,10 +39,10 @@ public class ScoreGeneratorFactoryTerranMachines extends ScoreGeneratorFactoryTe
 		super(manager);
 
 		this.scoreGeneratorFlying = new ScoreGeneratorFlying(this.manager);
-		this.scoreGeneratorResearchMachines = new ScoreGeneratorIncreaseFast(this.manager);
-		this.scoreGeneratorResearchFlying = new ScoreGeneratorIncreaseSlow(this.manager);
-		this.scoreGeneratorUpgradeMachines = new ScoreGeneratorIncreaseFast(this.manager);
-		this.scoreGeneratorUpgradeFlying = new ScoreGeneratorIncreaseSlow(this.manager);
+		this.scoreGeneratorResearchMachines = new ScoreGeneratorIncreaseSlow(this.manager);
+		this.scoreGeneratorResearchFlying = new ScoreGeneratorIncreaseVerySlow(this.manager);
+		this.scoreGeneratorUpgradeMachines = new ScoreGeneratorIncreaseSlow(this.manager);
+		this.scoreGeneratorUpgradeFlying = new ScoreGeneratorIncreaseVerySlow(this.manager);
 
 		this.scoreGeneratorSpecificTech = new ScoreGeneratorSpecificTechTerranMachines(this.manager);
 		this.scoreGeneratorSpecificUpgrade = new ScoreGeneratorSpecificUpgradeTerranMachines(this.manager);
