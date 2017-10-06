@@ -29,6 +29,7 @@ public class FollowActionTerran_ScienceVessel extends FollowAction {
 		super(target);
 
 		this.addEffect(new GoapState(0, "isNearSupportableUnit", true));
+		this.addEffect(new GoapState(0, "isFollowingUnit", true));
 		this.addPrecondition(new GoapState(0, "isNearSupportableUnit", false));
 	}
 

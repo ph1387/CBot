@@ -14,5 +14,6 @@ public class UnitWorldStateAbilityUsingUnitsTerran_ScienceVessel extends UnitWor
 
 	public UnitWorldStateAbilityUsingUnitsTerran_ScienceVessel() {
 		this.add(new GoapState(0, "isNearSupportableUnit", false));
+		this.add(new GoapState(0, "isFollowingUnit", false));
 	}
 }
