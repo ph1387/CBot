@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
 import javaGOAP.GoapState;
+import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_ScienceVessel;
 
 // TODO: UML ADD
@@ -21,6 +22,8 @@ public class FollowActionTerran_ScienceVessel extends FollowAction {
 	/**
 	 * @param target
 	 *            type: Unit
+	 * @param followActionTerran_ScienceVesselStorage
+	 *            the shared storage Class for the action itself.
 	 */
 	public FollowActionTerran_ScienceVessel(Object target) {
 		super(target);
@@ -35,5 +38,20 @@ public class FollowActionTerran_ScienceVessel extends FollowAction {
 	protected int defineDistanceToTarget() {
 		return PlayerUnitTerran_ScienceVessel.getSupportPixelDistance();
 	}
+
+	// TODO: UML ADD OVERRIDE
+	@Override
+	protected void resetSpecific() {
+		// Remove any Units that this one might be following from the shared
+		// storage as well as the Science_Vessel itself.
+		if (this.currentlyExecutingUnit != null) {
+			PlayerUnit playerUnit = (PlayerUnit) this.currentlyExecutingUnit;
+			playerUnit.getInformationStorage().getScienceVesselStorage().unfollowUnit(playerUnit.getUnit());
+		}
+
+		super.resetSpecific();
+	}
+
+	// ------------------------------ Getter / Setter
 
 }

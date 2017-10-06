@@ -43,7 +43,13 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 			this.initializationMissing = false;
 		}
 
-		this.followActionTerran_ScienceVessel.setTarget(this.getClosestSupportableUnit(playerUnit));
+		// Renew the mapping of the followed Unit from the last iteration since
+		// the target of the follow action may change!
+		this.playerUnit.getInformationStorage().getScienceVesselStorage().unfollowUnit(this.playerUnit.getUnit());
+		Unit followableUnit = this.getClosestSupportableUnit(playerUnit);
+		this.followActionTerran_ScienceVessel.setTarget(followableUnit);
+		this.playerUnit.getInformationStorage().getScienceVesselStorage().followUnit(this.playerUnit.getUnit(),
+				followableUnit);
 	}
 
 	// TODO: UML ADD
@@ -79,14 +85,16 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 					.getOrDefault(unitType, new HashSet<Unit>())) {
 				double currentDistance = playerUnit.getUnit().getDistance(unit);
 
-				if (closestSupportableUnit == null || currentDistance < closestSupportableUnitDistance) {
-					closestSupportableUnit = unit;
-					closestSupportableUnitDistance = currentDistance;
+				if (!this.playerUnit.getInformationStorage().getScienceVesselStorage().isBeingFollowed(unit)) {
+					if (closestSupportableUnit == null || currentDistance < closestSupportableUnitDistance) {
+						closestSupportableUnit = unit;
+						closestSupportableUnitDistance = currentDistance;
+					}
 				}
 			}
 
 			// The order in which the UnitTypes are listed in the ScienceVessel
-			// do matter!
+			// does matter!
 			if (closestSupportableUnit != null) {
 				break;
 			}

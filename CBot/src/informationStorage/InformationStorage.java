@@ -38,6 +38,10 @@ public class InformationStorage {
 	private ResourceReserver resourceReserver;
 	private WorkerConfiguration workerConfig;
 
+	// TODO: UML ADD
+	// Storage class for Terran_Science_Vessel follow actions.
+	private ScienceVesselStorage scienceVesselStorage;
+
 	// Tracking information.
 	private UnitTrackerInformation trackerInfo;
 
@@ -55,10 +59,13 @@ public class InformationStorage {
 	private IUnitControlModuleConfig iUnitControlModuleConfig;
 	private IUnitTrackerModuleConfig iUnitTrackerModuleConfig;
 
+	// TODO: UML PARAMS
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
-			UnitTrackerInformation trackerInfo, MapInformation mapInfo, CurrentGameInformation currentGameInformation) {
+			ScienceVesselStorage scienceVesselStorage, UnitTrackerInformation trackerInfo, MapInformation mapInfo,
+			CurrentGameInformation currentGameInformation) {
 		this.resourceReserver = resourceReserver;
 		this.workerConfig = workerConfig;
+		this.scienceVesselStorage = scienceVesselStorage;
 		this.trackerInfo = trackerInfo;
 		this.mapInfo = mapInfo;
 		this.currentGameInformation = currentGameInformation;
@@ -74,8 +81,8 @@ public class InformationStorage {
 	}
 
 	public InformationStorage() {
-		this(new ResourceReserver(), new WorkerConfiguration(), new UnitTrackerInformation(), new MapInformation(),
-				new CurrentGameInformation());
+		this(new ResourceReserver(), new WorkerConfiguration(), new ScienceVesselStorage(),
+				new UnitTrackerInformation(), new MapInformation(), new CurrentGameInformation());
 	}
 
 	// -------------------- Functions
@@ -108,6 +115,11 @@ public class InformationStorage {
 
 	public WorkerConfiguration getWorkerConfig() {
 		return workerConfig;
+	}
+
+	// TODO: UML ADD
+	public ScienceVesselStorage getScienceVesselStorage() {
+		return scienceVesselStorage;
 	}
 
 	public UnitTrackerInformation getTrackerInfo() {
