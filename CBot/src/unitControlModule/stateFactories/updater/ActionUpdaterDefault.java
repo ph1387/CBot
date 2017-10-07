@@ -28,8 +28,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 	private AttackUnitAction attackUnitAction;
 	private AttackMoveAction attackMoveAction;
-	// TODO: WIP ENABLE
-//	private ScoutBaseLocationAction scoutBaseLocationAction;
+	private ScoutBaseLocationAction scoutBaseLocationAction;
 
 	public ActionUpdaterDefault(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -56,9 +55,8 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 		this.attackUnitAction = ((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class));
 		this.attackMoveAction = ((AttackMoveAction) this.getActionFromInstance(AttackMoveAction.class));
-		// TODO: WIP ENABLE
-//		this.scoutBaseLocationAction = ((ScoutBaseLocationAction) this
-//				.getActionFromInstance(ScoutBaseLocationAction.class));
+		this.scoutBaseLocationAction = ((ScoutBaseLocationAction) this
+				.getActionFromInstance(ScoutBaseLocationAction.class));
 	}
 
 	/**
@@ -97,8 +95,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 	 * special function is needed to handle these cases.
 	 */
 	protected void baselocationScoutingConfiguration() {
-		// TODO: WIP ENABLE
-//		this.scoutBaseLocationAction.setTarget(findClosestReachableBasePosition());
+		this.scoutBaseLocationAction.setTarget(findClosestReachableBasePosition());
 	}
 
 	/**

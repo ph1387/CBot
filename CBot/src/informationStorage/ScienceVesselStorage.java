@@ -77,4 +77,39 @@ public class ScienceVesselStorage {
 
 	// ------------------------------ Getter / Setter
 
+	/**
+	 * Function for retrieving the Unit that the provided Science_Vessel is
+	 * currently following.
+	 * 
+	 * @param vessel
+	 *            the Science_Vessel whose follow-target is requested.
+	 * @return the Unit that the provided Science_Vessel is currently following
+	 *         or null, if the provided Unit is currently not following any.
+	 */
+	public Unit getFollowedUnit(Unit vessel) {
+		return this.vesselsFollowingUnits.get(vessel);
+	}
+
+	/**
+	 * Function for retrieving the Science_Vessel that is following the provided
+	 * Unit.
+	 * 
+	 * @param followedUnit
+	 *            the Unit whose Science_Vessel follower is being requested.
+	 * @return the Science_Vessel that is following the provided Unit or null,
+	 *         if the Unit is not being followed by a Science_Vessel.
+	 */
+	public Unit getFollowingUnit(Unit followedUnit) {
+		Unit matchingVessel = null;
+
+		for (Unit vessel : this.vesselsFollowingUnits.keySet()) {
+			if (this.vesselsFollowingUnits.get(vessel) == followedUnit) {
+				matchingVessel = vessel;
+
+				break;
+			}
+		}
+
+		return matchingVessel;
+	}
 }

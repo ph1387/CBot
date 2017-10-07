@@ -19,7 +19,7 @@ import unitControlModule.stateFactories.StateFactoryTerran_ScienceVessel;
 public class PlayerUnitTerran_ScienceVessel extends PlayerUnitTypeFlying {
 
 	// TODO: UML ADD
-	private static final int SUPPORT_PIXEL_DISTANCE = 32;
+	private static final int SUPPORT_PIXEL_DISTANCE = 64;
 
 	// TODO: UML ADD
 	// The order in which the different kinds of UnitTypes are supported by the

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import bwapi.Game;
+import bwapi.TechType;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -558,7 +559,20 @@ public class UnitTrackerModule {
 	 */
 	private double generateUnitMultiplier(Unit unit) {
 		double multiplier;
-
+		int additionalHitPoints = 0;
+		
+		
+		
+		// TODO: WIP
+		// Add additional hit points to the Unit's health pool if it is defensive matrixed. This is due to it being a simple shield of extra 250 hitpoints.
+		if(unit.isDefenseMatrixed()) {
+			additionalHitPoints = 250;
+		}
+		
+		
+		
+		
+		
 		// Only account the health + shield difference for non building Units!
 		// This is due to defensive structures being a constant threat.
 		if (unit.getType().isBuilding()) {
@@ -568,12 +582,12 @@ public class UnitTrackerModule {
 		} else {
 			// The Unit has a shield and therefore its value must be considered.
 			if (unit.getType().maxShields() > 0) {
-				multiplier = (double) (unit.getHitPoints() + unit.getShields())
+				multiplier = (double) (unit.getHitPoints() + unit.getShields() + additionalHitPoints)
 						/ (double) (unit.getType().maxHitPoints() + unit.getType().maxShields());
 			}
 			// The Unit has no shield and only its health matters.
 			else {
-				multiplier = (double) (unit.getHitPoints()) / (double) (unit.getType().maxHitPoints());
+				multiplier = (double) (unit.getHitPoints() + additionalHitPoints) / (double) (unit.getType().maxHitPoints());
 			}
 
 			// The Unit can not be targeted by the Player's Units.

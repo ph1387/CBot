@@ -493,6 +493,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 */
 	protected abstract double generateConfidence();
 
+	// TODO: UML VISIBILITY
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -500,12 +501,13 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the air strength of the Player and the enemy in the PlayerUnit's
 	 *         confidence range.
 	 */
-	protected Pair<Double, Double> generatePlayerAndEnemyAirStrengths() {
+	public Pair<Double, Double> generatePlayerAndEnemyAirStrengths() {
 		return this.generatePlayerAndEnemyStrengths(
 				this.informationStorage.getTrackerInfo().getPlayerAirAttackTilePositions(),
 				this.informationStorage.getTrackerInfo().getEnemyAirAttackTilePositions());
 	}
 
+	// TODO: UML VISIBILITY
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -513,12 +515,13 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the ground strength of the Player and the enemy in the
 	 *         PlayerUnit's confidence range.
 	 */
-	protected Pair<Double, Double> generatePlayerAndEnemyGroundStrengths() {
+	public Pair<Double, Double> generatePlayerAndEnemyGroundStrengths() {
 		return this.generatePlayerAndEnemyStrengths(
 				this.informationStorage.getTrackerInfo().getPlayerGroundAttackTilePositions(),
 				this.informationStorage.getTrackerInfo().getEnemyGroundAttackTilePositions());
 	}
 
+	// TODO: UML VISIBILITY
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -526,12 +529,13 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the health strength of the Player and the enemy in the
 	 *         PlayerUnit's confidence range.
 	 */
-	protected Pair<Double, Double> generatePlayerAndEnemyHealthStrengths() {
+	public Pair<Double, Double> generatePlayerAndEnemyHealthStrengths() {
 		return this.generatePlayerAndEnemyStrengths(
 				this.informationStorage.getTrackerInfo().getPlayerHealthTilePositions(),
 				this.informationStorage.getTrackerInfo().getEnemyHealthTilePositions());
 	}
 
+	// TODO: UML VISIBILITY
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -539,7 +543,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the support strength of the Player and the enemy in the
 	 *         PlayerUnit's confidence range.
 	 */
-	protected Pair<Double, Double> generatePlayerAndEnemySupportStrengths() {
+	public Pair<Double, Double> generatePlayerAndEnemySupportStrengths() {
 		return this.generatePlayerAndEnemyStrengths(
 				this.informationStorage.getTrackerInfo().getPlayerSupportTilePositions(),
 				this.informationStorage.getTrackerInfo().getEnemySupportTilePositions());
@@ -1045,7 +1049,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 *         false.
 	 */
 	public boolean isConfidenceBelowThreshold() {
-		return this.confidence < CONFIDENCE_THRESHHOLD;
+		return isConfidenceBelowThreshold(this.confidence);
 	}
 
 	/**
@@ -1056,7 +1060,29 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 *         false.
 	 */
 	public boolean isConfidenceAboveThreshold() {
-		return this.confidence >= CONFIDENCE_THRESHHOLD;
+		return isConfidenceAboveThreshold(this.confidence);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if a confidence is below the set threshold.
+	 * 
+	 * @return true if the confidence is below the set threshold, otherwise
+	 *         false.
+	 */
+	public static boolean isConfidenceBelowThreshold(Double confidence) {
+		return confidence < CONFIDENCE_THRESHHOLD;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if a confidence is above the set threshold.
+	 * 
+	 * @return true if the confidence is above the set threshold, otherwise
+	 *         false.
+	 */
+	public static boolean isConfidenceAboveThreshold(Double confidence) {
+		return confidence >= CONFIDENCE_THRESHHOLD;
 	}
 
 	// TODO: UML ADD

@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions;
 
 import unitControlModule.stateFactories.actions.executableActions.FollowActionTerran_ScienceVessel;
+import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranScienceVessel_DefensiveMatrix;
 
 // TODO: UML ADD
 /**
@@ -14,6 +15,7 @@ public class AvailableActionsTerran_ScienceVessel extends AvailableActionsGenera
 
 	public AvailableActionsTerran_ScienceVessel() {
 		this.add(new FollowActionTerran_ScienceVessel(null));
+		this.add(new AbilityActionTerranScienceVessel_DefensiveMatrix(null));
 	}
 
 }
