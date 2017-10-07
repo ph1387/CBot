@@ -1150,6 +1150,21 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	// TODO: UML ADD
 	/**
+	 * Convenience function.
+	 * 
+	 * @see #isDetected(Unit, int)
+	 * 
+	 * @param unit
+	 *            the Unit that is going to be checked.
+	 * @return true if the Unit is in the given tile range of an enemy detection
+	 *         Unit.
+	 */
+	public static boolean isDetected(Unit unit) {
+		return isDetected(unit, DEFAULT_DETECTION_TILERANGE);
+	}
+
+	// TODO: UML ADD
+	/**
 	 * Function for checking if the Unit is near an enemy detection Unit. This
 	 * function can be applied to either side since it compares the Player of
 	 * the provided Unit with the one of each checked Unit. <br>

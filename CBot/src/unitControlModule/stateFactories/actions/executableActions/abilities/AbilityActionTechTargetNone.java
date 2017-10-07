@@ -28,4 +28,13 @@ public abstract class AbilityActionTechTargetNone extends AbilityActionGeneralSu
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().useTech(this.ability);
 	}
+
+	// TODO: UML ADD
+	@Override
+	protected void resetSpecific() {
+		super.resetSpecific();
+
+		// Needed since the JavaGOAP library throws errors otherwise.
+		this.target = new Object();
+	}
 }

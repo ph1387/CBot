@@ -1,6 +1,8 @@
 package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Wraith;
+import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranWraith_Cloak;
+import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranWraith_Decloak;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -12,10 +14,35 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ActionUpdaterTerran_Wraith extends ActionUpdaterDefault {
 
+	// TODO: UML ADD
+	private AbilityActionTerranWraith_Cloak abilityActionTerranWraith_Cloak;
+	// TODO: UML ADD
+	private AbilityActionTerranWraith_Decloak abilityActionTerranWraith_Decloak;
+
 	public ActionUpdaterTerran_Wraith(PlayerUnit playerUnit) {
 		super(playerUnit);
 	}
 
 	// -------------------- Functions
+
+	// TODO: UML ADD
+	@Override
+	public void update(PlayerUnit playerUnit) {
+		super.update(playerUnit);
+
+		this.abilityActionTerranWraith_Cloak.setTarget(playerUnit);
+		this.abilityActionTerranWraith_Decloak.setTarget(playerUnit);
+	}
+
+	// TODO: UML ADD
+	@Override
+	protected void init() {
+		super.init();
+
+		this.abilityActionTerranWraith_Cloak = ((AbilityActionTerranWraith_Cloak) this
+				.getActionFromInstance(AbilityActionTerranWraith_Cloak.class));
+		this.abilityActionTerranWraith_Decloak = ((AbilityActionTerranWraith_Decloak) this
+				.getActionFromInstance(AbilityActionTerranWraith_Decloak.class));
+	}
 
 }

@@ -3,9 +3,14 @@ package unitControlModule.stateFactories;
 import java.util.HashSet;
 
 import javaGOAP.GoapAction;
+import javaGOAP.GoapState;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Wraith;
 import unitControlModule.stateFactories.updater.ActionUpdaterTerran_Wraith;
 import unitControlModule.stateFactories.updater.Updater;
+import unitControlModule.stateFactories.updater.WorldStateUpdaterAbilityUsingUnitsTerran_Wraith;
+import unitControlModule.stateFactories.updater.WorldStateUpdaterDefault;
+import unitControlModule.stateFactories.worldStates.UnitWorldStateAbilityUsingUnitsTerran_Wraith;
+import unitControlModule.stateFactories.worldStates.UnitWorldStateDefault;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -27,6 +32,18 @@ public class StateFactoryTerran_Wraith extends StateFactoryDefault {
 	@Override
 	public Updater getMatchingActionUpdater(PlayerUnit playerUnit) {
 		return new ActionUpdaterTerran_Wraith(playerUnit);
+	}
+
+	// TODO: UML ADD
+	@Override
+	public HashSet<GoapState> generateWorldState() {
+		return new UnitWorldStateAbilityUsingUnitsTerran_Wraith();
+	}
+
+	// TODO: UML ADD
+	@Override
+	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
+		return new WorldStateUpdaterAbilityUsingUnitsTerran_Wraith(playerUnit);
 	}
 
 }
