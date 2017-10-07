@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Queue;
 
 import bwapi.Pair;
+import bwapi.Player;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
@@ -42,6 +43,10 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	protected static final double CONFIDENCE_THRESHHOLD = 0.5;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	private static final int CONFIDENCE_TILE_RADIUS = 15;
+
+	// TODO: UML ADD
+	// The default tile range that is applied to the detection check of the
+	private static final int DEFAULT_DETECTION_TILERANGE = 10;
 
 	// Information preserver which holds all important information
 	protected InformationStorage informationStorage;
@@ -1111,10 +1116,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	// TODO: UML ADD
 	/**
-	 * Function for testing if an Unit is currently invulnerable. This is the
-	 * case if the Unit is burrowed or cloaked and no detector Unit of the other
-	 * Player is near it. Therefore no enemies are able to attack it =>
-	 * Invulnerable.
+	 * Convenience function.
+	 * 
+	 * @see #isInvulnerable(Unit, int)
 	 * 
 	 * @param unit
 	 *            the Unit that is going to be checked.
@@ -1122,7 +1126,57 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 *         not.
 	 */
 	public static boolean isInvulnerable(Unit unit) {
-		return (unit.isBurrowed() || unit.isCloaked()) && !unit.isDetected();
+		return isInvulnerable(unit, DEFAULT_DETECTION_TILERANGE);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if an Unit is currently invulnerable. This is the
+	 * case if the Unit is burrowed or cloaked and no detector Unit of the other
+	 * Player is near it. Therefore no enemies are able to attack it =>
+	 * Invulnerable.
+	 * 
+	 * @param unit
+	 *            the Unit that is going to be checked.
+	 * @param tileRange
+	 *            the range in tiles that a possible enemy detection Unit must
+	 *            be in.
+	 * @return true if the Unit is invulnerable and not attackable, false if
+	 *         not.
+	 */
+	public static boolean isInvulnerable(Unit unit, int tileRange) {
+		return (unit.isBurrowed() || unit.isCloaked()) && !isDetected(unit, tileRange);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for checking if the Unit is near an enemy detection Unit. This
+	 * function can be applied to either side since it compares the Player of
+	 * the provided Unit with the one of each checked Unit. <br>
+	 * <b>Note:</b><br>
+	 * This function is only necessary due to the default implementation of the
+	 * "isDetected" function not working properly!
+	 * 
+	 * @param unit
+	 *            the Unit that is going to be checked.
+	 * @param tileRange
+	 *            the range that a possible enemy detection Unit must be in for
+	 *            this function to return true.
+	 * @return true if the Unit is in the given tile range of an enemy detection
+	 *         Unit.
+	 */
+	public static boolean isDetected(Unit unit, int tileRange) {
+		Player player = unit.getPlayer();
+		boolean isDetected = false;
+
+		for (Unit unitInRadius : unit.getUnitsInRadius(tileRange * Core.getInstance().getTileSize())) {
+			if (unitInRadius != unit && unitInRadius.getPlayer() != player && unitInRadius.getType().isDetector()) {
+				isDetected = true;
+
+				break;
+			}
+		}
+		return isDetected;
 	}
 
 	// -------------------- RetreatUnit

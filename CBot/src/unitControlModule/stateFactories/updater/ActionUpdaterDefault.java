@@ -28,7 +28,8 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 	private AttackUnitAction attackUnitAction;
 	private AttackMoveAction attackMoveAction;
-	private ScoutBaseLocationAction scoutBaseLocationAction;
+	// TODO: WIP ENABLE
+//	private ScoutBaseLocationAction scoutBaseLocationAction;
 
 	public ActionUpdaterDefault(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -41,7 +42,8 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		super.update(playerUnit);
 
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_MISSING) {
-			this.baselocationScoutingConfiguration();
+			// TODO: WIP ENABLE
+//			this.baselocationScoutingConfiguration();
 		} else {
 			this.attackMoveToNearestKnownUnitConfiguration();
 
@@ -55,8 +57,9 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 		this.attackUnitAction = ((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class));
 		this.attackMoveAction = ((AttackMoveAction) this.getActionFromInstance(AttackMoveAction.class));
-		this.scoutBaseLocationAction = ((ScoutBaseLocationAction) this
-				.getActionFromInstance(ScoutBaseLocationAction.class));
+		// TODO: WIP ENABLE
+//		this.scoutBaseLocationAction = ((ScoutBaseLocationAction) this
+//				.getActionFromInstance(ScoutBaseLocationAction.class));
 	}
 
 	/**
@@ -95,7 +98,8 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 	 * special function is needed to handle these cases.
 	 */
 	protected void baselocationScoutingConfiguration() {
-		this.scoutBaseLocationAction.setTarget(findClosestReachableBasePosition());
+		// TODO: WIP ENABLE
+//		this.scoutBaseLocationAction.setTarget(findClosestReachableBasePosition());
 	}
 
 	/**
