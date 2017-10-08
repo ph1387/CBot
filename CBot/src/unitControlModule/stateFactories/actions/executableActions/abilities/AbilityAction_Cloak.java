@@ -21,7 +21,10 @@ public abstract class AbilityAction_Cloak extends AbilityActionTechTargetNone {
 		super(target);
 
 		this.addEffect(new GoapState(0, "isCloaked", true));
+		this.addEffect(new GoapState(0, "isDecloaked", false));
 		this.addPrecondition(new GoapState(0, "isCloaked", false));
+		this.addPrecondition(new GoapState(0, "isDecloaked", true));
+		this.addPrecondition(new GoapState(0, "mayCloak", true));
 	}
 
 	// -------------------- Functions
@@ -31,7 +34,7 @@ public abstract class AbilityAction_Cloak extends AbilityActionTechTargetNone {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
 
 		return !playerUnit.getUnit().isCloaked() && playerUnit.getUnit().canCloak()
-				&& playerUnit.getUnit().getEnergy() > 0;
+				&& playerUnit.getUnit().getEnergy() > this.defineType().energyCost();
 	}
 
 	// TODO: UML ADD

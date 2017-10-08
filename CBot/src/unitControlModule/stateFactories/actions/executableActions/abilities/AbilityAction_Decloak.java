@@ -21,7 +21,9 @@ public abstract class AbilityAction_Decloak extends AbilityActionTechTargetNone 
 		super(target);
 
 		this.addEffect(new GoapState(0, "isCloaked", false));
+		this.addEffect(new GoapState(0, "isDecloaked", true));
 		this.addPrecondition(new GoapState(0, "isCloaked", true));
+		this.addPrecondition(new GoapState(0, "isDecloaked", false));
 	}
 
 	// -------------------- Functions

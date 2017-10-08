@@ -1,11 +1,16 @@
 package unitControlModule.stateFactories;
 
 import java.util.HashSet;
+import java.util.List;
 
 import javaGOAP.GoapAction;
 import javaGOAP.GoapState;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Wraith;
+import unitControlModule.stateFactories.goals.UnitGoalStateDefault;
+import unitControlModule.stateFactories.goals.UnitGoalStateStealth;
 import unitControlModule.stateFactories.updater.ActionUpdaterTerran_Wraith;
+import unitControlModule.stateFactories.updater.GoalStateUpdaterDefault;
+import unitControlModule.stateFactories.updater.GoalStateUpdaterStealth;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.stateFactories.updater.WorldStateUpdaterAbilityUsingUnitsTerran_Wraith;
 import unitControlModule.stateFactories.updater.WorldStateUpdaterDefault;
@@ -46,4 +51,16 @@ public class StateFactoryTerran_Wraith extends StateFactoryDefault {
 		return new WorldStateUpdaterAbilityUsingUnitsTerran_Wraith(playerUnit);
 	}
 
+	// TODO: UML ADD
+	@Override
+	public List<GoapState> generateGoalState() {
+		return new UnitGoalStateStealth();
+	}
+	
+	// TODO: UML ADD
+	@Override
+	public Updater getMatchingGoalStateUpdater(PlayerUnit playerUnit) {
+		return new GoalStateUpdaterStealth(playerUnit);
+	}
+	
 }
