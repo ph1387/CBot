@@ -50,6 +50,9 @@ public class ScoreGeneratorSpecificTechTerranMachines extends ScoreGeneratorSpec
 		case "Spider_Mines":
 			score = this.scoreGeneratorIncreaseVeryFast.generateScore(gameState, framesPassed);
 			break;
+		case "Cloaking_Field":
+			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
+			break;
 
 		default:
 			throw new NullPointerException("Specific ScoreGeneration failed for TechType: " + techType);

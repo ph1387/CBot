@@ -131,6 +131,8 @@ public abstract class GameState {
 	public static final GameState SpecificTech_Tank_Siege_Mode = new GameStateSpecific_Tech(TechType.Tank_Siege_Mode);
 	// TODO: UML ADD
 	public static final GameState SpecificTech_Spider_Mines = new GameStateSpecific_Tech(TechType.Spider_Mines);
+	// TODO: UML ADD
+	public static final GameState SpecificTech_Cloaking_Field = new GameStateSpecific_Tech(TechType.Cloaking_Field);
 	// Improvement facilities:
 	// TODO: UML ADD
 	public static final GameState SpecificImprovementFacility_Terran_Academy = new GameStateSpecific_ImprovementFacility(

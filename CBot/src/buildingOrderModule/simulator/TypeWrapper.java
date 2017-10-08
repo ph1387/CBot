@@ -80,6 +80,8 @@ public class TypeWrapper {
 	public static final TypeWrapper TechType_Tank_Siege_Mode = new TypeWrapper(TechType.Tank_Siege_Mode);
 	// TODO: UML ADD
 	public static final TypeWrapper TechType_Spider_Mines = new TypeWrapper(TechType.Spider_Mines);
+	// TODO: UML ADD
+	public static final TypeWrapper TechType_Cloaking_Field = new TypeWrapper(TechType.Cloaking_Field);
 
 	// Precomputed HashMaps for an easy conversion from the different types to a
 	// TypeWrapper.
@@ -157,6 +159,7 @@ public class TypeWrapper {
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Stim_Packs, TechType_Stim_Packs);
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Tank_Siege_Mode, TechType_Tank_Siege_Mode);
 		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Spider_Mines, TechType_Spider_Mines);
+		TECHTYPE_TO_TYPEWRAPPER.put(TechType.Cloaking_Field, TechType_Cloaking_Field);
 	}
 
 	/**

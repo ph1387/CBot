@@ -7,6 +7,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_ScienceFacilitiy;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Starport;
+import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_CloakingField;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
@@ -68,6 +69,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ResearchActionTerran_SiegeMode(1));
 		this.add(new ResearchActionTerran_StimPacks(1));
 		this.add(new ResearchActionTerran_SpiderMines(1));
+		this.add(new ResearchActionTerran_CloakingField(1));
 
 		this.add(new UpgradeActionTerran_U_238_Shells(1));
 		this.add(new UpgradeActionTerran_InfantryArmor(1));
