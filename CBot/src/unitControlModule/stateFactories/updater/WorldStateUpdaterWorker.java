@@ -71,9 +71,11 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 		// Change scouting and gathering properties accordingly.
 		if (((PlayerUnitWorker) playerUnit).isAssignedToSout()) {
 			this.changeWorldStateEffect("isScout", true);
+			this.changeWorldStateEffect("canConstruct", false);
 			this.changeWorldStateEffect("allowGathering", false);
 		} else {
 			this.changeWorldStateEffect("isScout", false);
+			this.changeWorldStateEffect("canConstruct", true);
 
 			// Only allow gathering if the Unit is near a center building.
 			if (closestCenterDistance != null && closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter) {

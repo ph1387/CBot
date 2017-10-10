@@ -3,6 +3,7 @@ package unitControlModule.stateFactories.updater;
 import unitControlModule.stateFactories.worldStates.UnitWorldStateTerran_SCV;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SCV;
+import unitControlModule.unitWrappers.PlayerUnitWorker;
 
 // TODO: UML ADD
 /**
@@ -36,9 +37,11 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 			this.changeWorldStateEffect("repairing", false);
 		}
 
-		// Prevent the Unit from constructing buildings on the battlefield / while
-		// repairing another Unit or when the Unit is marked as combat engineer.
-		if (isRepairing || isFollowing || ((PlayerUnitTerran_SCV) playerUnit).isCombatEngineer()) {
+		// Prevent the Unit from constructing buildings on the battlefield /
+		// while repairing another Unit or when the Unit is marked as combat
+		// engineer / scouting Unit.
+		if (isRepairing || isFollowing || ((PlayerUnitTerran_SCV) playerUnit).isCombatEngineer()
+				|| ((PlayerUnitWorker) playerUnit).isAssignedToSout()) {
 			this.changeWorldStateEffect("canConstruct", false);
 		} else {
 			this.changeWorldStateEffect("canConstruct", true);
@@ -50,7 +53,8 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 			this.changeWorldStateEffect("isFollowingUnit", false);
 		}
 
-		// isNearRepairableUnit is not changed due to combat engineers then starting to
+		// isNearRepairableUnit is not changed due to combat engineers then
+		// starting to
 		// gather resources since the goal is met eventually!
 	}
 }
