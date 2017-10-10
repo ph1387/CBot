@@ -30,9 +30,9 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	
 	// BuildingOrderModule:
 	// TODO: UML ADD
-	private boolean displayGameStates = false;
+	private boolean displayGameStates = true;
 	// TODO: UML ADD
-	private boolean displayGeneratedScores = true;
+	private boolean displayGeneratedScores = false;
 
 	// UnitTrackerModule:
 	private boolean displayPlayerAirStrength = false;

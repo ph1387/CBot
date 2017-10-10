@@ -1,6 +1,8 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
+import bwapi.Unit;
 import javaGOAP.GoapState;
+import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_ScienceVessel;
 
@@ -22,8 +24,6 @@ public class FollowActionTerran_ScienceVessel extends FollowAction {
 	/**
 	 * @param target
 	 *            type: Unit
-	 * @param followActionTerran_ScienceVesselStorage
-	 *            the shared storage Class for the action itself.
 	 */
 	public FollowActionTerran_ScienceVessel(Object target) {
 		super(target);
@@ -42,9 +42,22 @@ public class FollowActionTerran_ScienceVessel extends FollowAction {
 
 	// TODO: UML ADD OVERRIDE
 	@Override
+	protected boolean performSpecificAction(IGoapUnit goapUnit) {
+		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
+
+		// Renew the mapping of the followed Unit from the last iteration since
+		// the target of the action may change!
+		playerUnit.getInformationStorage().getScienceVesselStorage().followUnit(playerUnit.getUnit(),
+				(Unit) this.target);
+
+		return super.performSpecificAction(goapUnit);
+	}
+
+	// TODO: UML ADD OVERRIDE
+	@Override
 	protected void resetSpecific() {
 		// Remove any Units that this one might be following from the shared
-		// storage as well as the Science_Vessel itself.
+		// storage.
 		if (this.currentlyExecutingUnit != null) {
 			PlayerUnit playerUnit = (PlayerUnit) this.currentlyExecutingUnit;
 			playerUnit.getInformationStorage().getScienceVesselStorage().unfollowUnit(playerUnit.getUnit());

@@ -61,13 +61,7 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 			this.initializationMissing = false;
 		}
 
-		// Renew the mapping of the followed Unit from the last iteration since
-		// the target of the follow action may change!
-		this.playerUnit.getInformationStorage().getScienceVesselStorage().unfollowUnit(this.playerUnit.getUnit());
-		Unit followableUnit = this.getClosestSupportableUnit(playerUnit);
-		this.followActionTerran_ScienceVessel.setTarget(followableUnit);
-		this.playerUnit.getInformationStorage().getScienceVesselStorage().followUnit(this.playerUnit.getUnit(),
-				followableUnit);
+		this.followActionTerran_ScienceVessel.setTarget(this.getClosestSupportableUnit(playerUnit));
 
 		// Find a Unit near the executing Science_Vessel that requires help in
 		// form of a life boost.
@@ -99,9 +93,15 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 	 * @return the closest Unit that the executing Unit can support.
 	 */
 	private Unit getClosestSupportableUnit(PlayerUnit playerUnit) {
-		Unit closestSupportableUnit = null;
+		Unit closestSupportableUnit = (Unit) this.followActionTerran_ScienceVessel.getTarget();
 		double closestSupportableUnitDistance = 0.;
 
+		// Prevent access violation errors.
+		if(closestSupportableUnit != null) {
+			closestSupportableUnitDistance = playerUnit.getUnit().getDistance(closestSupportableUnit);
+		}
+		
+		
 		// Find the closest Unit whose UnitType matches one of the
 		// ones supported by the Terran_Science_Vessel.
 		for (UnitType unitType : PlayerUnitTerran_ScienceVessel.getSupportableUnitTypes()) {

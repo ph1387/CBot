@@ -23,6 +23,7 @@ import informationStorage.InformationStorage;
 import javaGOAP.GoapUnit;
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.StateFactory;
+import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.actions.executableActions.RetreatUnit;
 import unitControlModule.stateFactories.updater.Updater;
 
@@ -1088,6 +1089,21 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 */
 	public static boolean isConfidenceAboveThreshold(Double confidence) {
 		return confidence >= CONFIDENCE_THRESHHOLD;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for reseting all actions, values and references associated with
+	 * the {@link PlayerUnit} instance. This function should only be called when
+	 * the reference to this instance is discarded and therefore not being used
+	 * anymore.
+	 */
+	public void destroy() {
+		this.manuallyResetActions();
+
+		// Remove the Unit from any assigned groups. This is necessary since
+		// they are not removed from them by an outside force.
+		BaseAction.removeGroupAssociations(this);
 	}
 
 	// TODO: UML ADD

@@ -27,6 +27,7 @@ public class ConstructBuildingAction extends WorkerAction {
 		this.addPrecondition(new GoapState(0, "canMove", true));
 		this.addPrecondition(new GoapState(0, "isCarryingMinerals", false));
 		this.addPrecondition(new GoapState(0, "isCarryingGas", false));
+		this.addPrecondition(new GoapState(0, "canConstruct", true));
 	}
 
 	// -------------------- Functions
@@ -51,10 +52,11 @@ public class ConstructBuildingAction extends WorkerAction {
 			// Update the ConstructionJob first.
 			constructionInformation.update();
 
-			// Walk to the TilePosition the building is being created on when it is undiscovered.
-			if(!Core.getInstance().getGame().isExplored(constructionInformation.getTilePosition())) {
+			// Walk to the TilePosition the building is being created on when it
+			// is undiscovered.
+			if (!Core.getInstance().getGame().isExplored(constructionInformation.getTilePosition())) {
 				((PlayerUnitWorker) goapUnit).getUnit().move(constructionInformation.getTilePosition().toPosition());
-			} 
+			}
 			// Initiate the construction of the building if necessary.
 			else if (!constructionInformation.constructionStarted()) {
 				((PlayerUnitWorker) goapUnit).getUnit().build(constructionInformation.getUnitType(),
@@ -87,7 +89,7 @@ public class ConstructBuildingAction extends WorkerAction {
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution = ((PlayerUnitWorker) goapUnit)
 				.getWorkerManagerConstructionJobDistribution();
-		
+
 		return workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)
 				|| workerManagerConstructionJobDistribution.canConstruct();
 	}

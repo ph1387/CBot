@@ -304,16 +304,8 @@ public class UnitControlModule implements RemoveAgentEvent {
 			this.agentUpdateQueueCombatUnits.remove(matchingAgent);
 			this.agents.remove(matchingAgent);
 
-			// Manually reset the currently active actions of the Unit.
-			((PlayerUnit) matchingAgent.getAssignedGoapUnit()).manuallyResetActions();
-
-			// Remove the Unit from any assigned groups.
-			BaseAction.removeGroupAssociations(matchingAgent.getAssignedGoapUnit());
-
-			// Remove any contended / assigned entries if the Unit is a worker.
-			if (unit.getType().isWorker()) {
-				this.informationStorage.getWorkerConfig().decrementTotalWorkerCount();
-			}
+			// Signal the agent that it is getting destroyed.
+			((PlayerUnit) matchingAgent.getAssignedGoapUnit()).destroy();
 		}
 		// TODO: REMOVE Safety feature since it is not clear if the Unit is
 		// found.

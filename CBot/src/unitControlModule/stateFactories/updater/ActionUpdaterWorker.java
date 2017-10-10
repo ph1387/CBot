@@ -36,6 +36,10 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 		this.unloadGasAction.setTarget(new Object());
 
 		this.moveToNearestCenterAction.setTarget(this.playerUnit.getClosestCenter());
+
+		// Construction / Gather actions are set separately in their own
+		// instance. These require no interaction with the Updater since they
+		// are managed by other Classes.
 	}
 
 	@Override

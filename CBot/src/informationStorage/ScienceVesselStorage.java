@@ -1,7 +1,5 @@
 package informationStorage;
 
-import java.util.HashMap;
-
 import bwapi.Unit;
 import unitControlModule.stateFactories.actions.executableActions.FollowActionTerran_ScienceVessel;
 
@@ -17,7 +15,7 @@ public class ScienceVesselStorage {
 
 	// Key: Science_Vessel.
 	// Value: The Unit that it follows.
-	private HashMap<Unit, Unit> vesselsFollowingUnits = new HashMap<>();
+	private UnitMapper unitMapper = new UnitMapper();
 
 	public ScienceVesselStorage() {
 
@@ -35,7 +33,7 @@ public class ScienceVesselStorage {
 	 *         if not.
 	 */
 	public boolean isBeingFollowed(Unit unit) {
-		return this.vesselsFollowingUnits.containsValue(unit);
+		return this.unitMapper.isBeingMapped(unit);
 	}
 
 	/**
@@ -46,7 +44,7 @@ public class ScienceVesselStorage {
 	 * @return true if the Science_Vessel is following a Unit, false if not.
 	 */
 	public boolean isFollowing(Unit unit) {
-		return this.vesselsFollowingUnits.containsKey(unit);
+		return this.unitMapper.isMapped(unit);
 	}
 
 	/**
@@ -60,8 +58,7 @@ public class ScienceVesselStorage {
 	 *         success and no other Unit was mapped to it.
 	 */
 	public boolean followUnit(Unit vessel, Unit target) {
-		return !this.vesselsFollowingUnits.containsKey(vessel)
-				&& this.vesselsFollowingUnits.put(vessel, target) == null;
+		return this.unitMapper.mapUnit(vessel, target);
 	}
 
 	/**
@@ -72,7 +69,7 @@ public class ScienceVesselStorage {
 	 *            removed.
 	 */
 	public void unfollowUnit(Unit vessel) {
-		this.vesselsFollowingUnits.remove(vessel);
+		this.unitMapper.unmapUnit(vessel);
 	}
 
 	// ------------------------------ Getter / Setter
@@ -87,7 +84,7 @@ public class ScienceVesselStorage {
 	 *         or null, if the provided Unit is currently not following any.
 	 */
 	public Unit getFollowedUnit(Unit vessel) {
-		return this.vesselsFollowingUnits.get(vessel);
+		return this.unitMapper.getMappedUnit(vessel);
 	}
 
 	/**
@@ -100,16 +97,6 @@ public class ScienceVesselStorage {
 	 *         if the Unit is not being followed by a Science_Vessel.
 	 */
 	public Unit getFollowingUnit(Unit followedUnit) {
-		Unit matchingVessel = null;
-
-		for (Unit vessel : this.vesselsFollowingUnits.keySet()) {
-			if (this.vesselsFollowingUnits.get(vessel) == followedUnit) {
-				matchingVessel = vessel;
-
-				break;
-			}
-		}
-
-		return matchingVessel;
+		return this.unitMapper.getMappingUnit(followedUnit);
 	}
 }
