@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
-import bwapi.Pair;
 import bwapi.Unit;
 import bwapi.UnitType;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_ScienceVessel;
@@ -28,14 +27,6 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 
 	private FollowActionTerran_ScienceVessel followActionTerran_ScienceVessel;
 	private AbilityActionTerranScienceVessel_DefensiveMatrix abilityActionTerranScienceVessel_DefensiveMatrix;
-
-	// The additional life granted by the Defensive_Maxtrix ability.
-	private double additionalLife = 250.;
-	// A general health multiplier used in the simple simulation to account for
-	// the different multipliers used by the UnitTrackerModule.
-	// Note:
-	// The higher the value, the sooner the Science_Vessel will use the ability!
-	private int generalHealthMultiplier = 200;
 
 	// The percentage of health at which the Science_Vessel considers the target
 	// Unit "at low health".
@@ -97,11 +88,10 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 		double closestSupportableUnitDistance = 0.;
 
 		// Prevent access violation errors.
-		if(closestSupportableUnit != null) {
+		if (closestSupportableUnit != null) {
 			closestSupportableUnitDistance = playerUnit.getUnit().getDistance(closestSupportableUnit);
 		}
-		
-		
+
 		// Find the closest Unit whose UnitType matches one of the
 		// ones supported by the Terran_Science_Vessel.
 		for (UnitType unitType : PlayerUnitTerran_ScienceVessel.getSupportableUnitTypes()) {
@@ -153,44 +143,13 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 		// Iterate through the sorted List. This way the closest one of the
 		// Units matching the criteria is picked.
 		for (Unit unit : playerUnits) {
-			if (this.doesConfidenceSwitch(playerUnit) || this.isInDanger(unit)) {
+			if (this.isInDanger(unit)) {
 				possibleTarget = unit;
 
 				break;
 			}
 		}
 		return possibleTarget;
-	}
-
-	/**
-	 * Function for testing if a shield (= Life boost) would cause the
-	 * confidence of the target Unit to exceed the set threshold for it.
-	 * 
-	 * @param playerUnit
-	 *            the executing Science_Vessel.
-	 * @return true if the Unit would be confident with additional health, false
-	 *         if it is already is or the boost is not enough.
-	 */
-	private boolean doesConfidenceSwitch(PlayerUnit playerUnit) {
-		boolean shieldingNeeded = false;
-
-		// Get the different strengths of the Player and the enemy.
-		Pair<Double, Double> healthStrengths = playerUnit.generatePlayerAndEnemyHealthStrengths();
-		Pair<Double, Double> groundStrengths = playerUnit.generatePlayerAndEnemyGroundStrengths();
-
-		// Do a simple simulation regarding the confidence of the affected
-		// target Unit. If a health boost causes the confidence to exceed the
-		// set threshold apply it to the target.
-		double simpleConfidence = (healthStrengths.first + groundStrengths.first)
-				/ Math.max(healthStrengths.second + groundStrengths.second, 1.);
-		double simpleSimulatedConfidence = (healthStrengths.first + (this.additionalLife * this.generalHealthMultiplier)
-				+ groundStrengths.first) / Math.max(healthStrengths.second + groundStrengths.second, 1.);
-
-		if (PlayerUnit.isConfidenceBelowThreshold(simpleConfidence)
-				&& PlayerUnit.isConfidenceAboveThreshold(simpleSimulatedConfidence)) {
-			shieldingNeeded = true;
-		}
-		return shieldingNeeded;
 	}
 
 	/**
