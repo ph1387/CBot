@@ -24,6 +24,8 @@ public abstract class RepairAction extends WorkerAction {
 		super(target);
 
 		this.addEffect(new GoapState(0, "repairing", true));
+		this.addPrecondition(new GoapState(0, "isCarryingMinerals", false));
+		this.addPrecondition(new GoapState(0, "isCarryingGas", false));
 	}
 
 	// -------------------- Functions

@@ -27,10 +27,16 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 	private boolean isCombatEngineer = false;
 
 	// TODO: UML ADD
-	// The machines that are repairable besides the buildings.
-	private static List<UnitType> RepairableUnitTypes = Arrays
-			.asList(new UnitType[] { UnitType.Terran_Siege_Tank_Siege_Mode, UnitType.Terran_Siege_Tank_Tank_Mode,
-					UnitType.Terran_Goliath, UnitType.Terran_Vulture });
+	private double combatEngineerTriggerPercentageEnroll = 0.3;
+	// TODO: UML ADD
+	private double combatEngineerTriggerPercentageCancel = 0.8;
+
+	// TODO: UML ADD
+	// The machines that are repairable besides the buildings. Vultures are not
+	// listed here since repairing them can be difficult due to them moving too
+	// fast.
+	private static List<UnitType> RepairableUnitTypes = Arrays.asList(new UnitType[] {
+			UnitType.Terran_Siege_Tank_Siege_Mode, UnitType.Terran_Siege_Tank_Tank_Mode, UnitType.Terran_Goliath });
 
 	public PlayerUnitTerran_SCV(Unit unit, InformationStorage informationStorage,
 			WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation,
@@ -48,20 +54,27 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 	// TODO: UML ADD
 	@Override
 	public void update() {
-		super.update();
+		boolean wasCombatEngineer = this.isCombatEngineer;
 
 		// Switch from a "normal" worker to being a combat engineer or vice
 		// versa.
 		if (!this.isCombatEngineer && this.shouldBecomeCombatEngineer()) {
 			this.isCombatEngineer = true;
 			this.informationStorage.getWorkerConfig().incrementCombatEngineerCount();
-		} else if (this.isCombatEngineer && this.shouldStopBeingCombatEngineer()) {
+		}
+		if (this.isCombatEngineer && this.shouldStopBeingCombatEngineer()) {
 			this.isCombatEngineer = false;
 			this.informationStorage.getWorkerConfig().decrementCombatEngineerCount();
 		}
+
+		// Needed for the Unit to take action when the state changes!
+		if (this.isCombatEngineer && !wasCombatEngineer) {
+			this.resetActions();
+		}
+
+		super.update();
 	}
 
-	// TODO: WIP
 	// TODO: UML ADD
 	/**
 	 * Function for determining if a worker should become a combat engineer and
@@ -73,10 +86,12 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 	 * @return true if the Unit should become a combat engineer, false if not.
 	 */
 	private boolean shouldBecomeCombatEngineer() {
-		return false;
+		double machineUnitsCount = this.getNumberOfMachineUnits();
+		double combatEngineers = this.informationStorage.getWorkerConfig().getTotalCombatEngineerCount();
+
+		return combatEngineers / machineUnitsCount <= this.combatEngineerTriggerPercentageEnroll;
 	}
 
-	// TODO: WIP
 	// TODO: UML ADD
 	/**
 	 * Function for determining if a worker should stop being a combat engineer.
@@ -87,7 +102,28 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 	 *         false.
 	 */
 	private boolean shouldStopBeingCombatEngineer() {
-		return false;
+		double machineUnitsCount = this.getNumberOfMachineUnits();
+		double combatEngineers = this.informationStorage.getWorkerConfig().getTotalCombatEngineerCount();
+
+		return combatEngineers / machineUnitsCount >= this.combatEngineerTriggerPercentageCancel;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for getting the total number of machine Units currently in game
+	 * that a Terran_SCV is can repair.
+	 * 
+	 * @return the number of Player machine Units that can be repaired by a
+	 *         Terran_SCV.
+	 */
+	private int getNumberOfMachineUnits() {
+		int machineUnitsCount = 0;
+
+		for (UnitType unitType : RepairableUnitTypes) {
+			machineUnitsCount += this.informationStorage.getCurrentGameInformation().getCurrentUnitCounts()
+					.getOrDefault(unitType, 0);
+		}
+		return machineUnitsCount;
 	}
 
 	// TODO: UML ADD

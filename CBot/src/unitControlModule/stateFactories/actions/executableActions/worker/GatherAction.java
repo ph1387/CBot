@@ -28,6 +28,7 @@ public abstract class GatherAction extends WorkerAction {
 		super(target);
 
 		this.addPrecondition(new GoapState(0, "allowGathering", true));
+		this.addPrecondition(new GoapState(0, "canGather", true));
 		this.addPrecondition(new GoapState(0, "canMove", true));
 	}
 

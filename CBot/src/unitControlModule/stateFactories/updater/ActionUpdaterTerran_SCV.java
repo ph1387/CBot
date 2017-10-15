@@ -64,8 +64,7 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 		Unit closestFollowableUnit = null;
 
 		// Add all Units of the Player on the map that match the repairable
-		// UnitType to
-		// the List.
+		// UnitType to the List.
 		for (UnitType unitType : PlayerUnitTerran_SCV.getRepairableUnitTypes()) {
 			followableUnits.addAll(this.playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
 					.getOrDefault(unitType, new HashSet<Unit>()));
@@ -74,17 +73,23 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 		this.sortByDistance(followableUnits, this.playerUnit.getUnit());
 
 		// Find a Unit that is not already being followed by another worker,
-		// starting
-		// with the closest one.
+		// starting with the closest one.
 		// OR
 		// Renew the reference to the Unit set in the previous iteration.
 		for (Unit unit : followableUnits) {
-			if (!this.playerUnit.getInformationStorage().getWorkerConfig().getUnitMapperFollow().isBeingMapped(unit)
-					|| this.playerUnit.getInformationStorage().getWorkerConfig().getUnitMapperFollow()
-							.getMappingUnit(unit) == this.playerUnit.getUnit()) {
-				closestFollowableUnit = unit;
+			boolean isNotMapped = !this.playerUnit.getInformationStorage().getWorkerConfig().getUnitMapperFollow()
+					.isBeingMapped(unit);
+			boolean wasMappedPreviously = this.playerUnit.getInformationStorage().getWorkerConfig()
+					.getUnitMapperFollow().getMappingUnit(unit) == this.playerUnit.getUnit();
 
-				break;
+			if (isNotMapped || wasMappedPreviously) {
+				// The Unit has to be completed for the executing one to be able
+				// to follow it.
+				if (unit.isCompleted() && this.playerUnit.getUnit().canFollow(unit)) {
+					closestFollowableUnit = unit;
+
+					break;
+				}
 			}
 		}
 
@@ -107,8 +112,7 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 	 */
 	private List<Unit> sortByDistance(List<Unit> list, final Unit executingUnit) {
 		// Sort based on the distance to the executing Unit. The closest one is
-		// at the
-		// beginning of the List.
+		// at the beginning of the List.
 		list.sort(new Comparator<Unit>() {
 
 			@Override

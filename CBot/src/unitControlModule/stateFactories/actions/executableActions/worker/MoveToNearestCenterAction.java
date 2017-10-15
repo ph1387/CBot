@@ -30,8 +30,9 @@ public class MoveToNearestCenterAction extends WorkerAction {
 	public MoveToNearestCenterAction(Object target) {
 		super(target);
 
-		this.addEffect(new GoapState(0, "allowGathering", true));
-		this.addPrecondition(new GoapState(0, "allowGathering", false));
+		this.addEffect(new GoapState(0, "canGather", true));
+		this.addPrecondition(new GoapState(0, "canGather", false));
+		this.addPrecondition(new GoapState(0, "allowGathering", true));
 	}
 
 	// -------------------- Functions

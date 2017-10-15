@@ -29,6 +29,8 @@ public class FollowActionTerran_SCV extends FollowAction {
 		this.addEffect(new GoapState(0, "isNearRepairableUnit", true));
 		this.addEffect(new GoapState(0, "isFollowingUnit", true));
 		this.addPrecondition(new GoapState(0, "isNearRepairableUnit", false));
+		this.addPrecondition(new GoapState(0, "isCarryingMinerals", false));
+		this.addPrecondition(new GoapState(0, "isCarryingGas", false));
 	}
 
 	// -------------------- Functions

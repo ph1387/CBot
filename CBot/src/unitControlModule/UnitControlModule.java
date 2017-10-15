@@ -12,7 +12,6 @@ import core.Display;
 import core.TilePositionContenderFactory;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapAgent;
-import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.RemoveAgentEvent;
@@ -99,7 +98,15 @@ public class UnitControlModule implements RemoveAgentEvent {
 		// TODO: DEBUG INFO
 		// Display the targets of all registered Units.
 		for (GoapAgent goapAgent : this.agents) {
-			Display.showUnitTarget(((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit(), new Color(0, 0, 255));
+			Unit unit = ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit();
+
+			if (unit.isFollowing()) {
+				Display.showUnitTile(unit, new bwapi.Color(255, 0, 0));
+				Core.getInstance().getGame().drawLineMap(unit.getPosition(), unit.getTargetPosition(),
+						new bwapi.Color(255, 0, 0));
+			} else {
+				Display.showUnitTarget(unit, new Color(0, 0, 255));
+			}
 		}
 	}
 

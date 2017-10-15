@@ -33,7 +33,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	private WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution;
 
 	protected boolean assignedToSout = false;
-	
+
 	public PlayerUnitWorker(Unit unit, InformationStorage informationStorage,
 			WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation,
 			WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution) {
@@ -103,7 +103,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 			}
 		}
 	}
-	
+
 	// TODO: UML ADD
 	@Override
 	public void destroy() {
@@ -132,5 +132,5 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	public boolean isAssignedToSout() {
 		return assignedToSout;
 	}
-	
+
 }

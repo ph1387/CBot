@@ -43,6 +43,7 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 		if (isRepairing || isFollowing || ((PlayerUnitTerran_SCV) playerUnit).isCombatEngineer()
 				|| ((PlayerUnitWorker) playerUnit).isAssignedToSout()) {
 			this.changeWorldStateEffect("canConstruct", false);
+			this.changeWorldStateEffect("allowGathering", false);
 		} else {
 			this.changeWorldStateEffect("canConstruct", true);
 		}
@@ -54,7 +55,6 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 		}
 
 		// isNearRepairableUnit is not changed due to combat engineers then
-		// starting to
-		// gather resources since the goal is met eventually!
+		// starting to gather resources since the goal is met eventually!
 	}
 }

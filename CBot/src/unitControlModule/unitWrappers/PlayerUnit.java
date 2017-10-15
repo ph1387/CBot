@@ -443,6 +443,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return unitToReactTo;
 	}
 
+	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for generating a modified version of the standard confidence.
 	 * This function utilizes the {@link #generateConfidence()} method that is
@@ -456,7 +457,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 *         factors into account like the distance to certain buildings and
 	 *         locations.
 	 */
-	private double generateModifiedConfidence() {
+	protected double generateModifiedConfidence() {
 		Integer closestCenterDistance = this.generateClosestCenterDistance();
 		double modifiedConfidence = this.generateConfidence();
 
