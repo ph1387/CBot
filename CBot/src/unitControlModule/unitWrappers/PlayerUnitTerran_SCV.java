@@ -30,6 +30,10 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 	private double combatEngineerTriggerPercentageEnroll = 0.3;
 	// TODO: UML ADD
 	private double combatEngineerTriggerPercentageCancel = 0.8;
+	// TODO: UML ADD
+	// The confidence multiplier for combat engineers following or repairing
+	// Units.
+	private double combatEngineerConfidenceMultiplier = 2.;
 
 	// TODO: UML ADD
 	// The machines that are repairable besides the buildings. Vultures are not
@@ -124,6 +128,26 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 					.getOrDefault(unitType, 0);
 		}
 		return machineUnitsCount;
+	}
+
+	// TODO: UML ADD
+	@Override
+	protected double generateModifiedConfidence() {
+		boolean isRepairing = this.unit.isRepairing()
+				|| this.informationStorage.getWorkerConfig().getUnitMapperRepair().isMapped(this.unit);
+		boolean isFollowing = this.unit.isFollowing()
+				|| this.informationStorage.getWorkerConfig().getUnitMapperFollow().isMapped(this.unit);
+		double modifiedConfidence = super.generateModifiedConfidence();
+
+		// Only apply changes to the confidence if the Unit is a combat engineer
+		// and actually following / repairing a Unit. This is due to idling
+		// combat engineers not being allowed to retreat easily when their
+		// target is attacked.
+		if (this.isCombatEngineer && (isRepairing || isFollowing)) {
+			modifiedConfidence *= this.combatEngineerConfidenceMultiplier;
+		}
+
+		return modifiedConfidence;
 	}
 
 	// TODO: UML ADD
