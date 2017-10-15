@@ -16,9 +16,10 @@ public class ScoreGeneratorWorker extends ScoreGeneratorDefault {
 
 	private static int Divider = 1;
 
+	// TODO: UML CHANGE 8
 	// Multiplier needed for ensuring that enough workers per center are
 	// trained. the higher the number the more workers are trained.
-	private double generalMultiplier = 8.;
+	private double generalMultiplier = 16.;
 
 	public ScoreGeneratorWorker(BuildActionManager manager) {
 		super(manager);
