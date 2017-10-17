@@ -6,6 +6,7 @@ import java.util.List;
 
 import bwapi.Unit;
 
+// TODO: UML CHANGE ABSTRACT
 /**
  * ResourceManager.java --- Manager class for a List of
  * {@link GatheringSource}s. These include mainly the {@link MineralPatch}s and
@@ -125,6 +126,31 @@ class ResourceManager<T extends GatheringSource> implements IResourceManager {
 		}
 
 		return foundGatheringSource;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if the {@link ResourceManager} contains a specific
+	 * {@link ResourceManagerEntry} / worker.
+	 * 
+	 * @param entry
+	 *            the worker which all gathering sources assigned to this
+	 *            {@link ResourceManager} are tested for.
+	 * @return true if the {@link ResourceManager} has a gathering source
+	 *         assigned that contains the provided {@link ResourceManagerEntry},
+	 *         otherwise false.
+	 */
+	public boolean contains(ResourceManagerEntry entry) {
+		boolean contains = false;
+
+		for (T t : this.gatheringSources) {
+			if (t.containsWorker(entry)) {
+				contains = true;
+
+				break;
+			}
+		}
+		return contains;
 	}
 
 	// ------------------------------ Getter / Setter

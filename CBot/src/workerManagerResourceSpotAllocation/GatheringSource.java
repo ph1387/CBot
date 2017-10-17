@@ -94,7 +94,8 @@ public interface GatheringSource {
 	 *            was previously added and whose gathering spot is now
 	 *            requested.
 	 * @return the Unit / gathering spot the {@link ResourceManagerEntry} was
-	 *         assigned to.
+	 *         assigned to or <b>null</b> if the Unit assigned Unit is no longer
+	 *         available.
 	 */
 	public Unit getGatheringSource(ResourceManagerEntry worker);
 

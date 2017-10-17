@@ -92,7 +92,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 			this.assignedToSout = true;
 
 			this.resetActions();
-		} else if (!this.assignedToSout) {
+		} else if (!this.assignedToSout && !this.unit.isGatheringGas()) {
 			if (!CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
 					&& CBot.getInstance().getWorkerManagerConstructionJobDistribution().canConstruct()
 					&& this.currentConstrcutionState == ConstructionState.IDLE) {

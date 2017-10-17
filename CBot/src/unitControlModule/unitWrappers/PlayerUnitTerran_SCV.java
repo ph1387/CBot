@@ -62,7 +62,7 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 
 		// Switch from a "normal" worker to being a combat engineer or vice
 		// versa.
-		if (!this.isCombatEngineer && this.shouldBecomeCombatEngineer()) {
+		if (!this.isCombatEngineer && this.shouldBecomeCombatEngineer() && !this.unit.isGatheringGas()) {
 			this.isCombatEngineer = true;
 			this.informationStorage.getWorkerConfig().incrementCombatEngineerCount();
 		}

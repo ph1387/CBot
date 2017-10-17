@@ -1,7 +1,5 @@
 package workerManagerResourceSpotAllocation;
 
-import java.util.HashMap;
-
 import bwapi.Unit;
 import informationStorage.InformationStorage;
 
@@ -17,9 +15,11 @@ public class WorkerManagerResourceSpotAllocation {
 
 	private InformationStorage informationStorage;
 
+	// TODO: UML REMOVE
 	// The mapping of the different workers to the ResourceManagers. Using a
 	// HashMap ensures a faster lookup when testing for a worker assignment.
-	private HashMap<ResourceManagerEntry, IResourceManager> mappedResourceManagerEntries = new HashMap<>();
+	// private HashMap<ResourceManagerEntry, IResourceManager>
+	// mappedResourceManagerEntries = new HashMap<>();
 	private MineralPatchManager<MineralPatch> mineralPatchManager = new MineralPatchManager<>();
 	private RefineryManager<RefineryWrapper> refineryManager = new RefineryManager<>();
 
@@ -55,10 +55,6 @@ public class WorkerManagerResourceSpotAllocation {
 
 		if (this.canAddMineralGatherer()) {
 			success = this.mineralPatchManager.addToManager(entry);
-
-			if (success) {
-				this.mappedResourceManagerEntries.put(entry, this.mineralPatchManager);
-			}
 		}
 		return success;
 	}
@@ -88,10 +84,6 @@ public class WorkerManagerResourceSpotAllocation {
 
 		if (this.canAddGasGatherer()) {
 			success = this.refineryManager.addToManager(entry);
-
-			if (success) {
-				this.mappedResourceManagerEntries.put(entry, this.refineryManager);
-			}
 		}
 		return success;
 	}
@@ -109,12 +101,13 @@ public class WorkerManagerResourceSpotAllocation {
 	 *         one or the removal of him failed.
 	 */
 	public boolean removeGatherer(ResourceManagerEntry entry) {
+		IResourceManager resourceManager = this.findManager(entry);
 		boolean success = false;
 
-		if (this.mappedResourceManagerEntries.containsKey(entry)) {
-			success = this.mappedResourceManagerEntries.get(entry).removeFromManager(entry);
-			success &= this.mappedResourceManagerEntries.remove(entry) != null;
+		if (resourceManager != null) {
+			success = resourceManager.removeFromManager(entry);
 		}
+
 		return success;
 	}
 
@@ -152,7 +145,7 @@ public class WorkerManagerResourceSpotAllocation {
 	 *         false if not.
 	 */
 	public boolean isAssignedGatheringMinerals(ResourceManagerEntry entry) {
-		IResourceManager resourceManager = this.mappedResourceManagerEntries.get(entry);
+		IResourceManager resourceManager = this.findManager(entry);
 
 		return resourceManager != null && resourceManager instanceof MineralPatchManager<?>;
 	}
@@ -167,7 +160,7 @@ public class WorkerManagerResourceSpotAllocation {
 	 *         false if not.
 	 */
 	public boolean isAssignedGatheringGas(ResourceManagerEntry entry) {
-		IResourceManager resourceManager = this.mappedResourceManagerEntries.get(entry);
+		IResourceManager resourceManager = this.findManager(entry);
 
 		return resourceManager != null && resourceManager instanceof RefineryManager<?>;
 	}
@@ -182,7 +175,31 @@ public class WorkerManagerResourceSpotAllocation {
 	 *         {@link MineralPatchManager} OR a {@link RefineryManager}.
 	 */
 	public boolean isAssignedGathering(ResourceManagerEntry entry) {
-		return this.mappedResourceManagerEntries.containsKey(entry);
+		return this.findManager(entry) != null;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for finding the {@link IResourceManager} that contains the
+	 * provided {@link ResourceManagerEntry} as a assigned worker.
+	 * 
+	 * @param entry
+	 *            the worker which will be looked for in the different
+	 *            {@link IResourceManager}s.
+	 * @return the {@link IResourceManager} that contains the worker / has the
+	 *         worker assigned or null, if none of the managers contains the
+	 *         {@link ResourceManagerEntry}.
+	 */
+	private IResourceManager findManager(ResourceManagerEntry entry) {
+		IResourceManager manager = null;
+
+		if (this.mineralPatchManager.contains(entry)) {
+			manager = this.mineralPatchManager;
+		} else if (this.refineryManager.contains(entry)) {
+			manager = this.refineryManager;
+		}
+
+		return manager;
 	}
 
 	// ------------------------------ Getter / Setter
@@ -202,7 +219,7 @@ public class WorkerManagerResourceSpotAllocation {
 		Unit gatheringSource = null;
 
 		if (this.isAssignedGathering(entry)) {
-			gatheringSource = this.mappedResourceManagerEntries.get(entry).getGatheringSource(entry);
+			gatheringSource = this.findManager(entry).getGatheringSource(entry);
 		}
 
 		return gatheringSource;

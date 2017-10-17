@@ -129,7 +129,7 @@ class MineralPatch implements GatheringSource {
 		// Iterate through all mineral spots and only count the ones that
 		// contain minerals!
 		for (Unit unit : this.baseLocation.getMinerals()) {
-			if (unit.getResources() > 0) {
+			if (unit.exists() && unit.getResources() > 0) {
 				totalWorkerSpots += this.maxWorkersPerSpot;
 			}
 
@@ -146,13 +146,18 @@ class MineralPatch implements GatheringSource {
 
 	@Override
 	public Unit getGatheringSource(ResourceManagerEntry worker) {
+		Unit mappedGatheringSource = this.mappedWorkers.get(worker);
 		Unit gatheringSource = null;
 
-		// Return the gathering source if either resources can be mined or the
-		// maximum number of Units working there is not exceeded.
-		if ((this.mappedWorkers.get(worker).getResources() > 0)
-				|| (this.mappedSpots.get(this.mappedWorkers.get(worker)).size() <= this.maxWorkersPerSpot)) {
-			gatheringSource = this.mappedWorkers.get(worker);
+		// The gathering source has to be existent in the game in order for the
+		// Unit to gather there.
+		if (mappedGatheringSource != null && mappedGatheringSource.exists()) {
+			// Return the gathering source if either resources can be mined or
+			// the maximum number of Units working there is not exceeded.
+			if ((mappedGatheringSource.getResources() > 0)
+					|| (this.mappedSpots.get(mappedGatheringSource).size() <= this.maxWorkersPerSpot)) {
+				gatheringSource = mappedGatheringSource;
+			}
 		}
 
 		return gatheringSource;

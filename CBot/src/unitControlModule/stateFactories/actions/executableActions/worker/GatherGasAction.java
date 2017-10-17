@@ -34,16 +34,23 @@ public class GatherGasAction extends GatherAction {
 
 		if (!workerManagerResourceSpotAllocation.isAssignedGathering((PlayerUnitWorker) goapUnit)) {
 			success &= workerManagerResourceSpotAllocation.addGasGatherer((PlayerUnitWorker) goapUnit);
+
+			if (success) {
+				this.assigningMissing = false;
+			}
 		}
 
-		Unit currentGatheringSource = workerManagerResourceSpotAllocation
-				.getGatheringSource((PlayerUnitWorker) goapUnit);
+		// Only assigned Units can perform the action itself.
+		if (!this.assigningMissing) {
+			Unit currentGatheringSource = workerManagerResourceSpotAllocation
+					.getGatheringSource((PlayerUnitWorker) goapUnit);
 
-		// If the gathering source changed, execute a new gather command.
-		if (currentGatheringSource != this.prevGatheringSource) {
-			((PlayerUnitWorker) goapUnit).getUnit().gather(currentGatheringSource);
+			// If the gathering source changed, execute a new gather command.
+			if (currentGatheringSource != this.prevGatheringSource) {
+				((PlayerUnitWorker) goapUnit).getUnit().gather(currentGatheringSource);
 
-			this.prevGatheringSource = currentGatheringSource;
+				this.prevGatheringSource = currentGatheringSource;
+			}
 		}
 
 		return success;
@@ -60,7 +67,8 @@ public class GatherGasAction extends GatherAction {
 		if (!workerManagerResourceSpotAllocation.isAssignedGatheringGas((PlayerUnitWorker) goapUnit)) {
 			success &= workerManagerResourceSpotAllocation.canAddGasGatherer();
 		} else {
-			success &= workerManagerResourceSpotAllocation.isAssignedGatheringGas((PlayerUnitWorker) goapUnit);
+			success &= workerManagerResourceSpotAllocation.isAssignedGatheringGas((PlayerUnitWorker) goapUnit)
+					&& workerManagerResourceSpotAllocation.getGatheringSource((PlayerUnitWorker) goapUnit) != null;
 		}
 		return success;
 	}

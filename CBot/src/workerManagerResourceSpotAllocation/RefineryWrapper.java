@@ -20,7 +20,8 @@ class RefineryWrapper implements GatheringSource {
 	// are going to gather at.
 	private Unit refinery;
 	private int maxWorkersPerRefinery = 3;
-	private int freeWorkerSpots = this.maxWorkersPerRefinery;
+	// TODO: UML REMOVE
+//	private int freeWorkerSpots = this.maxWorkersPerRefinery;
 	private HashSet<ResourceManagerEntry> assignedWorkers = new HashSet<>();
 
 	public RefineryWrapper(Unit refinery, IResourceManager refineryManager) {
@@ -36,7 +37,6 @@ class RefineryWrapper implements GatheringSource {
 
 		if (this.isSpaceAvailable()) {
 			success = this.assignedWorkers.add(worker);
-			this.freeWorkerSpots--;
 		}
 		return success;
 	}
@@ -46,8 +46,6 @@ class RefineryWrapper implements GatheringSource {
 		boolean success = false;
 
 		if (this.containsWorker(worker)) {
-			this.freeWorkerSpots++;
-
 			success = this.assignedWorkers.remove(worker);
 		}
 		return success;
@@ -65,7 +63,7 @@ class RefineryWrapper implements GatheringSource {
 
 	@Override
 	public int getAvailableSpace() {
-		return this.freeWorkerSpots;
+		return this.maxWorkersPerRefinery - this.assignedWorkers.size();
 	}
 
 	@Override
@@ -75,7 +73,12 @@ class RefineryWrapper implements GatheringSource {
 
 	@Override
 	public Unit getGatheringSource(ResourceManagerEntry worker) {
-		return this.refinery;
+		Unit refinery = null;
+
+		if (this.refinery.exists()) {
+			refinery = this.refinery;
+		}
+		return refinery;
 	}
 
 }
