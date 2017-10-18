@@ -79,6 +79,11 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	private double confidenceMultiplierSingleCenter = 2.5;
 	private double confidenceMultiplierInMaxCenterDistance = 1.5;
 
+	// TODO: UML ADD
+	// The wrapper that is controlling the resets of the Unit if an issue
+	// occurrs.
+	private IssueStateWrapper issueStateWrapper = new IssueStateWrapper();
+
 	// Factories and Objects needed for an accurate representation of the Units
 	// capabilities.
 	private StateFactory stateFactory;
@@ -178,6 +183,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 					this.actOnUnitsKnown();
 				}
 			}
+
+			// TODO: WIP
+			this.checkForUnresolvedIssue();
 
 			try {
 				this.worldStateUpdater.update(this);
@@ -629,6 +637,25 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		if (this.currentRangeState == ConfidenceRangeStates.UNIT_IN_RANGE
 				&& this.closestEnemyUnitInConfidenceRange == null) {
 			this.currentRangeState = ConfidenceRangeStates.NO_UNIT_IN_RANGE;
+			this.resetActions();
+		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for checking for an unresolved issue that the Unit is currently
+	 * experiencing. This can be i.e. the Unit being stuck or idling. Therefore
+	 * a check must be performed so that the actions of the Unit are reset. This
+	 * effectively causes the Unit to search for a new / other / same goal to
+	 * pursue with a new set of actions. <br>
+	 * <b>Note:</b><br>
+	 * This is necessary since either an action of an Unit does not work
+	 * correctly or a command passed to the BroodWar-API did not execute.
+	 * Therefore a "hard reset" is necessary to ensure that Units i.e. do not
+	 * stand in the base idling.
+	 */
+	private void checkForUnresolvedIssue() {
+		if ((this.unit.isStuck() || this.unit.isIdle()) && this.issueStateWrapper.signalIssue()) {
 			this.resetActions();
 		}
 	}

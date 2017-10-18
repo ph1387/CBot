@@ -6,7 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import bwapi.*;
+import bwapi.Color;
+import bwapi.TechType;
+import bwapi.TilePosition;
+import bwapi.Unit;
+import bwapi.UnitType;
+import bwapi.UpgradeType;
 import core.Core;
 import core.Display;
 import core.TilePositionContenderFactory;
