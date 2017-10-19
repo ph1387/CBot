@@ -22,8 +22,10 @@ import bwapi.Pair;
  */
 public class Simulator {
 
-	private static final int DEFAULT_INITIAL_NODE_COUNT = 100000;
-	private static final int DEFAULT_INITIAL_ACTION_SEQUENCE_COUNT = 100000;
+	// TODO: UML CHANGE 100000
+	private static final int DEFAULT_INITIAL_NODE_COUNT = 1000;
+	// TODO: UML CHANGE 100000
+	private static final int DEFAULT_INITIAL_ACTION_SEQUENCE_COUNT = 1000;
 
 	private HashSet<Node> nodes = new HashSet<>();
 	private TreeSet<Node> currentLayerNodes = new TreeSet<>();

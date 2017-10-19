@@ -16,7 +16,7 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
 	private int maxGroupSize = 5;
 	private int maxLeaderTileDistance = 5;
-	
+
 	/**
 	 * @param target
 	 *            type: TilePosition
@@ -68,10 +68,10 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 	public int defineMaxGroupSize() {
 		return this.maxGroupSize;
 	}
-	
+
 	@Override
 	public int defineMaxLeaderTileDistance() {
 		return this.maxLeaderTileDistance;
 	}
-	
+
 }

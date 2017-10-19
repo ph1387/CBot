@@ -184,7 +184,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 				}
 			}
 
-			// TODO: WIP
+			// Check if the Unit is stuck or idling.
 			this.checkForUnresolvedIssue();
 
 			try {
