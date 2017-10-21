@@ -16,8 +16,9 @@ class RefineryManager<T extends GatheringSource> extends ResourceManager<Gatheri
 
 	private HashMap<Unit, RefineryWrapper> mappedRefineries = new HashMap<>();
 
-	public RefineryManager() {
-
+	// TODO: UML PARAMS
+	public RefineryManager(WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation) {
+		super(workerManagerResourceSpotAllocation);
 	}
 
 	// -------------------- Functions

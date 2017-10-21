@@ -163,4 +163,11 @@ class MineralPatch implements GatheringSource {
 		return gatheringSource;
 	}
 
+	// ------------------------------ Getter / Setter
+
+	// TODO: UML ADD
+	public BaseLocation getBaseLocation() {
+		return baseLocation;
+	}
+
 }

@@ -20,11 +20,14 @@ public class WorkerManagerResourceSpotAllocation {
 	// HashMap ensures a faster lookup when testing for a worker assignment.
 	// private HashMap<ResourceManagerEntry, IResourceManager>
 	// mappedResourceManagerEntries = new HashMap<>();
-	private MineralPatchManager<MineralPatch> mineralPatchManager = new MineralPatchManager<>();
-	private RefineryManager<RefineryWrapper> refineryManager = new RefineryManager<>();
+	private MineralPatchManager<MineralPatch> mineralPatchManager;
+	private RefineryManager<RefineryWrapper> refineryManager;
 
 	public WorkerManagerResourceSpotAllocation(InformationStorage informationStorage) {
 		this.informationStorage = informationStorage;
+		
+		this.mineralPatchManager = new MineralPatchManager<>(this);
+		this.refineryManager = new RefineryManager<>(this);
 	}
 
 	// -------------------- Functions
