@@ -9,8 +9,8 @@ import bwapi.Pair;
  * ActionSequence.java --- A sequence of {@link ActionType}s that can / will be
  * executed. This class contains extra information like the combined mineral and
  * gas costs of these actions being taken. Also this class contains the
- * information regarding the availability and occupation of certain Types
- * that are required to perform the stored actions.
+ * information regarding the availability and occupation of certain Types that
+ * are required to perform the stored actions.
  * 
  * @author P H - 06.07.2017
  *
@@ -35,6 +35,18 @@ public class ActionSequence {
 	}
 
 	// -------------------- Functions
+
+	// TODO: UML ADD
+	/**
+	 * Function for resetting all values stored in the instance.
+	 */
+	public void reset() {
+		this.actionTypeSequence = new ArrayList<>();
+		this.mineralCost = 0;
+		this.gasCost = 0;
+		this.typesFree = new HashMap<>();
+		this.occupiedTypeTimes = new HashMap<>();
+	}
 
 	// ------------------------------ Getter / Setter
 

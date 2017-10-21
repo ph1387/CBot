@@ -57,12 +57,7 @@ public class ActionSequenceFactory {
 	 *            the ActionSequence that can be used by other classes.
 	 */
 	public void markSequenceAsAvailable(ActionSequence sequence) {
-		sequence.setGasCost(0);
-		sequence.setMineralCost(0);
-		sequence.getTypesFree().clear();
-		sequence.getOccupiedTypeTimes().clear();
-		sequence.getActionTypeSequence().clear();
-
+		sequence.reset();
 		this.availableSequences.add(sequence);
 	}
 }

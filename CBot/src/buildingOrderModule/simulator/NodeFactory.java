@@ -59,6 +59,7 @@ public class NodeFactory {
 	 *            the Node that can be used by other classes.
 	 */
 	public void markNodeAsAvailable(Node node) {
+		node.reset();
 		this.availableNodes.add(node);
 	}
 

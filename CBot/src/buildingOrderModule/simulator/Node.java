@@ -73,6 +73,22 @@ public class Node implements Comparable<Node> {
 				+ (int) (node.getCurrentMinerals() * InfluenceMinerals + node.getCurrentGas() * InfluenceGas);
 	}
 
+	// TODO: UML ADD
+	/**
+	 * Function for resetting all values stored in the instance.
+	 */
+	public void reset() {
+		this.typesFree = new HashMap<>();
+		this.typesWorking = new HashMap<>();
+		this.actionTypeOccurrences = new HashMap<>();
+		this.chosenActions = new ArrayList<>();
+		this.currentMinerals = 0;
+		this.currentGas = 0;
+		this.frameTimeStamp = -1;
+		this.previousNode = null;
+		this.score = 0;
+	}
+
 	// ------------------------------ Getter / Setter
 
 	public HashMap<TypeWrapper, Integer> getTypesFree() {
