@@ -44,7 +44,6 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 		// Call super.update() when the Units should react independently to
 		// enemy Units and retreat on their own. Init() should not be called
 		// then!
-		// super.update(playerUnit);
 
 		// Get the references to all used actions.
 		if (this.initializationMissing) {
@@ -52,11 +51,11 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 			this.initializationMissing = false;
 		}
 
-		this.followActionTerran_ScienceVessel.setTarget(this.getClosestSupportableUnit(playerUnit));
+		this.followActionTerran_ScienceVessel.setTarget(this.getClosestSupportableUnit());
 
 		// Find a Unit near the executing Science_Vessel that requires help in
 		// form of a life boost.
-		this.abilityActionTerranScienceVessel_DefensiveMatrix.setTarget(this.getDefensiveMatrixTarget(playerUnit));
+		this.abilityActionTerranScienceVessel_DefensiveMatrix.setTarget(this.getDefensiveMatrixTarget(this.playerUnit));
 	}
 
 	// TODO: UML ADD
@@ -79,25 +78,23 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 	 * UnitTypes at the beginning of the List are preferred while the ones at
 	 * the end are considered last.
 	 * 
-	 * @param playerUnit
-	 *            the Unit that is executing the Action.
 	 * @return the closest Unit that the executing Unit can support.
 	 */
-	private Unit getClosestSupportableUnit(PlayerUnit playerUnit) {
+	private Unit getClosestSupportableUnit() {
 		Unit closestSupportableUnit = (Unit) this.followActionTerran_ScienceVessel.getTarget();
 		double closestSupportableUnitDistance = 0.;
 
 		// Prevent access violation errors.
 		if (closestSupportableUnit != null) {
-			closestSupportableUnitDistance = playerUnit.getUnit().getDistance(closestSupportableUnit);
+			closestSupportableUnitDistance = this.playerUnit.getUnit().getDistance(closestSupportableUnit);
 		}
 
 		// Find the closest Unit whose UnitType matches one of the
 		// ones supported by the Terran_Science_Vessel.
 		for (UnitType unitType : PlayerUnitTerran_ScienceVessel.getSupportableUnitTypes()) {
-			for (Unit unit : playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
+			for (Unit unit : this.playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
 					.getOrDefault(unitType, new HashSet<Unit>())) {
-				double currentDistance = playerUnit.getUnit().getDistance(unit);
+				double currentDistance = this.playerUnit.getUnit().getDistance(unit);
 
 				if (!this.playerUnit.getInformationStorage().getScienceVesselStorage().isBeingFollowed(unit)) {
 					if (closestSupportableUnit == null || currentDistance < closestSupportableUnitDistance) {

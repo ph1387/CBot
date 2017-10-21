@@ -51,7 +51,7 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 			this.initializationMissing = false;
 		}
 
-		this.updateHealAndFollowTargets(playerUnit);
+		this.updateHealAndFollowTargets();
 	}
 
 	@Override
@@ -69,11 +69,8 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 	 * Function for updating the target of the
 	 * {@link #abilityActionTerranMedicHeal} and
 	 * {@link #followActionTerran_Medic} instances.
-	 * 
-	 * @param playerUnit
-	 *            the Unit that is executing the Action.
 	 */
-	private void updateHealAndFollowTargets(PlayerUnit playerUnit) {
+	private void updateHealAndFollowTargets() {
 		// Either a new Unit has to be assigned as a target or the current
 		// target Unit does not miss any hit points and therefore a new one can
 		// be assigned.
@@ -81,11 +78,11 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 				|| (((Unit) this.abilityActionTerranMedicHeal.getTarget())
 						.getHitPoints() >= ((Unit) this.abilityActionTerranMedicHeal.getTarget()).getType()
 								.maxHitPoints())) {
-			Unit closestUnit = this.getClosestHealableDamagedUnit(playerUnit);
+			Unit closestUnit = this.getClosestHealableDamagedUnit();
 
 			// No healable Unit is found -> Follow the next best Unit!
 			if (closestUnit == null) {
-				closestUnit = this.getClosestFollowableUnit(playerUnit);
+				closestUnit = this.getClosestFollowableUnit(this.playerUnit);
 			}
 
 			this.abilityActionTerranMedicHeal.setTarget(closestUnit);
@@ -98,20 +95,18 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 	 * Function for finding the closest damaged Unit that can be healed by the
 	 * provided PlayerUnit and is not targeted by another Terran_Medic.
 	 * 
-	 * @param playerUnit
-	 *            the Unit that is executing the Action.
 	 * @return the closest damaged, non targeted Unit that can be healed by the
 	 *         provided PlayerUnit.
 	 */
-	private Unit getClosestHealableDamagedUnit(PlayerUnit playerUnit) {
-		HashSet<Unit> possibleHealableUnits = this.getHealableUnits(playerUnit);
+	private Unit getClosestHealableDamagedUnit() {
+		HashSet<Unit> possibleHealableUnits = this.getHealableUnits(this.playerUnit);
 		HashSet<TilePosition> otherMedicTargetedUnitTilePositions = new HashSet<>();
 		HashSet<Unit> possibleUnits = new HashSet<>();
 
 		// Gather the TilePositions of each Terran_Medic targets.
-		for (Unit unit : playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
+		for (Unit unit : this.playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
 				.getOrDefault(UnitType.Terran_Medic, new HashSet<Unit>())) {
-			if (unit != playerUnit.getUnit() && unit.getTarget() != null) {
+			if (unit != this.playerUnit.getUnit() && unit.getTarget() != null) {
 				otherMedicTargetedUnitTilePositions.add(unit.getTarget().getTilePosition());
 			}
 		}
@@ -125,7 +120,7 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 			}
 		}
 
-		return BaseAction.getClosestUnit(possibleUnits, playerUnit.getUnit());
+		return BaseAction.getClosestUnit(possibleUnits, this.playerUnit.getUnit());
 	}
 
 	// TODO: UML ADD
@@ -133,8 +128,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 	 * Function for extracting all references to all current Player-Units on the
 	 * map that can be healed by a {@link PlayerUnitTerran_Medic}.
 	 * 
-	 * @param playerUnit
-	 *            the Unit that is executing the Action.
 	 * @return all current Player-Units on the map that can be healed by a
 	 *         {@link PlayerUnitTerran_Medic}.
 	 */
@@ -144,10 +137,10 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		// Get all the Units that match the defined UnitTypes except the one
 		// that is currently executing the Action.
 		for (UnitType unitType : PlayerUnitTerran_Medic.getHealableUnitTypes()) {
-			healableUnits.addAll(playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
+			healableUnits.addAll(this.playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
 					.getOrDefault(unitType, new HashSet<Unit>()));
 		}
-		healableUnits.remove(playerUnit.getUnit());
+		healableUnits.remove(this.playerUnit.getUnit());
 
 		return healableUnits;
 	}
@@ -156,12 +149,10 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 	/**
 	 * Function for finding the closest Unit that the executing Unit can follow.
 	 * 
-	 * @param playerUnit
-	 *            the Unit that is executing the Action.
 	 * @return the closest Unit that the executing Unit can follow.
 	 */
 	private Unit getClosestFollowableUnit(PlayerUnit playerUnit) {
-		return BaseAction.getClosestUnit(this.getFollowableUnits(playerUnit), playerUnit.getUnit());
+		return BaseAction.getClosestUnit(this.getFollowableUnits(), this.playerUnit.getUnit());
 	}
 
 	// TODO: UML ADD
@@ -173,12 +164,10 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 	 * UnitTypes are excluded to ensure that the Unit is searching for a
 	 * Terran_Marine/Firebat or a other healable Unit.
 	 * 
-	 * @param playerUnit
-	 *            the Unit that is executing the Action.
 	 * @return all current Player-Units on the map that can be followed by a
 	 *         {@link PlayerUnitTerran_Medic}.
 	 */
-	private HashSet<Unit> getFollowableUnits(PlayerUnit playerUnit) {
+	private HashSet<Unit> getFollowableUnits() {
 		HashSet<Unit> followableUnits = new HashSet<>();
 
 		// Get all the Units that match the defined UnitTypes except the one
@@ -187,11 +176,11 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 			// Do NOT add the Terran_Medic UnitType since this would cause the
 			// Units to clump. They would only walk towards each other in pairs.
 			if (unitType != UnitType.Terran_Medic) {
-				followableUnits.addAll(playerUnit.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
-						.getOrDefault(unitType, new HashSet<Unit>()));
+				followableUnits.addAll(this.playerUnit.getInformationStorage().getCurrentGameInformation()
+						.getCurrentUnits().getOrDefault(unitType, new HashSet<Unit>()));
 			}
 		}
-		followableUnits.remove(playerUnit.getUnit());
+		followableUnits.remove(this.playerUnit.getUnit());
 
 		return followableUnits;
 	}
