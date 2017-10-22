@@ -119,49 +119,51 @@ public class UnitTrackerModule {
 	 * Used for updating all information regarding enemy Units in the game.
 	 */
 	public void update() {
-		// Use a fixed update cycle to prevent the tracker from taking too many
-		// CPU resources and therefore slowing the frame rate of the game down
-		// (m*O(n) instead of O(n*m)).
-		if (Core.getInstance().getGame().getFrameCount() - this.lastUpdateTimeStamp >= FRAME_UPDATE_DIFF) {
-			this.updateCurrentGameInformation();
-			this.updateEnemyUnitLists();
-			this.updateTilePositionInformation();
-			this.forwardInformation();
+		if (this.informationStorage.getiUnitTrackerModuleConfig().enableUnitTrackerModuleUpdates()) {
+			// Use a fixed update cycle to prevent the tracker from taking too
+			// many CPU resources and therefore slowing the frame rate of the
+			// game down (m*O(n) instead of O(n*m)).
+			if (Core.getInstance().getGame().getFrameCount() - this.lastUpdateTimeStamp >= FRAME_UPDATE_DIFF) {
+				this.updateCurrentGameInformation();
+				this.updateEnemyUnitLists();
+				this.updateTilePositionInformation();
+				this.forwardInformation();
 
-			this.lastUpdateTimeStamp = Core.getInstance().getGame().getFrameCount();
-		}
+				this.lastUpdateTimeStamp = Core.getInstance().getGame().getFrameCount();
+			}
 
-		UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
-		UnitTrackerDisplay.showUnitsLastPosition(this.enemyUnits);
+			UnitTrackerDisplay.showBuildingsLastPosition(this.enemyBuildings);
+			UnitTrackerDisplay.showUnitsLastPosition(this.enemyUnits);
 
-		// Update the display of the calculated combat values of the ground and
-		// air forces of the enemy and the player. Player has to the shown
-		// first, since the enemy list might be empty which would result in none
-		// of them being shown.
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerAirStrength()) {
-			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerAirAttackTilePositions);
-		}
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerGroundStrength()) {
-			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
-		}
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerHealthStrength()) {
-			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerHealthTilePositions);
-		}
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerSupportStrength()) {
-			UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerSupportTilePositions);
-		}
+			// Update the display of the calculated combat values of the ground
+			// and air forces of the enemy and the player. Player has to the
+			// shown first, since the enemy list might be empty which would
+			// result in none of them being shown.
+			if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerAirStrength()) {
+				UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerAirAttackTilePositions);
+			}
+			if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerGroundStrength()) {
+				UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerGroundAttackTilePositions);
+			}
+			if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerHealthStrength()) {
+				UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerHealthTilePositions);
+			}
+			if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayPlayerSupportStrength()) {
+				UnitTrackerDisplay.showPlayerUnitTileStrength(this.playerSupportTilePositions);
+			}
 
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyAirStrength()) {
-			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyAirAttackTilePositions);
-		}
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyGroundStrength()) {
-			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
-		}
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyHealthStrength()) {
-			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyHealthTilePositions);
-		}
-		if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemySupportStrength()) {
-			UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemySupportTilePositions);
+			if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyAirStrength()) {
+				UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyAirAttackTilePositions);
+			}
+			if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyGroundStrength()) {
+				UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyGroundAttackTilePositions);
+			}
+			if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemyHealthStrength()) {
+				UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemyHealthTilePositions);
+			}
+			if (this.informationStorage.getiUnitTrackerModuleConfig().enableDisplayEnemySupportStrength()) {
+				UnitTrackerDisplay.showEnemyUnitTileStrength(this.enemySupportTilePositions);
+			}
 		}
 	}
 

@@ -12,6 +12,14 @@ import unitControlModule.UnitControlModule;
  */
 public interface IUnitControlModuleConfig {
 
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return true for enabling the updates on the {@link UnitControlModule},
+	 *         false for disabling them.
+	 */
+	public boolean enableUnitControlModuleUpdates();
+
 	/**
 	 *
 	 * @return true for enabling the display of the forwarded / received and

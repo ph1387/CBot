@@ -10,7 +10,7 @@ package informationStorage.config;
 public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, IInitConfig, IPlayerUnitConfig,
 		IUnitControlModuleConfig, IUnitTrackerModuleConfig {
 
-	// ----- General Bot functionalities:
+	// ---------- General Bot functionalities:
 	// Disable following properties on custom maps!
 
 	// Init:
@@ -21,13 +21,21 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// BuildingOrderModule:
 	private boolean enableBuildingOrderModuleUpdates = true;
 
-	// Following settings work on custom maps:
-	
+	// ----- Following settings work on custom maps:
+
+	// UnitTrackerModule:
+	// TODO: UML ADD
+	private boolean enableUnitTrackerModuleUpdates = true;
+
+	// UnitControlModule:
+	// TODO: UML ADD
+	private boolean enableUnitControlModuleUpdates = true;
+
 	// PlayerUnit:
 	private boolean allowModifiedConfidenceGeneration = true;
 
-	// ----- Display / Debug functionalities:
-	
+	// ---------- Display / Debug functionalities:
+
 	// BuildingOrderModule:
 	// TODO: UML ADD
 	private boolean displayGameStates = false;
@@ -54,13 +62,13 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	private boolean displayUnitConfidence = true;
 
 	// -------------------- Functions
-	
+
 	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayGameStates() {
 		return this.displayGameStates;
 	}
-	
+
 	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayGeneratedScores() {
@@ -155,6 +163,16 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	@Override
 	public boolean enableBuildingOrderModuleUpdates() {
 		return this.enableBuildingOrderModuleUpdates;
+	}
+
+	@Override
+	public boolean enableUnitTrackerModuleUpdates() {
+		return this.enableUnitTrackerModuleUpdates;
+	}
+
+	@Override
+	public boolean enableUnitControlModuleUpdates() {
+		return this.enableUnitControlModuleUpdates;
 	}
 
 	// ------------------------------ Getter / Setter

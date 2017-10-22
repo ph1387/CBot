@@ -11,6 +11,14 @@ import unitTrackerModule.UnitTrackerModule;
  */
 public interface IUnitTrackerModuleConfig {
 
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return true for enabling the updates on the {@link UnitTrackerModule},
+	 *         false for disabling them.
+	 */
+	public boolean enableUnitTrackerModuleUpdates();
+
 	/**
 	 *
 	 * @return true for enabling the highlight of the TilePositions containing

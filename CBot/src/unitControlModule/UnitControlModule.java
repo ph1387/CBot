@@ -79,38 +79,40 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 * the game.
 	 */
 	public void update() {
-		this.addNewTrackedUnits();
-		this.removeTrackedUnits();
+		if (this.informationStorage.getiUnitControlModuleConfig().enableUnitControlModuleUpdates()) {
+			this.addNewTrackedUnits();
+			this.removeTrackedUnits();
 
-		// Update the instances in the specified Queues.
-		if (this.currentUpdateCycle == UpdateCycle.COMBAT_UNIT) {
-			this.updateCombatUnitQueue();
-			this.currentUpdateCycle = UpdateCycle.WORKER;
-		} else {
-			this.updateWorkerQueue();
-			this.currentUpdateCycle = UpdateCycle.COMBAT_UNIT;
-		}
-		this.updateBuildingUnitQueue();
-
-		// Display of various information on the screen and on the map.
-		if (this.informationStorage.getiUnitControlModuleConfig().enableDisplayQueueInformation()) {
-			UnitControlDisplay.showQueueInformation(this.agents, this.buildings, this.informationStorage);
-		}
-		if (this.informationStorage.getiUnitControlModuleConfig().enableDisplayUnitConfidence()) {
-			UnitControlDisplay.showConfidence(this.agents);
-		}
-
-		// TODO: DEBUG INFO
-		// Display the targets of all registered Units.
-		for (GoapAgent goapAgent : this.agents) {
-			Unit unit = ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit();
-
-			if (unit.isFollowing()) {
-				Display.showUnitTile(unit, new bwapi.Color(255, 0, 0));
-				Core.getInstance().getGame().drawLineMap(unit.getPosition(), unit.getTargetPosition(),
-						new bwapi.Color(255, 0, 0));
+			// Update the instances in the specified Queues.
+			if (this.currentUpdateCycle == UpdateCycle.COMBAT_UNIT) {
+				this.updateCombatUnitQueue();
+				this.currentUpdateCycle = UpdateCycle.WORKER;
 			} else {
-				Display.showUnitTarget(unit, new Color(0, 0, 255));
+				this.updateWorkerQueue();
+				this.currentUpdateCycle = UpdateCycle.COMBAT_UNIT;
+			}
+			this.updateBuildingUnitQueue();
+
+			// Display of various information on the screen and on the map.
+			if (this.informationStorage.getiUnitControlModuleConfig().enableDisplayQueueInformation()) {
+				UnitControlDisplay.showQueueInformation(this.agents, this.buildings, this.informationStorage);
+			}
+			if (this.informationStorage.getiUnitControlModuleConfig().enableDisplayUnitConfidence()) {
+				UnitControlDisplay.showConfidence(this.agents);
+			}
+
+			// TODO: DEBUG INFO
+			// Display the targets of all registered Units.
+			for (GoapAgent goapAgent : this.agents) {
+				Unit unit = ((PlayerUnit) goapAgent.getAssignedGoapUnit()).getUnit();
+
+				if (unit.isFollowing()) {
+					Display.showUnitTile(unit, new bwapi.Color(255, 0, 0));
+					Core.getInstance().getGame().drawLineMap(unit.getPosition(), unit.getTargetPosition(),
+							new bwapi.Color(255, 0, 0));
+				} else {
+					Display.showUnitTarget(unit, new Color(0, 0, 255));
+				}
 			}
 		}
 	}

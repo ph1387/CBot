@@ -14,8 +14,8 @@ public interface IBuildingOrderModuleConfig {
 
 	/**
 	 *
-	 * @return true for enabling the generation of the updates on the
-	 *         {@link BuildingOrderModule}, false for disabling them.
+	 * @return true for enabling the updates on the {@link BuildingOrderModule},
+	 *         false for disabling them.
 	 */
 	public boolean enableBuildingOrderModuleUpdates();
 
