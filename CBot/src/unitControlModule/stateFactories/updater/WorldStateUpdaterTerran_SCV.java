@@ -31,11 +31,7 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 
 		super.update(playerUnit);
 
-		if (isRepairing) {
-			this.changeWorldStateEffect("repairing", true);
-		} else {
-			this.changeWorldStateEffect("repairing", false);
-		}
+		this.changeWorldStateEffect("repairing", isRepairing);
 
 		// Prevent the Unit from constructing buildings on the battlefield /
 		// while repairing another Unit or when the Unit is marked as combat
@@ -48,11 +44,7 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 			this.changeWorldStateEffect("canConstruct", true);
 		}
 
-		if (isFollowing) {
-			this.changeWorldStateEffect("isFollowingUnit", true);
-		} else {
-			this.changeWorldStateEffect("isFollowingUnit", false);
-		}
+		this.changeWorldStateEffect("isFollowingUnit", isFollowing);
 
 		// isNearRepairableUnit is not changed due to combat engineers then
 		// starting to gather resources since the goal is met eventually!

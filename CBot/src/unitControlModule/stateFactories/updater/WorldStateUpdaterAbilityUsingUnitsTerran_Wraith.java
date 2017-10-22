@@ -28,13 +28,9 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Wraith extends WorldStateU
 			this.changeWorldStateEffect("isCloaked", false);
 			this.changeWorldStateEffect("isDecloaked", true);
 		}
-		
+
 		// Define when the Unit may use the cloaking ability.
-		if(playerUnit.getAttackableEnemyUnitToReactTo() == null) {
-			this.changeWorldStateEffect("mayCloak", false);
-		} else {
-			this.changeWorldStateEffect("mayCloak", true);
-		}
+		this.changeWorldStateEffect("mayCloak", playerUnit.getAttackableEnemyUnitToReactTo() != null);
 	}
 
 }

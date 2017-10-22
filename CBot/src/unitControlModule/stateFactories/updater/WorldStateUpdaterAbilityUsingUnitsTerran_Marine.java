@@ -24,12 +24,7 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Marine extends WorldStateU
 	protected void updateAbilitiyWorldState(PlayerUnit playerUnit) {
 		Unit closestEnemy = playerUnit.getAttackingEnemyUnitToReactTo();
 
-		// StimPack effect
-		if (playerUnit.getUnit().isStimmed()) {
-			this.changeWorldStateEffect("isStimmed", true);
-		} else {
-			this.changeWorldStateEffect("isStimmed", false);
-		}
+		this.changeWorldStateEffect("isStimmed", playerUnit.getUnit().isStimmed());
 
 		// StimPack availability / accessibility:
 		// Only enable the StimPack if the Unit is in range of the enemies

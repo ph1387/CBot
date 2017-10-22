@@ -61,10 +61,6 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Medic extends WorldStateUp
 
 		// Change WorldState based on range to Units that can be healed around
 		// this Unit.
-		if (healableUnitNear) {
-			this.changeWorldStateEffect("isNearHealableUnit", true);
-		} else {
-			this.changeWorldStateEffect("isNearHealableUnit", false);
-		}
+		this.changeWorldStateEffect("isNearHealableUnit", healableUnitNear);
 	}
 }

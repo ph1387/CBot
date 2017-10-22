@@ -30,28 +30,16 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		super.update(playerUnit);
-
 		// Extract the distance to the closest center building for later use.
 		Integer closestCenterDistance = playerUnit.generateClosestCenterDistance();
+		
+		super.update(playerUnit);
 
-		if (playerUnit.getUnit().isGatheringMinerals()) {
-			this.changeWorldStateEffect("gatheringMinerals", true);
-		} else {
-			this.changeWorldStateEffect("gatheringMinerals", false);
-		}
-
-		if (playerUnit.getUnit().isGatheringGas()) {
-			this.changeWorldStateEffect("gatheringGas", true);
-		} else {
-			this.changeWorldStateEffect("gatheringGas", false);
-		}
-
-		if (playerUnit.getUnit().isConstructing()) {
-			this.changeWorldStateEffect("constructing", true);
-		} else {
-			this.changeWorldStateEffect("constructing", false);
-		}
+		this.changeWorldStateEffect("gatheringMinerals", playerUnit.getUnit().isGatheringMinerals());
+		this.changeWorldStateEffect("gatheringGas", playerUnit.getUnit().isGatheringGas());
+		this.changeWorldStateEffect("constructing", playerUnit.getUnit().isConstructing());
+		this.changeWorldStateEffect("isCarryingMinerals", playerUnit.getUnit().isCarryingMinerals());
+		this.changeWorldStateEffect("isCarryingGas", playerUnit.getUnit().isCarryingGas());
 
 		// Only allow fighting if the worker is either near an enemy as well as
 		// a center building or is assigned scouting. This keeps workers from
@@ -61,7 +49,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 		// null).
 		if ((closestCenterDistance == null)
 				|| (closestCenterDistance != null && closestCenterDistance <= this.maxPixelAttackDistanceToCenter
-						&& (this.playerUnit.getAttackableEnemyUnitToReactTo()) != null)
+						&& (playerUnit.getAttackableEnemyUnitToReactTo()) != null)
 				|| (((PlayerUnitWorker) playerUnit).isAssignedToSout())) {
 			this.changeWorldStateEffect("allowFighting", true);
 		} else {
@@ -79,23 +67,8 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("canConstruct", true);
 
 			// Only allow gathering if the Unit is near a center building.
-			if (closestCenterDistance != null && closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter) {
-				this.changeWorldStateEffect("canGather", true);
-			} else {
-				this.changeWorldStateEffect("canGather", false);
-			}
-		}
-
-		// Update the carrying states of the worker Unit.
-		if (playerUnit.getUnit().isCarryingMinerals()) {
-			this.changeWorldStateEffect("isCarryingMinerals", true);
-		} else {
-			this.changeWorldStateEffect("isCarryingMinerals", false);
-		}
-		if (playerUnit.getUnit().isCarryingGas()) {
-			this.changeWorldStateEffect("isCarryingGas", true);
-		} else {
-			this.changeWorldStateEffect("isCarryingGas", false);
+			this.changeWorldStateEffect("canGather", closestCenterDistance != null
+					&& closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter);
 		}
 	}
 

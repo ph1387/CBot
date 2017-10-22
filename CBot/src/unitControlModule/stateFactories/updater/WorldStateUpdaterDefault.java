@@ -20,50 +20,43 @@ public class WorldStateUpdaterDefault extends WorldStateUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		if(this.playerUnit.getAllEnemyUnitsInWeaponRange().isEmpty()) {
-			this.changeUnitsInRange(false);
-		} else {
-			this.changeUnitsInRange(true);
-		}
-		
-		if(this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_MISSING) {
-			this.changeEnemyKnown(false);
-		} else {
-			this.changeEnemyKnown(true);
-		}
-		
-		// Never set true, since the general intent of the unit is to destroy the enemy.
-		this.changeDestroyUnit(false);
-		
+		this.changeWorldStateEffect("unitsInRange", !this.playerUnit.getAllEnemyUnitsInWeaponRange().isEmpty());
+		this.changeWorldStateEffect("enemyKnown", this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN);
+
+		// Never set true, since the general intent of the unit is to destroy
+		// the enemy.
+		this.changeWorldStateEffect("destroyUnit", false);
+
 		// Change the move world state accordingly.
 		this.changeWorldStateEffect("canMove", playerUnit.getUnit().canMove());
 	}
 
-	/**
-	 * Convenience function.
-	 * 
-	 * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
-	 */
-	protected void changeEnemyKnown(Object value) {
-		this.changeWorldStateEffect("enemyKnown", value);
-	}
-
-	/**
-	 * Convenience function.
-	 * 
-	 * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
-	 */
-	protected void changeDestroyUnit(Object value) {
-		this.changeWorldStateEffect("destroyUnit", value);
-	}
-
-	/**
-	 * Convenience function.
-	 * 
-	 * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
-	 */
-	protected void changeUnitsInRange(Object value) {
-		this.changeWorldStateEffect("unitsInRange", value);
-	}
+	// TODO: UML REMOVE
+	// /**
+	// * Convenience function.
+	// *
+	// * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
+	// */
+	// protected void changeEnemyKnown(Object value) {
+	// this.changeWorldStateEffect("enemyKnown", value);
+	// }
+	//
+	// /**
+	// * Convenience function.
+	// *
+	// * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
+	// */
+	// protected void changeDestroyUnit(Object value) {
+	// this.changeWorldStateEffect("destroyUnit", value);
+	// }
+	//
+	// /**
+	// * Convenience function.
+	// *
+	// * @see WorldStateUpdaterDefault#changeWorldStateEffect(String, Object)
+	// */
+	// protected void changeUnitsInRange(Object value) {
+	// this.changeWorldStateEffect("unitsInRange", value);
+	// }
 
 }

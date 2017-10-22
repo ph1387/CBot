@@ -42,18 +42,11 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_ScienceVessel extends Worl
 		}
 
 		// WorldState changes apply towards the support of other Units.
-		if (supportableUnitNear) {
-			this.changeWorldStateEffect("isNearSupportableUnit", true);
-		} else {
-			this.changeWorldStateEffect("isNearSupportableUnit", false);
-		}
+		this.changeWorldStateEffect("isNearSupportableUnit", supportableUnitNear);
 
 		// WorldState regarding the following of other Units.
-		if (this.playerUnit.getInformationStorage().getScienceVesselStorage().isFollowing(this.playerUnit.getUnit())) {
-			this.changeWorldStateEffect("isFollowingUnit", false);
-		} else {
-			this.changeWorldStateEffect("isFollowingUnit", true);
-		}
+		this.changeWorldStateEffect("isFollowingUnit", !this.playerUnit.getInformationStorage()
+				.getScienceVesselStorage().isFollowing(this.playerUnit.getUnit()));
 	}
 
 }

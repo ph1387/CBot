@@ -39,19 +39,12 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_Vulture extends WorldState
 
 		// Change based on the spider mine count and the range towards other
 		// placed spider mines.
-		if (playerUnit.getUnit().getSpiderMineCount() > 0 && this.isNotNearSpiderMine(playerUnit)) {
-			this.changeWorldStateEffect("canSpiderMineBePlaced", true);
-		} else {
-			this.changeWorldStateEffect("canSpiderMineBePlaced", false);
-		}
+		this.changeWorldStateEffect("canSpiderMineBePlaced",
+				playerUnit.getUnit().getSpiderMineCount() > 0 && this.isNotNearSpiderMine(playerUnit));
 
 		// Change based on the enemy Units that are near the one targeting this
 		// one. If a group of them exists, enable the use of spider mines.
-		if (enemyGroupSize >= this.enemyGroupMinSize) {
-			this.changeWorldStateEffect("shouldSpiderMinesBePlaced", true);
-		} else {
-			this.changeWorldStateEffect("shouldSpiderMinesBePlaced", false);
-		}
+		this.changeWorldStateEffect("shouldSpiderMinesBePlaced", enemyGroupSize >= this.enemyGroupMinSize);
 
 		// "isAtSpiderMineLocation" is not set due to the fact that the Unit has
 		// to move to each location separately!
