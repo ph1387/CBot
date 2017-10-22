@@ -16,5 +16,6 @@ public class UnitGoalStateProtect extends UnitGoalStateDefault {
 		this.add(new GoapState(3, "shielding", true));
 		this.add(new GoapState(2, "isNearSupportableUnit", true));
 		this.add(new GoapState(2, "isNearHealableUnit", true));
+		this.add(new GoapState(1, "isNearBase", true));
 	}
 }

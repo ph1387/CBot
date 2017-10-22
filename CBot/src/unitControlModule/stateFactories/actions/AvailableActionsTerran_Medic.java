@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions;
 
 import unitControlModule.stateFactories.actions.executableActions.FollowActionTerran_Medic;
+import unitControlModule.stateFactories.actions.executableActions.TerranMedic_MoveBackToBase;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranMedic_Heal;
 
 /**
@@ -15,5 +16,6 @@ public class AvailableActionsTerran_Medic extends AvailableActionsGeneral {
 	public AvailableActionsTerran_Medic() {
 		this.add(new AbilityActionTerranMedic_Heal(null));
 		this.add(new FollowActionTerran_Medic(null));
+		this.add(new TerranMedic_MoveBackToBase(null));
 	}
 }

@@ -14,6 +14,7 @@ public class UnitWorldStateAbilityUsingUnitsTerran_Medic extends UnitWorldStateA
 	public UnitWorldStateAbilityUsingUnitsTerran_Medic() {
 		this.add(new GoapState(0, "isNearHealableUnit", false));
 		this.add(new GoapState(0, "healing", false));
+		this.add(new GoapState(0, "isNearBase", false));
 	}
 
 }

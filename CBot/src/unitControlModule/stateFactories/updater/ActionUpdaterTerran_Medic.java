@@ -7,6 +7,7 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.actions.executableActions.FollowActionTerran_Medic;
+import unitControlModule.stateFactories.actions.executableActions.TerranMedic_MoveBackToBase;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranMedic_Heal;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
@@ -31,6 +32,8 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 	private AbilityActionTerranMedic_Heal abilityActionTerranMedicHeal;
 	// TODO: UML ADD
 	private FollowActionTerran_Medic followActionTerran_Medic;
+	// TODO: UML ADD
+	private TerranMedic_MoveBackToBase terranMedic_MoveBackToBase;
 
 	public ActionUpdaterTerran_Medic(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -40,10 +43,11 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
+		Unit closestCenter = this.playerUnit.getClosestCenter();
+
 		// Call super.update() when the Units should react independently to
 		// enemy Units and retreat on their own. Init() should not be called
 		// then!
-		// super.update(playerUnit);
 
 		// Get the references to all used actions.
 		if (this.initializationMissing) {
@@ -52,6 +56,10 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		}
 
 		this.updateHealAndFollowTargets();
+
+		if (closestCenter != null) {
+			this.terranMedic_MoveBackToBase.setTarget(closestCenter.getPosition());
+		}
 	}
 
 	@Override
@@ -62,6 +70,8 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 				.getActionFromInstance(AbilityActionTerranMedic_Heal.class));
 		this.followActionTerran_Medic = ((FollowActionTerran_Medic) this
 				.getActionFromInstance(FollowActionTerran_Medic.class));
+		this.terranMedic_MoveBackToBase = ((TerranMedic_MoveBackToBase) this
+				.getActionFromInstance(TerranMedic_MoveBackToBase.class));
 	}
 
 	// TODO: UML ADD
