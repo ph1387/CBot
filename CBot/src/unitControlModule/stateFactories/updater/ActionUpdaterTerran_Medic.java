@@ -23,16 +23,8 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 
 	private boolean initializationMissing = true;
 
-	// TODO: UML REMOVE
-	// private RetreatActionSteerInBioUnitDirectionTerran_Medic
-	// retreatActionSteerInBioUnitDirectionTerranMedic;
-	// TODO: UML REMOVE
-	// private ProtectMoveActionSteerTowardsClosestDamagedUnit
-	// protectMoveActionSteerTowardsClosesDamagedUnit;
 	private AbilityActionTerranMedic_Heal abilityActionTerranMedicHeal;
-	// TODO: UML ADD
 	private FollowActionTerran_Medic followActionTerran_Medic;
-	// TODO: UML ADD
 	private TerranMedic_MoveBackToBase terranMedic_MoveBackToBase;
 
 	public ActionUpdaterTerran_Medic(PlayerUnit playerUnit) {
@@ -74,7 +66,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 				.getActionFromInstance(TerranMedic_MoveBackToBase.class));
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for updating the target of the
 	 * {@link #abilityActionTerranMedicHeal} and
@@ -100,7 +91,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the closest damaged Unit that can be healed by the
 	 * provided PlayerUnit and is not targeted by another Terran_Medic.
@@ -133,7 +123,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		return BaseAction.getClosestUnit(possibleUnits, this.playerUnit.getUnit());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all references to all current Player-Units on the
 	 * map that can be healed by a {@link PlayerUnitTerran_Medic}.
@@ -155,7 +144,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		return healableUnits;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the closest Unit that the executing Unit can follow.
 	 * 
@@ -165,7 +153,6 @@ public class ActionUpdaterTerran_Medic extends ActionUpdaterGeneral {
 		return BaseAction.getClosestUnit(this.getFollowableUnits(), this.playerUnit.getUnit());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all references to all current Player-Units on the
 	 * map that can be followed by a {@link PlayerUnitTerran_Medic}. This

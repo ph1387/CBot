@@ -1,8 +1,5 @@
 package unitControlModule.stateFactories.worldStates;
 
-import javaGOAP.GoapState;
-
-// TODO: UML ADD
 /**
  * UnitWorldStateAbilityUsingUnitsTerran_Wraith.java --- WorldState for a
  * Terran_Wraith using its corresponding abilities.

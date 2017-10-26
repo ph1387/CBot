@@ -23,11 +23,8 @@ import unitControlModule.unitWrappers.PlayerUnitTerran_SCV;
  */
 public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 
-	// TODO: UML ADD
 	private FollowActionTerran_SCV followActionTerran_SCV;
-	// TODO: UML ADD
 	private RepairActionUnit repairActionUnit;
-	// TODO: UML ADD
 	private RepairActionBuilding repairActionBuilding;
 
 	public ActionUpdaterTerran_SCV(PlayerUnit playerUnit) {
@@ -36,7 +33,6 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
@@ -50,7 +46,6 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the closest Unit whose UnitType matches one of the
 	 * listed ones in the {@link PlayerUnitTerran_SCV}'s List of repairable
@@ -96,7 +91,6 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 		return closestFollowableUnit;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for sorting a List containing Units references based on their
 	 * distance towards another provided one in an ascending order based on
@@ -124,7 +118,6 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 		return list;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding a target to repair (Unit) that is not already mapped
 	 * to another worker Unit in the executing Unit's confidence range. <br>
@@ -156,7 +149,6 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 		return repairActionTarget;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding a target to repair (Building) that is not already
 	 * mapped to another worker Unit in the executing Unit's confidence range.
@@ -188,7 +180,6 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 		return repairActionTarget;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all damaged Player Units from the Collection of
 	 * Units in the executing Unit's confidence range.
@@ -207,7 +198,6 @@ public class ActionUpdaterTerran_SCV extends ActionUpdaterWorker {
 		return damagedUnits;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected void init() {
 		super.init();

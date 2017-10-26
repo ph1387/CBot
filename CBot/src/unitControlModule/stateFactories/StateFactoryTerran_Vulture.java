@@ -32,13 +32,11 @@ public class StateFactoryTerran_Vulture extends StateFactoryDefault {
 		return new ActionUpdaterTerran_Vulture(playerUnit);
 	}
 
-	// TODO: UML ADD
 	@Override
 	public HashSet<GoapState> generateWorldState() {
 		return new UnitWorldStateAbilityUsingUnitsTerran_Vulture();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
 		return new WorldStateUpdaterAbilityUsingUnitsTerran_Vulture(playerUnit);

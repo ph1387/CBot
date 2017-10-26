@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.TechType;
 
-// TODO: UML ADD
 /**
  * ResearchActionTerran_StimPacks.java --- Action for researching the Stim_Packs
  * for Terran_Marines at the Terran_Academy.

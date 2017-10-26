@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.actions.executableActions.abilities;
 
 import bwapi.TechType;
 
-// TODO: UML ADD
 /**
  * AbilityActionTerranWraith_Cloak.java --- The cloak ability of a
  * Terran_Wraith.

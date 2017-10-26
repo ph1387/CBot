@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradual
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-//TODO: UML ADD
 /**
  * ScoreGeneratorIncreaseSlow.java --- A
  * {@link ScoreGeneratorGradualChangeTarget} increasing the score (Slow) until

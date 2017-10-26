@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import bwapi.Unit;
 
-// TODO: UML ADD
 /**
  * UnitMapper.java --- Class for mapping two Units together. This includes i.e.
  * Units following another one.

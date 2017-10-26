@@ -5,7 +5,6 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorDefault;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 
-//TODO: UML PACKAGE
 /**
  * ScoreGeneratorGradualChange.java --- A {@link ScoreGenerator} applying a
  * constant rate to an existing score. <br>

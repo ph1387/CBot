@@ -34,29 +34,25 @@ public class StateFactoryTerran_SCV extends StateFactoryWorker {
 	public Updater getMatchingActionUpdater(PlayerUnit playerUnit) {
 		return new ActionUpdaterTerran_SCV(playerUnit);
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public List<GoapState> generateGoalState() {
 		return new UnitGoalStateTerran_SCV();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public HashSet<GoapState> generateWorldState() {
 		return new UnitWorldStateTerran_SCV();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public Updater getMatchingGoalStateUpdater(PlayerUnit playerUnit) {
 		return new GoalStateUpdaterTerran_SCV(playerUnit);
 	}
 
-	// TODO: UML ADD
 	@Override
 	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
 		return new WorldStateUpdaterTerran_SCV(playerUnit);
 	}
-	
+
 }

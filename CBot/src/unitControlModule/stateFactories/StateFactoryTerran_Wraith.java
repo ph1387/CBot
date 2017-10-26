@@ -35,28 +35,24 @@ public class StateFactoryTerran_Wraith extends StateFactoryDefault {
 		return new ActionUpdaterTerran_Wraith(playerUnit);
 	}
 
-	// TODO: UML ADD
 	@Override
 	public HashSet<GoapState> generateWorldState() {
 		return new UnitWorldStateAbilityUsingUnitsTerran_Wraith();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
 		return new WorldStateUpdaterAbilityUsingUnitsTerran_Wraith(playerUnit);
 	}
 
-	// TODO: UML ADD
 	@Override
 	public List<GoapState> generateGoalState() {
 		return new UnitGoalStateStealth();
 	}
-	
-	// TODO: UML ADD
+
 	@Override
 	public Updater getMatchingGoalStateUpdater(PlayerUnit playerUnit) {
 		return new GoalStateUpdaterStealth(playerUnit);
 	}
-	
+
 }

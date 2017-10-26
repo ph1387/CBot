@@ -29,7 +29,6 @@ public abstract class AbilityActionTechTargetNone extends AbilityActionGeneralSu
 		return ((PlayerUnit) goapUnit).getUnit().useTech(this.ability);
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected void resetSpecific() {
 		super.resetSpecific();

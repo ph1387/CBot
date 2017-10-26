@@ -7,7 +7,6 @@ import bwapi.UnitType;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_ScienceVessel;
 
-// TODO: UML ADD
 /**
  * WorldStateUpdaterAbilityUsingUnitsTerran_ScienceVessel.java --- WorldState
  * updater for Terran_Science_Vessel WorldStates.

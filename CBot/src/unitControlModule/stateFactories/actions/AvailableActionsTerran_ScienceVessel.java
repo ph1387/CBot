@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.actions;
 import unitControlModule.stateFactories.actions.executableActions.FollowActionTerran_ScienceVessel;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranScienceVessel_DefensiveMatrix;
 
-// TODO: UML ADD
 /**
  * AvailableActionsTerran_ScienceVessel.java --- HashSet containing all
  * Terran_Science_Vessel Actions.

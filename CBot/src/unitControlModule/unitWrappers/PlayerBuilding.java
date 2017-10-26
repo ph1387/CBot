@@ -46,7 +46,7 @@ public class PlayerBuilding {
 	 * @author P H - 02.09.2017
 	 *
 	 */
-	private class Checker {
+	private abstract class Checker<T> implements QueueElementChecker<T> {
 
 		protected Unit unit;
 		protected InformationStorage informationStorage;
@@ -66,7 +66,7 @@ public class PlayerBuilding {
 	 * @author P H - 02.09.2017
 	 *
 	 */
-	private class TechnologyChecker extends Checker implements QueueElementChecker<TechType> {
+	private class TechnologyChecker extends Checker<TechType> {
 
 		public TechnologyChecker(Unit unit, InformationStorage informationStorage) {
 			super(unit, informationStorage);
@@ -98,7 +98,7 @@ public class PlayerBuilding {
 	 * @author P H - 02.09.2017
 	 *
 	 */
-	private class UpgradeChecker extends Checker implements QueueElementChecker<UpgradeType> {
+	private class UpgradeChecker extends Checker<UpgradeType> {
 
 		public UpgradeChecker(Unit unit, InformationStorage informationStorage) {
 			super(unit, informationStorage);
@@ -130,7 +130,7 @@ public class PlayerBuilding {
 	 * @author P H - 02.09.2017
 	 *
 	 */
-	private class AddonChecker extends Checker implements QueueElementChecker<UnitType> {
+	private class AddonChecker extends Checker<UnitType> {
 
 		public AddonChecker(Unit unit, InformationStorage informationStorage) {
 			super(unit, informationStorage);
@@ -162,7 +162,7 @@ public class PlayerBuilding {
 	 * @author P H - 02.09.2017
 	 *
 	 */
-	private class TrainChecker extends Checker implements QueueElementChecker<UnitType> {
+	private class TrainChecker extends Checker<UnitType> {
 
 		public TrainChecker(Unit unit, InformationStorage informationStorage) {
 			super(unit, informationStorage);

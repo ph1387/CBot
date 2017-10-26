@@ -5,7 +5,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SCV;
 import unitControlModule.unitWrappers.PlayerUnitWorker;
 
-// TODO: UML ADD
 /**
  * WorldStateUpdaterTerran_SCV.java --- Updater for updating a
  * {@link UnitWorldStateTerran_SCV} instance.
@@ -21,7 +20,6 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		boolean isRepairing = playerUnit.getUnit().isRepairing() || playerUnit.getInformationStorage().getWorkerConfig()

@@ -11,7 +11,6 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
-//TODO: UML MARK
 @Deprecated
 /**
  * RetreatActionSteerInBioUnitDirectionTerran_Medic.java --- A Retreat Action

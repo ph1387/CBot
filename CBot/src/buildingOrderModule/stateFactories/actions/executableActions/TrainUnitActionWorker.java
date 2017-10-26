@@ -14,7 +14,6 @@ import core.Core;
  */
 public class TrainUnitActionWorker extends TrainUnitBaseAction {
 
-	// TODO: UML ADD
 	private double occurrenceMultiplier = 2.;
 
 	/**
@@ -43,7 +42,6 @@ public class TrainUnitActionWorker extends TrainUnitBaseAction {
 		return TypeWrapper.generateFrom(Core.getInstance().getPlayer().getRace().getCenter());
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return (int) (this.occurrenceMultiplier * super.defineMaxSimulationOccurrences());

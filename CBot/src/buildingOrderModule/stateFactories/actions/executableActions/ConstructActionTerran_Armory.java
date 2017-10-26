@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * ConstructActionTerran_Armory.java --- Construction action for a Terran_Armory
  * Unit.
@@ -42,7 +41,6 @@ public class ConstructActionTerran_Armory extends ConstructBaseAction {
 		return UnitType.Terran_Armory;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return 1;

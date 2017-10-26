@@ -27,9 +27,7 @@ import javaGOAP.GoapAction;
  */
 public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQueue {
 
-	// TODO: UML ADD
 	private HashMap<TypeWrapper, Integer> simulationQueueResultActionTypes;
-	// TODO: UML ADD
 	private HashMap<TypeWrapper, Integer> informationStorageQueuesActionTypes;
 
 	public ActionUpdaterSimulationQueueTerran(BuildActionManager buildActionManager) {
@@ -156,7 +154,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		return availableActionTypes;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for determining if a technology can be researched or not. The
 	 * provided ActionType <b>must</b> result in a TechType. If this is not the
@@ -197,7 +194,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 				&& requiredUnitExist;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for determining if a technology can be researched or not. The
 	 * provided ActionType <b>must</b> result in a UpgradeType. If this is not
@@ -240,7 +236,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 				&& requiredUnitExist;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if the required <b>UnitType</b> of the provided
 	 * {@link ActionType} exists at least once. This function will fail if the
@@ -259,7 +254,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 				.getOrDefault(actionType.defineRequiredType().getUnitType(), 0) > 0;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if the provided {@link ActionType} is going to be
 	 * forwarded or is currently in one of the executing / waiting Queues of the
@@ -277,7 +271,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 				|| this.informationStorageQueuesActionTypes.containsKey(actionType.defineResultType());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if one completed and idle facility whose UnitType
 	 * was defined in the provided {@link ActionType} exists. The
@@ -312,7 +305,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		return prodcuingFacilityIdles;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if a provided TechType's required UnitType is
 	 * present on the map at least once.
@@ -336,7 +328,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		return exist;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if a provided UpgradeType's required UnitTypes are
 	 * present on the map at least once. These are based on the current level of
@@ -368,7 +359,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		return exist;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if a provided UnitType's required UnitTypes are
 	 * present on the map at least once.
@@ -392,7 +382,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		return exist;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if a provided UnitType's required TechType was
 	 * already researched by the Player.
@@ -415,7 +404,6 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 		return exist;
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for determining if a Terran_Machine_Shop can be added towards
 	 * the Queue of addons to construct. The function takes the already queued

@@ -38,14 +38,12 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	// The timer after a BaseLocation might be searched again.
 	public static final int BASELOCATIONS_TIME_PASSED = 60;
-	// TODO: UML CHANGE 0.7
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
 	// own parameters
 	protected static final double CONFIDENCE_THRESHHOLD = 0.5;
 	protected static final Integer DEFAULT_TILE_SEARCH_RADIUS = 2;
 	private static final int CONFIDENCE_TILE_RADIUS = 15;
 
-	// TODO: UML ADD
 	// The default tile range that is applied to the detection check of the
 	private static final int DEFAULT_DETECTION_TILERANGE = 10;
 
@@ -79,7 +77,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	private double confidenceMultiplierSingleCenter = 2.5;
 	private double confidenceMultiplierInMaxCenterDistance = 1.5;
 
-	// TODO: UML ADD
 	// The wrapper that is controlling the resets of the Unit if an issue
 	// occurrs.
 	private IssueStateWrapper issueStateWrapper = new IssueStateWrapper();
@@ -257,7 +254,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		this.attackingEnemyUnitToReactTo = this.generateAttackingEnemyUnitToReactTo();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for resetting all references regarding the different possible
 	 * types of enemy Units.
@@ -273,7 +269,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		this.attackableEnemyUnitToReactTo = null;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for sorting a given List of Units based on their distance
 	 * towards the current instance's Unit.
@@ -296,7 +291,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return inputList;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for reassigning the different types of enemy Unit references
 	 * based on different criteria. The provided List must contain a selection
@@ -451,7 +445,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return unitToReactTo;
 	}
 
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for generating a modified version of the standard confidence.
 	 * This function utilizes the {@link #generateConfidence()} method that is
@@ -508,7 +501,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 */
 	protected abstract double generateConfidence();
 
-	// TODO: UML VISIBILITY
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -516,13 +508,12 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the air strength of the Player and the enemy in the PlayerUnit's
 	 *         confidence range.
 	 */
-	public Pair<Double, Double> generatePlayerAndEnemyAirStrengths() {
+	protected Pair<Double, Double> generatePlayerAndEnemyAirStrengths() {
 		return this.generatePlayerAndEnemyStrengths(
 				this.informationStorage.getTrackerInfo().getPlayerAirAttackTilePositions(),
 				this.informationStorage.getTrackerInfo().getEnemyAirAttackTilePositions());
 	}
 
-	// TODO: UML VISIBILITY
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -530,13 +521,12 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the ground strength of the Player and the enemy in the
 	 *         PlayerUnit's confidence range.
 	 */
-	public Pair<Double, Double> generatePlayerAndEnemyGroundStrengths() {
+	protected Pair<Double, Double> generatePlayerAndEnemyGroundStrengths() {
 		return this.generatePlayerAndEnemyStrengths(
 				this.informationStorage.getTrackerInfo().getPlayerGroundAttackTilePositions(),
 				this.informationStorage.getTrackerInfo().getEnemyGroundAttackTilePositions());
 	}
 
-	// TODO: UML VISIBILITY
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -544,13 +534,12 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the health strength of the Player and the enemy in the
 	 *         PlayerUnit's confidence range.
 	 */
-	public Pair<Double, Double> generatePlayerAndEnemyHealthStrengths() {
+	protected Pair<Double, Double> generatePlayerAndEnemyHealthStrengths() {
 		return this.generatePlayerAndEnemyStrengths(
 				this.informationStorage.getTrackerInfo().getPlayerHealthTilePositions(),
 				this.informationStorage.getTrackerInfo().getEnemyHealthTilePositions());
 	}
 
-	// TODO: UML VISIBILITY
 	/**
 	 * Convenience function for
 	 * {@link #generatePlayerAndEnemyStrengths(HashMap, HashMap)}.
@@ -558,7 +547,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the support strength of the Player and the enemy in the
 	 *         PlayerUnit's confidence range.
 	 */
-	public Pair<Double, Double> generatePlayerAndEnemySupportStrengths() {
+	protected Pair<Double, Double> generatePlayerAndEnemySupportStrengths() {
 		return this.generatePlayerAndEnemyStrengths(
 				this.informationStorage.getTrackerInfo().getPlayerSupportTilePositions(),
 				this.informationStorage.getTrackerInfo().getEnemySupportTilePositions());
@@ -641,7 +630,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for checking for an unresolved issue that the Unit is currently
 	 * experiencing. This can be i.e. the Unit being stuck or idling. Therefore
@@ -985,7 +973,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return attackingUnits;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for checking if the provided Unit has either an air or a ground
 	 * weapon to attack with.
@@ -1097,7 +1084,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return isConfidenceAboveThreshold(this.confidence);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if a confidence is below the set threshold.
 	 * 
@@ -1108,7 +1094,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return confidence < CONFIDENCE_THRESHHOLD;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if a confidence is above the set threshold.
 	 * 
@@ -1119,7 +1104,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return confidence >= CONFIDENCE_THRESHHOLD;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for reseting all actions, values and references associated with
 	 * the {@link PlayerUnit} instance. This function should only be called when
@@ -1134,7 +1118,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		BaseAction.removeGroupAssociations(this);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for manually resetting all current actions of the PlayerUnit.
 	 * This is the equivalent of the Unit itself calling the
@@ -1145,7 +1128,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		this.resetActions();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if the Unit itself is currently invulnerable. This
 	 * is the case if the Unit is burrowed or cloaked and no enemy detector Unit
@@ -1158,7 +1140,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return isInvulnerable(this.unit);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -1173,7 +1154,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return isInvulnerable(unit, DEFAULT_DETECTION_TILERANGE);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if an Unit is currently invulnerable. This is the
 	 * case if the Unit is burrowed or cloaked and no detector Unit of the other
@@ -1192,7 +1172,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return (unit.isBurrowed() || unit.isCloaked()) && !isDetected(unit, tileRange);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -1207,7 +1186,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return isDetected(unit, DEFAULT_DETECTION_TILERANGE);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for checking if the Unit is near an enemy detection Unit. This
 	 * function can be applied to either side since it compares the Player of

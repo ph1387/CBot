@@ -6,7 +6,6 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SCV;
 
-// TODO: UML ADD
 /**
  * RepairAction.java --- Repair action mainly for a {@link PlayerUnitTerran_SCV}
  * since they are able to repair certain Units / buildings.

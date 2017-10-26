@@ -73,7 +73,6 @@ public class Node implements Comparable<Node> {
 				+ (int) (node.getCurrentMinerals() * InfluenceMinerals + node.getCurrentGas() * InfluenceGas);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for resetting all values stored in the instance.
 	 */

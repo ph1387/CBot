@@ -5,7 +5,6 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_Goliath;
 
-// TODO: UML ADD
 /**
  * PlayerUnitTerran_Goliath.java --- Terran_Goliath Class.
  * 

@@ -3,7 +3,6 @@ package informationStorage;
 import bwapi.Unit;
 import unitControlModule.stateFactories.actions.executableActions.FollowActionTerran_ScienceVessel;
 
-// TODO: UML ADD
 /**
  * ScienceVesselStorage.java --- Shared storage Class for the
  * {@link FollowActionTerran_ScienceVessel} action.

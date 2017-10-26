@@ -6,7 +6,6 @@ import java.util.List;
 
 import bwapi.Unit;
 
-// TODO: UML CHANGE ABSTRACT
 /**
  * ResourceManager.java --- Manager class for a List of
  * {@link GatheringSource}s. These include mainly the {@link MineralPatch}s and
@@ -15,9 +14,8 @@ import bwapi.Unit;
  * @author P H - 03.09.2017
  *
  */
-class ResourceManager<T extends GatheringSource> implements IResourceManager {
+abstract class ResourceManager<T extends GatheringSource> implements IResourceManager {
 
-	// TODO: UML ADD
 	/**
 	 * SortInterface.java --- Interface defining a sorter for gathering sources.
 	 * 
@@ -28,7 +26,6 @@ class ResourceManager<T extends GatheringSource> implements IResourceManager {
 		public int compare(ResourceManagerEntry worker, T firstGatheringSource, T secondGatheringSource);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Sorter.java --- Class used for sorting the gathering sources.
 	 * 
@@ -47,11 +44,9 @@ class ResourceManager<T extends GatheringSource> implements IResourceManager {
 
 	// A List of all GatheringSources that are being managed by this instance.
 	protected List<T> gatheringSources = new ArrayList<T>();
-	// TODO: UML ADD
 	// Reference for accessing mainly the information storage.
 	protected WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation;
 
-	// TODO: UML PARAMS
 	public ResourceManager(WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation) {
 		this.workerManagerResourceSpotAllocation = workerManagerResourceSpotAllocation;
 	}
@@ -111,7 +106,6 @@ class ResourceManager<T extends GatheringSource> implements IResourceManager {
 		return !assignmentMissing;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for defining the sorter that is going to be used for sorting the
 	 * gathering sources.
@@ -124,7 +118,6 @@ class ResourceManager<T extends GatheringSource> implements IResourceManager {
 		return (SortInterface<GatheringSource>) new Sorter();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for sorting the gathering sources of this instance.
 	 * 
@@ -188,7 +181,6 @@ class ResourceManager<T extends GatheringSource> implements IResourceManager {
 		return foundGatheringSource;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if the {@link ResourceManager} contains a specific
 	 * {@link ResourceManagerEntry} / worker.

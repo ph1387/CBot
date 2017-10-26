@@ -7,7 +7,6 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
-// TODO: UML ADD
 /**
  * TerranMedic_MoveBackToBase.java --- An Action with which a Terran_Medic can
  * retreat to the nearest base. This is needed when no healable / followable
@@ -57,7 +56,6 @@ public class TerranMedic_MoveBackToBase extends BaseAction {
 		return this.target != null && !this.followableUnitExists(goapUnit);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if a healable / followable Unit exists on the map
 	 * that the Terran_Medic can react to. This function excludes the

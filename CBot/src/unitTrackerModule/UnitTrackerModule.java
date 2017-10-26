@@ -29,13 +29,10 @@ public class UnitTrackerModule {
 
 	private static final int MAX_TIME_UNTIL_OUTDATED = 20;
 
-	// TODO: UML ADD
 	// The frame difference after which the Class performs the update.
 	private static final int FRAME_UPDATE_DIFF = 24;
-	// TODO: UML ADD
 	private int lastUpdateTimeStamp = 0;
 
-	// TODO: UML ADD
 	// The UnitTypes that are ignored in all tracking instances. This does
 	// include the ground / air strength as well as the health and other types!
 	private List<UnitType> ignoredUnitTypes = Arrays.asList(new UnitType[] { UnitType.Terran_Vulture_Spider_Mine });
@@ -66,21 +63,17 @@ public class UnitTrackerModule {
 	// The container holding all information.
 	private InformationStorage informationStorage;
 
-	// TODO: UML ADD
 	// The multiplier for either cloaked or burrowed Units that are not detected
 	// by a detector Unit. Therefore the Player's Units are unable to attack
 	// them.
 	private double invulnerableMultiplier = 5.0;
 
-	// TODO: UML ADD
 	// The multiplier that is applied to the enemy buildings that have a weapon.
 	// This is needed since stationary turrets etc. must NOT be rushed into!
 	private double buildingMultiplier = 2.5;
-	// TODO: UML ADD
 	// The tile range which gets added towards each Unit's default weapon range.
 	// Using this value Units can react sooner to incoming threats.
 	private int extraTileRange = 3;
-	// TODO: UML ADD
 	// The multiplier for workers since they are normally not used as combat
 	// Units. Therefore their strength must be adjusted.
 	private double workerMultiplier = 0.3;

@@ -9,7 +9,6 @@ import informationStorage.InformationStorage;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.StateFactoryTerran_ScienceVessel;
 
-// TODO: UML ADD
 /**
  * PlayerUnitTerran_ScienceVessel.java --- Terran_Science_Vessel Class.
  * 
@@ -18,10 +17,7 @@ import unitControlModule.stateFactories.StateFactoryTerran_ScienceVessel;
  */
 public class PlayerUnitTerran_ScienceVessel extends PlayerUnitTypeFlying {
 
-	// TODO: UML ADD
 	private static final int SUPPORT_PIXEL_DISTANCE = 64;
-
-	// TODO: UML ADD
 	// The order in which the different kinds of UnitTypes are supported by the
 	// Terran_Science_Vessel.
 	private static List<UnitType> SupportableUnitTypes = Arrays.asList(new UnitType[] { UnitType.Terran_Marine,
@@ -41,12 +37,10 @@ public class PlayerUnitTerran_ScienceVessel extends PlayerUnitTypeFlying {
 
 	// ------------------------------ Getter / Setter
 
-	// TODO: UML ADD
 	public static int getSupportPixelDistance() {
 		return SUPPORT_PIXEL_DISTANCE;
 	}
 
-	// TODO: UML ADD
 	public static List<UnitType> getSupportableUnitTypes() {
 		return SupportableUnitTypes;
 	}

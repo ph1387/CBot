@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.updater;
 import unitControlModule.stateFactories.goals.UnitGoalStateStealth;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * GoalStateUpdaterStealth.java --- Updater for updating a
  * {@link UnitGoalStateStealth} instance.
@@ -19,7 +18,6 @@ public class GoalStateUpdaterStealth extends GoalStateUpdaterDefault {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);

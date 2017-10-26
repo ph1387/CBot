@@ -6,7 +6,6 @@ import bwapi.Unit;
 import bwapi.UnitType;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * WorldStateUpdaterAbilityUsingUnitsTerran_Vulture.java --- WorldState updater
  * for Terran_Vulture WorldStates.

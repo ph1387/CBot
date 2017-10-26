@@ -6,7 +6,6 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.scoringDirector.gameState.GameStateSpecific_ImprovementFacility;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorSpecificImprovementFacility.java --- A {@link ScoreGenerator}
  * applying a target specific rate to the score. This rate is based on the type
@@ -23,6 +22,7 @@ public abstract class ScoreGeneratorSpecificImprovementFacility extends ScoreGen
 
 	// -------------------- Functions
 
+	@Override
 	protected UnitType extractUnitType(GameState gameState) throws Exception {
 		return ((GameStateSpecific_ImprovementFacility) gameState).getSpecificImprovementFacility();
 	}

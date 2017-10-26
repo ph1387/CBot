@@ -19,7 +19,6 @@ public interface IBuildingOrderModuleConfig {
 	 */
 	public boolean enableBuildingOrderModuleUpdates();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the display of all {@link GameState}s with
@@ -27,7 +26,6 @@ public interface IBuildingOrderModuleConfig {
 	 */
 	public boolean enableDisplayGameStates();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the display of all generated scores for each

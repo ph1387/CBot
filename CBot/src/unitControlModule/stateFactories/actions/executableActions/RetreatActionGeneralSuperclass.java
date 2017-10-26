@@ -54,12 +54,6 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 	// The distance at which isDone() returns true.
 	protected int minDistanceToGatheringPoint = 2 * Core.getInstance().getTileSize();
 
-	// TODO: UML REMOVE
-	// All generated retreat Positions. Each Unit that generates one stores it
-	// in this HashSet. When the Action is finished it is removed again.
-	// protected static HashSet<Position> GatheringPoints = new
-	// HashSet<Position>();
-
 	// Generated Positions by this specific Unit (Temporary and final).
 	protected Position generatedTempRetreatPosition = null;
 	protected Position retreatPosition = null;

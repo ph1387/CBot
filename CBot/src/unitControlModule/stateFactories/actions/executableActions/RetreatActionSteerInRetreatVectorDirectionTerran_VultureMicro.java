@@ -8,7 +8,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro.java ---
  * Improved RetreatAction for a Terran_Vulture that allows a kiting of enemy
@@ -58,7 +57,6 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
@@ -121,7 +119,6 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 		return success;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
 		boolean superPreconditions = super.checkProceduralSpecificPrecondition(goapUnit);
@@ -138,13 +135,11 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 		return superPreconditions && matchingUnitTargeted;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
 		return 20.f;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected void resetSpecific() {
 		super.resetSpecific();
@@ -155,7 +150,6 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 
 	// -------------------- Group
 
-	// TODO: UML ADD
 	@Override
 	public boolean canPerformGrouped() {
 		return false;

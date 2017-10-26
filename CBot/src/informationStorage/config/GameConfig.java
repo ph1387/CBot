@@ -24,11 +24,9 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// ----- Following settings work on custom maps:
 
 	// UnitTrackerModule:
-	// TODO: UML ADD
 	private boolean enableUnitTrackerModuleUpdates = true;
 
 	// UnitControlModule:
-	// TODO: UML ADD
 	private boolean enableUnitControlModuleUpdates = true;
 
 	// PlayerUnit:
@@ -37,9 +35,7 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// ---------- Display / Debug functionalities:
 
 	// BuildingOrderModule:
-	// TODO: UML ADD
 	private boolean displayGameStates = false;
-	// TODO: UML ADD
 	private boolean displayGeneratedScores = false;
 
 	// UnitTrackerModule:
@@ -63,13 +59,11 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayGameStates() {
 		return this.displayGameStates;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayGeneratedScores() {
 		return this.displayGeneratedScores;

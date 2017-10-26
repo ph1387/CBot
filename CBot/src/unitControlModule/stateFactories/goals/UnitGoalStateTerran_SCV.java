@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.goals;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * UnitGoalStateTerran_SCV.java --- A GoalState for a Terran_SCV. This Class
  * exists due to them being able to repair certain Units and buildings (=>

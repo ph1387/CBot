@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 
-// TODO: UML ORDER
 /**
  * ScoreGeneratorFactory.java --- A Interface defining a factory for
  * {@link ScoreGenerator}s (Abstract Factory Pattern). </br>
@@ -107,7 +106,6 @@ public interface ScoreGeneratorFactory {
 	 */
 	public ScoreGenerator generateTechnologyFocusedScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for researching machine Unit
@@ -115,14 +113,12 @@ public interface ScoreGeneratorFactory {
 	 */
 	public ScoreGenerator generateResearchMachinesScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for researching bio Unit technologies.
 	 */
 	public ScoreGenerator generateResearchBioScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for researching flying Unit
@@ -137,21 +133,18 @@ public interface ScoreGeneratorFactory {
 	 */
 	public ScoreGenerator generateUpgradeFocusedScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for upgrading machine Units.
 	 */
 	public ScoreGenerator generateUpgradesMachinesScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for upgrading bio Units.
 	 */
 	public ScoreGenerator generateUpgradesBioScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for upgrading flying Units.
@@ -176,28 +169,24 @@ public interface ScoreGeneratorFactory {
 	 */
 	public ScoreGenerator generateIdleTrainingFacilityScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for specific TechTypes.
 	 */
 	public ScoreGenerator generateSpecificTechScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for specific UpgradeTypes.
 	 */
 	public ScoreGenerator generateSpecificUpgradeScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for specific UnitTypes.
 	 */
 	public ScoreGenerator generateSpecificUnitScoreGenerator();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for specific improvement facilities

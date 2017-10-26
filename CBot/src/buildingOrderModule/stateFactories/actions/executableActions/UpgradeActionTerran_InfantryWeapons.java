@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UpgradeType;
 
-//TODO: UML ADD
 /**
  * UpgradeActionTerran_InfantryWeapons.java --- Action for upgrading the
  * Terran_Infantry_Weapons for the Terran Bio-Units at the

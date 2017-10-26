@@ -44,7 +44,6 @@ public class TrainUnitActionTerran_SiegeTank extends TrainUnitBaseAction {
 		return TypeWrapper.generateFrom(UnitType.Terran_Factory);
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return CBot.getInstance().getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()

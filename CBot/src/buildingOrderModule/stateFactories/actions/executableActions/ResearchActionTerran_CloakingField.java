@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.TechType;
 
-// TODO: UML ADD
 /**
  * ResearchActionTerran_CloakingField.java --- Action for researching the
  * Cloaking_Field for Terran_Wraiths at the Terran_Control_Tower.

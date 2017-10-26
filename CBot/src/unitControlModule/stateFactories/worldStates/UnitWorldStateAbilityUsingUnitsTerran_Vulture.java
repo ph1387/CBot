@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.worldStates;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * UnitWorldStateAbilityUsingUnitsTerran_Vulture.java --- WorldState for a
  * Terran_Vulture using its corresponding abilities.

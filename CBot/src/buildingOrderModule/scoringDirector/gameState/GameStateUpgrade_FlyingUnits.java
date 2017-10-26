@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
 import bwapi.UpgradeType;
 
-//TODO: UML ADD
 /**
  * GameStateUpgrade_FlyingUnits.java --- A GameState focused on performing
  * upgrades ({@link UpgradeType}s) for flying Units.

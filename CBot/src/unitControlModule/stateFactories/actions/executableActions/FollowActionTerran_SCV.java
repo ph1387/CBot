@@ -6,7 +6,6 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SCV;
 
-// TODO: UML ADD
 /**
  * FollowActionTerran_SCV.java --- A follow action for
  * {@link PlayerUnitTerran_SCV}s with which the Unit is able to follow another
@@ -40,7 +39,6 @@ public class FollowActionTerran_SCV extends FollowAction {
 		return PlayerUnitTerran_SCV.getRepairPixelDistance();
 	}
 
-	// TODO: UML ADD OVERRIDE
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
@@ -53,7 +51,6 @@ public class FollowActionTerran_SCV extends FollowAction {
 		return super.performSpecificAction(goapUnit);
 	}
 
-	// TODO: UML ADD OVERRIDE
 	@Override
 	protected void resetSpecific() {
 		// Remove any Units that this one might be following from the shared

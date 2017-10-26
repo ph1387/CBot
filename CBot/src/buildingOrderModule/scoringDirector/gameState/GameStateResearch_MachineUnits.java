@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
 import bwapi.TechType;
 
-//TODO: UML ADD
 /**
  * GameStateResearch_Machines.java --- A GameState focused on researching
  * {@link TechType}s for machine Units.

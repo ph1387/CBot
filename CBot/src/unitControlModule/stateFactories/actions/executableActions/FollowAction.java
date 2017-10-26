@@ -5,7 +5,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * FollowAction.java --- A follow action for {@link PlayerUnit}s to follow other
  * Units around the map. This Action is mostly used for supporting Units since
@@ -59,7 +58,6 @@ public abstract class FollowAction extends BaseAction {
 				.isNearPosition(((Unit) this.target).getPosition(), this.defineDistanceToTarget()));
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for defining the distance at which the
 	 * {@link #isDone(IGoapUnit)} function returns true, which indicates that

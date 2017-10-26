@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.actions.executableActions;
 import javaGOAP.GoapState;
 import unitControlModule.unitWrappers.PlayerUnitTerran_Medic;
 
-// TODO: UML ADD
 /**
  * FollowActionTerran_Medic.java --- A follow action for
  * {@link PlayerUnitTerran_Medic}s with which the Unit is able to follow another

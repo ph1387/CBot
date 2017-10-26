@@ -35,52 +35,34 @@ public class TypeWrapper {
 	public static final TypeWrapper UnitType_Terran_Vulture = new TypeWrapper(UnitType.Terran_Vulture);
 	public static final TypeWrapper UnitType_Terran_Refinery = new TypeWrapper(UnitType.Terran_Refinery);
 	public static final TypeWrapper UnitType_Terran_Supply_Depot = new TypeWrapper(UnitType.Terran_Supply_Depot);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Academy = new TypeWrapper(UnitType.Terran_Academy);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Starport = new TypeWrapper(UnitType.Terran_Starport);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Wraith = new TypeWrapper(UnitType.Terran_Wraith);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Engineering_Bay = new TypeWrapper(UnitType.Terran_Engineering_Bay);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Science_Facility = new TypeWrapper(
 			UnitType.Terran_Science_Facility);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Armory = new TypeWrapper(UnitType.Terran_Armory);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Goliath = new TypeWrapper(UnitType.Terran_Goliath);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Science_Vessel = new TypeWrapper(UnitType.Terran_Science_Vessel);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Control_Tower = new TypeWrapper(UnitType.Terran_Control_Tower);
 
 	// UpgradeType wrappers:
-	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_U_238_Shells = new TypeWrapper(UpgradeType.U_238_Shells);
-	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_Terran_Infantry_Armor = new TypeWrapper(
 			UpgradeType.Terran_Infantry_Armor);
-	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_Terran_Infantry_Weapons = new TypeWrapper(
 			UpgradeType.Terran_Infantry_Weapons);
-	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_Terran_Vehicle_Plating = new TypeWrapper(
 			UpgradeType.Terran_Vehicle_Plating);
-	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_Terran_Vehicle_Weapons = new TypeWrapper(
 			UpgradeType.Terran_Vehicle_Weapons);
-	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_Ion_Thrusters = new TypeWrapper(UpgradeType.Ion_Thrusters);
-	// TODO: UML ADD
 	public static final TypeWrapper UpgradeType_Charon_Boosters = new TypeWrapper(UpgradeType.Charon_Boosters);
 
 	// TechType wrappers:
 	public static final TypeWrapper TechType_Stim_Packs = new TypeWrapper(TechType.Stim_Packs);
 	public static final TypeWrapper TechType_Tank_Siege_Mode = new TypeWrapper(TechType.Tank_Siege_Mode);
-	// TODO: UML ADD
 	public static final TypeWrapper TechType_Spider_Mines = new TypeWrapper(TechType.Spider_Mines);
-	// TODO: UML ADD
 	public static final TypeWrapper TechType_Cloaking_Field = new TypeWrapper(TechType.Cloaking_Field);
 
 	// Precomputed HashMaps for an easy conversion from the different types to a

@@ -15,7 +15,6 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.stateFactories.actions.executableActions.steering.SteeringOperationEnemiesInConfidenceRange;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML MARK
 @Deprecated
 /**
  * ProtectMoveActionGeneralSuperclass.java --- Superclass for all Actions

@@ -14,7 +14,6 @@ import unitControlModule.stateFactories.actions.executableActions.steering.Steer
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_Vulture;
 
-// TODO: UML ADD
 /**
  * TerranVulture_SpiderMines_RepositionEnemy.java --- Action for a
  * {@link PlayerUnitTerran_Vulture} to reposition itself according to the
@@ -67,7 +66,6 @@ public class TerranVulture_SpiderMines_RepositionEnemy extends BaseAction {
 		return success;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function used for generating a Position to which the Unit can retreat to.
 	 * Is called when a new temporary retreat Position is needed.
@@ -101,7 +99,6 @@ public class TerranVulture_SpiderMines_RepositionEnemy extends BaseAction {
 		return generatedPosition;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a Vector emerging at the executing Unit with the
 	 * direction and of the target Unit towards itself set to a fixed length.

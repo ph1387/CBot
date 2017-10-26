@@ -36,7 +36,6 @@ public class ActionSequence {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	/**
 	 * Function for resetting all values stored in the instance.
 	 */

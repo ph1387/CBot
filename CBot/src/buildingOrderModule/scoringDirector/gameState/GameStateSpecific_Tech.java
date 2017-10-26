@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
 import bwapi.TechType;
 
-//TODO: UML ADD
 /**
  * GameStateSpecific_Tech.java --- A GameState focused on researching specific
  * {@link TechType}s.

@@ -4,7 +4,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityAction_Decloak.java --- General decloaking ability for Units.
  * 
@@ -35,7 +34,6 @@ public abstract class AbilityAction_Decloak extends AbilityActionTechTargetNone 
 		return playerUnit.getUnit().isCloaked() && playerUnit.getUnit().canDecloak();
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().decloak();

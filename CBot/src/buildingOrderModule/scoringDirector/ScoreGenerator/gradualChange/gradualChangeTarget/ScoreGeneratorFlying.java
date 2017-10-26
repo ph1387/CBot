@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradual
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorFlying.java --- A {@link ScoreGenerator} regarding flying
  * Units.

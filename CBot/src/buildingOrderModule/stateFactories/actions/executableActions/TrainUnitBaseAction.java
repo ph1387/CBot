@@ -138,7 +138,6 @@ public abstract class TrainUnitBaseAction extends ManagerBaseAction {
 		return maxPossTrainingCount - queuedTrainingCount;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for defining the maximum number of times the UnitType may be
 	 * queued for training. This function is necessary since some Units

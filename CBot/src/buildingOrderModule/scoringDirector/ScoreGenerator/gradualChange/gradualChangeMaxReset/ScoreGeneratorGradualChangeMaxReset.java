@@ -1,7 +1,8 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange;
+package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeMaxReset;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
+import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.ScoreGeneratorGradualChangeMax;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 
 /**

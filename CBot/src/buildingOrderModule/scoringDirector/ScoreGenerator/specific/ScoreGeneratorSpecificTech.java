@@ -6,7 +6,6 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.scoringDirector.gameState.GameStateSpecific_Tech;
 import bwapi.TechType;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorSpecificTech.java --- A {@link ScoreGenerator} applying a
  * target specific rate to the score. This rate is based on the {@link TechType}

@@ -69,7 +69,6 @@ class MineralPatchManager<T extends GatheringSource> extends ResourceManager<Gat
 
 	}
 
-	// TODO: UML PARAMS
 	public MineralPatchManager(WorkerManagerResourceSpotAllocation workerManagerResourceSpotAllocation) {
 		super(workerManagerResourceSpotAllocation);
 
@@ -90,7 +89,6 @@ class MineralPatchManager<T extends GatheringSource> extends ResourceManager<Gat
 		}
 	}
 
-	// TODO: UML ADD
 	@Override
 	@SuppressWarnings("unchecked")
 	protected SortInterface<GatheringSource> defineSorter() {

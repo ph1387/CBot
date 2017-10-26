@@ -1,10 +1,10 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeMaxReset;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
-import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.ScoreGeneratorGradualChangeMaxReset;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UpgradeType;
 
@@ -19,7 +19,6 @@ import bwapi.UpgradeType;
 public class ScoreGeneratorUpgradeFocused extends ScoreGeneratorGradualChangeMaxReset {
 
 	private static double DefaultRate = 0.1;
-	// TODO: UML CHANGE 200
 	private static double DefaultFrameDiff = 400;
 	private static double DefaultResetValue = 0.;
 

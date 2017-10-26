@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.worldStates;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * UnitWorldStateTerran_SCV.java --- WorldState for a Terran_SCV. This Class
  * exists due to them being able repair certain Units / buildings.

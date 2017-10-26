@@ -4,7 +4,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityAction_Cloak.java --- General cloaking ability for Units.
  * 
@@ -37,7 +36,6 @@ public abstract class AbilityAction_Cloak extends AbilityActionTechTargetNone {
 				&& playerUnit.getUnit().getEnergy() > this.defineType().energyCost();
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		return ((PlayerUnit) goapUnit).getUnit().cloak();

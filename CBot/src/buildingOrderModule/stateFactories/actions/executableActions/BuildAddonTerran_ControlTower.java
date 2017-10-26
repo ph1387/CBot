@@ -4,7 +4,6 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * BuildAddonTerran_ControlTower.java --- Action for building a
  * Terran_Control_Tower at a Starport.
@@ -44,7 +43,6 @@ public class BuildAddonTerran_ControlTower extends BuildAddonBaseAction {
 		return UnitType.Terran_Control_Tower;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return 1;

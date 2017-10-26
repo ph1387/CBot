@@ -15,11 +15,8 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ActionUpdaterTerran_Vulture extends ActionUpdaterDefault {
 
-	// TODO: UML ADD
 	private AbilityActionTerranVuture_SpiderMines abilityActionTerranVuture_SpiderMines;
-	// TODO: UML ADD
 	private TerranVulture_SpiderMines_RepositionEnemy terranVulture_SpiderMines_RepositionEnemy;
-	// TODO: UML ADD
 	private RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro retreatActionSteerInRetreatVectorDirectionTerran_VultureMicro;
 
 	public ActionUpdaterTerran_Vulture(PlayerUnit playerUnit) {
@@ -28,20 +25,19 @@ public class ActionUpdaterTerran_Vulture extends ActionUpdaterDefault {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
 
 		// Enable a secondary retreat action: The micro one!
-		this.retreatActionSteerInRetreatVectorDirectionTerran_VultureMicro.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
-		
+		this.retreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
+				.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
+
 		// Always place the mines below the Unit itself.
 		this.abilityActionTerranVuture_SpiderMines.setTarget(this.playerUnit.getUnit().getPosition());
 		this.terranVulture_SpiderMines_RepositionEnemy.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected void init() {
 		super.init();

@@ -19,23 +19,17 @@ import workerManagerResourceSpotAllocation.WorkerManagerResourceSpotAllocation;
  */
 public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 
-	// TODO: UML ADD
 	private static final int REPAIR_PIXEL_DISTANCE = 128;
-	// TODO: UML ADD
 	// Flag for workers that are repairing / are allowed to repair machine Units
 	// on the battlefield.
 	private boolean isCombatEngineer = false;
 
-	// TODO: UML ADD
 	private double combatEngineerTriggerPercentageEnroll = 0.3;
-	// TODO: UML ADD
 	private double combatEngineerTriggerPercentageCancel = 0.8;
-	// TODO: UML ADD
 	// The confidence multiplier for combat engineers following or repairing
 	// Units.
 	private double combatEngineerConfidenceMultiplier = 2.;
 
-	// TODO: UML ADD
 	// The machines that are repairable besides the buildings. Vultures are not
 	// listed here since repairing them can be difficult due to them moving too
 	// fast.
@@ -55,7 +49,6 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 		return new StateFactoryTerran_SCV();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public void update() {
 		boolean wasCombatEngineer = this.isCombatEngineer;
@@ -79,7 +72,6 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 		super.update();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for determining if a worker should become a combat engineer and
 	 * therefore repair machine Units on the battlefield and actively follow
@@ -96,7 +88,6 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 		return combatEngineers / machineUnitsCount <= this.combatEngineerTriggerPercentageEnroll;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for determining if a worker should stop being a combat engineer.
 	 * This can be necessary when either a lot of machine or worker Units die
@@ -112,7 +103,6 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 		return combatEngineers / machineUnitsCount >= this.combatEngineerTriggerPercentageCancel;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for getting the total number of machine Units currently in game
 	 * that a Terran_SCV is can repair.
@@ -130,7 +120,6 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 		return machineUnitsCount;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected double generateModifiedConfidence() {
 		boolean isRepairing = this.unit.isRepairing()
@@ -150,7 +139,6 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 		return modifiedConfidence;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -163,17 +151,14 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 
 	// ------------------------------ Getter / Setter
 
-	// TODO: UML ADD
 	public static int getRepairPixelDistance() {
 		return REPAIR_PIXEL_DISTANCE;
 	}
 
-	// TODO: UML ADD
 	public static List<UnitType> getRepairableUnitTypes() {
 		return RepairableUnitTypes;
 	}
 
-	// TODO: UML ADD
 	public boolean isCombatEngineer() {
 		return isCombatEngineer;
 	}

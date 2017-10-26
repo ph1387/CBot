@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * RepairActionUnit.java --- Repair action focused on repairing a Unit. This
  * Class is separated from the {@link RepairActionBuilding} due to it containing

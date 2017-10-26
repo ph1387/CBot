@@ -104,7 +104,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		}
 	}
 
-	// TODO: UML ADD
 	@Override
 	public void destroy() {
 		super.destroy();

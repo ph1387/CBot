@@ -8,7 +8,6 @@ import unitControlModule.stateFactories.updater.ActionUpdaterTerran_Goliath;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * StateFactoryTerran_Goliath.java --- A StateFactory used for generating all
  * necessary Objects for the Terran_Goliath.
@@ -20,13 +19,11 @@ public class StateFactoryTerran_Goliath extends StateFactoryDefault {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public HashSet<GoapAction> generateAvailableActions() {
 		return new AvailableActionsTerran_Goliath();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public Updater getMatchingActionUpdater(PlayerUnit playerUnit) {
 		return new ActionUpdaterTerran_Goliath(playerUnit);

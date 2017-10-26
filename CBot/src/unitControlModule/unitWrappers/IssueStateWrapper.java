@@ -2,7 +2,6 @@ package unitControlModule.unitWrappers;
 
 import core.Core;
 
-// TODO: UML ADD
 /**
  * IssueStateWrapper.java --- A wrapper Class for an {@link IssueState}
  * containing functions for signaling an error ({@link #signalIssue()}). Calling
@@ -15,7 +14,6 @@ import core.Core;
  */
 public class IssueStateWrapper {
 
-	// TODO: UML ADD
 	/**
 	 * IssueState.java --- A Enum representing an issue combined with an
 	 * additional time stamp.
@@ -38,14 +36,11 @@ public class IssueStateWrapper {
 
 	};
 
-	// TODO: UML ADD
 	private IssueState currentIssueState = IssueState.NONE;
 	// The time that must pass before the state resets to NONE.
-	// TODO: UML ADD
 	private int maxIssueResolveFrames = 240;
 	// The time that must pass before the state can be switched from NONE to
 	// DETECTED again (after switching to NONE).
-	// TODO: UML ADD
 	private int issueResolveResetFrames = 240;
 
 	public IssueStateWrapper() {
@@ -54,7 +49,6 @@ public class IssueStateWrapper {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	/**
 	 * Function for signaling that an issue exists. This can be an Unit idling
 	 * or one being stuck. This function switches the states of an

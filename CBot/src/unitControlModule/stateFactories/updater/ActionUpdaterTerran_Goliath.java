@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.updater;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Goliath;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterTerran_Goliath.java --- Updater for updating an
  * {@link AvailableActionsTerran_Goliath} instance.

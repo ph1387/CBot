@@ -5,7 +5,6 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorDefault;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 
-//TODO: UML PACKAGE
 /**
  * ScoreGeneratorProportion.java --- A {@link ScoreGenerator} based on returning
  * a score based on a generated numerator and denominator (=> Proportion!).

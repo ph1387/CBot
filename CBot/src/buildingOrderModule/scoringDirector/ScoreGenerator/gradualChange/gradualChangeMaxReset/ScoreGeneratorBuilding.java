@@ -1,13 +1,12 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeMaxReset;
 
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
-import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.ScoreGeneratorGradualChangeMaxReset;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorBuilding.java --- A {@link ScoreGenerator} focused on
  * buildings. Increases it's score until the number of buildings changes.

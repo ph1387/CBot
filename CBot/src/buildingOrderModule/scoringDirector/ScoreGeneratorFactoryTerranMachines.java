@@ -14,7 +14,6 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGenerato
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificUnitTerranMachines;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificUpgradeTerranMachines;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorFactoryTerranMachines.java --- a {@link ScoreGeneratorFactory}
  * for the Terran Race with the focus being on machine Units.

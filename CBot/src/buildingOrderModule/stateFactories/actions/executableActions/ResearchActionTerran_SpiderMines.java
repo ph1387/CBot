@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.TechType;
 
-// TODO: UML ADD
 /**
  * ResearchActionTerran_SpiderMines.java --- Action for researching the
  * Spider_Mines for Terran_Vultures at the Terran_Machine_Shop.

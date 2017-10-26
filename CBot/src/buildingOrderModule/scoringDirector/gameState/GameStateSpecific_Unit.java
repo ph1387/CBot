@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * GameStateSpecific_Unit.java --- A GameState focused on training specific
  * {@link UnitType}s.

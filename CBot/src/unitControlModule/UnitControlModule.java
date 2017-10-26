@@ -31,21 +31,18 @@ public class UnitControlModule implements RemoveAgentEvent {
 
 	private GoapAgentFactory goapAgentFactory;
 
-	// TODO: UML ADD
 	// The UnitTypes that are not going to be added to the different update sets
 	// and is therefore ignored. The GoapAgentFactory does not need to provide a
 	// GoapAgent instance for Units of this UnitType. A UnitType should only be
 	// added towards this List if it performs it's actions on it's own.
 	private List<UnitType> ignoredUnitTypes = Arrays.asList(new UnitType[] { UnitType.Terran_Vulture_Spider_Mine });
 
-	// TODO: UML ADD
 	// Information regarding the updates of the different kinds of Units.
 	// Workers and combat Units are updated in an alternating fashion.
 	private enum UpdateCycle {
 		WORKER, COMBAT_UNIT
 	};
 
-	// TODO: UML ADD
 	private UpdateCycle currentUpdateCycle = UpdateCycle.WORKER;
 
 	// The HashSet(s) is / are used for displaying the content whereas the
@@ -61,11 +58,6 @@ public class UnitControlModule implements RemoveAgentEvent {
 	private Queue<Unit> unitsToRemove = new LinkedList<Unit>();
 
 	private InformationStorage informationStorage;
-
-	// TODO: UML REMOVE
-	// The percentage of combat Units that are updated in one single iteration.
-	// Higher values equal a stronger impact on the CPU.
-	// private double combatUnitUpdatePercentage = 0.2;
 
 	public UnitControlModule(InformationStorage informationStorage) {
 		this.informationStorage = informationStorage;

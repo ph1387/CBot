@@ -9,7 +9,6 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualC
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorSpecificUpgradeTerranMachines.java --- A {@link ScoreGenerator}
  * applying a target specific rate to the score. This class focuses on Terran

@@ -1,7 +1,5 @@
 package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget;
 
-// TODO: UML ADD
-// TODO: UML VISIBILITY
 /**
  * ConfigRate.java --- Configuration for the increase / decrease
  * {@link ScoreGeneratorGradualChangeTarget}s.

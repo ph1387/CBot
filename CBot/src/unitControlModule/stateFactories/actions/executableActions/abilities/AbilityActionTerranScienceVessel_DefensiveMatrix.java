@@ -6,7 +6,6 @@ import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * AbilityActionTerranScienceVessel_DefensiveMatrix.java --- The
  * Defensiv_eMatrix ability of a Terran_Science_Vessel.

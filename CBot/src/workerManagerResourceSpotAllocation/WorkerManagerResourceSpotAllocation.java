@@ -15,11 +15,6 @@ public class WorkerManagerResourceSpotAllocation {
 
 	private InformationStorage informationStorage;
 
-	// TODO: UML REMOVE
-	// The mapping of the different workers to the ResourceManagers. Using a
-	// HashMap ensures a faster lookup when testing for a worker assignment.
-	// private HashMap<ResourceManagerEntry, IResourceManager>
-	// mappedResourceManagerEntries = new HashMap<>();
 	private MineralPatchManager<MineralPatch> mineralPatchManager;
 	private RefineryManager<RefineryWrapper> refineryManager;
 
@@ -181,7 +176,6 @@ public class WorkerManagerResourceSpotAllocation {
 		return this.findManager(entry) != null;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the {@link IResourceManager} that contains the
 	 * provided {@link ResourceManagerEntry} as a assigned worker.

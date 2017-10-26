@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-// TODO: UML RENAME ScoringDirectorTerran_Bio
 /**
  * ScoringDirectorTerranDefault.java --- A ScoringDirector providing the machine
  * version of the Terran {@link ScoreGeneratorFactory}.

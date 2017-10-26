@@ -1,7 +1,7 @@
-package buildingOrderModule.scoringDirector.ScoreGenerator;
+package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeMaxReset;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
-import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.ScoreGeneratorGradualChangeMaxReset;
+import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 
 /**
@@ -15,7 +15,6 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 public class ScoreGeneratorTechnologyFocused extends ScoreGeneratorGradualChangeMaxReset {
 
 	private static double DefaultRate = 0.1;
-	// TODO: UML CHANGE 200
 	private static double DefaultFrameDiff = 400;
 	private static double DefaultResetValue = 0.;
 

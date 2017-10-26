@@ -1,6 +1,5 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
-// TODO: UML ADD
 /**
  * RepairActionBuilding.java --- Repair action focused on repairing a building.
  * 

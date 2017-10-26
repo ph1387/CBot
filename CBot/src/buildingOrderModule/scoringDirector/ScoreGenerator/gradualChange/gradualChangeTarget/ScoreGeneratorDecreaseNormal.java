@@ -2,7 +2,6 @@ package buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradual
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorDecreaseNormal.java --- A
  * {@link ScoreGeneratorGradualChangeTarget} decreasing the score (Normal) until

@@ -12,7 +12,6 @@ import unitControlModule.UnitControlModule;
  */
 public interface IUnitControlModuleConfig {
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the updates on the {@link UnitControlModule},

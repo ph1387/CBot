@@ -38,7 +38,6 @@ public class InformationStorage {
 	private ResourceReserver resourceReserver;
 	private WorkerConfiguration workerConfig;
 
-	// TODO: UML ADD
 	// Storage class for Terran_Science_Vessel follow actions.
 	private ScienceVesselStorage scienceVesselStorage;
 
@@ -59,7 +58,6 @@ public class InformationStorage {
 	private IUnitControlModuleConfig iUnitControlModuleConfig;
 	private IUnitTrackerModuleConfig iUnitTrackerModuleConfig;
 
-	// TODO: UML PARAMS
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
 			ScienceVesselStorage scienceVesselStorage, UnitTrackerInformation trackerInfo, MapInformation mapInfo,
 			CurrentGameInformation currentGameInformation) {
@@ -117,7 +115,6 @@ public class InformationStorage {
 		return workerConfig;
 	}
 
-	// TODO: UML ADD
 	public ScienceVesselStorage getScienceVesselStorage() {
 		return scienceVesselStorage;
 	}

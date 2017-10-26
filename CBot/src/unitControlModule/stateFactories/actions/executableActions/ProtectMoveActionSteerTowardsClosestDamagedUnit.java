@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import javaGOAP.GoapState;
 
-//TODO: UML MARK
 @Deprecated
 /**
  * ProtectMoveActionSteerTowardsClosestDamagedUnit.java --- A Action for a

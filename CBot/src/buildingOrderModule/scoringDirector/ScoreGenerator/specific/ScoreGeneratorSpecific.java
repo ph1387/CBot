@@ -6,7 +6,6 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGeneratorDefault;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.ScoreGeneratorGradualChange;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorSpecific.java --- A {@link ScoreGenerator} applying a target
  * specific rate to the score. This can either be a fixed or a changing one
@@ -39,7 +38,6 @@ public abstract class ScoreGeneratorSpecific extends ScoreGeneratorDefault {
 		return score;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a score based on a given {@link GameState}. This
 	 * function exists since the superclass implementation does not take
@@ -57,7 +55,6 @@ public abstract class ScoreGeneratorSpecific extends ScoreGeneratorDefault {
 	 */
 	protected abstract double generateScoreForGameState(GameState gameState, int framesPassed) throws Exception;
 
-	// TODO: UML ADD
 	@Override
 	public int generateDivider(GameState gameState, int framesPassed) {
 		int divider = 1;
@@ -71,7 +68,6 @@ public abstract class ScoreGeneratorSpecific extends ScoreGeneratorDefault {
 		return divider;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a divider based on a given {@link GameState}.
 	 * This function should return 1 for all GameStates that are not forbidden.

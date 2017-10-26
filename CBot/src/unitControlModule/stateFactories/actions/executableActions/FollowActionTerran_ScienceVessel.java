@@ -6,7 +6,6 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_ScienceVessel;
 
-// TODO: UML ADD
 /**
  * FollowActionTerran_ScienceVessel.java --- A follow action for
  * {@link PlayerUnitTerran_ScienceVessel}s with which the Unit is able to follow
@@ -40,7 +39,6 @@ public class FollowActionTerran_ScienceVessel extends FollowAction {
 		return PlayerUnitTerran_ScienceVessel.getSupportPixelDistance();
 	}
 
-	// TODO: UML ADD OVERRIDE
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
@@ -53,7 +51,6 @@ public class FollowActionTerran_ScienceVessel extends FollowAction {
 		return super.performSpecificAction(goapUnit);
 	}
 
-	// TODO: UML ADD OVERRIDE
 	@Override
 	protected void resetSpecific() {
 		// Remove any Units that this one might be following from the shared

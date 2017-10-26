@@ -14,9 +14,7 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ActionUpdaterTerran_Wraith extends ActionUpdaterDefault {
 
-	// TODO: UML ADD
 	private AbilityActionTerranWraith_Cloak abilityActionTerranWraith_Cloak;
-	// TODO: UML ADD
 	private AbilityActionTerranWraith_Decloak abilityActionTerranWraith_Decloak;
 
 	public ActionUpdaterTerran_Wraith(PlayerUnit playerUnit) {
@@ -25,7 +23,6 @@ public class ActionUpdaterTerran_Wraith extends ActionUpdaterDefault {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
@@ -34,7 +31,6 @@ public class ActionUpdaterTerran_Wraith extends ActionUpdaterDefault {
 		this.abilityActionTerranWraith_Decloak.setTarget(playerUnit);
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected void init() {
 		super.init();

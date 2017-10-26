@@ -26,7 +26,6 @@ public class BuildingOrderModule {
 	// The elements that are allowed in the queue regardless of the generated
 	// result.
 	private int extraQueueElements = 1;
-	// TODO: UML ADD
 	// The maximum number of queued elements in the training and building Queue.
 	private int maxQueuedElements = 5;
 

@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD
 /**
  * UpgradeActionTerran_U_238_Shells.java --- Action for upgrading the
  * U_238_Shells for the Terran_Marine at the Terran_Academy.

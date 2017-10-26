@@ -20,8 +20,6 @@ class RefineryWrapper implements GatheringSource {
 	// are going to gather at.
 	private Unit refinery;
 	private int maxWorkersPerRefinery = 3;
-	// TODO: UML REMOVE
-//	private int freeWorkerSpots = this.maxWorkersPerRefinery;
 	private HashSet<ResourceManagerEntry> assignedWorkers = new HashSet<>();
 
 	public RefineryWrapper(Unit refinery, IResourceManager refineryManager) {

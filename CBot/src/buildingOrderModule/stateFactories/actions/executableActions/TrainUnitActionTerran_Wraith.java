@@ -4,7 +4,6 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * TrainUnitActionTerran_Wraith.java --- Class for training a Terran_Wraith.
  * 

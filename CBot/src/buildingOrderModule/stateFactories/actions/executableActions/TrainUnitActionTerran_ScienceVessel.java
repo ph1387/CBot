@@ -5,7 +5,6 @@ import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 import core.CBot;
 
-// TODO: UML ADD
 /**
  * TrainUnitActionTerran_ScienceVessel.java --- Class for training a
  * Terran_Science_Vessel.
@@ -29,7 +28,7 @@ public class TrainUnitActionTerran_ScienceVessel extends TrainUnitBaseAction {
 		this.addToGameStates(GameState.Flying_Units);
 
 		this.addToGameStates(GameState.FreeTrainingFacility_Terran_Starport);
-		
+
 		this.addToGameStates(GameState.SpecificUnit_Terran_Siege_Tank_Tank_Mode);
 	}
 
@@ -45,7 +44,6 @@ public class TrainUnitActionTerran_ScienceVessel extends TrainUnitBaseAction {
 		return UnitType.Terran_Science_Vessel;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected int defineMaxTrainingCount() {
 		return CBot.getInstance().getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()

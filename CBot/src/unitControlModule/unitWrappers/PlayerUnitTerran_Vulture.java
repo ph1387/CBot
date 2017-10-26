@@ -25,7 +25,6 @@ public class PlayerUnitTerran_Vulture extends PlayerUnitTypeRanged {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	/**
 	 * Removed the Action reset(s) due to them interfering with the kiting
 	 * action of the Terran_Vulture. These cause the Unit to stop and therefore

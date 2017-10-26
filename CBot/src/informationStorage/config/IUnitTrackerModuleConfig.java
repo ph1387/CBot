@@ -11,7 +11,6 @@ import unitTrackerModule.UnitTrackerModule;
  */
 public interface IUnitTrackerModuleConfig {
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the updates on the {@link UnitTrackerModule},

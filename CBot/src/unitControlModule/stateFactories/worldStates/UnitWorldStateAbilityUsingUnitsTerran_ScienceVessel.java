@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.worldStates;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * UnitWorldStateAbilityUsingUnitsTerran_ScienceVessel.java --- WorldState for a
  * Terran_Science_Vessel using its corresponding abilities.

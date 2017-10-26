@@ -4,7 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
 import bwapi.UnitType;
 
-//TODO: UML ADD
 /**
  * GameStateSpecific_ImprovementFacility.java --- A GameState focused on
  * specific improvement facilities that are used for upgrading or researching.

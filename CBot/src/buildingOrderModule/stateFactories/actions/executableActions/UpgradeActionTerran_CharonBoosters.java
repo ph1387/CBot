@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD
 /**
  * UpgradeActionTerran_CharonBoosters.java --- Action for upgrading the
  * Charon_Boosters for the Terran_Goliath at the Terran_Machine_Shop.

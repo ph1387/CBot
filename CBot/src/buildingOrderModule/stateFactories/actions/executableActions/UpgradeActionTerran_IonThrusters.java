@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UpgradeType;
 
-// TODO: UML ADD
 /**
  * UpgradeActionTerran_IonThrusters.java --- Action for upgrading the
  * Ion_Thrusters for the Terran_Vulture at the Terran_Machine_Shop.

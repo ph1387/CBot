@@ -4,7 +4,6 @@ import unitControlModule.stateFactories.goals.UnitGoalStateTerran_SCV;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SCV;
 
-// TODO: UML ADD
 /**
  * GoalStateUpdaterTerran_SCV.java --- Updater for updating a
  * {@link UnitGoalStateTerran_SCV} instance.
@@ -20,12 +19,12 @@ public class GoalStateUpdaterTerran_SCV extends GoalStateUpdaterWorker {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
 
-		// Workers designated as combat repairers must follow machine Units in the first
+		// Workers designated as combat repairers must follow machine Units in
+		// the first
 		// place.
 		if (((PlayerUnitTerran_SCV) playerUnit).isCombatEngineer()) {
 			this.changeGoalStateImportance("isNearRepairableUnit", 5);

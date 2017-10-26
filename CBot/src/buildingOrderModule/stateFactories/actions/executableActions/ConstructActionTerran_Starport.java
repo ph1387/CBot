@@ -3,7 +3,6 @@ package buildingOrderModule.stateFactories.actions.executableActions;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * ConstructActionTerran_Starport.java --- Construction action for a
  * Terran_Starport Unit.

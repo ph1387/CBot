@@ -13,7 +13,6 @@ import unitControlModule.stateFactories.actions.executableActions.abilities.Abil
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_ScienceVessel;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterTerran_ScienceVessel.java --- Updater for updating an
  * {@link AvailableActionsTerran_ScienceVessel} instance.
@@ -38,7 +37,6 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		// Call super.update() when the Units should react independently to
@@ -58,7 +56,6 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 		this.abilityActionTerranScienceVessel_DefensiveMatrix.setTarget(this.getDefensiveMatrixTarget(this.playerUnit));
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected void init() {
 		super.init();
@@ -69,7 +66,6 @@ public class ActionUpdaterTerran_ScienceVessel extends ActionUpdaterGeneral {
 				.getActionFromInstance(AbilityActionTerranScienceVessel_DefensiveMatrix.class));
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the closest Unit whose UnitType matches one of the
 	 * listed ones in the {@link PlayerUnitTerran_ScienceVessel}'s List of

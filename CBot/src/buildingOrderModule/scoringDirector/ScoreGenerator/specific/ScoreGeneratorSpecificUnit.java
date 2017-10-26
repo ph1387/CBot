@@ -6,7 +6,6 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.scoringDirector.gameState.GameStateSpecific_Unit;
 import bwapi.UnitType;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorSpecificUnit.java --- A {@link ScoreGenerator} applying a
  * target specific rate to the score. This rate is based on the {@link UnitType}

@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.goals;
 
 import javaGOAP.GoapState;
 
-// TODO: UML ADD
 /**
  * UnitGoalStateStealth.java --- GoalState containing goals regarding different
  * stealth aspects of the Game like i.e. cloaking.
