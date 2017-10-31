@@ -33,7 +33,17 @@ public class WorldStateUpdaterAbilityUsingUnitsTerran_SiegeTank extends WorldSta
 		// Mark it if the enemy Unit that the tank has to react to is in siege
 		// range.
 		Unit attackableEnemyUnitToReactTo = playerUnit.getAttackableEnemyUnitToReactTo();
-		this.changeWorldStateEffect("inSiegeRange", attackableEnemyUnitToReactTo != null
-				&& ((PlayerUnitTerran_SiegeTank) playerUnit).isInSiegeRange(attackableEnemyUnitToReactTo));
+		if (attackableEnemyUnitToReactTo != null) {
+			this.changeWorldStateEffect("inSiegeRange",
+					((PlayerUnitTerran_SiegeTank) playerUnit).isInSiegeRange(attackableEnemyUnitToReactTo));
+			this.changeWorldStateEffect("belowSiegeRange",
+					((PlayerUnitTerran_SiegeTank) playerUnit).isBelowSiegeRange(attackableEnemyUnitToReactTo));
+		} else {
+			this.changeWorldStateEffect("inSiegeRange", false);
+			this.changeWorldStateEffect("belowSiegeRange", false);
+		}
+
+		// Change the world state regarding the expectations of enemy Units.
+		this.changeWorldStateEffect("isExpectingEnemy", ((PlayerUnitTerran_SiegeTank) playerUnit).isExpectingEnemy());
 	}
 }

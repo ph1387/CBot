@@ -2,6 +2,7 @@ package unitControlModule.stateFactories.updater;
 
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_SiegeTank;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitActionTerran_SiegeTank_Bombard;
+import unitControlModule.stateFactories.actions.executableActions.TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange;
 import unitControlModule.stateFactories.actions.executableActions.TerranSiegeTank_TankMode_MoveIntoSiegeRange;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranSiegeTank_SiegeMode;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -19,6 +20,8 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 	private AttackUnitActionTerran_SiegeTank_Bombard abilityActionTerranSiegeTankBombard;
 
 	private TerranSiegeTank_TankMode_MoveIntoSiegeRange terranSiegeTank_TankMode_MoveIntoSiegeRange;
+	// TODO: UML ADD
+	private TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange terranSiegeTank_TankMode_MoveIntoExpectedSiegeRange;
 
 	public ActionUpdaterTerran_SiegeTank(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -33,9 +36,9 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 		// TODO: Possible Change: Only perform once.
 		this.abilityActionTerranSiegeTankSiegeMode.setTarget(this.playerUnit);
 
-		this.abilityActionTerranSiegeTankBombard
-				.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
-		this.terranSiegeTank_TankMode_MoveIntoSiegeRange
+		this.abilityActionTerranSiegeTankBombard.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
+		this.terranSiegeTank_TankMode_MoveIntoSiegeRange.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
+		this.terranSiegeTank_TankMode_MoveIntoExpectedSiegeRange
 				.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
 	}
 
@@ -49,5 +52,7 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 				.getActionFromInstance(AttackUnitActionTerran_SiegeTank_Bombard.class));
 		this.terranSiegeTank_TankMode_MoveIntoSiegeRange = ((TerranSiegeTank_TankMode_MoveIntoSiegeRange) this
 				.getActionFromInstance(TerranSiegeTank_TankMode_MoveIntoSiegeRange.class));
+		this.terranSiegeTank_TankMode_MoveIntoExpectedSiegeRange = ((TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange) this
+				.getActionFromInstance(TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange.class));
 	}
 }

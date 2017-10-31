@@ -16,19 +16,53 @@ import unitControlModule.stateFactories.StateFactoryTerran_SiegeTank;
  */
 public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
+	// TODO: UML CHANGE 4
 	// Below this distance the SiegeTank_SiegeMode will / can not use the siege
 	// attack.
-	private static final int MIN_SIEGE_TILE_RANGE = 4;
+	private static final int MIN_SIEGE_TILE_RANGE = 6;
 	private static final int MAX_SIEGE_TILE_RANGE = 12;
 
 	private double inSiegeRangeConfidenceMultiplier = 1.5;
 	private double notInSiegeRangeConfidenceMultiplier = 0.5;
+
+	// TODO: UML ADD
+	// Flag indicating if the Unit is currently expecting another enemy one to
+	// advance towards it / it's Position.
+	protected boolean isExpectingEnemy = false;
 
 	public PlayerUnitTerran_SiegeTank(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
 	}
 
 	// -------------------- Functions
+
+	// TODO: UML ADD
+	@Override
+	public void update() {
+		super.update();
+
+		this.updateExpectingEnemy();
+	}
+
+	// TODO: WIP IMPROVE FUNCTIONALITY
+	// TODO: UML ADD
+	/**
+	 * Function for updating the flag indicating if the Unit is currently
+	 * expecting another enemy one to advance to it / it's Position. <br>
+	 * <b>Note:</b><br>
+	 * Do <b>NOT</b> reset the Actions here since this can cause the Unit to
+	 * permanently change from Tank_Mode to Siege_Mode. This is due to the
+	 * instance being destroyed when morphing from one state to another and
+	 * therefore instantiating new objects of this Class and the Siege_Mode one.
+	 */
+	protected void updateExpectingEnemy() {
+		// Do NOT reset the Unit's Actions here! This must be done by each
+		// Action itself since doing it here causes the Unit to constantly swap
+		// states (Tank_Mode, Siege_Mode) due to the initial state of
+		// "expectingEnemy" being false and therefore always causing a possible
+		// reset.
+		this.isExpectingEnemy = true;
+	}
 
 	@Override
 	protected double generateConfidence() {
@@ -37,8 +71,7 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		if (this.closestEnemyUnitInConfidenceRange != null) {
 			// Boost the confidence based on the range towards the closest enemy
 			// Unit. If the Unit is too close and the tank is therefore unable
-			// to
-			// attack it in siege mode, decrease the confidence drastically.
+			// to attack it in siege mode, decrease the confidence drastically.
 			if (this.isInSiegeRange(this.closestEnemyUnitInConfidenceRange)) {
 				generatedConfidence *= this.inSiegeRangeConfidenceMultiplier;
 			} else {
@@ -93,6 +126,35 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		return distance > getMinSiegeRange() && distance < getMaxSiegeRange();
 	}
 
+	// TODO: UML ADD
+	/**
+	 * Convenience function.
+	 * 
+	 * @param tilePosition
+	 *            the TilePosition that is going to be checked if it is in the
+	 *            siege range.
+	 * @return true if the Position is below the siege range, false if not.
+	 */
+	public boolean isBelowSiegeRange(Unit unit) {
+		return this.isBelowSiegeRange(unit.getPosition());
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for checking if a Position is below the
+	 * {@link PlayerUnitTerran_SiegeTank}'s siege range and therefore too close
+	 * to attack using the Siege_Mode.
+	 * 
+	 * @param position
+	 *            the Position that is going to be tested.
+	 * @return true if the Position is below the siege range, false if not.
+	 */
+	public boolean isBelowSiegeRange(Position position) {
+		double distance = this.unit.getDistance(position);
+
+		return distance < getMinSiegeRange();
+	}
+
 	// ------------------------------ Getter / Setter
 
 	public static int getMinSiegeTileRange() {
@@ -110,4 +172,10 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	public static int getMaxSiegeRange() {
 		return MAX_SIEGE_TILE_RANGE * Core.getInstance().getTileSize();
 	}
+
+	// TODO: UML ADD
+	public boolean isExpectingEnemy() {
+		return isExpectingEnemy;
+	}
+
 }

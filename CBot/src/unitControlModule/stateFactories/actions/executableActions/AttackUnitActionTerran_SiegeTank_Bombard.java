@@ -28,26 +28,29 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 		this.addPrecondition(new GoapState(0, "isSieged", true));
 
 		this.addPrecondition(new GoapState(0, "inSiegeRange", true));
+		this.addPrecondition(new GoapState(0, "belowSiegeRange", false));
 	}
 
 	// -------------------- Functions
 
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
-		return this.target != null && ((PlayerUnitTerran_SiegeTank) goapUnit).isInSiegeRange((Unit) this.target);
+		PlayerUnitTerran_SiegeTank siegeTank = (PlayerUnitTerran_SiegeTank) goapUnit;
+
+		return this.target != null && siegeTank.isInSiegeRange((Unit) this.target)
+				&& !siegeTank.isBelowSiegeRange((Unit) this.target);
 	}
 
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
-		return 1;
+		return 2;
 	}
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
 		boolean isEnemyDead = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().contains(this.target);
 		boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
-		boolean isEnemyTooClose = ((PlayerUnit) goapUnit).isNearPosition(((Unit) this.target).getPosition(),
-				PlayerUnitTerran_SiegeTank.getMinSiegeRange());
+		boolean isEnemyTooClose = ((PlayerUnitTerran_SiegeTank) goapUnit).isBelowSiegeRange((Unit) this.target);
 
 		return isEnemyDead || isConfidenceLow || isEnemyTooClose;
 	}

@@ -42,6 +42,7 @@ public class TerranSiegeTank_TankMode_MoveIntoSiegeRange extends BaseAction {
 		super(target);
 
 		this.addEffect(new GoapState(0, "inSiegeRange", true));
+		this.addEffect(new GoapState(0, "belowSiegeRange", false));
 		this.addPrecondition(new GoapState(0, "canMove", true));
 		this.addPrecondition(new GoapState(0, "isSieged", false));
 	}
@@ -123,7 +124,7 @@ public class TerranSiegeTank_TankMode_MoveIntoSiegeRange extends BaseAction {
 
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
-		return 1.f;
+		return 2.f;
 	}
 
 	@Override
@@ -133,7 +134,9 @@ public class TerranSiegeTank_TankMode_MoveIntoSiegeRange extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return ((PlayerUnitTerran_SiegeTank) goapUnit).isInSiegeRange((Unit) this.target);
+		PlayerUnitTerran_SiegeTank siegeTank = (PlayerUnitTerran_SiegeTank) goapUnit;
+
+		return siegeTank.isInSiegeRange((Unit) this.target) && !siegeTank.isBelowSiegeRange((Unit) this.target);
 	}
 
 	@Override

@@ -25,6 +25,11 @@ public class AbilityActionTerranSiegeTank_SiegeMode extends AbilityActionTechTar
 		this.addEffect(new GoapState(0, "isSieged", true));
 		this.addPrecondition(new GoapState(0, "canMove", true));
 		this.addPrecondition(new GoapState(0, "isSieged", false));
+
+		// The tank is FORBIDDEN to transform into siege mode when a Unit is too
+		// close to him! This effectively prevents the Unit from senselessly
+		// transforming between these two states.
+		this.addPrecondition(new GoapState(0, "belowSiegeRange", false));
 	}
 
 	// -------------------- Functions

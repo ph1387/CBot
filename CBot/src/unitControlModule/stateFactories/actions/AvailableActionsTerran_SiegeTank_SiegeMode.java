@@ -5,6 +5,7 @@ import java.util.HashSet;
 import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitActionTerran_SiegeTank_Bombard;
 import unitControlModule.stateFactories.actions.executableActions.TerranSiegeTank_SiegeMode_Reposition;
+import unitControlModule.stateFactories.actions.executableActions.TerranSiegeTank_SiegeMode_WaitForExpectedEnemy;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranSiegeTank_TankMode;
 
 /**
@@ -19,7 +20,9 @@ public class AvailableActionsTerran_SiegeTank_SiegeMode extends HashSet<GoapActi
 	public AvailableActionsTerran_SiegeTank_SiegeMode() {
 		this.add(new AttackUnitActionTerran_SiegeTank_Bombard(null));
 		this.add(new AbilityActionTerranSiegeTank_TankMode(null));
-		
+
 		this.add(new TerranSiegeTank_SiegeMode_Reposition(null));
+
+		this.add(new TerranSiegeTank_SiegeMode_WaitForExpectedEnemy(null));
 	}
 }
