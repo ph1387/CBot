@@ -107,7 +107,11 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
 
-		return this.target != null && !playerUnit.getUnit().isSieged() && playerUnit.getUnit().canMove();
+		// The target must not be a building since the tank would be unable to
+		// reach a building being outside it's siege range since the building
+		// can not move towards the tank itself.
+		return this.target != null && !playerUnit.getUnit().isSieged() && playerUnit.getUnit().canMove()
+				&& !((Unit) this.target).getType().isBuilding();
 	}
 
 	@Override
