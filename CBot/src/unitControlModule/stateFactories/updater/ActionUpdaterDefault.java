@@ -13,6 +13,7 @@ import core.Core;
 import unitControlModule.stateFactories.actions.AvailableActionsDefault;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
+import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.actions.executableActions.ScoutBaseLocationAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitTrackerModule.EnemyUnit;
@@ -27,8 +28,10 @@ import unitTrackerModule.EnemyUnit;
 public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 	private AttackUnitAction attackUnitAction;
-	private AttackMoveAction attackMoveAction;
-	private ScoutBaseLocationAction scoutBaseLocationAction;
+	// TODO: UML CHANGE TYPE
+	private BaseAction attackMoveAction;
+	// TODO: UML CHANGE TYPE
+	private BaseAction scoutBaseLocationAction;
 
 	public ActionUpdaterDefault(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -54,9 +57,34 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		super.init();
 
 		this.attackUnitAction = ((AttackUnitAction) this.getActionFromInstance(AttackUnitAction.class));
-		this.attackMoveAction = ((AttackMoveAction) this.getActionFromInstance(AttackMoveAction.class));
-		this.scoutBaseLocationAction = ((ScoutBaseLocationAction) this
-				.getActionFromInstance(ScoutBaseLocationAction.class));
+		this.scoutBaseLocationAction = this.initScoutBaseLocationActionInstance();
+		this.attackMoveAction = this.initAttackMoveAction();
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for initializing the used scouting action. This is needed since
+	 * some Units require the use of different types of actions. Therefore the
+	 * types of the Actions as well as the instance of the Action used must be
+	 * defined by each Unit individually.
+	 * 
+	 * @return the scouting Action that the Unit will be using.
+	 */
+	protected BaseAction initScoutBaseLocationActionInstance() {
+		return ((ScoutBaseLocationAction) this.getActionFromInstance(ScoutBaseLocationAction.class));
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for initializing the used attack move Action. This is needed
+	 * since some Units require the use of different types of actions. Therefore
+	 * the types of the Actions as well as the instance of the Action used must
+	 * be defined by each Unit individually.
+	 * 
+	 * @return the scouting Action that the Unit will be using.
+	 */
+	protected BaseAction initAttackMoveAction() {
+		return ((AttackMoveAction) this.getActionFromInstance(AttackMoveAction.class));
 	}
 
 	// TODO: UML CHANGE PARAMS RETURN TYPE

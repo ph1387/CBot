@@ -16,7 +16,7 @@ public class AvailableActionsDefault extends AvailableActionsGeneral {
 
 	public AvailableActionsDefault() {
 		this.add(this.defineScoutingAction());
-		this.add(new AttackMoveAction(null));
+		this.add(this.defineAttackMoveAction());
 		this.add(new AttackUnitAction(null));
 	}
 
@@ -24,9 +24,20 @@ public class AvailableActionsDefault extends AvailableActionsGeneral {
 	 * Function for defining a scouting action for the Unit. These might differ
 	 * from one another. Therefore a function is needed.
 	 * 
-	 * @return a GoapAction which defines a scouting action.
+	 * @return a {@link GoapAction} which defines a scouting action.
 	 */
 	protected GoapAction defineScoutingAction() {
 		return new ScoutBaseLocationAction(null);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for defining a attack move action for the Unit. These might
+	 * differ from one another. Therefore a function is needed.
+	 * 
+	 * @return a {@link GoapAction} which defines a attack move action.
+	 */
+	protected GoapAction defineAttackMoveAction() {
+		return new AttackMoveAction(null);
 	}
 }
