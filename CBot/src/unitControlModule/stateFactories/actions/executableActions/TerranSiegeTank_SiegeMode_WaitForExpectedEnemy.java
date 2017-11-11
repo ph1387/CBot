@@ -19,7 +19,7 @@ import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank_SiegeMode;
  */
 public class TerranSiegeTank_SiegeMode_WaitForExpectedEnemy extends BaseAction {
 
-	private int frameTimeWait = 96;
+	private int frameTimeWait = 160;
 	private Integer frameTimeStampStart = null;
 
 	// The minimum number of frames that must pass before this action can be
