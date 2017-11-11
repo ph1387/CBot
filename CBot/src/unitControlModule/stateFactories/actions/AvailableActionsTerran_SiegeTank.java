@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.actions;
 
+import unitControlModule.stateFactories.actions.executableActions.AttackMoveActionTerran_SiegeTank;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitActionTerran_SiegeTank_Bombard;
 import unitControlModule.stateFactories.actions.executableActions.TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange;
 import unitControlModule.stateFactories.actions.executableActions.TerranSiegeTank_TankMode_MoveIntoSiegeRange;
@@ -21,6 +22,7 @@ public class AvailableActionsTerran_SiegeTank extends AvailableActionsDefault {
 
 		this.add(new TerranSiegeTank_TankMode_MoveIntoSiegeRange(null));
 
+		this.add(new AttackMoveActionTerran_SiegeTank(null));
 		this.add(new TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange(null));
 		this.add(new TerranSiegeTank_TankMode_PrepareBombard(null));
 	}

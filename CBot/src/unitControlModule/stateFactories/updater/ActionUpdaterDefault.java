@@ -43,7 +43,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_MISSING) {
 			this.baselocationScoutingConfiguration();
 		} else {
-			this.attackMoveToNearestKnownUnitConfiguration();
+			this.attackMoveAction.setTarget(this.attackMoveToNearestKnownUnitConfiguration());
 
 			this.attackUnitAction.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
 		}
@@ -59,11 +59,12 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 				.getActionFromInstance(ScoutBaseLocationAction.class));
 	}
 
+	// TODO: UML CHANGE PARAMS RETURN TYPE
 	/**
 	 * Function for the unit to configure its AttackMoveAction to the nearest
 	 * enemy Unit (can be a building).
 	 */
-	protected void attackMoveToNearestKnownUnitConfiguration() {
+	protected TilePosition attackMoveToNearestKnownUnitConfiguration() {
 		TilePosition closestUnitTilePosition = null;
 
 		// Either the Unit has a possible attack target,
@@ -85,8 +86,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 				}
 			}
 		}
-
-		this.attackMoveAction.setTarget(closestUnitTilePosition);
+		return closestUnitTilePosition;
 	}
 
 	/**
