@@ -34,4 +34,10 @@ public class ConstructActionTerran_Barracks extends ConstructBaseAction {
 		return UnitType.Terran_Barracks;
 	}
 
+	// TODO: UML ADD
+	@Override
+	public int defineMaxSimulationOccurrences() {
+		return 2;
+	}
+
 }
