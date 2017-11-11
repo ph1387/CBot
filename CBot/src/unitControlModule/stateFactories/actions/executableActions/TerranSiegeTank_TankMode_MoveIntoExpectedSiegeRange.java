@@ -23,7 +23,9 @@ import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank;
  * {@link PlayerUnitTerran_SiegeTank} to move into bombard / siege range of an
  * expected enemy Unit, therefore preparing itself for an incoming attack.
  * Preparing is better than simply reacting to enemies since morphing the tank
- * from Tank_Mode into Siege_Mode takes time.
+ * from Tank_Mode into Siege_Mode takes time. For this Action to be performable
+ * the Unit has to be completely out of range of the enemy Unit (-> No Unit in
+ * siege range / below siege range), therefore limiting it's use cases.
  * 
  * @author P H - 27.10.2017
  *
@@ -34,12 +36,13 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 	private Position generatedPosition;
 	private int minPixelDistanceToGeneratedPosition = 32;
 
+	// TODO: UML CHANGE 64
 	// The extra range that is going to be added towards the Units default siege
 	// range and that a generated Position must include.
 	// This is necessary since moving directly to a Position without extra range
 	// would cause the enemy Unit to be directly on the edge of the tank's siege
 	// range without giving it time to set up / morph into Siege_Mode properly.
-	private int extraRange = 64;
+	private int extraRange = 128;
 
 	// TODO: UML ADD
 	// The offset that is used to retrieve a second Position from the path

@@ -1,5 +1,9 @@
 package unitControlModule.unitWrappers;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
+import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
@@ -16,6 +20,54 @@ import unitControlModule.stateFactories.StateFactoryTerran_SiegeTank;
  */
 public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
+	// TODO: UML ADD
+	/**
+	 * ExpectingEnemyState.java --- Enum used for switching between expecting
+	 * enemy Units and not doing it at all based on a set frame time interval.
+	 * 
+	 * @author P H - 11.11.2017
+	 *
+	 */
+	private enum ExpectingEnemyState {
+		IDLE(-1), ACTIVE(480);
+
+		// TODO: UML ADD
+		private int activeFrames;
+		// TODO: UML ADD
+		private int timeStampStartFrames = -1;
+
+		// TODO: UML ADD
+		/**
+		 * @param activeFrames
+		 *            the number of frames that this state is active (-1 means
+		 *            not active at all).
+		 */
+		private ExpectingEnemyState(int activeFrames) {
+			this.activeFrames = activeFrames;
+		}
+
+		// TODO: UML ADD
+		/**
+		 * Function for testing if the set maximum number of frames exceeds the
+		 * difference between the current frame count and the saved one.
+		 * 
+		 * @param currentFrames
+		 *            the current number of frames that have passed until this
+		 *            point.
+		 * @return true if the set maximum number of frames exceeds the
+		 *         difference between the current frame count and the saved one,
+		 *         otherwise false.
+		 */
+		public boolean isFinished(int currentFrames) {
+			return currentFrames - this.timeStampStartFrames >= this.activeFrames;
+		}
+
+		// TODO: UML ADD
+		public void setTimeStampStartFrames(int timeStampStartFrames) {
+			this.timeStampStartFrames = timeStampStartFrames;
+		}
+	}
+
 	// TODO: UML CHANGE 4
 	// Below this distance the SiegeTank_SiegeMode will / can not use the siege
 	// attack.
@@ -24,6 +76,22 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
 	private double inSiegeRangeConfidenceMultiplier = 1.5;
 	private double notInSiegeRangeConfidenceMultiplier = 0.5;
+
+	// TODO: UML ADD
+	private ExpectingEnemyState currentExpectingState = ExpectingEnemyState.IDLE;
+
+	// TODO: UML ADD
+	// Pair.first: TimeStamp
+	// Pair.second: Combat Unit count
+	private Queue<Pair<Integer, Integer>> combatUnitCounts = new LinkedList<>();
+	// TODO: UML ADD
+	// After more than this number of Units get destroyed in a certain frame
+	// interval the Unit will be expecting enemies / swapping states.
+	private int destroyedUnitsTriggerPoint = 3;
+	// TODO: UML ADD
+	// Combat Unit count entries older than the given number of frames are
+	// discarded.
+	private int maxTimeIntervalFrames = 720;
 
 	// TODO: UML ADD
 	// Flag indicating if the Unit is currently expecting another enemy one to
@@ -44,7 +112,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		this.updateExpectingEnemy();
 	}
 
-	// TODO: WIP IMPROVE FUNCTIONALITY
 	// TODO: UML ADD
 	/**
 	 * Function for updating the flag indicating if the Unit is currently
@@ -55,13 +122,81 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	 * instance being destroyed when morphing from one state to another and
 	 * therefore instantiating new objects of this Class and the Siege_Mode one.
 	 */
-	protected void updateExpectingEnemy() {
-		// Do NOT reset the Unit's Actions here! This must be done by each
-		// Action itself since doing it here causes the Unit to constantly swap
-		// states (Tank_Mode, Siege_Mode) due to the initial state of
-		// "expectingEnemy" being false and therefore always causing a possible
-		// reset.
-		this.isExpectingEnemy = true;
+	private void updateExpectingEnemy() {
+		int frameCount = Core.getInstance().getGame().getFrameCount();
+		this.removeOutdatedCombatUnitCounts();
+		this.combatUnitCounts.add(new Pair<>(frameCount,
+				this.informationStorage.getCurrentGameInformation().getCurrentCombatUnitCount()));
+
+		// Based on the number of destroyed Units in a certain frame interval
+		// trigger the Unit's flag for expecting enemies.
+		int numberOfDestroyedUnitsInInterval = this.generateNumberOfDestroyedUnitsInInterval();
+		boolean triggerPointReached = this.destroyedUnitsTriggerPoint <= numberOfDestroyedUnitsInInterval;
+
+		// Simple state machine for swapping between the different states the
+		// Unit can be in for expecting enemies.
+		if (this.currentExpectingState == ExpectingEnemyState.IDLE && triggerPointReached) {
+			this.currentExpectingState = ExpectingEnemyState.ACTIVE;
+			this.currentExpectingState.setTimeStampStartFrames(frameCount);
+			this.isExpectingEnemy = true;
+		} else if (this.currentExpectingState == ExpectingEnemyState.ACTIVE
+				&& this.currentExpectingState.isFinished(frameCount)) {
+			this.currentExpectingState = ExpectingEnemyState.IDLE;
+			this.isExpectingEnemy = false;
+		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for removing all entries from the Queue of stored combat Unit
+	 * counts that are older than a certain amount of frames.
+	 */
+	private void removeOutdatedCombatUnitCounts() {
+		int frameCount = Core.getInstance().getGame().getFrameCount();
+		boolean running = true;
+
+		while (running) {
+			Pair<Integer, Integer> currentCombatUnitCount = this.combatUnitCounts.peek();
+
+			// Remove all entries that are older than a specified number of
+			// frames.
+			if (currentCombatUnitCount != null
+					&& frameCount - currentCombatUnitCount.first >= this.maxTimeIntervalFrames) {
+				this.combatUnitCounts.poll();
+			} else {
+				running = false;
+			}
+		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for counting the number of destroyed Units based on the Queue of
+	 * stored combat Unit counts.
+	 * 
+	 * @return the number of Units that got destroyed in the set interval of
+	 *         frames based on the stored combat Unit count Queue.
+	 */
+	private int generateNumberOfDestroyedUnitsInInterval() {
+		Pair<Integer, Integer> previousCombatUnitCount = null;
+		int destroyedUnits = 0;
+
+		// The difference between the previous and the current combat Unit count
+		// represents the "rough" (!) number of destroyed Units. "Rough" due to
+		// the Player training Units and this Class not implementing a listener
+		// for "onDestroy".
+		for (Pair<Integer, Integer> combatUnitCount : this.combatUnitCounts) {
+			if (previousCombatUnitCount != null) {
+				int difference = previousCombatUnitCount.second - combatUnitCount.second;
+
+				// Units got destroyed.
+				if (difference > 0) {
+					destroyedUnits += difference;
+				}
+			}
+			previousCombatUnitCount = combatUnitCount;
+		}
+		return destroyedUnits;
 	}
 
 	@Override
