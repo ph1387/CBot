@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
 
@@ -78,6 +76,7 @@ public class Simulator {
 
 	// -------------------- Functions
 
+	// TODO: UML CHANGE PARAMS
 	// TODO: Possible Change: Make generic for further use.
 	/**
 	 * Function for performing a simulation based on available ActionTypes and
@@ -126,7 +125,7 @@ public class Simulator {
 	 */
 	public ArrayList<ActionType> simulate(int currentFrameTimeStamp, int frameStep, int stepAmount, int currentMinerals,
 			int currentGas, HashMap<TypeWrapper, Integer> typesFree,
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking, TypeWrapper workerType,
+			HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> typesWorking, TypeWrapper workerType,
 			int idleScorePenalty, int consecutiveActionsBonus, boolean allowIdle) {
 		// Create the root and save it.
 		Node root = this.createRoot(currentMinerals, currentGas, currentFrameTimeStamp, typesFree, typesWorking);
@@ -172,6 +171,7 @@ public class Simulator {
 			for (Node node : this.currentLayerNodes) {
 				HashSet<ActionSequence> actionTypeSequences = this.generateAllPossibleActionTypeSequences(node,
 						simulatedFrameTimeStamp, treeSpaceAvailable);
+
 				// Update the available space in the tree.
 				treeSpaceAvailable -= actionTypeSequences.size();
 
@@ -277,7 +277,7 @@ public class Simulator {
 
 				for (ActionType actionType : currentNode.getChosenActions()) {
 					// TODO: DEBUG INFO
-					System.out.println("  - " + actionType.getClass().getSimpleName());
+					System.out.println(" - " + actionType.getClass().getSimpleName());
 					actionTypeSequence.add(actionType);
 				}
 			}
@@ -308,6 +308,7 @@ public class Simulator {
 		return branch;
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for generating the root of a tree that the Simulator is going to
 	 * be using.
@@ -327,7 +328,7 @@ public class Simulator {
 	 */
 	private Node createRoot(int currentMinerals, int currentGas, int currentFrameTimeStamp,
 			HashMap<TypeWrapper, Integer> typesFree,
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking) {
+			HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> typesWorking) {
 		// Create the root of the tree.
 		Node root = this.nodeFactory.receiveNode();
 
@@ -345,6 +346,7 @@ public class Simulator {
 		return root;
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for generating the resource values the working Units are going
 	 * to produce in the simulated time.
@@ -361,10 +363,10 @@ public class Simulator {
 	 * @return the amount of minerals the specified worker Units are gathering.
 	 */
 	private int generateSimulatedMineralGain(HashMap<TypeWrapper, Integer> unitsFree,
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking, TypeWrapper workerType,
+			HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> typesWorking, TypeWrapper workerType,
 			int frameStep) {
 		// Count all workers. This is not completely accurate since workers can
-		// not collect
+		// not collect both resources at the same time.
 		int totalWorkerCount = 0;
 		if (unitsFree.get(workerType) != null) {
 			totalWorkerCount += unitsFree.get(workerType);
@@ -441,10 +443,10 @@ public class Simulator {
 		// Pair.second = TimeStamp of the thing created.
 		final ArrayList<Pair<TypeWrapper, Integer>> unitsToFree = new ArrayList<>();
 
-		node.getTypesWorking().forEach(new BiConsumer<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>>() {
+		node.getTypesWorking().forEach(new BiConsumer<TypeWrapper, List<Pair<TypeWrapper, Integer>>>() {
 
 			@Override
-			public void accept(TypeWrapper typeWrapper, ArrayList<Pair<TypeWrapper, Integer>> list) {
+			public void accept(TypeWrapper typeWrapper, List<Pair<TypeWrapper, Integer>> list) {
 				for (Pair<TypeWrapper, Integer> pair : list) {
 					// Extract all Types whose actions are finished.
 					if (pair.second <= simulatedFrameTimeStamp) {
@@ -588,6 +590,7 @@ public class Simulator {
 		}
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for generating all possible permutations of ActionTypes a Node
 	 * can perform. This takes the available mineral and gas counts in
@@ -609,47 +612,35 @@ public class Simulator {
 	 */
 	private HashSet<ActionSequence> generateAllPossibleActionTypeSequences(Node currentNode, int simulatedTimeStamp,
 			int maxSequenceCount) {
-		HashSet<ActionSequence> actionSequences = new HashSet<>();
-		HashSet<ActionType> possibleActionTypes = new HashSet<>();
-		Queue<ActionSequence> workingSets = new LinkedList<>();
-
 		// Find the ActionTypes that are actually usable with the current
-		// state of the Node and add them to the Queue of ActionType sequences
-		// that are being processed.
-		this.findUsableActionTypes(currentNode, simulatedTimeStamp, possibleActionTypes, workingSets);
-
-		// Work on the Queue of ActionType sequences until all executable
-		// permutations are found.
-		this.findAllPossibleActionTypeCombinations(currentNode, simulatedTimeStamp, possibleActionTypes, workingSets,
-				actionSequences, maxSequenceCount);
+		// state of the Node
+		HashSet<ActionType> possibleActionTypes = this.extractAllPossibleActionTypes(currentNode);
+		TreeSet<ActionSequence> actionSequencesToWorkWith = this.initActionSequenceTreeSet(currentNode,
+				simulatedTimeStamp, possibleActionTypes);
+		HashSet<ActionSequence> actionSequences = this.findAllPossibleActionTypeCombinations(currentNode,
+				simulatedTimeStamp, possibleActionTypes, actionSequencesToWorkWith, maxSequenceCount);
 
 		return actionSequences;
 	}
 
+	// TODO: UML ADD
 	/**
-	 * Function for finding the initial ActionTypes that can be executed. These
-	 * ActionTypes are one by one transformed into a ActionSequence and then
-	 * added to the Queue of ActionSequences to be worked on. Also each
-	 * ActionType which can be executed at the current moment (-> Simulated Node
-	 * timeStamp and state in the future) is added to a Set of executable
-	 * ActionTypes for later use.
+	 * Function for extracting the {@link ActionType}s that can be executed
+	 * using a given {@link Node} from the set of all possible
+	 * {@link ActionType}s.
 	 * 
 	 * @param currentNode
 	 *            the Node against whose state all possible ActionTypes are
 	 *            checked.
-	 * @param simulatedTimeStamp
-	 *            the timeStamp in the simulated future in frames.
-	 * @param possibleActionTypes
-	 *            the Set to which all ActionTypes are added whose execution is
-	 *            possible.
-	 * @param workingSets
-	 *            the Queue to which the initial ActionSequences are added.
+	 * @return a HashSet containing all the {@link ActionType}s that can be used
+	 *         in the simulation for the current provided {@link Node}.
 	 */
-	private void findUsableActionTypes(Node currentNode, int simulatedTimeStamp,
-			HashSet<ActionType> possibleActionTypes, Queue<ActionSequence> workingSets) {
+	private HashSet<ActionType> extractAllPossibleActionTypes(Node currentNode) {
+		HashSet<ActionType> actionTypes = new HashSet<>();
+
 		for (ActionType actionType : this.actionTypes) {
 			// Costs and preconditions must apply before adding the ActionType
-			// towards the already existing sequence of Actions.
+			// towards the already existing sequence of Actions later on.
 			if (currentNode.getTypesFree().get(actionType.defineRequiredType()) != null
 					&& currentNode.getTypesFree().get(actionType.defineRequiredType()) > 0
 					&& currentNode.getCurrentMinerals() >= actionType.defineMineralCost()
@@ -663,15 +654,49 @@ public class Simulator {
 						.get(actionType) < this.maxActionTypesOccurrences.get(actionType);
 
 				if (belowThreshold) {
-					workingSets.add(this.generateNewActionSequence(currentNode, actionType, simulatedTimeStamp));
-
-					// Save the ActionType for later -> Saves time looking up
-					// Actions!
-					possibleActionTypes.add(actionType);
+					actionTypes.add(actionType);
 				}
 			}
 		}
+		return actionTypes;
 	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for initializing the {@link TreeSet} that is going to be used in
+	 * the simulation. It is based on a {@link Node} that represents the current
+	 * simulated state of the game, a simulated time stamp as well as a HashSet
+	 * of {@link ActionType}s that can be executed using the state of the
+	 * previously provided {@link Node}. The function generates a
+	 * {@link ActionSequence} for each {@link ActionType} and adds it to the
+	 * TreeSet that is returned later on.
+	 * 
+	 * @param currentNode
+	 *            the Node that is used as base for the {@link ActionSequence}s
+	 *            being created.
+	 * @param simulatedTimeStamp
+	 *            the timeStamp in the simulated future in frames.
+	 * @param possibleActionTypes
+	 *            the Set of all {@link ActionType}s that can be executed with
+	 *            the state of the provided {@link Node}.
+	 * @return a {@link TreeSet} of {@link ActionSequence}s that is based on the
+	 *         provided {@link Node} and the HashSet of {@link ActionType}s.
+	 */
+	private TreeSet<ActionSequence> initActionSequenceTreeSet(Node currentNode, int simulatedTimeStamp,
+			HashSet<ActionType> possibleActionTypes) {
+		TreeSet<ActionSequence> initialTreeSet = new TreeSet<>();
+
+		for (ActionType actionType : possibleActionTypes) {
+			initialTreeSet.add(this.generateNewActionSequence(currentNode, actionType, simulatedTimeStamp));
+		}
+		return initialTreeSet;
+	}
+
+	// TODO: UML REMOVE
+	// private void findUsableActionTypes(Node currentNode, int
+	// simulatedTimeStamp,
+	// HashSet<ActionType> possibleActionTypes, Queue<ActionSequence>
+	// workingSets) {
 
 	/**
 	 * Function for generating a ActionSequence based on a provided Node, a
@@ -700,17 +725,17 @@ public class Simulator {
 		actionSequence.setGasCost(actionType.defineGasCost());
 
 		// Completion time and free Units.
-		actionSequence.setOccupiedTypeTimes(new HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>>());
-		node.getTypesWorking().forEach(new BiConsumer<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>>() {
+		actionSequence.setOccupiedTypeTimes(new HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>>());
+		node.getTypesWorking().forEach(new BiConsumer<TypeWrapper, List<Pair<TypeWrapper, Integer>>>() {
 
 			@Override
-			public void accept(TypeWrapper typeWrapper, ArrayList<Pair<TypeWrapper, Integer>> list) {
+			public void accept(TypeWrapper typeWrapper, List<Pair<TypeWrapper, Integer>> list) {
 				// Create a new List for the Type.
 				if (actionSequence.getOccupiedTypeTimes().get(typeWrapper) == null) {
 					actionSequence.getOccupiedTypeTimes().put(typeWrapper, new ArrayList<Pair<TypeWrapper, Integer>>());
 				}
 
-				ArrayList<Pair<TypeWrapper, Integer>> occupiedUnitsList = actionSequence.getOccupiedTypeTimes()
+				List<Pair<TypeWrapper, Integer>> occupiedUnitsList = actionSequence.getOccupiedTypeTimes()
 						.get(typeWrapper);
 
 				// Insert each Pair from the given List into the newly created
@@ -720,6 +745,9 @@ public class Simulator {
 				}
 			}
 		});
+
+		// Add a new ActionType with it's associated completion time to the
+		// ActionSequence's HashMap of occupied types.
 		if (actionSequence.getOccupiedTypeTimes().get(actionType.defineRequiredType()) == null) {
 			actionSequence.getOccupiedTypeTimes().put(actionType.defineRequiredType(),
 					new ArrayList<Pair<TypeWrapper, Integer>>());
@@ -733,38 +761,38 @@ public class Simulator {
 		return actionSequence;
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for finding all combinations of ActionTypes that can be
-	 * performed together from the specified Node. The finished products are
-	 * stored in the provided Set.
+	 * performed together from the specified Node until a maximum number of them
+	 * are found / generated.
 	 * 
 	 * @param currentNode
-	 *            the Node against whose state all possible ActionTypes are
-	 *            checked.
+	 *            the {@link Node} that all {@link ActionSequence}s are based
+	 *            on.
 	 * @param simulatedTimeStamp
 	 *            the timeStamp in the simulated future in frames.
 	 * @param possibleActionTypes
 	 *            the Set from which all possible ActionTypes are received. This
 	 *            ensures that only possible Actions are being considered for
 	 *            the addition to any existing ActionSequences.
-	 * @param workingSets
-	 *            the Queue from which the initial ActionSequences are received
-	 *            and all operations are being performed on. The Queue is empty
-	 *            after calling this function.
-	 * @param actionSequences
-	 *            the Set of all finished ActionSequences that can be performed
-	 *            from the current Node. This includes all combinations of
-	 *            possible / executable ActionTypes that were provided.
+	 * @param actionSequencesToWorkWith
+	 *            the TreeSet that contains the different permutations of
+	 *            {@link ActionSequence}s that the function is working with.
 	 * @param maxSequenceCount
 	 *            the maximum number of sequences that this function may
 	 *            generate. Needed for limiting the output and decreasing the
 	 *            complexity.
+	 * @return a HashSet containing at most the maximum number of
+	 *         {@link ActionSequence}s.
 	 */
-	private void findAllPossibleActionTypeCombinations(Node currentNode, int simulatedTimeStamp,
-			HashSet<ActionType> possibleActionTypes, Queue<ActionSequence> workingSets,
-			HashSet<ActionSequence> actionSequences, int maxSequenceCount) {
-		while (!workingSets.isEmpty() && actionSequences.size() < maxSequenceCount) {
-			ActionSequence currentActionSequence = workingSets.poll();
+	private HashSet<ActionSequence> findAllPossibleActionTypeCombinations(Node currentNode, int simulatedTimeStamp,
+			HashSet<ActionType> possibleActionTypes, TreeSet<ActionSequence> actionSequencesToWorkWith,
+			int maxSequenceCount) {
+		HashSet<ActionSequence> actionSequences = new HashSet<>();
+
+		while (!actionSequencesToWorkWith.isEmpty() && actionSequences.size() < maxSequenceCount) {
+			ActionSequence currentActionSequence = actionSequencesToWorkWith.pollFirst();
 			boolean permutationFinished = true;
 
 			// Find all other ActionTypes that are executable in combination
@@ -778,21 +806,19 @@ public class Simulator {
 				// threshold.
 				int appearanceCount = 0;
 
-				// Count the appearances for the specific ActionType.
 				for (ActionType countingActionType : currentActionSequence.getActionTypeSequence()) {
 					if (countingActionType == actionType) {
 						appearanceCount++;
 					}
 				}
 
-				// Count below threshold.
 				if (appearanceCount < this.maxActionTypesOccurrences.get(actionType)) {
 					// Either no further permutations are possible or the
 					// maximum size of the sequence is reached.
 					permutationFinished = currentActionSequence.getActionTypeSequence()
 							.size() >= this.actionSequenceMaxSize
 							|| this.tryFinalizingNewActionSequencePermutation(currentActionSequence, actionType,
-									currentNode, simulatedTimeStamp, workingSets);
+									currentNode, simulatedTimeStamp, actionSequencesToWorkWith);
 				}
 				// Threshold for ActionType reached -> Sequence finished.
 				else {
@@ -806,15 +832,17 @@ public class Simulator {
 				actionSequences.add(currentActionSequence);
 			}
 		}
+		return actionSequences;
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for testing if a permutation of ActionTypes already exists in a
 	 * provided Queue of sequences ((1, 2) == (2, 1) => {1, 2}). Therefore this
 	 * function takes an already existing ActionSequence as well as another
 	 * ActionType and combines them. This function also adds the permutation to
-	 * the Queue of stored ActionSequences for future testing if the permutation
-	 * was not already existent.
+	 * the Collection of stored ActionSequences for future testing if the
+	 * permutation was not already existent.
 	 * 
 	 * @param baseActionSequence
 	 *            the ActionSequence that is going to be taken as a base.
@@ -827,22 +855,16 @@ public class Simulator {
 	 * @param simulatedTimeStamp
 	 *            the simulated time stamp of a moment in the future at which
 	 *            the ActionType is being executed.
-	 * @param actionSequenceStorage
-	 *            the storage which
-	 *            <ul>
-	 *            <li>A) Contains all current permutations of the ActionTypes in
-	 *            ActionSequences</li>
-	 *            <li>B) Provides the storage for the newly created
-	 *            ActionSequence if the permutation provides any new features
-	 *            that the existing ones do not.</li>
-	 *            </ul>
+	 * @param actionSequencesToWorkWith
+	 *            the TreeSet that contains the different permutations of
+	 *            {@link ActionSequence}s that the function is working with.
 	 * @return true if the ActionType could not be added and the ActionSequence
 	 *         is final and false if the ActionType could be added to the
 	 *         ActionSequence.
 	 */
 	private boolean tryFinalizingNewActionSequencePermutation(ActionSequence baseActionSequence,
 			ActionType additionalActionType, Node currentNode, int simulatedTimeStamp,
-			Queue<ActionSequence> actionSequenceStorage) {
+			TreeSet<ActionSequence> actionSequencesToWorkWith) {
 		// The ActionType's costs as well as the Type that this action
 		// relies on must be available.
 		int combinedMineralCosts = baseActionSequence.getMineralCost() + additionalActionType.defineMineralCost();
@@ -866,7 +888,7 @@ public class Simulator {
 
 			// Do not allow any doubled combinations of ActionTypes:
 			// (1, 2) == (2, 1) => {1, 2}
-			for (ActionSequence testingActionSequence : actionSequenceStorage) {
+			for (ActionSequence testingActionSequence : actionSequencesToWorkWith) {
 				// Count the number of each ActionType in the sequence.
 				HashMap<ActionType, Integer> storedActionsActionTypeCount = this
 						.extractActionTypeAppearances(testingActionSequence);
@@ -890,14 +912,14 @@ public class Simulator {
 
 			// When the combination of ActionTypes is not found in any previous
 			// combinations, combine all necessary information and add the
-			// sequence to the Queue.
+			// sequence to the Collection.
 			if (actionSequenceCombinationMissing) {
 				// Combine the information of the current ActionSequence with
 				// the newly calculated values from the added ActionType.
 				this.extendActionSequence(actionSequence, baseActionSequence, additionalActionType,
 						combinedMineralCosts, combinedGasCosts, simulatedTimeStamp);
 
-				actionSequenceStorage.add(actionSequence);
+				actionSequencesToWorkWith.add(actionSequence);
 
 				// A combination was found. Therefore the permutation is not
 				// final.
@@ -1017,18 +1039,18 @@ public class Simulator {
 		// storage.
 		// => Problem!
 		transferActionSequence.getOccupiedTypeTimes()
-				.forEach(new BiConsumer<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>>() {
+				.forEach(new BiConsumer<TypeWrapper, List<Pair<TypeWrapper, Integer>>>() {
 
 					@Override
-					public void accept(TypeWrapper typeWrapper, ArrayList<Pair<TypeWrapper, Integer>> list) {
+					public void accept(TypeWrapper typeWrapper, List<Pair<TypeWrapper, Integer>> list) {
 						// Create a new List if necessary.
 						if (receiverActionSequence.getOccupiedTypeTimes().get(typeWrapper) == null) {
 							receiverActionSequence.getOccupiedTypeTimes().put(typeWrapper,
 									new ArrayList<Pair<TypeWrapper, Integer>>());
 						}
 
-						ArrayList<Pair<TypeWrapper, Integer>> occupations = receiverActionSequence
-								.getOccupiedTypeTimes().get(typeWrapper);
+						List<Pair<TypeWrapper, Integer>> occupations = receiverActionSequence.getOccupiedTypeTimes()
+								.get(typeWrapper);
 
 						// Copy the reference for each Pair into the newly
 						// created List.

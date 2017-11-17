@@ -2,6 +2,7 @@ package buildingOrderModule.simulator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import bwapi.Pair;
 
@@ -16,9 +17,11 @@ import bwapi.Pair;
 public class Node implements Comparable<Node> {
 
 	private HashMap<TypeWrapper, Integer> typesFree = new HashMap<>();
-	private HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> typesWorking = new HashMap<>();
+	// TODO: UML CHANGE TYPE
+	private HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> typesWorking = new HashMap<>();
 	private HashMap<ActionType, Integer> actionTypeOccurrences = new HashMap<>();
-	private ArrayList<ActionType> chosenActions = new ArrayList<>();
+	// TODO: UML CHANGE TYPE
+	private List<ActionType> chosenActions = new ArrayList<>();
 	private int currentMinerals = 0;
 	private int currentGas = 0;
 	private int frameTimeStamp = -1;
@@ -57,15 +60,12 @@ public class Node implements Comparable<Node> {
 		int totalScoreNodeTwo = generateSingleNodeScore(node);
 
 		// Highest score = index 0.
-		if (totalScoreNodeTwo > totalScoreNodeOne) {
-			return 1;
-		} else if (totalScoreNodeTwo < totalScoreNodeOne) {
-			return -1;
-		} else {
-			return 0;
-		}
+		// => Sorted: Descending.
+		return -1 * (Integer.compare(totalScoreNodeOne, totalScoreNodeTwo));
 	}
 
+	// TODO: UML ADD IF MISSING
+	// TODO: WIP JAVADOC
 	private static int generateSingleNodeScore(Node node) {
 		// Take the stored influences and apply them to the mineral and gas
 		// counts.
@@ -98,11 +98,13 @@ public class Node implements Comparable<Node> {
 		this.typesFree = unitsFree;
 	}
 
-	public HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> getTypesWorking() {
+	// TODO: UML CHANGE TYPE
+	public HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> getTypesWorking() {
 		return typesWorking;
 	}
 
-	public void setTypesWorking(HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> unitsWorking) {
+	// TODO: UML CHANGE PARAMS
+	public void setTypesWorking(HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> unitsWorking) {
 		this.typesWorking = unitsWorking;
 	}
 
@@ -114,11 +116,13 @@ public class Node implements Comparable<Node> {
 		this.actionTypeOccurrences = actionTypeOccurrences;
 	}
 
-	public ArrayList<ActionType> getChosenActions() {
+	// TODO: UML CHANGE TYPE
+	public List<ActionType> getChosenActions() {
 		return chosenActions;
 	}
 
-	public void setChosenActions(ArrayList<ActionType> chosenActions) {
+	// TODO: UML CHANGE PARAMS
+	public void setChosenActions(List<ActionType> chosenActions) {
 		this.chosenActions = chosenActions;
 	}
 

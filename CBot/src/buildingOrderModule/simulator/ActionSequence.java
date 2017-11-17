@@ -2,9 +2,11 @@ package buildingOrderModule.simulator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import bwapi.Pair;
 
+// TODO: UML ADD INTERFACE
 /**
  * ActionSequence.java --- A sequence of {@link ActionType}s that can / will be
  * executed. This class contains extra information like the combined mineral and
@@ -15,20 +17,22 @@ import bwapi.Pair;
  * @author P H - 06.07.2017
  *
  */
-public class ActionSequence {
+public class ActionSequence implements Comparable<ActionSequence> {
 
-	private ArrayList<ActionType> actionTypeSequence = new ArrayList<>();
+	// TODO: UML CHANGE TYPE
+	private List<ActionType> actionTypeSequence = new ArrayList<>();
 	private int mineralCost = 0;
 	private int gasCost = 0;
 	// Key: The UnitType of that is being considered.
 	// Value: The amount of the Type that is free / available to receive
 	// orders.
 	private HashMap<TypeWrapper, Integer> typesFree = new HashMap<>();
+	// TODO: UML CHANGE TYPE
 	// Key: The creating Type.
 	// Value: A List of Pairs of Types that are being created by the key
 	// Type.
 	// ---> Pair: "What" is "When" finished.
-	private HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> occupiedTypeTimes = new HashMap<>();
+	private HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> occupiedTypeTimes = new HashMap<>();
 
 	public ActionSequence() {
 
@@ -47,13 +51,44 @@ public class ActionSequence {
 		this.occupiedTypeTimes = new HashMap<>();
 	}
 
+	// TODO: WIP
+	// TODO: UML ADD
+	/**
+	 * Function for summing up the score of all ActionTypes that this instance
+	 * is referencing.
+	 * 
+	 * @return the sum of all the scores of all ActionTypes the instance is
+	 *         currently storing.
+	 */
+	public int generateScoreOfActions() {
+		int totalScore = 0;
+
+		for (ActionType actionType : this.actionTypeSequence) {
+			totalScore += actionType.defineScore();
+		}
+		return totalScore;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public int compareTo(ActionSequence actionSequence) {
+		int totalScoreActionSequenceOne = this.generateScoreOfActions();
+		int totalScoreActionSequenceTwo = actionSequence.generateScoreOfActions();
+
+		// Highest score = index 0.
+		// => Sorted: Descending.
+		return -1 * (Integer.compare(totalScoreActionSequenceOne, totalScoreActionSequenceTwo));
+	}
+
 	// ------------------------------ Getter / Setter
 
-	public ArrayList<ActionType> getActionTypeSequence() {
+	// TODO: UML CHANGE TYPE
+	public List<ActionType> getActionTypeSequence() {
 		return actionTypeSequence;
 	}
 
-	public void setActionTypeSequence(ArrayList<ActionType> sequence) {
+	// TODO: UML CHANGE PARAMS
+	public void setActionTypeSequence(List<ActionType> sequence) {
 		this.actionTypeSequence = sequence;
 	}
 
@@ -81,11 +116,13 @@ public class ActionSequence {
 		typesFree = unitsFree;
 	}
 
-	public HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> getOccupiedTypeTimes() {
+	// TODO: UML CHANGE TYPE
+	public HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> getOccupiedTypeTimes() {
 		return occupiedTypeTimes;
 	}
 
-	public void setOccupiedTypeTimes(HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> occupiedUnits) {
+	// TODO: UML CHANGE PARAMS
+	public void setOccupiedTypeTimes(HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> occupiedUnits) {
 		this.occupiedTypeTimes = occupiedUnits;
 	}
 }

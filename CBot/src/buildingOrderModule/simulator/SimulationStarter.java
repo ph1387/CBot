@@ -33,6 +33,7 @@ public class SimulationStarter {
 
 	// -------------------- Functions
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for starting a new simulation in the {@link Simulator} instance.
 	 * 
@@ -56,7 +57,7 @@ public class SimulationStarter {
 	public ArrayList<ActionType> runStarter(HashSet<ActionType> actionTypes, List<Unit> units, int currentMinerals,
 			int currentGas, UnitType workerUnitType, int currentFrameTimeStamp) {
 		HashMap<TypeWrapper, Integer> simulationTypesFree = new HashMap<>();
-		HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationTypesWorking = new HashMap<>();
+		HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> simulationTypesWorking = new HashMap<>();
 		TypeWrapper workerType = TypeWrapper.generateFrom(workerUnitType);
 
 		// Fill the HashMaps with the current information regarding the
@@ -70,6 +71,7 @@ public class SimulationStarter {
 				this.simulationIdleScorePenalty, this.simulationConsecutiveActionsBonus, this.simulationAllowIdle);
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for splitting a List of given Units in different categories
 	 * (Free and working) as well as counting the specific types.
@@ -86,8 +88,7 @@ public class SimulationStarter {
 	 */
 	private static void extractFreeAndWorkingTypeWrappers(List<Unit> units,
 			HashMap<TypeWrapper, Integer> simulationTypesFree,
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationTypesWorking,
-			int currentFrameTimeStamp) {
+			HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> simulationTypesWorking, int currentFrameTimeStamp) {
 		// Iterate through all Player Units and add the information towards the
 		// HashMaps.
 		for (Unit unit : units) {
@@ -146,6 +147,7 @@ public class SimulationStarter {
 		}
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Convenience function.
 	 * 
@@ -156,12 +158,12 @@ public class SimulationStarter {
 	 * @param finishingTimeStamp
 	 *            the time stamp in frames at which the type finishes its work.
 	 */
-	private static void addTypeWorking(
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationUnitsWorking, UnitType unitType,
-			int finishingTimeStamp) {
+	private static void addTypeWorking(HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> simulationUnitsWorking,
+			UnitType unitType, int finishingTimeStamp) {
 		addTypeWorking(simulationUnitsWorking, TypeWrapper.generateFrom(unitType), finishingTimeStamp);
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for adding a type towards a HashMap of existing types. Each type
 	 * is handled separately in its own Pair (First: Result type, Second: Time
@@ -174,9 +176,8 @@ public class SimulationStarter {
 	 * @param finishingTimeStamp
 	 *            the time stamp in frames at which the type finishes it's work.
 	 */
-	private static void addTypeWorking(
-			HashMap<TypeWrapper, ArrayList<Pair<TypeWrapper, Integer>>> simulationUnitsWorking, TypeWrapper typeWrapper,
-			int finishingTimeStamp) {
+	private static void addTypeWorking(HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> simulationUnitsWorking,
+			TypeWrapper typeWrapper, int finishingTimeStamp) {
 		if (simulationUnitsWorking.get(typeWrapper) == null) {
 			simulationUnitsWorking.put(typeWrapper, new ArrayList<Pair<TypeWrapper, Integer>>());
 		}
