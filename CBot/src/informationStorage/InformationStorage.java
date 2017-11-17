@@ -49,6 +49,10 @@ public class InformationStorage {
 
 	// Information regarding the Player and the current state of the game.
 	private CurrentGameInformation currentGameInformation;
+	
+	// TODO: UML ADD
+	// Shared information between all BaseAction (And subclass) instances.
+	private BaseActionSharedInformation baseActionSharedInformation;
 
 	// Configuration information:
 	private IBuildingOrderModuleConfig iBuildingOrderModuleConfig;
@@ -58,15 +62,17 @@ public class InformationStorage {
 	private IUnitControlModuleConfig iUnitControlModuleConfig;
 	private IUnitTrackerModuleConfig iUnitTrackerModuleConfig;
 
+	// TODO: UML CHANGE PARAMS
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
 			ScienceVesselStorage scienceVesselStorage, UnitTrackerInformation trackerInfo, MapInformation mapInfo,
-			CurrentGameInformation currentGameInformation) {
+			CurrentGameInformation currentGameInformation, BaseActionSharedInformation baseActionSharedInformation) {
 		this.resourceReserver = resourceReserver;
 		this.workerConfig = workerConfig;
 		this.scienceVesselStorage = scienceVesselStorage;
 		this.trackerInfo = trackerInfo;
 		this.mapInfo = mapInfo;
 		this.currentGameInformation = currentGameInformation;
+		this.baseActionSharedInformation = baseActionSharedInformation;
 
 		// Generate the configuration object:
 		GameConfig gameConfig = new GameConfig();
@@ -80,7 +86,7 @@ public class InformationStorage {
 
 	public InformationStorage() {
 		this(new ResourceReserver(), new WorkerConfiguration(), new ScienceVesselStorage(),
-				new UnitTrackerInformation(), new MapInformation(), new CurrentGameInformation());
+				new UnitTrackerInformation(), new MapInformation(), new CurrentGameInformation(), new BaseActionSharedInformation());
 	}
 
 	// -------------------- Functions
@@ -129,6 +135,11 @@ public class InformationStorage {
 
 	public CurrentGameInformation getCurrentGameInformation() {
 		return currentGameInformation;
+	}
+	
+	// TODO: UML ADD
+	public BaseActionSharedInformation getBaseActionSharedInformation() {
+		return baseActionSharedInformation;
 	}
 
 	// ------------------------------ Config:
