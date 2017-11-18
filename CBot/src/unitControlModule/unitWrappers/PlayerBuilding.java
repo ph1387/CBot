@@ -282,6 +282,13 @@ public class PlayerBuilding {
 	private boolean switchState() {
 		// Research a technology.
 		if (this.state == State.IDLE) {
+			// Remove any technologies that have already been researched. This
+			// is needed to prevent deadlocks from happening.
+			while (this.informationStorage.getResearchQueue().peek() != null && Core.getInstance().getPlayer()
+					.hasResearched(this.informationStorage.getResearchQueue().peek())) {
+				this.informationStorage.getResearchQueue().poll();
+			}
+
 			this.researchedTech = extractPossibleMatch(this.informationStorage.getResearchQueue(),
 					this.technologyChecker);
 
