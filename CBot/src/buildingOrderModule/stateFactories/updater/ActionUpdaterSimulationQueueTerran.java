@@ -27,6 +27,9 @@ import javaGOAP.GoapAction;
  */
 public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQueue {
 
+	// TODO: UML ADD
+	private static final int STARPORT_FORBID_UNTIL_SECONDS = 900;
+
 	private HashMap<TypeWrapper, Integer> simulationQueueResultActionTypes;
 	private HashMap<TypeWrapper, Integer> informationStorageQueuesActionTypes;
 
@@ -118,6 +121,14 @@ public class ActionUpdaterSimulationQueueTerran extends ActionUpdaterSimulationQ
 								.getCurrentUnitCounts().getOrDefault(UnitType.Terran_Armory, 0);
 
 						if (!this.wasForwardedOrQueued(actionType) && playerArmoryCount.equals(0)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
+					case "Terran_Starport":
+						// Must be forbid until a later stage in the game. This
+						// is due to the Bot building it too early otherwise and
+						// therefore messing up the different build orders.
+						if (Core.getInstance().getGame().elapsedTime() >= STARPORT_FORBID_UNTIL_SECONDS) {
 							availableActionTypes.add(actionType);
 						}
 						break;
