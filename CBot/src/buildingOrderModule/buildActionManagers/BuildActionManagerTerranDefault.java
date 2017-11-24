@@ -2,7 +2,10 @@ package buildingOrderModule.buildActionManagers;
 
 import buildingOrderModule.CommandSender;
 import buildingOrderModule.stateFactories.StateFactory;
-import buildingOrderModule.stateFactories.StateFactoryTerranBasic;
+import buildingOrderModule.stateFactories.StateFactoryTerranBio;
+import buildingOrderModule.stateFactories.StateFactoryTerranMachines;
+import bwapi.Race;
+import core.Core;
 import informationStorage.InformationStorage;
 
 /**
@@ -22,7 +25,11 @@ public class BuildActionManagerTerranDefault extends BuildActionManager {
 
 	@Override
 	protected StateFactory createFactory() {
-		return new StateFactoryTerranBasic();
+		if (Core.getInstance().getGame().enemy().getRace() == Race.Zerg) {
+			return new StateFactoryTerranBio();
+		} else {
+			return new StateFactoryTerranMachines();
+		}
 	}
-	
+
 }

@@ -1,28 +1,26 @@
 package buildingOrderModule.stateFactories;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
-import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueueTerran;
 import buildingOrderModule.stateFactories.goals.ManagerGoalStateActionQueueTerran;
-import buildingOrderModule.stateFactories.updater.ActionUpdaterSimulationQueueTerran;
 import buildingOrderModule.stateFactories.updater.GoalStateUpdaterActionQueueTerran;
 import buildingOrderModule.stateFactories.updater.Updater;
 import buildingOrderModule.stateFactories.updater.WorldStateUpdaterActionQueueTerran;
 import buildingOrderModule.stateFactories.worldStates.ManagerWorldStateActionQueueTerran;
-import javaGOAP.GoapAction;
 import javaGOAP.GoapState;
 
+// TODO: UML CHANGE ABSTRACT
+// TODO: UML RENAME StateFactoryTerranBasic
 /**
- * StateFactoryTerranBasic.java --- Default Terran StateFactory containing basic
- * building sequences.
+ * StateFactoryTerranDefault.java --- Default Terran StateFactory containing
+ * default values.
  * 
  * @author P H - 28.04.2017
  *
  */
-public class StateFactoryTerranBasic extends StateFactoryDefault {
+public abstract class StateFactoryTerranDefault extends StateFactoryDefault {
 
 	// -------------------- Functions
 
@@ -36,10 +34,11 @@ public class StateFactoryTerranBasic extends StateFactoryDefault {
 		return new ManagerGoalStateActionQueueTerran();
 	}
 
-	@Override
-	public LinkedHashSet<GoapAction> generateAvailableActions() {
-		return new AvailableActionsSimulationQueueTerran();
-	}
+	// TODO: UML REMOVE
+	// @Override
+	// public LinkedHashSet<GoapAction> generateAvailableActions() {
+	// return new AvailableActionsSimulationQueueTerran();
+	// }
 
 	@Override
 	public Updater getMatchingWorldStateUpdater(BuildActionManager manager) {
@@ -51,8 +50,9 @@ public class StateFactoryTerranBasic extends StateFactoryDefault {
 		return new GoalStateUpdaterActionQueueTerran(manager);
 	}
 
-	@Override
-	public Updater getMatchingActionUpdater(BuildActionManager manager) {
-		return new ActionUpdaterSimulationQueueTerran(manager);
-	}
+	// TODO: UML REMOVE
+	// @Override
+	// public Updater getMatchingActionUpdater(BuildActionManager manager) {
+	// return new ActionUpdaterSimulationQueueTerran(manager);
+	// }
 }

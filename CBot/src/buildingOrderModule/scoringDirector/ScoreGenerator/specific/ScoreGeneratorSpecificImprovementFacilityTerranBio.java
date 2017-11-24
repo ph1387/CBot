@@ -8,21 +8,22 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualC
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
+//TODO: UML ADD
 /**
- * ScoreGeneratorSpecificUnitTerranMachines.java --- A {@link ScoreGenerator}
- * applying a target specific rate to the score. This class focuses on Terran
- * machine-{@link UnitType}s.
+ * ScoreGeneratorSpecificImprovementFacilityTerranBio.java --- A
+ * {@link ScoreGenerator} applying a target specific rate to the score. This
+ * class focuses on Terran bio-Unit improvement facilities.
  * 
- * @author P H - 03.10.2017
+ * @author P H - 18.11.2017
  *
  */
-public class ScoreGeneratorSpecificUnitTerranMachines extends ScoreGeneratorSpecificUnit {
+public class ScoreGeneratorSpecificImprovementFacilityTerranBio extends ScoreGeneratorSpecificImprovementFacility {
 
 	private ScoreGenerator scoreGeneratorIncreaseNormal;
 	private ScoreGenerator scoreGeneratorIncreaseSlow;
 	private ScoreGenerator scoreGeneratorIncreaseVerySlow;
 
-	public ScoreGeneratorSpecificUnitTerranMachines(BuildActionManager manager) {
+	public ScoreGeneratorSpecificImprovementFacilityTerranBio(BuildActionManager manager) {
 		super(manager);
 
 		this.scoreGeneratorIncreaseNormal = new ScoreGeneratorIncreaseNormal(this.manager);
@@ -38,25 +39,16 @@ public class ScoreGeneratorSpecificUnitTerranMachines extends ScoreGeneratorSpec
 		double score = 0.;
 
 		switch (unitType.toString()) {
-		case "Terran_Goliath":
-			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
-			break;
-		case "Terran_Marine":
+		case "Terran_Academy":
 			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
 			break;
-		case "Terran_Medic":
-			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
-			break;
-		case "Terran_Science_Vessel":
-			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
-			break;
-		case "Terran_Siege_Tank_Tank_Mode":
+		case "Terran_Engineering_Bay":
 			score = this.scoreGeneratorIncreaseSlow.generateScore(gameState, framesPassed);
 			break;
-		case "Terran_Vulture":
+		case "Terran_Science_Facility":
 			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
 			break;
-		case "Terran_Wraith":
+		case "Terran_Armory":
 			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
 			break;
 

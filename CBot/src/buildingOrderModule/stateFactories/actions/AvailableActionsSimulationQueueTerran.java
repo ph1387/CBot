@@ -30,6 +30,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActio
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_U_238_Shells;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_VehiclePlating;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_VehicleWeapons;
+import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueStartingTerranBionic;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueStartingTerranRaxFE;
 
 /**
@@ -43,6 +44,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 
 	public AvailableActionsSimulationQueueTerran() {
 		this.add(new ActionQueueStartingTerranRaxFE(1));
+		this.add(new ActionQueueStartingTerranBionic(1));
 
 		this.add(new ConstructActionCenter(1));
 		this.add(new ConstructActionRefinery(1));

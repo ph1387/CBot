@@ -14,11 +14,13 @@ import buildingOrderModule.simulator.TypeWrapper;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueue;
 import buildingOrderModule.stateFactories.actions.executableActions.ManagerBaseAction;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
+import bwapi.Player;
 import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
+import informationStorage.InformationStorage;
 
 /**
  * ActionUpdaterSimulationQueue.java --- Updater for updating a
@@ -42,6 +44,15 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	// The actions that the ScoringDirector will be updating.
 	private HashSet<ScoringAction> scoringActions;
 
+	// Information that change each iteration:
+	// TODO: UML ADD
+	// All Types plus their amount that are currently produced and inside the
+	// action Queue.
+	protected HashMap<TypeWrapper, Integer> simulationQueueResultActionTypes;
+	// TODO: UML ADD
+	// The types that are currently inside the InformationStorage Queues
+	protected HashMap<TypeWrapper, Integer> informationStorageQueuesActionTypes;
+
 	// Simulation frequency:
 	// The max difference of the index and the size of the action Queue. When
 	// the difference is less or equal this value a new simulation is
@@ -61,6 +72,95 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 
 	// -------------------- Functions
 
+	// TODO: UML ORDER
+
+	/**
+	 * Function for defining which ScoringDirector should be used.
+	 * 
+	 * @return the ScoringDirector which will be used for updating the scores of
+	 *         all Actions used in the simulations.
+	 */
+	protected abstract ScoringDirector defineScoringDirector();
+
+	@Override
+	public void update(BuildActionManager manager) {
+		// The initialization can not be done beforehand -> Safety reasons due
+		// to the order of possible initializations.
+		if (this.actionQueueSimulationResults == null) {
+			this.actionQueueSimulationResults = (ActionQueueSimulationResults) this
+					.getActionFromInstance(ActionQueueSimulationResults.class);
+		}
+		if (this.actionTypes == null && this.scoringActions == null) {
+			// Get all the Types plus their amount that are currently produced
+			// and inside the action Queue. Used to prevent i.e. building two
+			// centers.
+			this.simulationQueueResultActionTypes = this.extractAllProducedTypes();
+
+			// Also extract the types that are currently inside the
+			// InformationStorage Queues:
+			this.informationStorageQueuesActionTypes = this.extractAllForwardedTypes();
+
+			this.actionTypes = this.generateAllAvailableActionTypes(this.buildActionManager);
+			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
+		}
+
+		this.updateSimulationStarter(manager);
+	}
+
+	/**
+	 * Function for extracting all currently produces Types (TypeWrappers) from
+	 * the action Queue.
+	 * 
+	 * @return a HashMap containing all TypeWrappers that are produced in the
+	 *         action Queue of the actionQueueSimulationResults action. </br>
+	 *         Key: The produced TypeWrapper.</br>
+	 *         Value: The number of times it was found inside the action Queue.
+	 */
+	protected HashMap<TypeWrapper, Integer> extractAllProducedTypes() {
+		HashMap<TypeWrapper, Integer> usedActionTypes = new HashMap<TypeWrapper, Integer>();
+
+		if (this.actionQueueSimulationResults != null) {
+			for (ActionType actionType : this.actionQueueSimulationResults.getActionQueue()) {
+				addToTypeWrapperHashMap(usedActionTypes, actionType.defineResultType());
+			}
+		}
+
+		return usedActionTypes;
+	}
+
+	/**
+	 * Function for extracting all types that got forwarded into the
+	 * InformationStorage's Queues and convert them to their TypeWrapper
+	 * equivalent.
+	 * 
+	 * @return a HashMap containing all the types that already got forwarded to
+	 *         the InformationStorage.</br>
+	 *         Key: The forwarded type as TypeWrapper.</br>
+	 *         Value: The number of times it was found inside the Queues.
+	 */
+	protected HashMap<TypeWrapper, Integer> extractAllForwardedTypes() {
+		HashMap<TypeWrapper, Integer> forwardedActionTypes = new HashMap<TypeWrapper, Integer>();
+
+		// Training Queue:
+		for (UnitType unitType : this.buildActionManager.getInformationStorage().getTrainingQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(unitType));
+		}
+		// Upgrade Queue:
+		for (UpgradeType upgradeType : this.buildActionManager.getInformationStorage().getUpgradeQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(upgradeType));
+		}
+		// Research Queue:
+		for (TechType techType : this.buildActionManager.getInformationStorage().getResearchQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(techType));
+		}
+		// Addon Queue:
+		for (UnitType unitType : this.buildActionManager.getInformationStorage().getAddonQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(unitType));
+		}
+
+		return forwardedActionTypes;
+	}
+
 	/**
 	 * Function for generating all the available ActionTypes that will be used
 	 * inside the different simulations.
@@ -72,12 +172,23 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	protected abstract HashSet<ActionType> generateAllAvailableActionTypes(BuildActionManager buildActionManager);
 
 	/**
-	 * Function for defining which ScoringDirector should be used.
+	 * Function for adding a TypeWrapper to a HashMap. If the HashMap does not
+	 * contain any previous instance of the TypeWrapper, instantiate it with 1.
+	 * Otherwise add 1 to the existing value.
 	 * 
-	 * @return the ScoringDirector which will be used for updating the scores of
-	 *         all Actions used in the simulations.
+	 * @param hashMap
+	 *            the HashMap to which a TypeWrapper instance will be counted
+	 *            towards.
+	 * @param wrapper
+	 *            the TypeWrapper that will be added towards a HashMap.
 	 */
-	protected abstract ScoringDirector defineScoringDirector();
+	private static void addToTypeWrapperHashMap(HashMap<TypeWrapper, Integer> hashMap, TypeWrapper wrapper) {
+		if (hashMap.containsKey(wrapper)) {
+			hashMap.put(wrapper, hashMap.get(wrapper) + 1);
+		} else {
+			hashMap.put(wrapper, 1);
+		}
+	}
 
 	/**
 	 * Function for transforming the available actions into ScoringActions that
@@ -95,22 +206,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			}
 		}
 		return transformedScoringActions;
-	}
-
-	@Override
-	public void update(BuildActionManager manager) {
-		// The initialization can not be done beforehand -> Safety reasons due
-		// to the order of possible initializations.
-		if (this.actionQueueSimulationResults == null) {
-			this.actionQueueSimulationResults = (ActionQueueSimulationResults) this
-					.getActionFromInstance(ActionQueueSimulationResults.class);
-		}
-		if (this.actionTypes == null && this.scoringActions == null) {
-			this.actionTypes = this.generateAllAvailableActionTypes(this.buildActionManager);
-			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
-		}
-
-		this.updateSimulationStarter(manager);
 	}
 
 	/**
@@ -198,77 +293,274 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 				- this.actionQueueSimulationResults.getIndex() <= this.maxActionQueueIndexOffsetTilEnd;
 	}
 
-	/**
-	 * Function for extracting all currently produces Types (TypeWrappers) from
-	 * the action Queue.
-	 * 
-	 * @return a HashMap containing all TypeWrappers that are produced in the
-	 *         action Queue of the actionQueueSimulationResults action. </br>
-	 *         Key: The produced TypeWrapper.</br>
-	 *         Value: The number of times it was found inside the action Queue.
-	 */
-	protected HashMap<TypeWrapper, Integer> extractAllProducedTypes() {
-		HashMap<TypeWrapper, Integer> usedActionTypes = new HashMap<TypeWrapper, Integer>();
+	// -------------------- Specific tests
 
-		if (this.actionQueueSimulationResults != null) {
-			for (ActionType actionType : this.actionQueueSimulationResults.getActionQueue()) {
-				addToTypeWrapperHashMap(usedActionTypes, actionType.defineResultType());
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
+	/**
+	 * Function for determining if a technology can be researched or not. The
+	 * provided ActionType <b>must</b> result in a TechType. If this is not the
+	 * case, the function will fail. The function tests if the Player has
+	 * researched the resulting TechType of the provided {@link ActionType} and
+	 * if he is currently not researching it. Also other checks are done:
+	 * <ul>
+	 * <li>Test if the required UnitType (Research facility) exists at least
+	 * once.</li>
+	 * <li>Test if the {@link ActionType} was not already forwarded or is
+	 * currently in the research Queue.</li>
+	 * <li>Test if an idling, required research facility exists.</li>
+	 * <li>Test if the required UnitType of the stored TechType exists at least
+	 * once.</li>
+	 * </ul>
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Unit counts
+	 *            as well as the difference Queues.
+	 * @param actionType
+	 *            the {@link ActionType} (Resulting in a TechType) that is going
+	 *            to be checked.
+	 * @return true if all criteria regarding the research of the TechType of
+	 *         the provided {@link ActionType} are matched, false if not.
+	 */
+	protected boolean canResearchTechnology(BuildActionManager manager, ActionType actionType) {
+		Player player = Core.getInstance().getPlayer();
+		boolean notResearched = !player.hasResearched(actionType.defineResultType().getTechType());
+		boolean notResearching = !player.isResearching(actionType.defineResultType().getTechType());
+
+		boolean requiredTypeExist = this.doesRequiredTypeExist(manager, actionType);
+		boolean notForwardedOrQueued = !this.wasForwardedOrQueued(actionType);
+		boolean idleFacilitiyExists = this.isOneProducingFacilityIdle(manager, actionType);
+		boolean requiredUnitExist = this.doesRequiredUnitExist(manager, actionType.defineResultType().getTechType());
+
+		return notResearched && notResearching && requiredTypeExist && notForwardedOrQueued && idleFacilitiyExists
+				&& requiredUnitExist;
+	}
+
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
+	/**
+	 * Function for determining if a technology can be researched or not. The
+	 * provided ActionType <b>must</b> result in a UpgradeType. If this is not
+	 * the case, the function will fail. The function tests if the Player has
+	 * not yet reached the maximum upgrade level of the resulting UpgradeType of
+	 * the provided {@link ActionType} and if he is currently not performing it.
+	 * Also other checks are done:
+	 * <ul>
+	 * <li>Test if the required UnitType (Upgrade facility) exists at least
+	 * once.</li>
+	 * <li>Test if the {@link ActionType} was not already forwarded or is
+	 * currently in the upgrade Queue.</li>
+	 * <li>Test if an idling, required upgrade facility exists.</li>
+	 * <li>Test if the required UnitType of the stored UpgradeType of the
+	 * current level exists at least once.</li>
+	 * </ul>
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Unit counts
+	 *            as well as the difference Queues.
+	 * @param actionType
+	 *            the {@link ActionType} (Resulting in a TechType) that is going
+	 *            to be checked.
+	 * @return true if all criteria regarding the research of the TechType of
+	 *         the provided {@link ActionType} are matched, false if not.
+	 */
+	protected boolean canUpgrade(BuildActionManager manager, ActionType actionType) {
+		Player player = Core.getInstance().getPlayer();
+		boolean maxLevelNotReached = player.getUpgradeLevel(actionType.defineResultType().getUpgradeType()) < player
+				.getMaxUpgradeLevel(actionType.defineResultType().getUpgradeType());
+		boolean notUpgrading = !player.isUpgrading(actionType.defineResultType().getUpgradeType());
+
+		boolean requiredTypeExist = this.doesRequiredTypeExist(manager, actionType);
+		boolean notForwardedOrQueued = !this.wasForwardedOrQueued(actionType);
+		boolean idleFacilitiyExists = this.isOneProducingFacilityIdle(manager, actionType);
+		boolean requiredUnitExist = this.doesRequiredUnitExist(manager, actionType.defineResultType().getUpgradeType());
+
+		return maxLevelNotReached && notUpgrading && requiredTypeExist && notForwardedOrQueued && idleFacilitiyExists
+				&& requiredUnitExist;
+	}
+
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
+	/**
+	 * Function for testing if the required <b>UnitType</b> of the provided
+	 * {@link ActionType} exists at least once. This function will fail if the
+	 * required type is not a UnitType!
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Unit counts.
+	 * @param actionType
+	 *            the {@link ActionType} (Resulting in a TechType) that is going
+	 *            to be checked.
+	 * @return true if the required UnitType exists at least once, false if not.
+	 */
+	protected boolean doesRequiredTypeExist(BuildActionManager manager, ActionType actionType) {
+		return manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(actionType.defineRequiredType().getUnitType(), 0) > 0;
+	}
+
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
+	/**
+	 * Function for testing if the provided {@link ActionType} is going to be
+	 * forwarded or is currently in one of the executing / waiting Queues of the
+	 * Bot. These include i.e. the upgrade, training, research or addon Queue.
+	 * 
+	 * @param actionType
+	 *            the {@link ActionType} (Resulting in a TechType) that is going
+	 *            to be checked.
+	 * @return true if the {@link ActionType} was forwarded into one of the
+	 *         {@link InformationStorage}'s Queues or if it is still going to be
+	 *         forwarded to them. Otherwise this function returns false.
+	 */
+	protected boolean wasForwardedOrQueued(ActionType actionType) {
+		return this.simulationQueueResultActionTypes.containsKey(actionType.defineResultType())
+				|| this.informationStorageQueuesActionTypes.containsKey(actionType.defineResultType());
+	}
+
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
+	/**
+	 * Function for testing if one completed and idle facility whose UnitType
+	 * was defined in the provided {@link ActionType} exists. The
+	 * {@link ActionType} of this function <b>must</b> define a UnitType as
+	 * required type. Otherwise this function returns false.
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param actionType
+	 *            the {@link ActionType} (Resulting in a TechType) that is going
+	 *            to be checked.
+	 * @return true if one (Or more) idling and completed facilities that are
+	 *         defined as the required UnitType of the {@link ActionType}
+	 *         exist(s). Otherwise this function returns false, if either the
+	 *         required type is not a UnitType or no completed and idling Unit
+	 *         is found.
+	 */
+	protected boolean isOneProducingFacilityIdle(BuildActionManager manager, ActionType actionType) {
+		boolean prodcuingFacilityIdles = false;
+
+		// Find a required, idle and completed facility for the ActionType.
+		for (Unit unit : manager.getInformationStorage().getCurrentGameInformation().getCurrentUnits()
+				.getOrDefault(actionType.defineRequiredType().getUnitType(), new HashSet<Unit>())) {
+			if (unit.isIdle() && unit.isCompleted()) {
+				prodcuingFacilityIdles = true;
+
+				break;
 			}
 		}
 
-		return usedActionTypes;
+		return prodcuingFacilityIdles;
 	}
 
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
 	/**
-	 * Function for extracting all types that got forwarded into the
-	 * InformationStorage's Queues and convert them to their TypeWrapper
-	 * equivalent.
+	 * Function for testing if a provided TechType's required UnitType is
+	 * present on the map at least once.
 	 * 
-	 * @return a HashMap containing all the types that already got forwarded to
-	 *         the InformationStorage.</br>
-	 *         Key: The forwarded type as TypeWrapper.</br>
-	 *         Value: The number of times it was found inside the Queues.
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param techType
+	 *            the TechType whose required UnitType is going to be checked.
+	 * @return true if the required UnitType of the provided TechType is present
+	 *         on the map at least once.
 	 */
-	protected HashMap<TypeWrapper, Integer> extractAllForwardedTypes() {
-		HashMap<TypeWrapper, Integer> forwardedActionTypes = new HashMap<TypeWrapper, Integer>();
+	protected boolean doesRequiredUnitExist(BuildActionManager manager, TechType techType) {
+		boolean exist = true;
 
-		// Training Queue:
-		for (UnitType unitType : this.buildActionManager.getInformationStorage().getTrainingQueue()) {
-			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(unitType));
-		}
-		// Upgrade Queue:
-		for (UpgradeType upgradeType : this.buildActionManager.getInformationStorage().getUpgradeQueue()) {
-			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(upgradeType));
-		}
-		// Research Queue:
-		for (TechType techType : this.buildActionManager.getInformationStorage().getResearchQueue()) {
-			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(techType));
-		}
-		// Addon Queue:
-		for (UnitType unitType : this.buildActionManager.getInformationStorage().getAddonQueue()) {
-			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(unitType));
+		if (techType.requiredUnit() != UnitType.None) {
+			exist &= manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+					.getOrDefault(techType.requiredUnit(), 0) > 0;
 		}
 
-		return forwardedActionTypes;
+		return exist;
 	}
 
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
 	/**
-	 * Function for adding a TypeWrapper to a HashMap. If the HashMap does not
-	 * contain any previous instance of the TypeWrapper, instantiate it with 1.
-	 * Otherwise add 1 to the existing value.
+	 * Function for testing if a provided UpgradeType's required UnitTypes are
+	 * present on the map at least once. These are based on the current level of
+	 * the UpgradeType and must be matched before upgrading to the next level is
+	 * possible.
 	 * 
-	 * @param hashMap
-	 *            the HashMap to which a TypeWrapper instance will be counted
-	 *            towards.
-	 * @param wrapper
-	 *            the TypeWrapper that will be added towards a HashMap.
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param upgradeType
+	 *            the UpgradeType whose required UnitTypes are going to be
+	 *            checked.
+	 * @return true if the required UnitType of the provided UpgradeType is
+	 *         present on the map at least once for the next level.
 	 */
-	private static void addToTypeWrapperHashMap(HashMap<TypeWrapper, Integer> hashMap, TypeWrapper wrapper) {
-		if (hashMap.containsKey(wrapper)) {
-			hashMap.put(wrapper, hashMap.get(wrapper) + 1);
-		} else {
-			hashMap.put(wrapper, 1);
+	protected boolean doesRequiredUnitExist(BuildActionManager manager, UpgradeType upgradeType) {
+		int currentUpgradeLevel = manager.getCurrentGameInformation().getCurrentUpgrades().getOrDefault(upgradeType, 0);
+		boolean exist = true;
+
+		// Make sure the required UnitType exists at least once and is NOT None!
+		if (currentUpgradeLevel > 0 && upgradeType.whatsRequired(currentUpgradeLevel + 1) != UnitType.None) {
+			exist &= manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+					.getOrDefault(upgradeType.whatsRequired(currentUpgradeLevel + 1), 0) > 0;
+		} else if (upgradeType.whatsRequired() != UnitType.None) {
+			exist &= manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+					.getOrDefault(upgradeType.whatsRequired(), 0) > 0;
 		}
+
+		return exist;
+	}
+
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
+	/**
+	 * Function for testing if a provided UnitType's required UnitTypes are
+	 * present on the map at least once.
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param unitType
+	 *            the UnitType whose required UnitTypes are going to be checked.
+	 * @return true if the required UnitTypes of the provided UnitType are
+	 *         present on the map at least once.
+	 */
+	protected boolean doesRequiredUnitExist(BuildActionManager manager, UnitType unitType) {
+		boolean exist = true;
+
+		for (UnitType requiredUnitType : unitType.requiredUnits().keySet()) {
+			exist &= unitType.requiredUnits().get(requiredUnitType) <= manager.getInformationStorage()
+					.getCurrentGameInformation().getCurrentUnitCounts().getOrDefault(requiredUnitType, 0);
+		}
+
+		return exist;
+	}
+
+	// TODO: UML ADD
+	// TODO: UML CHANGE VISIBILITY
+	/**
+	 * Function for testing if a provided UnitType's required TechType was
+	 * already researched by the Player.
+	 * 
+	 * @param manager
+	 *            the manager which provides access to the
+	 *            {@link InformationStorage} containing the current Units.
+	 * @param unitType
+	 *            the UnitType whose required TechType is going to be checked.
+	 * @return if the required TechType of the provided UnitType was already
+	 *         researched.
+	 */
+	protected boolean doesRequiredTechExist(BuildActionManager manager, UnitType unitType) {
+		boolean exist = true;
+
+		if (unitType.requiredTech() != TechType.None) {
+			exist &= manager.getCurrentGameInformation().getCurrentTechs().contains(unitType.requiredTech());
+		}
+
+		return exist;
 	}
 
 	// ------------------------------ Getter / Setter

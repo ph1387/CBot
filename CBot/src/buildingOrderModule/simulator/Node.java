@@ -65,7 +65,15 @@ public class Node implements Comparable<Node> {
 	}
 
 	// TODO: UML ADD IF MISSING
-	// TODO: WIP JAVADOC
+	/**
+	 * Function for generating the score of a {@link Node} instance based on the
+	 * current gas and minerals.
+	 * 
+	 * @param node
+	 *            the {@link Node} whose score is going to be generated.
+	 * @return the score of the provided {@link Node} based on it's gas and
+	 *         minerals.
+	 */
 	private static int generateSingleNodeScore(Node node) {
 		// Take the stored influences and apply them to the mineral and gas
 		// counts.

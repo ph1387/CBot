@@ -2,31 +2,37 @@ package buildingOrderModule.scoringDirector.ScoreGenerator.specific;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
+import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_Forbid;
+import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseFast;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseNormal;
-import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseSlow;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseVerySlow;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
+//TODO: UML ADD
 /**
- * ScoreGeneratorSpecificUnitTerranMachines.java --- A {@link ScoreGenerator}
+ * ScoreGeneratorSpecificUnitTerranBio.java --- A {@link ScoreGenerator}
  * applying a target specific rate to the score. This class focuses on Terran
- * machine-{@link UnitType}s.
+ * bio-{@link UnitType}s.
  * 
- * @author P H - 03.10.2017
+ * @author P H - 18.11.2017
  *
  */
-public class ScoreGeneratorSpecificUnitTerranMachines extends ScoreGeneratorSpecificUnit {
+public class ScoreGeneratorSpecificUnitTerranBio extends ScoreGeneratorSpecificUnit {
 
+	private ScoreGenerator scoreGeneratorFixedForbid;
+
+	private ScoreGenerator scoreGeneratorIncreaseFast;
 	private ScoreGenerator scoreGeneratorIncreaseNormal;
-	private ScoreGenerator scoreGeneratorIncreaseSlow;
 	private ScoreGenerator scoreGeneratorIncreaseVerySlow;
 
-	public ScoreGeneratorSpecificUnitTerranMachines(BuildActionManager manager) {
+	public ScoreGeneratorSpecificUnitTerranBio(BuildActionManager manager) {
 		super(manager);
 
+		this.scoreGeneratorFixedForbid = new ScoreGeneratorFixed_Forbid(this.manager);
+
+		this.scoreGeneratorIncreaseFast = new ScoreGeneratorIncreaseFast(this.manager);
 		this.scoreGeneratorIncreaseNormal = new ScoreGeneratorIncreaseNormal(this.manager);
-		this.scoreGeneratorIncreaseSlow = new ScoreGeneratorIncreaseSlow(this.manager);
 		this.scoreGeneratorIncreaseVerySlow = new ScoreGeneratorIncreaseVerySlow(this.manager);
 	}
 
@@ -39,22 +45,22 @@ public class ScoreGeneratorSpecificUnitTerranMachines extends ScoreGeneratorSpec
 
 		switch (unitType.toString()) {
 		case "Terran_Goliath":
-			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Marine":
-			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorIncreaseFast.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Medic":
-			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorIncreaseFast.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Science_Vessel":
 			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Siege_Tank_Tank_Mode":
-			score = this.scoreGeneratorIncreaseSlow.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Vulture":
-			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Wraith":
 			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
@@ -69,7 +75,14 @@ public class ScoreGeneratorSpecificUnitTerranMachines extends ScoreGeneratorSpec
 
 	@Override
 	protected int generateDividerForGameState(GameState gameState, int framesPassed) throws Exception {
-		return 1;
+		UnitType unitType = this.extractUnitType(gameState);
+		int divider = 1;
+
+		if (unitType == UnitType.Terran_Vulture || unitType == UnitType.Terran_Goliath) {
+			divider = this.scoreGeneratorFixedForbid.generateDivider(gameState, framesPassed);
+		}
+
+		return divider;
 	}
 
 }

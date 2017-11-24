@@ -5,7 +5,7 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 /**
  * ScoreGeneratorFactory.java --- A Interface defining a factory for
  * {@link ScoreGenerator}s (Abstract Factory Pattern). </br>
- * <b>Note:</b> The objects returned by this factory must only be generated
+ * <b>Note:</b></br> The objects returned by this factory must only be generated
  * <b>once</b> for any factory that relies on storing information!
  * 
  * @author P H - 16.07.2017

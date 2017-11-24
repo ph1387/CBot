@@ -11,7 +11,7 @@ import bwapi.UnitType;
 /**
  * ScoreGeneratorSpecificImprovementFacilityTerranMachines.java --- A
  * {@link ScoreGenerator} applying a target specific rate to the score. This
- * class focuses on Terran improvement facilities.
+ * class focuses on Terran machine-Unit improvement facilities.
  * 
  * @author P H - 03.10.2017
  *

@@ -4,34 +4,32 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_Forbid;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseNormal;
-import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseSlow;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseVerySlow;
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UpgradeType;
 
+//TODO: UML ADD
 /**
- * ScoreGeneratorSpecificUpgradeTerranMachines.java --- A {@link ScoreGenerator}
+ * ScoreGeneratorSpecificUpgradeTerranBio.java --- A {@link ScoreGenerator}
  * applying a target specific rate to the score. This class focuses on Terran
- * machine-{@link UpgradeType}s.
+ * bio-{@link UpgradeType}s.
  * 
- * @author P H - 03.10.2017
+ * @author P H - 18.11.2017
  *
  */
-public class ScoreGeneratorSpecificUpgradeTerranMachines extends ScoreGeneratorSpecificUpgrade {
+public class ScoreGeneratorSpecificUpgradeTerranBio extends ScoreGeneratorSpecificUpgrade {
 
 	private ScoreGenerator scoreGeneratorFixedForbid;
 
 	private ScoreGenerator scoreGeneratorIncreaseNormal;
-	private ScoreGenerator scoreGeneratorIncreaseSlow;
 	private ScoreGenerator scoreGeneratorIncreaseVerySlow;
 
-	public ScoreGeneratorSpecificUpgradeTerranMachines(BuildActionManager manager) {
+	public ScoreGeneratorSpecificUpgradeTerranBio(BuildActionManager manager) {
 		super(manager);
 
 		this.scoreGeneratorFixedForbid = new ScoreGeneratorFixed_Forbid(this.manager);
 
 		this.scoreGeneratorIncreaseNormal = new ScoreGeneratorIncreaseNormal(this.manager);
-		this.scoreGeneratorIncreaseSlow = new ScoreGeneratorIncreaseSlow(this.manager);
 		this.scoreGeneratorIncreaseVerySlow = new ScoreGeneratorIncreaseVerySlow(this.manager);
 	}
 
@@ -44,25 +42,25 @@ public class ScoreGeneratorSpecificUpgradeTerranMachines extends ScoreGeneratorS
 
 		switch (upgradeType.toString()) {
 		case "Terran_Infantry_Armor":
-			score = scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
+			score = scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Infantry_Weapons":
-			score = scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
+			score = scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Vehicle_Plating":
-			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Vehicle_Weapons":
-			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
 			break;
 		case "Ion_Thrusters":
-			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
 			break;
 		case "Charon_Boosters":
-			score = this.scoreGeneratorIncreaseSlow.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
 			break;
 		case "U_238_Shells":
-			score = scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
+			score = scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
 			break;
 
 		default:
@@ -77,8 +75,8 @@ public class ScoreGeneratorSpecificUpgradeTerranMachines extends ScoreGeneratorS
 		UpgradeType upgradeType = this.extractUpgradeType(gameState);
 		int divider = 1;
 
-		if (upgradeType == UpgradeType.Terran_Infantry_Armor || upgradeType == UpgradeType.Terran_Infantry_Weapons
-				|| upgradeType == UpgradeType.U_238_Shells) {
+		if (upgradeType == UpgradeType.Terran_Vehicle_Plating || upgradeType == UpgradeType.Terran_Vehicle_Weapons
+				|| upgradeType == UpgradeType.Ion_Thrusters || upgradeType == UpgradeType.Charon_Boosters) {
 			divider = this.scoreGeneratorFixedForbid.generateDivider(gameState, framesPassed);
 		}
 

@@ -51,7 +51,6 @@ public class ActionSequence implements Comparable<ActionSequence> {
 		this.occupiedTypeTimes = new HashMap<>();
 	}
 
-	// TODO: WIP
 	// TODO: UML ADD
 	/**
 	 * Function for summing up the score of all ActionTypes that this instance

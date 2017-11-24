@@ -9,24 +9,24 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualC
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.TechType;
 
+//TODO: UML ADD
 /**
- * ScoreGeneratorSpecificTechTerranMachines.java --- A {@link ScoreGenerator}
+ * ScoreGeneratorSpecificTechTerranBio.java --- A {@link ScoreGenerator}
  * applying a target specific rate to the score. This class focuses on Terran
- * machine-{@link TechType}s.
+ * bio-{@link TechType}s.
  * 
- * @author P H - 03.10.2017
+ * @author P H - 18.11.2017
  *
  */
-public class ScoreGeneratorSpecificTechTerranMachines extends ScoreGeneratorSpecificTech {
+public class ScoreGeneratorSpecificTechTerranBio extends ScoreGeneratorSpecificTech {
 
 	private ScoreGenerator scoreGeneratorFixedForbid;
 
 	private ScoreGenerator scoreGeneratorIncreaseVeryFast;
 	private ScoreGenerator scoreGeneratorIncreaseNormal;
-	// TODO: UML ADD
 	private ScoreGenerator scoreGeneratorIncreaseSlow;
 
-	public ScoreGeneratorSpecificTechTerranMachines(BuildActionManager manager) {
+	public ScoreGeneratorSpecificTechTerranBio(BuildActionManager manager) {
 		super(manager);
 
 		this.scoreGeneratorFixedForbid = new ScoreGeneratorFixed_Forbid(this.manager);
@@ -45,13 +45,13 @@ public class ScoreGeneratorSpecificTechTerranMachines extends ScoreGeneratorSpec
 
 		switch (techType.toString()) {
 		case "Stim_Packs":
-			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorIncreaseVeryFast.generateScore(gameState, framesPassed);
 			break;
 		case "Tank_Siege_Mode":
 			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
 			break;
 		case "Spider_Mines":
-			score = this.scoreGeneratorIncreaseVeryFast.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
 			break;
 		case "Cloaking_Field":
 			score = this.scoreGeneratorIncreaseSlow.generateScore(gameState, framesPassed);
@@ -69,7 +69,7 @@ public class ScoreGeneratorSpecificTechTerranMachines extends ScoreGeneratorSpec
 		TechType techType = this.extractTechType(gameState);
 		int divider = 1;
 
-		if (techType == TechType.Stim_Packs) {
+		if (techType == TechType.Spider_Mines) {
 			divider = this.scoreGeneratorFixedForbid.generateDivider(gameState, framesPassed);
 		}
 

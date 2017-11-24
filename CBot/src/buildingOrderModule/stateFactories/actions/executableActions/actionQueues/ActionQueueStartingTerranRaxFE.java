@@ -1,12 +1,15 @@
 package buildingOrderModule.stateFactories.actions.executableActions.actionQueues;
 
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Barracks;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Barracks;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
+import bwapi.Race;
+import core.Core;
+import javaGOAP.IGoapUnit;
 
 /**
  * ActionQueueStartingTerranRaxFE.java --- Action Queue for a Terran opening:
@@ -36,14 +39,12 @@ public class ActionQueueStartingTerranRaxFE extends ActionQueueStarting {
 		this.actionQueue.add(new TrainUnitActionWorker(6));
 		this.actionQueue.add(new ConstructActionTerran_Barracks(1));
 		this.actionQueue.add(new TrainUnitActionWorker(4));
-
-		// Custom addition against rushes.
-		this.actionQueue.add(new TrainUnitActionTerran_Marine(2));
-
 		this.actionQueue.add(new ConstructActionCenter(1));
 		this.actionQueue.add(new TrainUnitActionWorker(1));
 		this.actionQueue.add(new ConstructActionRefinery(1));
+
 		this.actionQueue.add(new TrainUnitActionTerran_Marine(2));
+
 		this.actionQueue.add(new TrainUnitActionWorker(5));
 		this.actionQueue.add(new ConstructActionTerran_Factory(1));
 		this.actionQueue.add(new BuildAddonTerran_MachineShop(1));
@@ -59,5 +60,12 @@ public class ActionQueueStartingTerranRaxFE extends ActionQueueStarting {
 	}
 
 	// -------------------- Functions
+
+	// TODO: UML ADD
+	@Override
+	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
+		return super.checkProceduralSpecificPrecondition(goapUnit)
+				&& Core.getInstance().getGame().enemy().getRace() != Race.Zerg;
+	}
 
 }
