@@ -68,12 +68,14 @@ public class UnitTrackerModule {
 	// them.
 	private double invulnerableMultiplier = 5.0;
 
+	// TODO: UML CHANGE 2.5
 	// The multiplier that is applied to the enemy buildings that have a weapon.
 	// This is needed since stationary turrets etc. must NOT be rushed into!
-	private double buildingMultiplier = 2.5;
+	private double buildingMultiplier = 7.5;
+	// TODO: UML CHANGE 3
 	// The tile range which gets added towards each Unit's default weapon range.
 	// Using this value Units can react sooner to incoming threats.
-	private int extraTileRange = 3;
+	private int extraTileRange = 5;
 	// The multiplier for workers since they are normally not used as combat
 	// Units. Therefore their strength must be adjusted.
 	private double workerMultiplier = 0.3;
