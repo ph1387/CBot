@@ -1,6 +1,14 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
+import java.util.HashMap;
+import java.util.List;
+
 import bwapi.Position;
+import bwapi.TilePosition;
+import bwta.BWTA;
+import bwta.BaseLocation;
+import bwta.Region;
+import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -14,11 +22,17 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ScoutBaseLocationAction extends BaseAction {
 
+	// The time after a BaseLocation might be searched again.
+	public static final int BASELOCATIONS_TIME_PASSED = 60;
+
 	protected static Integer RANGE_TO_TARGET = null;
 
+	private Position targetPosition = null;
+
+	// TODO: UML CHANGE PARAM DESCRIPTION
 	/**
 	 * @param target
-	 *            type: Position
+	 *            type: Null
 	 */
 	public ScoutBaseLocationAction(Object target) {
 		super(target);
@@ -33,12 +47,88 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return false;
+		return this.targetPosition != null && ((PlayerUnit) goapUnit)
+				.isNearTilePosition(((Position) this.targetPosition).toTilePosition(), RANGE_TO_TARGET);
 	}
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
-		return true;
+		boolean success = true;
+		boolean executeMove = false;
+
+		if (this.targetPosition == null) {
+			this.targetPosition = this.findClosestReachableBasePosition();
+			executeMove = true;
+		}
+
+		if (this.targetPosition != null && executeMove) {
+			((PlayerUnit) goapUnit).getUnit().move(this.targetPosition);
+		} else {
+			success = false;
+		}
+
+		return success;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * If no enemy buildings are are being known of the Bot has to search for
+	 * them.
+	 * 
+	 * @return the closest, reachable base Position.
+	 */
+	protected Position findClosestReachableBasePosition() {
+		Position closestPosition = null;
+
+		// The start locations must be preferred.
+		closestPosition = this.checkBaseLocations(BWTA.getStartLocations());
+
+		if (closestPosition == null) {
+			closestPosition = this.checkBaseLocations(BWTA.getBaseLocations());
+		}
+
+		return closestPosition;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for finding the closest, reachable BaseLocation with a
+	 * timeStamp:
+	 * <p>
+	 * currentTime - timeStamp >= timePassed
+	 * 
+	 * @param baseLocations
+	 *            the BaseLocations that are being checked.
+	 * 
+	 * @return the closest, reachable base Position with a matching timeStamp.
+	 */
+	private Position checkBaseLocations(List<BaseLocation> baseLocations) {
+		PlayerUnit playerUnit = (PlayerUnit) this.currentlyExecutingUnit;
+		HashMap<BaseLocation, Integer> baselocationsSearched = playerUnit.getInformationStorage()
+				.getBaselocationsSearched();
+		Position closestReachableBasePosition = null;
+		int closestReachableBasePositionPathSize = -1;
+
+		for (BaseLocation location : baseLocations) {
+			Region baseRegion = ((BaseLocation) location).getRegion();
+
+			// TODO: Needed Change: Check for blocking minerals
+			if (baselocationsSearched.get(location) != null && playerUnit.getUnit().hasPath(baseRegion.getCenter())) {
+				List<TilePosition> path = BWTA.getShortestPath(
+						((PlayerUnit) this.currentlyExecutingUnit).getUnit().getTilePosition(),
+						baseRegion.getCenter().toTilePosition());
+
+				if ((closestReachableBasePosition == null && Core.getInstance().getGame().elapsedTime()
+						- baselocationsSearched.get(location) >= BASELOCATIONS_TIME_PASSED)
+						|| (Core.getInstance().getGame().elapsedTime()
+								- baselocationsSearched.get(location) >= BASELOCATIONS_TIME_PASSED
+								&& path.size() < closestReachableBasePositionPathSize)) {
+					closestReachableBasePosition = baseRegion.getCenter();
+					closestReachableBasePositionPathSize = path.size();
+				}
+			}
+		}
+		return closestReachableBasePosition;
 	}
 
 	@Override
@@ -53,22 +143,23 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected boolean requiresInRange(IGoapUnit goapUnit) {
-		return true;
+		return false;
 	}
 
 	@Override
 	protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).getUnit().getDistance((Position) this.target);
+		return 0;
 	}
 
 	@Override
 	protected boolean isInRange(IGoapUnit goapUnit) {
-		return ((PlayerUnit) goapUnit).isNearTilePosition(((Position) this.target).toTilePosition(), RANGE_TO_TARGET);
+		return false;
 	}
 
 	@Override
 	protected void resetSpecific() {
-
+		this.target = new Object();
+		this.targetPosition = null;
 	}
 
 	// -------------------- Group

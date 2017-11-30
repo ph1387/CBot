@@ -36,8 +36,9 @@ import unitControlModule.stateFactories.updater.Updater;
  */
 public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
+	// TODO: UML REMOVE
 	// The timer after a BaseLocation might be searched again.
-	public static final int BASELOCATIONS_TIME_PASSED = 60;
+	// public static final int BASELOCATIONS_TIME_PASSED = 60;
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
 	// own parameters
 	protected static final double CONFIDENCE_THRESHHOLD = 0.5;

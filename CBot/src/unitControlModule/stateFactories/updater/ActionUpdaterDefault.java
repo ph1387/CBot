@@ -1,13 +1,6 @@
 package unitControlModule.stateFactories.updater;
 
-import java.util.HashMap;
-
-import bwapi.Position;
 import bwapi.TilePosition;
-import bwta.BWTA;
-import bwta.BaseLocation;
-import bwta.Region;
-import core.Core;
 import unitControlModule.stateFactories.actions.AvailableActionsDefault;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
@@ -41,9 +34,9 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
 
-		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_MISSING) {
-			this.baselocationScoutingConfiguration();
-		} else {
+		this.scoutBaseLocationAction.setTarget(new Object());
+
+		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
 			this.attackMoveAction.setTarget(this.attackMoveToNearestKnownUnitConfiguration());
 
 			this.attackUnitAction.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
@@ -110,43 +103,9 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		return closestUnitTilePosition;
 	}
 
-	/**
-	 * Function for configuring the associated scouting function of the Unit.
-	 * Since the type of scouting action might differ from Unit to Unit a
-	 * special function is needed to handle these cases.
-	 */
-	protected void baselocationScoutingConfiguration() {
-		 this.scoutBaseLocationAction.setTarget(findClosestReachableBasePosition());
-	}
+	// TODO: UML REMOVE
+	// protected void baselocationScoutingConfiguration() {
 
-	/**
-	 * If no enemy buildings are are being known of the Bot has to search for
-	 * them. Find the closest BaseLocation with a timeStamp:
-	 * <p>
-	 * currentTime - timeStamp >= timePassed
-	 * 
-	 * @return the closest reachable base Position with a matching timeStamp.
-	 */
-	protected Position findClosestReachableBasePosition() {
-		Position closestReachableBasePosition = null;
-		HashMap<BaseLocation, Integer> baselocationsSearched = this.playerUnit.getInformationStorage()
-				.getBaselocationsSearched();
-
-		for (BaseLocation location : BWTA.getBaseLocations()) {
-			Region baseRegion = ((BaseLocation) location).getRegion();
-
-			if (baselocationsSearched.get(location) != null
-					&& this.playerUnit.getUnit().hasPath(baseRegion.getCenter())) {
-				if ((closestReachableBasePosition == null && Core.getInstance().getGame().elapsedTime()
-						- baselocationsSearched.get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED)
-						|| (Core.getInstance().getGame().elapsedTime()
-								- baselocationsSearched.get(location) >= PlayerUnit.BASELOCATIONS_TIME_PASSED
-								&& this.playerUnit.getUnit().getDistance(location) < this.playerUnit.getUnit()
-										.getDistance(closestReachableBasePosition))) {
-					closestReachableBasePosition = baseRegion.getCenter();
-				}
-			}
-		}
-		return closestReachableBasePosition;
-	}
+	// TODO: UML REMOVE
+	// protected Position findClosestReachableBasePosition() {
 }
