@@ -42,6 +42,10 @@ public class UnitControlModule implements RemoveAgentEvent {
 	private enum UpdateCycle {
 		WORKER, COMBAT_UNIT
 	};
+	// TODO: UML ADD
+	private int consecutiveCombatUnitUpdates = 4;
+	// TODO: UML ADD
+	private int currentConsecutiveCombatUnitUpdates = 0;
 
 	private UpdateCycle currentUpdateCycle = UpdateCycle.WORKER;
 
@@ -78,7 +82,13 @@ public class UnitControlModule implements RemoveAgentEvent {
 			// Update the instances in the specified Queues.
 			if (this.currentUpdateCycle == UpdateCycle.COMBAT_UNIT) {
 				this.updateCombatUnitQueue();
-				this.currentUpdateCycle = UpdateCycle.WORKER;
+				
+				this.currentConsecutiveCombatUnitUpdates++;
+				
+				if(this.currentConsecutiveCombatUnitUpdates >= this.consecutiveCombatUnitUpdates) {
+					this.currentUpdateCycle = UpdateCycle.WORKER;
+					this.currentConsecutiveCombatUnitUpdates = 0;
+				}
 			} else {
 				this.updateWorkerQueue();
 				this.currentUpdateCycle = UpdateCycle.COMBAT_UNIT;
