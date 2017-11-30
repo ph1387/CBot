@@ -8,10 +8,9 @@ import bwapi.Pair;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapiMath.Point;
-import bwapiMath.Polygon;
-import bwapiMath.Vector;
 import bwapiMath.Point.Direction;
 import bwapiMath.Point.Type;
+import bwapiMath.Polygon;
 import bwta.BWTA;
 import bwta.Chokepoint;
 
@@ -23,9 +22,6 @@ import bwta.Chokepoint;
  *
  */
 public class PolygonContenderFactory extends TilePositionFactory {
-
-	private double chokePointVectorLength = 64;
-	private int chokePointVectorRotation = 90;
 
 	public PolygonContenderFactory() {
 
@@ -362,53 +358,12 @@ public class PolygonContenderFactory extends TilePositionFactory {
 		List<Chokepoint> chokePoints = BWTA.getChokepoints();
 
 		for (Chokepoint chokepoint : chokePoints) {
-			designatedHashSet.add(this.generatePolygonAtChokePoint(chokepoint));
+			designatedHashSet.add(ChokePointPolygonGenerator.generatePolygonAtChokePoint(chokepoint));
 		}
 	}
 
-	/**
-	 * Function for generating a Polygon around a ChokePoint.
-	 * 
-	 * @param chokePoint
-	 *            the {@link Chokepoint} that the {@link Polygon} is being
-	 *            created around.
-	 * @return a {@link Polygon} that is being created around a
-	 *         {@link Chokepoint}.
-	 */
-	private Polygon generatePolygonAtChokePoint(Chokepoint chokePoint) {
-		List<Point> vertices = new ArrayList<>();
-
-		// Generate four Vectors: Each end Position of the ChokPoint is the
-		// start of two of them. Use the other Position as end Position to
-		// ensure the 90° rotation later on.
-		Vector firstVectorRotLeft = new Vector(chokePoint.getSides().first, chokePoint.getSides().second);
-		Vector firstVectorRotRight = new Vector(chokePoint.getSides().first, chokePoint.getSides().second);
-		Vector secondVectorRotLeft = new Vector(chokePoint.getSides().second, chokePoint.getSides().first);
-		Vector secondVectorRotRight = new Vector(chokePoint.getSides().second, chokePoint.getSides().first);
-		firstVectorRotLeft.setToLength(this.chokePointVectorLength);
-		firstVectorRotRight.setToLength(this.chokePointVectorLength);
-		secondVectorRotLeft.setToLength(this.chokePointVectorLength);
-		secondVectorRotRight.setToLength(this.chokePointVectorLength);
-
-		// Rotate the Vectors in the different directions (2x90° left and
-		// right).
-		firstVectorRotLeft.rotateLeftDEG(this.chokePointVectorRotation);
-		firstVectorRotRight.rotateRightDEG(this.chokePointVectorRotation);
-		secondVectorRotLeft.rotateLeftDEG(this.chokePointVectorRotation);
-		secondVectorRotRight.rotateRightDEG(this.chokePointVectorRotation);
-
-		// Combine the end Positions of the Vectors to a Polygon.
-		vertices.add(new Point(firstVectorRotLeft.getX() + (int) (firstVectorRotLeft.getDirX()),
-				firstVectorRotLeft.getY() + (int) (firstVectorRotLeft.getDirY()), Point.Type.POSITION));
-		vertices.add(new Point(firstVectorRotRight.getX() + (int) (firstVectorRotRight.getDirX()),
-				firstVectorRotRight.getY() + (int) (firstVectorRotRight.getDirY()), Point.Type.POSITION));
-		vertices.add(new Point(secondVectorRotLeft.getX() + (int) (secondVectorRotLeft.getDirX()),
-				secondVectorRotLeft.getY() + (int) (secondVectorRotLeft.getDirY()), Point.Type.POSITION));
-		vertices.add(new Point(secondVectorRotRight.getX() + (int) (secondVectorRotRight.getDirX()),
-				secondVectorRotRight.getY() + (int) (secondVectorRotRight.getDirY()), Point.Type.POSITION));
-
-		return new Polygon(vertices);
-	}
+	// TODO: UML REMOVE
+//	private Polygon generatePolygonAtChokePoint(Chokepoint chokePoint) {
 
 	// ------------------------------ Getter / Setter
 
