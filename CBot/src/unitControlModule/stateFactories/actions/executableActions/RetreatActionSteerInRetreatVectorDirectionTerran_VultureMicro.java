@@ -34,10 +34,15 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 	private int lastExecutionTimeStampPatrol = 0;
 	private boolean issuedPatrolCommand = false;
 	private int turnAngle = 15;
+	// TODO: UML ADD
+	// The frames that the default retreat behavior is used between iterations
+	// of this Action.
+	private int minDefaultBehaviorFramesBetweenIterations = 32;
 
+	// TODO: UML REMOVE
 	// The distance that the enemy must be away from the executing Unit before
 	// the patrol command is issued.
-	private int minEnemyDistance = 48;
+	// private int minEnemyDistance = 48;
 
 	// The additional range that is added towards the executing Unit's range.
 	// The lower this value the less Unit's can be targeted by this action. This
@@ -59,6 +64,7 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
+		int frameCount = Core.getInstance().getGame().getFrameCount();
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
 		boolean success = true;
 
@@ -79,18 +85,23 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 			this.actionChangeTrigger = true;
 			success &= super.performSpecificAction(goapUnit);
 
-			// Move back into range if necessary.
-			if (playerUnit.getUnit().getDistance((Unit) this.target) >= playerUnit.getUnit().getType().groundWeapon()
-					.maxRange()) {
-				this.currentMircoState = MicroState.MOVE_INTO_RANGE;
-			}
-			// A patrol command has to be executed for the micro to have an
-			// effect.
-			else if (playerUnit.getUnit().getDistance((Unit) this.target) >= this.minEnemyDistance
-					&& Core.getInstance().getGame().getFrameCount()
-							- this.lastExecutionTimeStampRetreat >= this.minFramesToWaitRetreat) {
-				this.currentMircoState = MicroState.PATROL;
-				this.lastExecutionTimeStampRetreat = Core.getInstance().getGame().getFrameCount();
+			// The Unit must proceed with the default behavior until a certain
+			// amount of time / frames has / have passed. This is due to prevent
+			// the Unit from permanently being near an enemy Unit since it is
+			// forced to move towards one if the enemy Unit is not in weapon
+			// range.
+			if (frameCount - this.lastExecutionTimeStampPatrol >= this.minDefaultBehaviorFramesBetweenIterations) {
+				// Move back into range if necessary.
+				if (!playerUnit.getUnit().isInWeaponRange((Unit) this.target)) {
+					this.currentMircoState = MicroState.MOVE_INTO_RANGE;
+				}
+				// A patrol command has to be executed for the micro to have an
+				// effect.
+				else if (playerUnit.getUnit().isInWeaponRange((Unit) this.target)
+						&& frameCount - this.lastExecutionTimeStampRetreat >= this.minFramesToWaitRetreat) {
+					this.currentMircoState = MicroState.PATROL;
+					this.lastExecutionTimeStampRetreat = frameCount;
+				}
 			}
 		}
 
@@ -103,14 +114,13 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 						vecToEnemy.getY() + (int) (vecToEnemy.getDirY()));
 				success &= playerUnit.getUnit().patrol(patrolPosition);
 
-				this.lastExecutionTimeStampPatrol = Core.getInstance().getGame().getFrameCount();
+				this.lastExecutionTimeStampPatrol = frameCount;
 				this.issuedPatrolCommand = true;
 			}
 
 			// After a short while (The Unit must / should have attacked by now)
 			// proceed with the execution of the superclass' implementation.
-			if (Core.getInstance().getGame().getFrameCount()
-					- this.lastExecutionTimeStampPatrol >= this.minFramesToWaitPatrol) {
+			if (frameCount - this.lastExecutionTimeStampPatrol >= this.minFramesToWaitPatrol) {
 				this.currentMircoState = MicroState.RETREAT;
 				this.issuedPatrolCommand = false;
 			}
@@ -126,7 +136,7 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 
 		// Make sure only Units with a smaller range are considered for microing
 		// against!
-		if (this.target != null) {
+		if (this.target != null && !((Unit) this.target).getType().isBuilding()) {
 			matchingUnitTargeted = ((Unit) this.target).getType().groundWeapon()
 					.maxRange() < ((PlayerUnit) goapUnit).getUnit().getType().groundWeapon().maxRange()
 							+ this.rangeOffset;
