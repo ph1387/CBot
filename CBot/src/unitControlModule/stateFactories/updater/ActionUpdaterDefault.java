@@ -1,8 +1,6 @@
 package unitControlModule.stateFactories.updater;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import bwapi.Position;
 import bwapi.TilePosition;
@@ -99,14 +97,9 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null) {
 			closestUnitTilePosition = this.playerUnit.getAttackableEnemyUnitToReactTo().getTilePosition();
 		}
-		// Or it just moves to the nearest one it knows of.
+		// Or it just moves to the nearest building it knows of.
 		else {
-			List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>(
-					this.playerUnit.getInformationStorage().getTrackerInfo().getEnemyUnits());
-			enemyUnits.addAll(this.playerUnit.getInformationStorage().getTrackerInfo().getEnemyBuildings());
-
-			// Find the closest unit of the known ones
-			for (EnemyUnit unit : enemyUnits) {
+			for (EnemyUnit unit : this.playerUnit.getInformationStorage().getTrackerInfo().getEnemyBuildings()) {
 				if (closestUnitTilePosition == null || this.playerUnit.getUnit()
 						.getDistance(unit.getLastSeenTilePosition().toPosition()) < this.playerUnit.getUnit()
 								.getDistance(closestUnitTilePosition.toPosition())) {
@@ -123,7 +116,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 	 * special function is needed to handle these cases.
 	 */
 	protected void baselocationScoutingConfiguration() {
-		this.scoutBaseLocationAction.setTarget(findClosestReachableBasePosition());
+		 this.scoutBaseLocationAction.setTarget(findClosestReachableBasePosition());
 	}
 
 	/**
