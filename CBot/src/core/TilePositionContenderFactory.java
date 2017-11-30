@@ -7,6 +7,7 @@ import bwapi.Game;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwta.BWTA;
+import bwta.BaseLocation;
 
 /**
  * TilePositionContenderGenerator.java --- Class for generating the default
@@ -21,6 +22,8 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 	private int contendedTileRangeBorder = 1;
 	private int contendedTileRangeMinerals = 3;
 	private int contendedTileRangeGeysers = 3;
+	// TODO: UML ADD
+	private int contendedTileRangeBaseLocations = 3;
 
 	public TilePositionContenderFactory() {
 
@@ -44,6 +47,7 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 		this.contendTilePositionsAroundMinerals(defaultContendedTilePositions, startingMinerals);
 		this.contendTilePositionsAroundGeysers(defaultContendedTilePositions, startingGeysers);
 		this.contendTilePositionsAtMapEdges(defaultContendedTilePositions);
+		this.contendTilePositionsAtBaseLocations(defaultContendedTilePositions);
 
 		// TODO: DEBUG INFO
 		System.out.println("Total default contended TilePositions: " + defaultContendedTilePositions.size());
@@ -164,4 +168,28 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 			}
 		}
 	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for contending all TilePositions on each BaseLocation on the
+	 * map.
+	 * 
+	 * @param designatedHashSet
+	 *            the HashSet in which the TilePositions are going to be stored.
+	 */
+	private void contendTilePositionsAtBaseLocations(HashSet<TilePosition> designatedHashSet) {
+		for (BaseLocation baseLocation : BWTA.getBaseLocations()) {
+			TilePosition baseLocationTilePosition = baseLocation.getTilePosition();
+
+			for (int i = -this.contendedTileRangeBaseLocations; i <= this.contendedTileRangeBaseLocations; i++) {
+				for (int j = -this.contendedTileRangeBaseLocations; j <= this.contendedTileRangeBaseLocations; j++) {
+					TilePosition currentReservedTilePosition = new TilePosition(baseLocationTilePosition.getX() + i,
+							baseLocationTilePosition.getY() + j);
+
+					designatedHashSet.add(currentReservedTilePosition);
+				}
+			}
+		}
+	}
+
 }
