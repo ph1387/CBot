@@ -19,6 +19,7 @@ import bwapi.TechType;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
+import core.CBot;
 import core.Core;
 import informationStorage.InformationStorage;
 
@@ -91,32 +92,55 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 					.getActionFromInstance(ActionQueueSimulationResults.class);
 		}
 		if (this.actionTypes == null && this.scoringActions == null) {
-			// Get all the Types plus their amount that are currently produced
-			// and inside the action Queue. Used to prevent i.e. building two
-			// centers.
-			this.simulationQueueResultActionTypes = this.extractAllProducedTypes();
-
-			// Also extract the types that are currently inside the
-			// InformationStorage Queues:
-			this.informationStorageQueuesActionTypes = this.extractAllForwardedTypes();
-
-			this.actionTypes = this.generateAllAvailableActionTypes(this.buildActionManager);
-			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
+			this.updateActionTypesAndScoringActions();
 		}
 
 		this.updateSimulationStarter(manager);
 	}
 
+	// TODO: UML ADD
 	/**
-	 * Function for extracting all currently produces Types (TypeWrappers) from
-	 * the action Queue.
+	 * Function for updating the {@link #actionTypes} and the
+	 * {@link #scoringActions} as the latter depend on the former ones. This
+	 * function first extracts all information from the different Queues
+	 * (training, building, etc.) (->
+	 * {@link #informationStorageQueuesActionTypes}) as well as the previous
+	 * simulation results (-> {@link #simulationQueueResultActionTypes}). Then
+	 * the {@link #generateAllAvailableActionTypes(BuildActionManager)} function
+	 * is called from the implementing subclass. The order must be kept due to
+	 * the latter one depending on the different Queue results since some
+	 * actions must not be taken whilst another one is already queued (I.e.: It
+	 * is not advised / allowed for to center buildings to be queued together in
+	 * order to prevent errors).
+	 */
+	private void updateActionTypesAndScoringActions() {
+		// Get all the Types plus their amount that are currently inside the
+		// action Queue (Result of a simulation). Used to prevent i.e. building
+		// two centers.
+		this.simulationQueueResultActionTypes = this.extractAllSimulationResultActions();
+
+		// Also extract the types that are currently inside the
+		// InformationStorage Queues:
+		this.informationStorageQueuesActionTypes = this.extractAllForwardedTypes();
+
+		this.actionTypes = this.generateAllAvailableActionTypes(this.buildActionManager);
+		this.scoringActions = this.transformAvailableActionsIntoScoringActions();
+	}
+
+	// TODO: UML RENAME extractAllProducedTypes
+	/**
+	 * Function for extracting all {@link TypeWrapper}s from the
+	 * {@link #actionQueueSimulationResults}. These actions represent the
+	 * results of the previous simulation that are still stored but not yet
+	 * forwarded to the UnitControlModule / queued inside the training- /
+	 * building- / addon- / research- / upgrade-Queue.
 	 * 
 	 * @return a HashMap containing all TypeWrappers that are produced in the
 	 *         action Queue of the actionQueueSimulationResults action. </br>
 	 *         Key: The produced TypeWrapper.</br>
 	 *         Value: The number of times it was found inside the action Queue.
 	 */
-	protected HashMap<TypeWrapper, Integer> extractAllProducedTypes() {
+	protected HashMap<TypeWrapper, Integer> extractAllSimulationResultActions() {
 		HashMap<TypeWrapper, Integer> usedActionTypes = new HashMap<TypeWrapper, Integer>();
 
 		if (this.actionQueueSimulationResults != null) {
@@ -141,6 +165,10 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	protected HashMap<TypeWrapper, Integer> extractAllForwardedTypes() {
 		HashMap<TypeWrapper, Integer> forwardedActionTypes = new HashMap<TypeWrapper, Integer>();
 
+		// Building Queue:
+		for (UnitType unitType : CBot.getInstance().getWorkerManagerConstructionJobDistribution().getBuildingQueue()) {
+			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(unitType));
+		}
 		// Training Queue:
 		for (UnitType unitType : this.buildActionManager.getInformationStorage().getTrainingQueue()) {
 			addToTypeWrapperHashMap(forwardedActionTypes, TypeWrapper.generateFrom(unitType));
@@ -161,16 +189,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		return forwardedActionTypes;
 	}
 
-	/**
-	 * Function for generating all the available ActionTypes that will be used
-	 * inside the different simulations.
-	 * 
-	 * @param buildActionManager
-	 *            the manager whose actions are being extracted.
-	 * @return a HashSet containing all available ActionTypes for simulations.
-	 */
-	protected abstract HashSet<ActionType> generateAllAvailableActionTypes(BuildActionManager buildActionManager);
-
+	// TODO: UML ORDER UP
 	/**
 	 * Function for adding a TypeWrapper to a HashMap. If the HashMap does not
 	 * contain any previous instance of the TypeWrapper, instantiate it with 1.
@@ -189,6 +208,16 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			hashMap.put(wrapper, 1);
 		}
 	}
+
+	/**
+	 * Function for generating all the available ActionTypes that will be used
+	 * inside the different simulations.
+	 * 
+	 * @param buildActionManager
+	 *            the manager whose actions are being extracted.
+	 * @return a HashSet containing all available ActionTypes for simulations.
+	 */
+	protected abstract HashSet<ActionType> generateAllAvailableActionTypes(BuildActionManager buildActionManager);
 
 	/**
 	 * Function for transforming the available actions into ScoringActions that
@@ -242,41 +271,8 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 			}
 		}
 
-		// Check if the index of the action Queue is nearly at the end of the
-		// Queue. If it is, start a new simulation.
 		if (this.isActionQueueNearlyFinished()) {
-			ArrayList<ManagerBaseAction> transformedResult = new ArrayList<>();
-
-			// Extract all currently relevant information.
-			int currentFrameTimeStamp = Core.getInstance().getGame().getFrameCount();
-			int currentMinerals = Core.getInstance().getPlayer().minerals()
-					- manager.getInformationStorage().getResourceReserver().getReservedMinerals();
-			int currentGas = Core.getInstance().getPlayer().gas()
-					- manager.getInformationStorage().getResourceReserver().getReservedGas();
-			UnitType workerUnitType = Core.getInstance().getPlayer().getRace().getWorker();
-			List<Unit> units = Core.getInstance().getPlayer().getUnits();
-
-			// Update the score of all actions being used in the simulation.
-			this.actionTypes = this.generateAllAvailableActionTypes(manager);
-			this.scoringActions = this.transformAvailableActionsIntoScoringActions();
-			this.scoringDirector.update(this.scoringActions, manager);
-
-			// TODO: DEBUG INFO
-			long start = System.nanoTime();
-
-			// Transform the ActionTypes back into ManagerBaseActions.
-			for (ActionType actionType : this.simulationActionStarter.runStarter(this.actionTypes, units,
-					currentMinerals, currentGas, workerUnitType, currentFrameTimeStamp)) {
-				transformedResult.add((ManagerBaseAction) actionType);
-			}
-
-			// Forward the transformed ActionTypes towards the Action itself.
-			this.actionQueueSimulationResults.addToActionQueue(transformedResult);
-			this.lastSimulationTimeStampFrames = currentFrameTimeStamp;
-
-			// TODO: DEBUG INFO
-			System.out.println(
-					"Simulation + forwarding time: " + ((double) (System.nanoTime() - start) / 1000000) + "ms\n");
+			this.performNextSimulation(manager);
 		}
 	}
 
@@ -291,6 +287,60 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		// The index must nearly be at the end for the function to return true.
 		return this.actionQueueSimulationResults.getActionQueue().size()
 				- this.actionQueueSimulationResults.getIndex() <= this.maxActionQueueIndexOffsetTilEnd;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for performing another / the next simulation iteration. This
+	 * function updates the {@link #actionTypes} as well as the
+	 * {@link #scoringActions} with the internal
+	 * {@link #updateActionTypesAndScoringActions()} function. Afterwards
+	 * another simulation is run.
+	 * 
+	 * @param manager
+	 *            the BuildActionManager whose properties / Actions are going to
+	 *            be updated and which is used to access the
+	 *            {@link InformationStorage} instance.
+	 */
+	private void performNextSimulation(BuildActionManager manager) {
+		ArrayList<ManagerBaseAction> transformedResult = new ArrayList<>();
+
+		// Extract all currently relevant information.
+		int currentFrameTimeStamp = Core.getInstance().getGame().getFrameCount();
+		int currentMinerals = Core.getInstance().getPlayer().minerals()
+				- manager.getInformationStorage().getResourceReserver().getReservedMinerals();
+		int currentGas = Core.getInstance().getPlayer().gas()
+				- manager.getInformationStorage().getResourceReserver().getReservedGas();
+		UnitType workerUnitType = Core.getInstance().getPlayer().getRace().getWorker();
+		List<Unit> units = Core.getInstance().getPlayer().getUnits();
+
+		// Needed since the different Queues must be checked for i.e. duplicates
+		// before running another simulation.
+		this.updateActionTypesAndScoringActions();
+
+		// Update the scores of the different actions AFTER they were updated!
+		// This is due to some actions getting disabled due to i.e. duplicates
+		// in some Queue.
+		this.scoringDirector.update(this.scoringActions, manager);
+
+		// TODO: DEBUG INFO
+		long start = System.nanoTime();
+
+		// The results of the simulation must be converted back into
+		// ManagerBaseActions for them to be executable.
+		List<ActionType> simulationResult = this.simulationActionStarter.runStarter(this.actionTypes, units,
+				currentMinerals, currentGas, workerUnitType, currentFrameTimeStamp);
+		for (ActionType actionType : simulationResult) {
+			transformedResult.add((ManagerBaseAction) actionType);
+		}
+
+		// Forward the transformed ActionTypes towards the Action itself.
+		this.actionQueueSimulationResults.addToActionQueue(transformedResult);
+		this.lastSimulationTimeStampFrames = currentFrameTimeStamp;
+
+		// TODO: DEBUG INFO
+		System.out
+				.println("Simulation + forwarding time: " + ((double) (System.nanoTime() - start) / 1000000) + "ms\n");
 	}
 
 	// -------------------- Specific tests
@@ -340,7 +390,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	// TODO: UML ADD
 	// TODO: UML CHANGE VISIBILITY
 	/**
-	 * Function for determining if a technology can be researched or not. The
+	 * Function for determining if a upgrade can be performed or not. The
 	 * provided ActionType <b>must</b> result in a UpgradeType. If this is not
 	 * the case, the function will fail. The function tests if the Player has
 	 * not yet reached the maximum upgrade level of the resulting UpgradeType of
@@ -405,8 +455,8 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for testing if the provided {@link ActionType} is going to be
-	 * forwarded or is currently in one of the executing / waiting Queues of the
-	 * Bot. These include i.e. the upgrade, training, research or addon Queue.
+	 * forwarded or is currently in one of the waiting Queues of the Bot. These
+	 * include the building, upgrade, training, research or addon Queue.
 	 * 
 	 * @param actionType
 	 *            the {@link ActionType} (Resulting in a TechType) that is going

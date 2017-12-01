@@ -34,8 +34,16 @@ public abstract class UpgradeBaseAction extends ManagerBaseActionPreconditionExt
 
 		@Override
 		public boolean check(UnitType unitType) {
-			boolean maxUpgradeLevelNotReached = Core.getInstance().getPlayer()
-					.getUpgradeLevel(this.actionReference.type) < Core.getInstance().getPlayer()
+			// The level must be adjusted if the Player is currently upgrading
+			// it. Otherwise maxLevel+1 would be possible!
+			int levelAddition = 0;
+
+			if (Core.getInstance().getPlayer().isUpgrading(this.actionReference.type)) {
+				levelAddition = 1;
+			}
+			
+			boolean maxUpgradeLevelNotReached = (Core.getInstance().getPlayer()
+					.getUpgradeLevel(this.actionReference.type) + levelAddition) < Core.getInstance().getPlayer()
 							.getMaxUpgradeLevel(this.actionReference.type);
 
 			return unitType.upgradesWhat().contains(this.actionReference.type) && maxUpgradeLevelNotReached;
