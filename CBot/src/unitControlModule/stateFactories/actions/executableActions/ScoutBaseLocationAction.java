@@ -62,8 +62,8 @@ public class ScoutBaseLocationAction extends BaseAction {
 		}
 
 		if (this.targetPosition != null && executeMove) {
-			((PlayerUnit) goapUnit).getUnit().move(this.targetPosition);
-		} else {
+			success &= ((PlayerUnit) goapUnit).getUnit().move(this.targetPosition);
+		} else if (this.targetPosition == null) {
 			success = false;
 		}
 
