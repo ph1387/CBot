@@ -47,8 +47,12 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return this.targetPosition != null && ((PlayerUnit) goapUnit)
+		boolean targetPositionChosen = this.targetPosition != null;
+		boolean isNearTargetPosition = targetPositionChosen && ((PlayerUnit) goapUnit)
 				.isNearTilePosition(((Position) this.targetPosition).toTilePosition(), RANGE_TO_TARGET);
+		boolean enemyKnown = ((PlayerUnit) goapUnit).currentState == PlayerUnit.UnitStates.ENEMY_KNOWN;
+
+		return targetPositionChosen && (isNearTargetPosition || enemyKnown);
 	}
 
 	@Override
