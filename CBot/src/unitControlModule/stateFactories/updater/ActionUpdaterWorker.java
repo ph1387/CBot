@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.updater;
 
+import bwapi.TilePosition;
 import unitControlModule.stateFactories.actions.AvailableActionsWorker;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.MoveToNearestCenterAction;
@@ -20,7 +21,7 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 	private UnloadMineralsAction unloadMineralsAction;
 	private UnloadGasAction unloadGasAction;
 	// TODO: UML REMOVE
-//	private ScoutBaseLocationWorkerAction scoutBaseLocationWorkerAction;
+	// private ScoutBaseLocationWorkerAction scoutBaseLocationWorkerAction;
 	private MoveToNearestCenterAction moveToNearestCenterAction;
 
 	public ActionUpdaterWorker(PlayerUnit playerUnit) {
@@ -54,14 +55,27 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 		this.moveToNearestCenterAction = ((MoveToNearestCenterAction) this
 				.getActionFromInstance(MoveToNearestCenterAction.class));
 	}
-	
+
 	// TODO: UML ADD
 	@Override
 	protected BaseAction initScoutBaseLocationActionInstance() {
 		return ((ScoutBaseLocationWorkerAction) this.getActionFromInstance(ScoutBaseLocationWorkerAction.class));
 	}
 
+	// TODO: UML ADD
+	@Override
+	protected TilePosition attackMoveToNearestKnownUnitConfiguration() {
+		TilePosition returnTilePosition = null;
+
+		// No buildings are attacked like in the superclass.
+		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null) {
+			returnTilePosition = this.playerUnit.getAttackableEnemyUnitToReactTo().getTilePosition();
+		}
+		
+		return returnTilePosition;
+	}
+
 	// TODO: UML REMOVE
-//	protected void baselocationScoutingConfiguration() {
+	// protected void baselocationScoutingConfiguration() {
 
 }

@@ -21,6 +21,10 @@ public class WorkerConfiguration {
 	// Key: Worker repairing.
 	// Value: Unit / Building that is being repaired.
 	private UnitMapper unitMapperRepair = new UnitMapper();
+	// TODO: UML ADD
+	// Key: Worker attacking
+	// Value: (Enemy) Unit
+	private UnitMapper unitMapperAttack = new UnitMapper();
 
 	public WorkerConfiguration() {
 
@@ -72,6 +76,11 @@ public class WorkerConfiguration {
 
 	public UnitMapper getUnitMapperRepair() {
 		return unitMapperRepair;
+	}
+
+	// TODO: UML ADD
+	public UnitMapper getUnitMapperAttack() {
+		return unitMapperAttack;
 	}
 
 }

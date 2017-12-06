@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.updater;
 
 import bwapi.TilePosition;
+import bwapi.Unit;
 import unitControlModule.stateFactories.actions.AvailableActionsDefault;
 import unitControlModule.stateFactories.actions.executableActions.AttackMoveAction;
 import unitControlModule.stateFactories.actions.executableActions.AttackUnitAction;
@@ -39,7 +40,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		if (this.playerUnit.currentState == PlayerUnit.UnitStates.ENEMY_KNOWN) {
 			this.attackMoveAction.setTarget(this.attackMoveToNearestKnownUnitConfiguration());
 
-			this.attackUnitAction.setTarget(this.playerUnit.getAttackableEnemyUnitToReactTo());
+			this.attackUnitAction.setTarget(this.attackUnitActionConfiguration());
 		}
 	}
 
@@ -101,6 +102,14 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 			}
 		}
 		return closestUnitTilePosition;
+	}
+	
+	// TODO: UML ADD
+	/**
+	 * Function for the unit to configure its AttackUnitAction.
+	 */
+	protected Unit attackUnitActionConfiguration() {
+		return this.playerUnit.getAttackableEnemyUnitToReactTo();
 	}
 
 	// TODO: UML REMOVE

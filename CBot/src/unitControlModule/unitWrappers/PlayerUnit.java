@@ -382,6 +382,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		}
 	}
 
+	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for generating / finding the Unit that this one has to react to
 	 * when taking any offensive actions. The Unit has to chose between
@@ -390,7 +391,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * @return the Unit that this one should react to when taking offensive
 	 *         actions.
 	 */
-	private Unit generateAttackableEnemyUnitToReactTo() {
+	protected Unit generateAttackableEnemyUnitToReactTo() {
 		Unit unitToReactTo = null;
 
 		// Prioritize the special Units above all other Units: In weapon range.
