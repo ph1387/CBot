@@ -56,9 +56,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	// The special UnitTypes that the Unit is looking out for and prioritizes in
 	// its target choosing. These are mostly sentry turrets and static buildings
 	// that can attack Units.
-	protected List<UnitType> specialUnitTypes = Arrays.asList(
-			new UnitType[] { UnitType.Terran_Bunker, UnitType.Terran_Missile_Turret, UnitType.Protoss_Photon_Cannon,
-					UnitType.Zerg_Creep_Colony, UnitType.Zerg_Spore_Colony, UnitType.Zerg_Sunken_Colony, });
+	protected List<UnitType> specialUnitTypes = Arrays.asList(new UnitType[] { UnitType.Terran_Bunker,
+			UnitType.Terran_Missile_Turret, UnitType.Protoss_Photon_Cannon, UnitType.Zerg_Creep_Colony,
+			UnitType.Zerg_Spore_Colony, UnitType.Zerg_Sunken_Colony, UnitType.Terran_Medic });
 	// The closest enemy Unit this one can attack:
 	protected Unit closestAttackableEnemyUnitInConfidenceRange;
 	protected Unit closestAttackableEnemyUnitWithWeapon;
@@ -342,7 +342,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 				closestAttackableEnemyUnitInConfidenceRangeAssigned = true;
 			}
 			if (!closestAttackableEnemySpecialUnitInConfidenceRangeAssigned
-					&& specialUnitTypes.contains(currentUnit.getType()) && this.canAttack(currentUnit)) {
+					&& this.specialUnitTypes.contains(currentUnit.getType()) && this.canAttack(currentUnit)) {
 				this.closestAttackableEnemySpecialUnitInConfidenceRange = currentUnit;
 				closestAttackableEnemySpecialUnitInConfidenceRangeAssigned = true;
 			}
