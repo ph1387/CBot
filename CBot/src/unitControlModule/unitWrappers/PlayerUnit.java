@@ -758,16 +758,14 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return closestUnit;
 	}
 
+	// TODO: UML CHANGE TO ABSTRACT
 	/**
 	 * Function for retrieving a HashSet of all units in weapon range, both on
 	 * the ground and in the air.
 	 * 
 	 * @return a HashSet of all enemy units in the weapon range of this unit.
 	 */
-	public HashSet<Unit> getAllEnemyUnitsInWeaponRange() {
-		return this.getAllEnemyUnitsInRange(
-				Math.max(this.unit.getType().groundWeapon().maxRange(), this.unit.getType().airWeapon().maxRange()));
-	}
+	public abstract HashSet<Unit> getAllEnemyUnitsInWeaponRange();
 
 	/**
 	 * Function for retrieving a HashSet of all enemy Units in the confidence

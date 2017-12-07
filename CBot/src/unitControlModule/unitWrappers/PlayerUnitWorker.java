@@ -1,5 +1,7 @@
 package unitControlModule.unitWrappers;
 
+import java.util.HashSet;
+
 import bwapi.Position;
 import bwapi.Unit;
 import core.CBot;
@@ -196,6 +198,22 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		}
 
 		return returnUnit;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public HashSet<Unit> getAllEnemyUnitsInWeaponRange() {
+		HashSet<Unit> returnedHashSet;
+
+		// A mapped enemy Unit should be targeted at all cost to ensure that the
+		// worker keeps following / attacking it.
+		if (this.mappedAttackableTargetUnit != null) {
+			returnedHashSet = new HashSet<>();
+			returnedHashSet.add(this.mappedAttackableTargetUnit);
+		} else {
+			returnedHashSet = super.getAllEnemyUnitsInWeaponRange();
+		}
+		return returnedHashSet;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package unitControlModule.unitWrappers;
 
+import java.util.HashSet;
+
 import bwapi.Pair;
 import bwapi.Unit;
 import informationStorage.InformationStorage;
@@ -37,6 +39,13 @@ public abstract class PlayerUnitTypeRanged extends PlayerUnit {
 		}
 
 		return generatedConfidence;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public HashSet<Unit> getAllEnemyUnitsInWeaponRange() {
+		return this.getAllEnemyUnitsInRange(
+				Math.max(this.unit.getType().groundWeapon().maxRange(), this.unit.getType().airWeapon().maxRange()));
 	}
 
 	// ------------------------------ Getter / Setter

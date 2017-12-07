@@ -1,7 +1,10 @@
 package unitControlModule.unitWrappers;
 
+import java.util.HashSet;
+
 import bwapi.Pair;
 import bwapi.Unit;
+import core.Core;
 import informationStorage.InformationStorage;
 
 /**
@@ -13,6 +16,13 @@ import informationStorage.InformationStorage;
  *
  */
 public abstract class PlayerUnitTypeMelee extends PlayerUnit {
+
+	// The additional TileRange to the Unit's weapon range that enemy Units are
+	// still counted towards the ones being inside the executing Unit's range.
+	// TODO: UML ADD
+	private int additionalTileRange = 2;
+	// TODO: UML ADD
+	private int additionalRange = Core.getInstance().getTileSize() * this.additionalTileRange;
 
 	public PlayerUnitTypeMelee(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
@@ -37,6 +47,12 @@ public abstract class PlayerUnitTypeMelee extends PlayerUnit {
 		}
 
 		return generatedConfidence;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public HashSet<Unit> getAllEnemyUnitsInWeaponRange() {
+		return this.getAllEnemyUnitsInRange(this.unit.getType().groundWeapon().maxRange() + this.additionalRange);
 	}
 
 	// ------------------------------ Getter / Setter
