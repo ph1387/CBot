@@ -13,7 +13,7 @@ import javaGOAP.GoapState;
 public class UnitGoalStateTerran_SCV extends UnitGoalStateWorker {
 
 	public UnitGoalStateTerran_SCV() {
-		this.add(new GoapState(6, "repairing", true));
+		this.add(new GoapState(7, "repairing", true));
 		this.add(new GoapState(1, "isNearRepairableUnit", true));
 	}
 

@@ -24,12 +24,14 @@ public class GoalStateUpdaterTerran_SCV extends GoalStateUpdaterWorker {
 		super.update(playerUnit);
 
 		// Workers designated as combat repairers must follow machine Units in
-		// the first
-		// place.
+		// the first place and not i.e. attack enemy Units.
 		if (((PlayerUnitTerran_SCV) playerUnit).isCombatEngineer()) {
-			this.changeGoalStateImportance("isNearRepairableUnit", 5);
+			this.changeGoalStateImportance("isNearRepairableUnit", 6);
+			this.changeGoalStateImportance("destroyUnit", 5);
 		} else {
 			this.changeGoalStateImportance("isNearRepairableUnit", 1);
+			// Do NOT change the destroyUnit importance here since it would
+			// override any value set in the superclass!
 		}
 	}
 
