@@ -104,6 +104,18 @@ public class UnitTrackerModule {
 	// range.
 	private HashMap<Integer, Double> generatedDividers = new HashMap<>();
 
+	// All information needed for the correct representation of a Terran_Bunker.
+	// These are needed due to the Player not having access to the actual number
+	// and type of Units inside the Bunker:
+	// TODO: UML ADD
+	private UnitType terranUnitTypeInBunker = UnitType.Terran_Marine;
+	// TODO: UML ADD
+	// Should be <= 4 since only up to four Units can fit inside the Bunker
+	// itself.
+	private int numberOfTerranUnitsInBunker = 4;
+	// TODO: UML ADD
+	private double healthMultiplierOfTerranUnitsInBunker = 1.;
+
 	public UnitTrackerModule(InformationStorage informationStorage) {
 		this.informationStorage = informationStorage;
 	}
@@ -520,6 +532,33 @@ public class UnitTrackerModule {
 		if (enemyIsKnownOf && this.supportUnitTypes.contains(enemyUnit.getUnitType())) {
 			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemySupport,
 					this.generateSupportGenerationInformation(unitHealthMultiplier));
+		}
+
+		// Simulate the existence of (up to 4) Terran Units which are inside a
+		// Terran_Bunker. This is due to the Player not having access to the
+		// actual number and type of Units that are / could be inside the
+		// building.
+		if (enemyIsKnownOf && enemyUnit.getUnitType() == UnitType.Terran_Bunker) {
+			// Enemy Health (Bunker itself):
+			this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyHealth,
+					this.generateHealthGenerationInformation(this.terranUnitTypeInBunker, unitHealthMultiplier));
+
+			for (int i = 0; i < this.numberOfTerranUnitsInBunker; i++) {
+				// Enemy Air (Unit in Bunker):
+				this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyAir,
+						this.generateAttackGenerationInformation(this.terranUnitTypeInBunker.airWeapon(),
+								this.healthMultiplierOfTerranUnitsInBunker));
+
+				// Enemy Ground (Unit in Bunker):
+				this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyGround,
+						this.generateAttackGenerationInformation(this.terranUnitTypeInBunker.groundWeapon(),
+								this.healthMultiplierOfTerranUnitsInBunker));
+
+				// Enemy Health (Unit in Bunker):
+				this.addValueInAreaToTilePositionValue(enemyUnit.getLastSeenTilePosition(), enemyHealth,
+						this.generateHealthGenerationInformation(this.terranUnitTypeInBunker,
+								this.healthMultiplierOfTerranUnitsInBunker));
+			}
 		}
 	}
 
