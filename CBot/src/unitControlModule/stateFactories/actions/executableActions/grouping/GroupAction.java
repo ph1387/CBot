@@ -52,7 +52,11 @@ public class GroupAction {
 		// Perform the action of the leader for each registered member. The
 		// leader does NOT perform the action himself. Only the other members of
 		// the group do that!
-		for (IGoapUnit goapUnit : members) {
+		// Iterated without a Iterator as well as from behind since it is
+		// possible that certain members of the group leave.
+		for (int i = this.members.size() - 1; i >= 0; i--) {
+			IGoapUnit goapUnit = this.members.get(i);
+
 			if (goapUnit != this.getLeader() && !this.actions.get(0).performGrouped(this.getLeader(), goapUnit)) {
 				success = false;
 			}
