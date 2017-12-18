@@ -41,6 +41,11 @@ public class InformationStorage {
 	// Storage class for Terran_Science_Vessel follow actions.
 	private ScienceVesselStorage scienceVesselStorage;
 
+	// TODO: UML ADD
+	// Storage class for Terran_SiegeTanks due to them morphing into sieged
+	// versions of themselves.
+	private SiegeTankStorage siegeTankStorage;
+
 	// Tracking information.
 	private UnitTrackerInformation trackerInfo;
 
@@ -49,7 +54,7 @@ public class InformationStorage {
 
 	// Information regarding the Player and the current state of the game.
 	private CurrentGameInformation currentGameInformation;
-	
+
 	// TODO: UML ADD
 	// Shared information between all BaseAction (And subclass) instances.
 	private BaseActionSharedInformation baseActionSharedInformation;
@@ -64,11 +69,13 @@ public class InformationStorage {
 
 	// TODO: UML CHANGE PARAMS
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
-			ScienceVesselStorage scienceVesselStorage, UnitTrackerInformation trackerInfo, MapInformation mapInfo,
-			CurrentGameInformation currentGameInformation, BaseActionSharedInformation baseActionSharedInformation) {
+			ScienceVesselStorage scienceVesselStorage, SiegeTankStorage siegeTankStorage,
+			UnitTrackerInformation trackerInfo, MapInformation mapInfo, CurrentGameInformation currentGameInformation,
+			BaseActionSharedInformation baseActionSharedInformation) {
 		this.resourceReserver = resourceReserver;
 		this.workerConfig = workerConfig;
 		this.scienceVesselStorage = scienceVesselStorage;
+		this.siegeTankStorage = siegeTankStorage;
 		this.trackerInfo = trackerInfo;
 		this.mapInfo = mapInfo;
 		this.currentGameInformation = currentGameInformation;
@@ -85,8 +92,9 @@ public class InformationStorage {
 	}
 
 	public InformationStorage() {
-		this(new ResourceReserver(), new WorkerConfiguration(), new ScienceVesselStorage(),
-				new UnitTrackerInformation(), new MapInformation(), new CurrentGameInformation(), new BaseActionSharedInformation());
+		this(new ResourceReserver(), new WorkerConfiguration(), new ScienceVesselStorage(), new SiegeTankStorage(),
+				new UnitTrackerInformation(), new MapInformation(), new CurrentGameInformation(),
+				new BaseActionSharedInformation());
 	}
 
 	// -------------------- Functions
@@ -125,6 +133,11 @@ public class InformationStorage {
 		return scienceVesselStorage;
 	}
 
+	// TODO: UML ADD
+	public SiegeTankStorage getSiegeTankStorage() {
+		return siegeTankStorage;
+	}
+
 	public UnitTrackerInformation getTrackerInfo() {
 		return trackerInfo;
 	}
@@ -136,7 +149,7 @@ public class InformationStorage {
 	public CurrentGameInformation getCurrentGameInformation() {
 		return currentGameInformation;
 	}
-	
+
 	// TODO: UML ADD
 	public BaseActionSharedInformation getBaseActionSharedInformation() {
 		return baseActionSharedInformation;

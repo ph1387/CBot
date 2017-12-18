@@ -100,6 +100,15 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
 	public PlayerUnitTerran_SiegeTank(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
+
+		// Make sure the Unit is not returning back to the grouping spot after
+		// (re-)morphing from a sieged Siege_Tank version. This is due to the
+		// instance of the PlaceUnitTerran_SiegeTank being destroyed and
+		// replaced by a sieged one. Therefore a flag at a shared storage is
+		// necessary. After reading the value make sure that this Unit is added
+		// to the collection of marked ones!
+		this.needsGrouping = !informationStorage.getSiegeTankStorage().wasAlreadyMarkedOnceAsGrouped(unit);
+		informationStorage.getSiegeTankStorage().markAsGrouped(unit);
 	}
 
 	// -------------------- Functions
