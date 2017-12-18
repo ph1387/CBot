@@ -29,6 +29,9 @@ public class WorldStateUpdaterDefault extends WorldStateUpdaterGeneral {
 
 		// Change the move world state accordingly.
 		this.changeWorldStateEffect("canMove", playerUnit.getUnit().canMove());
+
+		// Needs to be changed to ensure that the Units move together.
+		this.changeWorldStateEffect("needsGrouping", playerUnit.needsGrouping());
 	}
 
 }

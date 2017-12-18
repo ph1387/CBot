@@ -49,6 +49,9 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		this.informationStorage.getWorkerConfig().incrementTotalWorkerCount();
 		this.workerManagerResourceSpotAllocation = workerManagerResourceSpotAllocation;
 		this.workerManagerConstructionJobDistribution = workerManagerConstructionJobDistribution;
+
+		// Worker Units do NOT need to be grouped with combat Units.
+		this.needsGrouping = false;
 	}
 
 	// -------------------- Functions
@@ -71,6 +74,9 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		if (this.currentRangeState == PlayerUnit.ConfidenceRangeStates.NO_UNIT_IN_RANGE) {
 			this.customUpdate();
 		}
+
+		// Ensure that worker Units NEVER move in a group!
+		this.needsGrouping = false;
 	}
 
 	/**

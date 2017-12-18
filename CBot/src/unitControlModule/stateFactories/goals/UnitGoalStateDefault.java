@@ -17,5 +17,6 @@ public class UnitGoalStateDefault extends ArrayList<GoapState> {
 		this.add(new GoapState(1, "enemyKnown", true));
 		this.add(new GoapState(2, "destroyUnit", true));
 		this.add(new GoapState(1, "retreatFromUnit", true));
+		this.add(new GoapState(3, "grouped", true));
 	}
 }

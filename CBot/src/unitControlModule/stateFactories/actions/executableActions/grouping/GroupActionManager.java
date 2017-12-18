@@ -240,4 +240,25 @@ public class GroupActionManager {
 
 	// ------------------------------ Getter / Setter
 
+	// TODO: UML ADD
+	/**
+	 * Function retrieving the size of the group the provided Unit is currently
+	 * part of.
+	 * 
+	 * @param goapUnit
+	 *            the Unit whose group size is being retrieved.
+	 * @return the number of Units the group of the provided Unit consists of or
+	 *         0 if the Unit is not part of any group.
+	 */
+	public int getGroupSize(IGoapUnit goapUnit) {
+		GroupAction groupAction = this.mappedUnits.get(goapUnit);
+		int size = 0;
+
+		if (groupAction != null) {
+			size = groupAction.getMembers().size();
+		}
+
+		return size;
+	}
+
 }

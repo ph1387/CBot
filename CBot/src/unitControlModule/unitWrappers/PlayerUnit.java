@@ -78,8 +78,13 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	private double confidenceMultiplierSingleCenter = 2.5;
 	private double confidenceMultiplierInMaxCenterDistance = 1.5;
 
+	// TODO: UML ADD
+	// Flag set by certain grouping Actions which are used to group Units at
+	// specific Positions.
+	protected boolean needsGrouping = true;
+
 	// The wrapper that is controlling the resets of the Unit if an issue
-	// occurrs.
+	// occurs.
 	private IssueStateWrapper issueStateWrapper = new IssueStateWrapper();
 
 	// Factories and Objects needed for an accurate representation of the Units
@@ -1274,6 +1279,16 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
 	public InformationStorage getInformationStorage() {
 		return informationStorage;
+	}
+
+	// TODO: UML ADD
+	public boolean needsGrouping() {
+		return needsGrouping;
+	}
+
+	// TODO: UML ADD
+	public void setNeedsGrouping(boolean needsGrouping) {
+		this.needsGrouping = needsGrouping;
 	}
 
 	public boolean isHollowUpdatesEnabled() {

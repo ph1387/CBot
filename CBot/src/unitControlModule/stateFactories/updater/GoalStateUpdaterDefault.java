@@ -20,10 +20,17 @@ public class GoalStateUpdaterDefault extends GoalStateUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		if(this.playerUnit.isConfidenceAboveThreshold()) {
+		if (this.playerUnit.isConfidenceAboveThreshold()) {
 			this.changeGoalStateImportance("retreatFromUnit", 1);
 		} else {
 			this.changeGoalStateImportance("retreatFromUnit", 10);
+		}
+
+		// Needs to be changed to ensure that the Units move together.
+		if (playerUnit.needsGrouping()) {
+			this.changeGoalStateImportance("grouped", 3);
+		} else {
+			this.changeGoalStateImportance("grouped", 0);
 		}
 	}
 }

@@ -21,9 +21,21 @@ public class PlayerUnitTerran_Vulture extends PlayerUnitTypeRanged {
 
 	public PlayerUnitTerran_Vulture(Unit unit, InformationStorage informationStorage) {
 		super(unit, informationStorage);
+
+		// Vultures do NOT need to be grouped with combat Units.
+		this.needsGrouping = false;
 	}
 
 	// -------------------- Functions
+
+	// TODO: UML ADD
+	@Override
+	public void update() {
+		super.update();
+
+		// Ensure that Vultures NEVER move in a group!
+		this.needsGrouping = false;
+	}
 
 	/**
 	 * Removed the Action reset(s) due to them interfering with the kiting

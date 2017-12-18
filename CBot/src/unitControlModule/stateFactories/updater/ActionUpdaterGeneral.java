@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.updater;
 
 import javaGOAP.GoapAction;
+import unitControlModule.stateFactories.actions.executableActions.GroupingAtPositionActionBaseEntrance;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionInPreviousAdjacentRegion;
 import unitControlModule.stateFactories.actions.executableActions.RetreatActionSteerInRetreatVectorDirection;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -18,6 +19,8 @@ public abstract class ActionUpdaterGeneral implements Updater {
 
 	private RetreatActionSteerInRetreatVectorDirection retreatActionSteerInRetreatVectorDirection;
 	private RetreatActionInPreviousAdjacentRegion retreatActionInPreviousAdjacentRegion;
+	// TODO: UML ADD
+	private GroupingAtPositionActionBaseEntrance groupingAtPositionActionBaseEntrance;
 
 	public ActionUpdaterGeneral(PlayerUnit playerUnit) {
 		this.playerUnit = playerUnit;
@@ -40,18 +43,23 @@ public abstract class ActionUpdaterGeneral implements Updater {
 			this.retreatActionSteerInRetreatVectorDirection.setTarget(this.playerUnit.getAttackingEnemyUnitToReactTo());
 			this.retreatActionInPreviousAdjacentRegion.setTarget(this.playerUnit.getAttackingEnemyUnitToReactTo());
 		}
+
+		// Needed to prevent error messages.
+		this.groupingAtPositionActionBaseEntrance.setTarget(new Object());
 	}
 
 	/**
 	 * Function used for retrieving the references to the different actions.
-	 * This function should be overridden and called again for maximum
-	 * efficiency.
+	 * This function should be overwritten by subclasses to provide further
+	 * functionalities.
 	 */
 	protected void init() {
 		this.retreatActionSteerInRetreatVectorDirection = ((RetreatActionSteerInRetreatVectorDirection) this
 				.getActionFromInstance(RetreatActionSteerInRetreatVectorDirection.class));
 		this.retreatActionInPreviousAdjacentRegion = ((RetreatActionInPreviousAdjacentRegion) this
 				.getActionFromInstance(RetreatActionInPreviousAdjacentRegion.class));
+		this.groupingAtPositionActionBaseEntrance = ((GroupingAtPositionActionBaseEntrance) this
+				.getActionFromInstance(GroupingAtPositionActionBaseEntrance.class));
 	}
 
 	/**
