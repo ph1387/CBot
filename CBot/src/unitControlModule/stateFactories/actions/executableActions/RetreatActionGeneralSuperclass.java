@@ -66,7 +66,8 @@ public abstract class RetreatActionGeneralSuperclass extends BaseAction {
 
 	// Group related stuff.
 	private RetreatPositionCluster retreatPositionCluster;
-	private int distanceBetweenUnits = 32;
+	// TODO: UML CHANGE
+	private int distanceBetweenUnits = 48;
 	private int matrixTurnAngleXDEG = 0;
 	private int matrixTurnAngleYDEG = 90;
 	private int maxGroupSize = 15;
