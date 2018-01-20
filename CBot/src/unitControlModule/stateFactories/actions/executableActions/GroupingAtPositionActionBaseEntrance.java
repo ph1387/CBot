@@ -16,7 +16,6 @@ import informationStorage.InformationStorage;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * GroupingAtPositionActionBaseEntrance.java --- Grouping Action with which a
  * executing Unit is grouping with other ones at the entrance of the base.
@@ -26,7 +25,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionAction {
 
-	// TODO: UML ADD
 	/**
 	 * RegionWrapper.java --- Wrapper Class for Regions. Used for storing the
 	 * Region a ChokePoint is associated with. This ChokePoint resembles the

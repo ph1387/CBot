@@ -6,7 +6,6 @@ import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.actions.executableActions.grouping.GroupActionManager;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * BaseActionSharedInformation.java --- Class for sharing information between
  * all instances or subclasses of {@link BaseAction} instances. This Class is

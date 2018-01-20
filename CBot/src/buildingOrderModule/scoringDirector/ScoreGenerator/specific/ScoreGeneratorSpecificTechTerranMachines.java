@@ -23,7 +23,6 @@ public class ScoreGeneratorSpecificTechTerranMachines extends ScoreGeneratorSpec
 
 	private ScoreGenerator scoreGeneratorIncreaseVeryFast;
 	private ScoreGenerator scoreGeneratorIncreaseNormal;
-	// TODO: UML ADD
 	private ScoreGenerator scoreGeneratorIncreaseSlow;
 
 	public ScoreGeneratorSpecificTechTerranMachines(BuildActionManager manager) {

@@ -41,7 +41,6 @@ public class InformationStorage {
 	// Storage class for Terran_Science_Vessel follow actions.
 	private ScienceVesselStorage scienceVesselStorage;
 
-	// TODO: UML ADD
 	// Storage class for Terran_SiegeTanks due to them morphing into sieged
 	// versions of themselves.
 	private SiegeTankStorage siegeTankStorage;
@@ -55,7 +54,6 @@ public class InformationStorage {
 	// Information regarding the Player and the current state of the game.
 	private CurrentGameInformation currentGameInformation;
 
-	// TODO: UML ADD
 	// Shared information between all BaseAction (And subclass) instances.
 	private BaseActionSharedInformation baseActionSharedInformation;
 
@@ -67,7 +65,6 @@ public class InformationStorage {
 	private IUnitControlModuleConfig iUnitControlModuleConfig;
 	private IUnitTrackerModuleConfig iUnitTrackerModuleConfig;
 
-	// TODO: UML CHANGE PARAMS
 	public InformationStorage(ResourceReserver resourceReserver, WorkerConfiguration workerConfig,
 			ScienceVesselStorage scienceVesselStorage, SiegeTankStorage siegeTankStorage,
 			UnitTrackerInformation trackerInfo, MapInformation mapInfo, CurrentGameInformation currentGameInformation,
@@ -133,7 +130,6 @@ public class InformationStorage {
 		return scienceVesselStorage;
 	}
 
-	// TODO: UML ADD
 	public SiegeTankStorage getSiegeTankStorage() {
 		return siegeTankStorage;
 	}
@@ -150,7 +146,6 @@ public class InformationStorage {
 		return currentGameInformation;
 	}
 
-	// TODO: UML ADD
 	public BaseActionSharedInformation getBaseActionSharedInformation() {
 		return baseActionSharedInformation;
 	}

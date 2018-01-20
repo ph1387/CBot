@@ -34,15 +34,9 @@ public class RetreatActionSteerInRetreatVectorDirectionTerran_VultureMicro
 	private int lastExecutionTimeStampPatrol = 0;
 	private boolean issuedPatrolCommand = false;
 	private int turnAngle = 15;
-	// TODO: UML ADD
 	// The frames that the default retreat behavior is used between iterations
 	// of this Action.
 	private int minDefaultBehaviorFramesBetweenIterations = 32;
-
-	// TODO: UML REMOVE
-	// The distance that the enemy must be away from the executing Unit before
-	// the patrol command is issued.
-	// private int minEnemyDistance = 48;
 
 	// The additional range that is added towards the executing Unit's range.
 	// The lower this value the less Unit's can be targeted by this action. This

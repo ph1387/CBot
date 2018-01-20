@@ -17,7 +17,6 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank;
 
-// TODO: UML ADD
 /**
  * TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange.java --- Action for a
  * {@link PlayerUnitTerran_SiegeTank} to move into bombard / siege range of an
@@ -36,7 +35,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 	private Position generatedPosition;
 	private int minPixelDistanceToGeneratedPosition = 32;
 
-	// TODO: UML CHANGE 64
 	// The extra range that is going to be added towards the Units default siege
 	// range and that a generated Position must include.
 	// This is necessary since moving directly to a Position without extra range
@@ -44,7 +42,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 	// range without giving it time to set up / morph into Siege_Mode properly.
 	private int extraRange = 128;
 
-	// TODO: UML ADD
 	// The offset that is used to retrieve a second Position from the path
 	// emerging from the enemy Unit and leading towards the Player's
 	// starting location. This second Position is used to generate a Vector
@@ -55,13 +52,11 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 	// produce a faulty direction!
 	private int desiredIndexOffset = 8;
 
-	// TODO: UML ADD
 	// The length of the Vectors emerging from the start-Position that marks the
 	// possible Position to move to. The length does not matter as long as it is
 	// large enough for the Vectors to intersect wíth the current Region's
 	// boundaries.
 	private int vectorLength = 320000;
-	// TODO: UML ADD
 	// The number of degrees the Vectors emerging from the start-Position that
 	// marks the possible Position to move to are turned left / right.
 	private int rotateDegrees = 90;
@@ -100,7 +95,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 		return success;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a Position used for the Action to move to in
 	 * order to prepare for an expected enemy Unit.
@@ -118,7 +112,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 		return this.tryGeneratingPossibleMovePosition(path, possiblePositionIndex);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding a suitable index at which the Terran_Siege_Tank
 	 * could move to in order to be at a certain distance to the enemy Unit as
@@ -147,7 +140,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 		return possiblePositionIndex;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a Position that the executing Unit can move to in
 	 * order to be prepared for an enemy attack. This function utilizes various
@@ -188,7 +180,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 
 			possibleMovePosition = closestTilePosition.toPosition();
 		} catch (Exception e) {
-			// TODO: DEBUG INFO
 			e.printStackTrace();
 
 			possibleMovePosition = path.get(possiblePositionIndex).toPosition();
@@ -197,7 +188,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 		return possibleMovePosition;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a Vector from a TilePosition on a provided Path
 	 * to a TilePosition with a larger index. This is used to provide a general
@@ -259,7 +249,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 		return vector;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for creating two Vectors to intersect the map's / current
 	 * Region's boundaries. The length can be set to any value as long as the
@@ -302,7 +291,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 		return new Pair<>(vecLeftEndPosition, vecRightEndPosition);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the first free / non occupied TilePosition from a
 	 * List of TilePositions.
@@ -328,7 +316,6 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 		return freeTilePosition;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the closest TilePosition of a pair of two provided
 	 * TilePositions to the currently executing Unit.

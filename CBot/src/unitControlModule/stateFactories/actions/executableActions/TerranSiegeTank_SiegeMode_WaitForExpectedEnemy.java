@@ -6,7 +6,6 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank_SiegeMode;
 
-//TODO: UML ADD
 /**
  * TerranSiegeTank_SiegeMode_WaitForExpectedEnemy.java --- Action for a
  * {@link PlayerUnitTerran_SiegeTank_SiegeMode} to wait for an expected enemy in

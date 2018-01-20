@@ -22,7 +22,6 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 	private int contendedTileRangeBorder = 1;
 	private int contendedTileRangeMinerals = 3;
 	private int contendedTileRangeGeysers = 3;
-	// TODO: UML ADD
 	private int contendedTileRangeBaseLocations = 3;
 
 	public TilePositionContenderFactory() {
@@ -169,7 +168,6 @@ public class TilePositionContenderFactory extends TilePositionFactory {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for contending all TilePositions on each BaseLocation on the
 	 * map.

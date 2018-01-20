@@ -15,7 +15,6 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGenerato
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificUnitTerranBio;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificUpgradeTerranBio;
 
-// TODO: UML ADD
 /**
  * ScoreGeneratorFactoryTerranBio.java --- a {@link ScoreGeneratorFactory} for
  * the Terran Race with the focus being on bio Units.

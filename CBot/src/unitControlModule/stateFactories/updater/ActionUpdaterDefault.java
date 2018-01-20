@@ -20,9 +20,7 @@ import unitTrackerModule.EnemyUnit;
 public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 
 	private AttackUnitAction attackUnitAction;
-	// TODO: UML CHANGE TYPE
 	private BaseAction attackMoveAction;
-	// TODO: UML CHANGE TYPE
 	private BaseAction scoutBaseLocationAction;
 
 	public ActionUpdaterDefault(PlayerUnit playerUnit) {
@@ -53,7 +51,6 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		this.attackMoveAction = this.initAttackMoveAction();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for initializing the used scouting action. This is needed since
 	 * some Units require the use of different types of actions. Therefore the
@@ -66,7 +63,6 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		return ((ScoutBaseLocationAction) this.getActionFromInstance(ScoutBaseLocationAction.class));
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for initializing the used attack move Action. This is needed
 	 * since some Units require the use of different types of actions. Therefore
@@ -79,7 +75,6 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		return ((AttackMoveAction) this.getActionFromInstance(AttackMoveAction.class));
 	}
 
-	// TODO: UML CHANGE PARAMS RETURN TYPE
 	/**
 	 * Function for the unit to configure its AttackMoveAction to the nearest
 	 * enemy Unit (can be a building).
@@ -103,8 +98,7 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		}
 		return closestUnitTilePosition;
 	}
-	
-	// TODO: UML ADD
+
 	/**
 	 * Function for the unit to configure its AttackUnitAction.
 	 */
@@ -112,9 +106,4 @@ public class ActionUpdaterDefault extends ActionUpdaterGeneral {
 		return this.playerUnit.getAttackableEnemyUnitToReactTo();
 	}
 
-	// TODO: UML REMOVE
-	// protected void baselocationScoutingConfiguration() {
-
-	// TODO: UML REMOVE
-	// protected Position findClosestReachableBasePosition() {
 }

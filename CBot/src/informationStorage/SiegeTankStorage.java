@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 import bwapi.Unit;
 
-// TODO: UML ADD
 /**
  * SiegeTankStorage.java --- Shared storage Class for
  * {@link PlayerUnitTerran_SiegeTank} instances, mainly due to them needing a

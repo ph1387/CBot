@@ -11,7 +11,6 @@ import bwapi.UnitType;
 import core.Core;
 import javaGOAP.GoapAction;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterSimulationQueueTerranMachines.java --- Updater for updating a
  * {@link AvailableActionsSimulationQueueTerran} instance matching a
@@ -23,7 +22,6 @@ import javaGOAP.GoapAction;
  */
 public class ActionUpdaterSimulationQueueTerranMachines extends ActionUpdaterSimulationQueueTerranDefault {
 
-	// TODO: UML ADD
 	private static final int SECOND_ARMORY_FORBID_UNITL_SECONDS = 900;
 
 	public ActionUpdaterSimulationQueueTerranMachines(BuildActionManager buildActionManager) {
@@ -32,7 +30,6 @@ public class ActionUpdaterSimulationQueueTerranMachines extends ActionUpdaterSim
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected HashSet<ActionType> generateAllAvailableActionTypes(BuildActionManager manager) {
 		HashSet<ActionType> availableActionTypes = super.generateAllAvailableActionTypes(manager);
@@ -78,7 +75,6 @@ public class ActionUpdaterSimulationQueueTerranMachines extends ActionUpdaterSim
 		return availableActionTypes;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected ScoringDirector defineScoringDirector() {
 		return new ScoringDirectorTerranMachines(this.buildActionManager);

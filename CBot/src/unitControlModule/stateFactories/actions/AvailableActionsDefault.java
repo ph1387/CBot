@@ -30,7 +30,6 @@ public class AvailableActionsDefault extends AvailableActionsGeneral {
 		return new ScoutBaseLocationAction(null);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for defining a attack move action for the Unit. These might
 	 * differ from one another. Therefore a function is needed.

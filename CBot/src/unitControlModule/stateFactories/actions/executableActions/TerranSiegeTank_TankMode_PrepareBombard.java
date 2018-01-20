@@ -5,7 +5,6 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.abilities.AbilityActionTerranSiegeTank_SiegeMode;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank;
 
-//TODO: UML ADD
 /**
  * TerranSiegeTank_TankMode_PrepareBombard.java --- Action for a
  * {@link PlayerUnitTerran_SiegeTank} to prepare the

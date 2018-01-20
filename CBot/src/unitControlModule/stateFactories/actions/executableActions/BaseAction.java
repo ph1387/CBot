@@ -31,13 +31,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	private static final int DEFAULT_SEARCH_STEP_DISTANCE = 200;
 	private static final int DEFAULT_MIN_DISTANCE = 256;
 
-	// TODO: UML REMOVE
-	// protected static HashMap<PlayerUnit, BaseAction>
-	// CurrentlyExecutingActions = new HashMap<>();
-	// TODO: UML REMOVE
-	// The manager that controls the assignment of all group actions.
-	// private static GroupActionManager GroupActionManager = new
-	// GroupActionManager();
 	// Flag for re-enabling the action change trigger when the Unit is the new
 	// leader of a group action.
 	private boolean wasPrevLeader = false;

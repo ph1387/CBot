@@ -30,7 +30,6 @@ public class PlayerUnitTerran_SiegeTank_SiegeMode extends PlayerUnitTerran_Siege
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update() {
 		super.update();

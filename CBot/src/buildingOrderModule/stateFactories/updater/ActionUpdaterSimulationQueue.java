@@ -46,11 +46,9 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	private HashSet<ScoringAction> scoringActions;
 
 	// Information that change each iteration:
-	// TODO: UML ADD
 	// All Types plus their amount that are currently produced and inside the
 	// action Queue.
 	protected HashMap<TypeWrapper, Integer> simulationQueueResultActionTypes;
-	// TODO: UML ADD
 	// The types that are currently inside the InformationStorage Queues
 	protected HashMap<TypeWrapper, Integer> informationStorageQueuesActionTypes;
 
@@ -72,8 +70,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 	}
 
 	// -------------------- Functions
-
-	// TODO: UML ORDER
 
 	/**
 	 * Function for defining which ScoringDirector should be used.
@@ -98,7 +94,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		this.updateSimulationStarter(manager);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for updating the {@link #actionTypes} and the
 	 * {@link #scoringActions} as the latter depend on the former ones. This
@@ -127,7 +122,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		this.scoringActions = this.transformAvailableActionsIntoScoringActions();
 	}
 
-	// TODO: UML RENAME extractAllProducedTypes
 	/**
 	 * Function for extracting all {@link TypeWrapper}s from the
 	 * {@link #actionQueueSimulationResults}. These actions represent the
@@ -189,7 +183,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		return forwardedActionTypes;
 	}
 
-	// TODO: UML ORDER UP
 	/**
 	 * Function for adding a TypeWrapper to a HashMap. If the HashMap does not
 	 * contain any previous instance of the TypeWrapper, instantiate it with 1.
@@ -289,7 +282,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 				- this.actionQueueSimulationResults.getIndex() <= this.maxActionQueueIndexOffsetTilEnd;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for performing another / the next simulation iteration. This
 	 * function updates the {@link #actionTypes} as well as the
@@ -345,8 +337,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 
 	// -------------------- Specific tests
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for determining if a technology can be researched or not. The
 	 * provided ActionType <b>must</b> result in a TechType. If this is not the
@@ -387,8 +377,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 				&& requiredUnitExist;
 	}
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for determining if a upgrade can be performed or not. The
 	 * provided ActionType <b>must</b> result in a UpgradeType. If this is not
@@ -431,8 +419,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 				&& requiredUnitExist;
 	}
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for testing if the required <b>UnitType</b> of the provided
 	 * {@link ActionType} exists at least once. This function will fail if the
@@ -451,8 +437,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 				.getOrDefault(actionType.defineRequiredType().getUnitType(), 0) > 0;
 	}
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for testing if the provided {@link ActionType} is going to be
 	 * forwarded or is currently in one of the waiting Queues of the Bot. These
@@ -470,8 +454,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 				|| this.informationStorageQueuesActionTypes.containsKey(actionType.defineResultType());
 	}
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for testing if one completed and idle facility whose UnitType
 	 * was defined in the provided {@link ActionType} exists. The
@@ -506,8 +488,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		return prodcuingFacilityIdles;
 	}
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for testing if a provided TechType's required UnitType is
 	 * present on the map at least once.
@@ -531,8 +511,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		return exist;
 	}
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for testing if a provided UpgradeType's required UnitTypes are
 	 * present on the map at least once. These are based on the current level of
@@ -564,8 +542,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		return exist;
 	}
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for testing if a provided UnitType's required UnitTypes are
 	 * present on the map at least once.
@@ -589,8 +565,6 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		return exist;
 	}
 
-	// TODO: UML ADD
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for testing if a provided UnitType's required TechType was
 	 * already researched by the Player.

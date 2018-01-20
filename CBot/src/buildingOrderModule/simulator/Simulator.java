@@ -76,8 +76,6 @@ public class Simulator {
 
 	// -------------------- Functions
 
-	// TODO: UML CHANGE PARAMS
-	// TODO: Possible Change: Make generic for further use.
 	/**
 	 * Function for performing a simulation based on available ActionTypes and
 	 * provided resources (minerals and gas) as well as a record of available
@@ -308,7 +306,6 @@ public class Simulator {
 		return branch;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for generating the root of a tree that the Simulator is going to
 	 * be using.
@@ -346,7 +343,6 @@ public class Simulator {
 		return root;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for generating the resource values the working Units are going
 	 * to produce in the simulated time.
@@ -590,7 +586,6 @@ public class Simulator {
 		}
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for generating all possible permutations of ActionTypes a Node
 	 * can perform. This takes the available mineral and gas counts in
@@ -623,7 +618,6 @@ public class Simulator {
 		return actionSequences;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the {@link ActionType}s that can be executed
 	 * using a given {@link Node} from the set of all possible
@@ -661,7 +655,6 @@ public class Simulator {
 		return actionTypes;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for initializing the {@link TreeSet} that is going to be used in
 	 * the simulation. It is based on a {@link Node} that represents the current
@@ -691,12 +684,6 @@ public class Simulator {
 		}
 		return initialTreeSet;
 	}
-
-	// TODO: UML REMOVE
-	// private void findUsableActionTypes(Node currentNode, int
-	// simulatedTimeStamp,
-	// HashSet<ActionType> possibleActionTypes, Queue<ActionSequence>
-	// workingSets) {
 
 	/**
 	 * Function for generating a ActionSequence based on a provided Node, a
@@ -761,7 +748,6 @@ public class Simulator {
 		return actionSequence;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for finding all combinations of ActionTypes that can be
 	 * performed together from the specified Node until a maximum number of them
@@ -835,7 +821,6 @@ public class Simulator {
 		return actionSequences;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for testing if a permutation of ActionTypes already exists in a
 	 * provided Queue of sequences ((1, 2) == (2, 1) => {1, 2}). Therefore this

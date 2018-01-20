@@ -33,7 +33,6 @@ public class SimulationStarter {
 
 	// -------------------- Functions
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for starting a new simulation in the {@link Simulator} instance.
 	 * 
@@ -51,10 +50,10 @@ public class SimulationStarter {
 	 *            the UnitType that defines the worker. Different for all Races.
 	 * @param currentFrameTimeStamp
 	 *            the current time stamp in frames.
-	 * @return the ArrayList that is the result of the {@link Simulator}
-	 *         simulation.
+	 * @return the List of ActionTypes that is the result of the
+	 *         {@link Simulator} simulation.
 	 */
-	public ArrayList<ActionType> runStarter(HashSet<ActionType> actionTypes, List<Unit> units, int currentMinerals,
+	public List<ActionType> runStarter(HashSet<ActionType> actionTypes, List<Unit> units, int currentMinerals,
 			int currentGas, UnitType workerUnitType, int currentFrameTimeStamp) {
 		HashMap<TypeWrapper, Integer> simulationTypesFree = new HashMap<>();
 		HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> simulationTypesWorking = new HashMap<>();
@@ -71,7 +70,6 @@ public class SimulationStarter {
 				this.simulationIdleScorePenalty, this.simulationConsecutiveActionsBonus, this.simulationAllowIdle);
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for splitting a List of given Units in different categories
 	 * (Free and working) as well as counting the specific types.
@@ -147,7 +145,6 @@ public class SimulationStarter {
 		}
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Convenience function.
 	 * 
@@ -163,7 +160,6 @@ public class SimulationStarter {
 		addTypeWorking(simulationUnitsWorking, TypeWrapper.generateFrom(unitType), finishingTimeStamp);
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for adding a type towards a HashMap of existing types. Each type
 	 * is handled separately in its own Pair (First: Result type, Second: Time

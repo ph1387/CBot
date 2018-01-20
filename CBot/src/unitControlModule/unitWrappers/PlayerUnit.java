@@ -36,9 +36,6 @@ import unitControlModule.stateFactories.updater.Updater;
  */
 public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 
-	// TODO: UML REMOVE
-	// The timer after a BaseLocation might be searched again.
-	// public static final int BASELOCATIONS_TIME_PASSED = 60;
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
 	// own parameters
 	protected static final double CONFIDENCE_THRESHHOLD = 0.5;
@@ -78,7 +75,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	private double confidenceMultiplierSingleCenter = 2.5;
 	private double confidenceMultiplierInMaxCenterDistance = 1.5;
 
-	// TODO: UML ADD
 	// Flag set by certain grouping Actions which are used to group Units at
 	// specific Positions.
 	protected boolean needsGrouping = true;
@@ -387,7 +383,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		}
 	}
 
-	// TODO: UML CHANGE VISIBILITY
 	/**
 	 * Function for generating / finding the Unit that this one has to react to
 	 * when taking any offensive actions. The Unit has to chose between
@@ -763,7 +758,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return closestUnit;
 	}
 
-	// TODO: UML CHANGE TO ABSTRACT
 	/**
 	 * Function for retrieving a HashSet of all units in weapon range, both on
 	 * the ground and in the air.
@@ -1281,12 +1275,10 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return informationStorage;
 	}
 
-	// TODO: UML ADD
 	public boolean needsGrouping() {
 		return needsGrouping;
 	}
 
-	// TODO: UML ADD
 	public void setNeedsGrouping(boolean needsGrouping) {
 		this.needsGrouping = needsGrouping;
 	}

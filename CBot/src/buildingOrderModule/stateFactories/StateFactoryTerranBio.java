@@ -8,7 +8,6 @@ import buildingOrderModule.stateFactories.updater.ActionUpdaterSimulationQueueTe
 import buildingOrderModule.stateFactories.updater.Updater;
 import javaGOAP.GoapAction;
 
-// TODO: UML ADD
 /**
  * StateFactoryTerranBio.java --- Terran StateFactory containing values and
  * actions for a Terran-Bio configuration.
@@ -20,13 +19,11 @@ public class StateFactoryTerranBio extends StateFactoryTerranDefault {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public LinkedHashSet<GoapAction> generateAvailableActions() {
 		return new AvailableActionsSimulationQueueTerran();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public Updater getMatchingActionUpdater(BuildActionManager manager) {
 		return new ActionUpdaterSimulationQueueTerranBio(manager);

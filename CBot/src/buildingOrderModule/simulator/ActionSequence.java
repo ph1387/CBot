@@ -6,7 +6,6 @@ import java.util.List;
 
 import bwapi.Pair;
 
-// TODO: UML ADD INTERFACE
 /**
  * ActionSequence.java --- A sequence of {@link ActionType}s that can / will be
  * executed. This class contains extra information like the combined mineral and
@@ -19,7 +18,6 @@ import bwapi.Pair;
  */
 public class ActionSequence implements Comparable<ActionSequence> {
 
-	// TODO: UML CHANGE TYPE
 	private List<ActionType> actionTypeSequence = new ArrayList<>();
 	private int mineralCost = 0;
 	private int gasCost = 0;
@@ -27,7 +25,6 @@ public class ActionSequence implements Comparable<ActionSequence> {
 	// Value: The amount of the Type that is free / available to receive
 	// orders.
 	private HashMap<TypeWrapper, Integer> typesFree = new HashMap<>();
-	// TODO: UML CHANGE TYPE
 	// Key: The creating Type.
 	// Value: A List of Pairs of Types that are being created by the key
 	// Type.
@@ -51,7 +48,6 @@ public class ActionSequence implements Comparable<ActionSequence> {
 		this.occupiedTypeTimes = new HashMap<>();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for summing up the score of all ActionTypes that this instance
 	 * is referencing.
@@ -68,7 +64,6 @@ public class ActionSequence implements Comparable<ActionSequence> {
 		return totalScore;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int compareTo(ActionSequence actionSequence) {
 		int totalScoreActionSequenceOne = this.generateScoreOfActions();
@@ -81,12 +76,10 @@ public class ActionSequence implements Comparable<ActionSequence> {
 
 	// ------------------------------ Getter / Setter
 
-	// TODO: UML CHANGE TYPE
 	public List<ActionType> getActionTypeSequence() {
 		return actionTypeSequence;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	public void setActionTypeSequence(List<ActionType> sequence) {
 		this.actionTypeSequence = sequence;
 	}
@@ -115,12 +108,10 @@ public class ActionSequence implements Comparable<ActionSequence> {
 		typesFree = unitsFree;
 	}
 
-	// TODO: UML CHANGE TYPE
 	public HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> getOccupiedTypeTimes() {
 		return occupiedTypeTimes;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	public void setOccupiedTypeTimes(HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> occupiedUnits) {
 		this.occupiedTypeTimes = occupiedUnits;
 	}

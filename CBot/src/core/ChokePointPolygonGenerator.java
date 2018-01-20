@@ -8,7 +8,6 @@ import bwapiMath.Polygon;
 import bwapiMath.Vector;
 import bwta.Chokepoint;
 
-// TODO: UML ADD
 /**
  * ChokePointPolygonGenerator.java --- Class for generating Polygons around
  * ChokePoints.

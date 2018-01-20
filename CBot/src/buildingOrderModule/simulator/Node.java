@@ -17,10 +17,8 @@ import bwapi.Pair;
 public class Node implements Comparable<Node> {
 
 	private HashMap<TypeWrapper, Integer> typesFree = new HashMap<>();
-	// TODO: UML CHANGE TYPE
 	private HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> typesWorking = new HashMap<>();
 	private HashMap<ActionType, Integer> actionTypeOccurrences = new HashMap<>();
-	// TODO: UML CHANGE TYPE
 	private List<ActionType> chosenActions = new ArrayList<>();
 	private int currentMinerals = 0;
 	private int currentGas = 0;
@@ -64,7 +62,6 @@ public class Node implements Comparable<Node> {
 		return -1 * (Integer.compare(totalScoreNodeOne, totalScoreNodeTwo));
 	}
 
-	// TODO: UML ADD IF MISSING
 	/**
 	 * Function for generating the score of a {@link Node} instance based on the
 	 * current gas and minerals.
@@ -106,12 +103,10 @@ public class Node implements Comparable<Node> {
 		this.typesFree = unitsFree;
 	}
 
-	// TODO: UML CHANGE TYPE
 	public HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> getTypesWorking() {
 		return typesWorking;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	public void setTypesWorking(HashMap<TypeWrapper, List<Pair<TypeWrapper, Integer>>> unitsWorking) {
 		this.typesWorking = unitsWorking;
 	}
@@ -124,12 +119,10 @@ public class Node implements Comparable<Node> {
 		this.actionTypeOccurrences = actionTypeOccurrences;
 	}
 
-	// TODO: UML CHANGE TYPE
 	public List<ActionType> getChosenActions() {
 		return chosenActions;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	public void setChosenActions(List<ActionType> chosenActions) {
 		this.chosenActions = chosenActions;
 	}

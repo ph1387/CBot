@@ -68,11 +68,9 @@ public class UnitTrackerModule {
 	// them.
 	private double invulnerableMultiplier = 5.0;
 
-	// TODO: UML CHANGE 2.5
 	// The multiplier that is applied to the enemy buildings that have a weapon.
 	// This is needed since stationary turrets etc. must NOT be rushed into!
 	private double buildingMultiplier = 7.5;
-	// TODO: UML CHANGE 3
 	// The tile range which gets added towards each Unit's default weapon range.
 	// Using this value Units can react sooner to incoming threats.
 	private int extraTileRange = 5;
@@ -107,13 +105,10 @@ public class UnitTrackerModule {
 	// All information needed for the correct representation of a Terran_Bunker.
 	// These are needed due to the Player not having access to the actual number
 	// and type of Units inside the Bunker:
-	// TODO: UML ADD
 	private UnitType terranUnitTypeInBunker = UnitType.Terran_Marine;
-	// TODO: UML ADD
 	// Should be <= 4 since only up to four Units can fit inside the Bunker
 	// itself.
 	private int numberOfTerranUnitsInBunker = 4;
-	// TODO: UML ADD
 	private double healthMultiplierOfTerranUnitsInBunker = 1.;
 
 	public UnitTrackerModule(InformationStorage informationStorage) {
@@ -397,7 +392,6 @@ public class UnitTrackerModule {
 			if (!this.ignoredUnitTypes.contains(unit.getType())) {
 				double unitHealthMultiplier = this.generateUnitMultiplier(unit);
 
-				// TODO: Possible Change: Consider upgrades.
 				// Player Air:
 				if (unit.isCompleted() && unit.getType().airWeapon() != null
 						&& unit.getType().airWeapon().damageAmount() > 0) {
@@ -405,7 +399,6 @@ public class UnitTrackerModule {
 							this.generateAttackGenerationInformation(unit.getType().airWeapon(), unitHealthMultiplier));
 				}
 
-				// TODO: Possible Change: Consider upgrades.
 				// Player Ground:
 				if (unit.isCompleted() && unit.getType().groundWeapon() != null
 						&& unit.getType().groundWeapon().damageAmount() > 0) {
@@ -413,7 +406,6 @@ public class UnitTrackerModule {
 							.generateAttackGenerationInformation(unit.getType().groundWeapon(), unitHealthMultiplier));
 				}
 
-				// TODO: Possible Change: Consider upgrades.
 				// Player Health:
 				if (unit.isCompleted() && ((unit.getType().groundWeapon() != null
 						&& unit.getType().groundWeapon().damageAmount() > 0)
@@ -422,7 +414,6 @@ public class UnitTrackerModule {
 							this.generateHealthGenerationInformation(unit.getType(), unitHealthMultiplier));
 				}
 
-				// TODO: Possible Change: Consider upgrades.
 				// Player Support:
 				if (this.supportUnitTypes.contains(unit.getType()) && unit.isCompleted()) {
 					this.addValueInAreaToTilePositionValue(unit.getTilePosition(), playerSupport,
@@ -493,7 +484,6 @@ public class UnitTrackerModule {
 	private void generateEnemyUnitTilePositions(EnemyUnit enemyUnit, HashMap<TilePosition, Integer> enemyAir,
 			HashMap<TilePosition, Integer> enemyGround, HashMap<TilePosition, Integer> enemyHealth,
 			HashMap<TilePosition, Integer> enemySupport) {
-		// TODO: Possible Change: Consider upgrades. (+ Health and support!)
 		boolean enemyIsKnownOf = enemyUnit.getUnit().isVisible() && enemyUnit.getUnit().isCompleted()
 				|| !enemyUnit.getUnit().isVisible();
 		boolean hasValidGroundWeapon = enemyUnit.getUnitType().groundWeapon() != null

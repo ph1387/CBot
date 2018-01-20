@@ -20,8 +20,6 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 
 	private UnloadMineralsAction unloadMineralsAction;
 	private UnloadGasAction unloadGasAction;
-	// TODO: UML REMOVE
-	// private ScoutBaseLocationWorkerAction scoutBaseLocationWorkerAction;
 	private MoveToNearestCenterAction moveToNearestCenterAction;
 
 	public ActionUpdaterWorker(PlayerUnit playerUnit) {
@@ -56,13 +54,11 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 				.getActionFromInstance(MoveToNearestCenterAction.class));
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected BaseAction initScoutBaseLocationActionInstance() {
 		return ((ScoutBaseLocationWorkerAction) this.getActionFromInstance(ScoutBaseLocationWorkerAction.class));
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected TilePosition attackMoveToNearestKnownUnitConfiguration() {
 		TilePosition returnTilePosition = null;
@@ -71,11 +67,8 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null) {
 			returnTilePosition = this.playerUnit.getAttackableEnemyUnitToReactTo().getTilePosition();
 		}
-		
+
 		return returnTilePosition;
 	}
-
-	// TODO: UML REMOVE
-	// protected void baselocationScoutingConfiguration() {
 
 }

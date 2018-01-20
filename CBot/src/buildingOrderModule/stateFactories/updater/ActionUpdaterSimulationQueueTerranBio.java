@@ -11,7 +11,6 @@ import bwapi.UnitType;
 import core.Core;
 import javaGOAP.GoapAction;
 
-// TODO: UML ADD
 /**
  * ActionUpdaterSimulationQueueTerranBio.java --- Updater for updating a
  * {@link AvailableActionsSimulationQueueTerran} instance matching a Terran-Bio
@@ -32,7 +31,6 @@ public class ActionUpdaterSimulationQueueTerranBio extends ActionUpdaterSimulati
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected HashSet<ActionType> generateAllAvailableActionTypes(BuildActionManager manager) {
 		HashSet<ActionType> availableActionTypes = super.generateAllAvailableActionTypes(manager);
@@ -87,7 +85,6 @@ public class ActionUpdaterSimulationQueueTerranBio extends ActionUpdaterSimulati
 		return availableActionTypes;
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected ScoringDirector defineScoringDirector() {
 		return new ScoringDirectorTerranBio(this.buildActionManager);

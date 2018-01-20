@@ -11,8 +11,6 @@ import buildingOrderModule.stateFactories.updater.WorldStateUpdaterActionQueueTe
 import buildingOrderModule.stateFactories.worldStates.ManagerWorldStateActionQueueTerran;
 import javaGOAP.GoapState;
 
-// TODO: UML CHANGE ABSTRACT
-// TODO: UML RENAME StateFactoryTerranBasic
 /**
  * StateFactoryTerranDefault.java --- Default Terran StateFactory containing
  * default values.
@@ -34,12 +32,6 @@ public abstract class StateFactoryTerranDefault extends StateFactoryDefault {
 		return new ManagerGoalStateActionQueueTerran();
 	}
 
-	// TODO: UML REMOVE
-	// @Override
-	// public LinkedHashSet<GoapAction> generateAvailableActions() {
-	// return new AvailableActionsSimulationQueueTerran();
-	// }
-
 	@Override
 	public Updater getMatchingWorldStateUpdater(BuildActionManager manager) {
 		return new WorldStateUpdaterActionQueueTerran(manager);
@@ -50,9 +42,4 @@ public abstract class StateFactoryTerranDefault extends StateFactoryDefault {
 		return new GoalStateUpdaterActionQueueTerran(manager);
 	}
 
-	// TODO: UML REMOVE
-	// @Override
-	// public Updater getMatchingActionUpdater(BuildActionManager manager) {
-	// return new ActionUpdaterSimulationQueueTerran(manager);
-	// }
 }

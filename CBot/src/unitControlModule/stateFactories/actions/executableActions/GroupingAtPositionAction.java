@@ -12,7 +12,6 @@ import javaGOAP.IGoapUnit;
 import unitControlModule.stateFactories.actions.executableActions.steering.SteeringFactory;
 import unitControlModule.unitWrappers.PlayerUnit;
 
-// TODO: UML ADD
 /**
  * GroupingAtPositionAction.java --- A general grouping Action with which a Unit
  * can group together at a certain spot with other allies (One uniform grouping

@@ -3,7 +3,6 @@ package unitControlModule.stateFactories.actions.executableActions;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnitTerran_SiegeTank;
 
-// TODO: UML ADD
 /**
  * AttackMoveActionTerran_SiegeTank.java --- An attacking action with which the
  * unit can perform an attack move to the specified target TilePosition. This
@@ -30,13 +29,11 @@ public class AttackMoveActionTerran_SiegeTank extends AttackMoveAction {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected boolean isSpecificDone(IGoapUnit goapUnit) {
 		return super.isSpecificDone(goapUnit) || ((PlayerUnitTerran_SiegeTank) goapUnit).isExpectingEnemy();
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected float generateBaseCost(IGoapUnit goapUnit) {
 		return super.generateBaseCost(goapUnit) - 1.f;

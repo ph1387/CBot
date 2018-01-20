@@ -10,7 +10,6 @@ import bwapi.Race;
 import core.Core;
 import javaGOAP.IGoapUnit;
 
-// TODO: UML ADD
 /**
  * ActionQueueStartingTerranBionic.java --- Action Queue for a Terran opening:
  * 
@@ -68,7 +67,6 @@ public class ActionQueueStartingTerranBionic extends ActionQueueStarting {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
 		return super.checkProceduralSpecificPrecondition(goapUnit)

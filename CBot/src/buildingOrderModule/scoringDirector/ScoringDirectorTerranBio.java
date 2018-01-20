@@ -3,7 +3,6 @@ package buildingOrderModule.scoringDirector;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.stateFactories.actions.executableActions.actionQueues.ActionQueueSimulationResults;
 
-// TODO: UML ADD
 /**
  * ScoringDirectorTerranBio.java --- A {@link ScoringDirector} that changes the
  * scores of the Actions used in the {@link ActionQueueSimulationResults} for a

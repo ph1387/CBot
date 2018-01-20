@@ -20,7 +20,6 @@ import unitControlModule.stateFactories.StateFactoryTerran_SiegeTank;
  */
 public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
-	// TODO: UML ADD
 	/**
 	 * ExpectingEnemyState.java --- Enum used for switching between expecting
 	 * enemy Units and not doing it at all based on a set frame time interval.
@@ -31,12 +30,9 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	private enum ExpectingEnemyState {
 		IDLE(-1), ACTIVE(480);
 
-		// TODO: UML ADD
 		private int activeFrames;
-		// TODO: UML ADD
 		private int timeStampStartFrames = -1;
 
-		// TODO: UML ADD
 		/**
 		 * @param activeFrames
 		 *            the number of frames that this state is active (-1 means
@@ -46,7 +42,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 			this.activeFrames = activeFrames;
 		}
 
-		// TODO: UML ADD
 		/**
 		 * Function for testing if the set maximum number of frames exceeds the
 		 * difference between the current frame count and the saved one.
@@ -62,13 +57,11 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 			return currentFrames - this.timeStampStartFrames >= this.activeFrames;
 		}
 
-		// TODO: UML ADD
 		public void setTimeStampStartFrames(int timeStampStartFrames) {
 			this.timeStampStartFrames = timeStampStartFrames;
 		}
 	}
 
-	// TODO: UML CHANGE 4
 	// Below this distance the SiegeTank_SiegeMode will / can not use the siege
 	// attack.
 	private static final int MIN_SIEGE_TILE_RANGE = 6;
@@ -77,23 +70,18 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	private double inSiegeRangeConfidenceMultiplier = 1.5;
 	private double notInSiegeRangeConfidenceMultiplier = 0.5;
 
-	// TODO: UML ADD
 	private ExpectingEnemyState currentExpectingState = ExpectingEnemyState.IDLE;
 
-	// TODO: UML ADD
 	// Pair.first: TimeStamp
 	// Pair.second: Combat Unit count
 	private Queue<Pair<Integer, Integer>> combatUnitCounts = new LinkedList<>();
-	// TODO: UML ADD
 	// After more than this number of Units get destroyed in a certain frame
 	// interval the Unit will be expecting enemies / swapping states.
 	private int destroyedUnitsTriggerPoint = 3;
-	// TODO: UML ADD
 	// Combat Unit count entries older than the given number of frames are
 	// discarded.
 	private int maxTimeIntervalFrames = 720;
 
-	// TODO: UML ADD
 	// Flag indicating if the Unit is currently expecting another enemy one to
 	// advance towards it / it's Position.
 	protected boolean isExpectingEnemy = false;
@@ -113,7 +101,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update() {
 		super.update();
@@ -121,7 +108,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		this.updateExpectingEnemy();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for updating the flag indicating if the Unit is currently
 	 * expecting another enemy one to advance to it / it's Position. <br>
@@ -155,7 +141,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for removing all entries from the Queue of stored combat Unit
 	 * counts that are older than a certain amount of frames.
@@ -178,7 +163,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for counting the number of destroyed Units based on the Queue of
 	 * stored combat Unit counts.
@@ -270,7 +254,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		return distance > getMinSiegeRange() && distance < getMaxSiegeRange();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Convenience function.
 	 * 
@@ -283,7 +266,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		return this.isBelowSiegeRange(unit.getPosition());
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for checking if a Position is below the
 	 * {@link PlayerUnitTerran_SiegeTank}'s siege range and therefore too close
@@ -317,7 +299,6 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 		return MAX_SIEGE_TILE_RANGE * Core.getInstance().getTileSize();
 	}
 
-	// TODO: UML ADD
 	public boolean isExpectingEnemy() {
 		return isExpectingEnemy;
 	}

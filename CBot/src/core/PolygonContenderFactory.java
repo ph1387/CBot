@@ -362,9 +362,6 @@ public class PolygonContenderFactory extends TilePositionFactory {
 		}
 	}
 
-	// TODO: UML REMOVE
-//	private Polygon generatePolygonAtChokePoint(Chokepoint chokePoint) {
-
 	// ------------------------------ Getter / Setter
 
 }

@@ -22,7 +22,6 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 	private AttackUnitActionTerran_SiegeTank_Bombard abilityActionTerranSiegeTankBombard;
 
 	private TerranSiegeTank_TankMode_MoveIntoSiegeRange terranSiegeTank_TankMode_MoveIntoSiegeRange;
-	// TODO: UML ADD
 	private TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange terranSiegeTank_TankMode_MoveIntoExpectedSiegeRange;
 
 	public ActionUpdaterTerran_SiegeTank(PlayerUnit playerUnit) {
@@ -58,7 +57,6 @@ public class ActionUpdaterTerran_SiegeTank extends ActionUpdaterDefault {
 				.getActionFromInstance(TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange.class));
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected BaseAction initAttackMoveAction() {
 		return ((AttackMoveActionTerran_SiegeTank) this.getActionFromInstance(AttackMoveActionTerran_SiegeTank.class));

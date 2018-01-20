@@ -28,7 +28,6 @@ public class PlayerUnitTerran_Vulture extends PlayerUnitTypeRanged {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	public void update() {
 		super.update();

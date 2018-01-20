@@ -41,7 +41,6 @@ public abstract class PlayerUnitTypeRanged extends PlayerUnit {
 		return generatedConfidence;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public HashSet<Unit> getAllEnemyUnitsInWeaponRange() {
 		return this.getAllEnemyUnitsInRange(

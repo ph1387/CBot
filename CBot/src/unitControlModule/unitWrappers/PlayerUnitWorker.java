@@ -37,7 +37,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 
 	protected boolean assignedToSout = false;
 
-	// TODO: UML ADD
 	// The Unit that the worker is mapped attacking to.
 	private Unit mappedAttackableTargetUnit = null;
 
@@ -117,7 +116,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		}
 	}
 
-	// TODO: UML ADD
 	@Override
 	protected Unit generateAttackableEnemyUnitToReactTo() {
 		Unit unitToReactTo = null;
@@ -153,7 +151,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		return unitToReactTo;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for mapping a worker Unit to another target Unit. This function
 	 * utilizes a {@link UnitMapper} to ensure that only one single worker is
@@ -206,7 +203,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 		return returnUnit;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public HashSet<Unit> getAllEnemyUnitsInWeaponRange() {
 		HashSet<Unit> returnedHashSet;

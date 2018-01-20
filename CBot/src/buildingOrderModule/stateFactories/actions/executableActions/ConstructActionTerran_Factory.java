@@ -35,7 +35,6 @@ public class ConstructActionTerran_Factory extends ConstructBaseAction {
 		return UnitType.Terran_Factory;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public int defineMaxSimulationOccurrences() {
 		return 2;

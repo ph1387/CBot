@@ -88,7 +88,6 @@ public class ActionQueueStartingTerranRaxFE extends ActionQueueStarting {
 
 	// -------------------- Functions
 
-	// TODO: UML ADD
 	@Override
 	protected boolean checkProceduralSpecificPrecondition(IGoapUnit goapUnit) {
 		return super.checkProceduralSpecificPrecondition(goapUnit)

@@ -29,7 +29,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	private Position targetPosition = null;
 
-	// TODO: UML CHANGE PARAM DESCRIPTION
 	/**
 	 * @param target
 	 *            type: Null
@@ -74,7 +73,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 		return success;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * If no enemy buildings are are being known of the Bot has to search for
 	 * them.
@@ -85,16 +83,15 @@ public class ScoutBaseLocationAction extends BaseAction {
 		Position closestPosition = null;
 
 		// The start locations must be preferred.
-		closestPosition = this.checkBaseLocations(BWTA.getStartLocations());
+		closestPosition = this.findCLosestReachableBaseLocation(BWTA.getStartLocations());
 
 		if (closestPosition == null) {
-			closestPosition = this.checkBaseLocations(BWTA.getBaseLocations());
+			closestPosition = this.findCLosestReachableBaseLocation(BWTA.getBaseLocations());
 		}
 
 		return closestPosition;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the closest, reachable BaseLocation with a
 	 * timeStamp:
@@ -106,7 +103,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 	 * 
 	 * @return the closest, reachable base Position with a matching timeStamp.
 	 */
-	private Position checkBaseLocations(List<BaseLocation> baseLocations) {
+	private Position findCLosestReachableBaseLocation(List<BaseLocation> baseLocations) {
 		PlayerUnit playerUnit = (PlayerUnit) this.currentlyExecutingUnit;
 		HashMap<BaseLocation, Integer> baselocationsSearched = playerUnit.getInformationStorage()
 				.getBaselocationsSearched();

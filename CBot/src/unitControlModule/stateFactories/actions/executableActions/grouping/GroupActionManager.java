@@ -240,7 +240,6 @@ public class GroupActionManager {
 
 	// ------------------------------ Getter / Setter
 
-	// TODO: UML ADD
 	/**
 	 * Function retrieving the size of the group the provided Unit is currently
 	 * part of.
