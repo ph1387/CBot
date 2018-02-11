@@ -284,8 +284,8 @@ public class RetreatPositionCluster {
 			}
 		}
 
-		this.countInvalid = this.countInvalidPositions();
 		this.clusterElementMatrix = newUnitMatrix;
+		this.countInvalid = this.countInvalidPositions();
 	}
 
 	/**
