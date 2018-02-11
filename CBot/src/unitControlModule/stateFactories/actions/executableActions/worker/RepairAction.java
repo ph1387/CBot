@@ -74,7 +74,9 @@ public abstract class RepairAction extends WorkerAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return ((Unit) this.target).getHitPoints() == ((Unit) this.target).getType().maxHitPoints()
+		return this.target == null
+				|| !((Unit) this.target).exists()
+				|| ((Unit) this.target).getHitPoints() == ((Unit) this.target).getType().maxHitPoints()
 				|| !((PlayerUnit) goapUnit).getUnit().canRepair((Unit) this.target);
 	}
 
