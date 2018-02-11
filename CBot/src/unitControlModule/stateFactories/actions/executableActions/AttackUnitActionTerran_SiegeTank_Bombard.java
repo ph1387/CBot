@@ -48,11 +48,18 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		boolean isEnemyDead = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange().contains(this.target);
-		boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
-		boolean isEnemyTooClose = ((PlayerUnitTerran_SiegeTank) goapUnit).isBelowSiegeRange((Unit) this.target);
+		boolean isDone = true;
 
-		return isEnemyDead || isConfidenceLow || isEnemyTooClose;
+		if (this.target != null) {
+			boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
+			boolean isEnemyInWeaponRange = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange()
+					.contains(this.target);
+			boolean isEnemyTooClose = ((PlayerUnitTerran_SiegeTank) goapUnit).isBelowSiegeRange((Unit) this.target);
+
+			isDone = isEnemyInWeaponRange || isConfidenceLow || isEnemyTooClose;
+		}
+
+		return isDone;
 	}
 
 	@Override
