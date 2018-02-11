@@ -11,6 +11,7 @@ import bwapiMath.Vector;
 import bwta.Chokepoint;
 import core.Core;
 import javaGOAP.IGoapUnit;
+import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.unitWrappers.PlayerUnit;
 
 /**
@@ -113,9 +114,18 @@ public class SteeringFactory {
 						&& ((PlayerUnit) goapUnit).getUnit().hasPath(vecRightEndPosition))
 						|| doesOneIntersectionBelongToChokePoint(nearestChoke, intersectionsVecRight);
 
-				if (!isEndPositionBlockedByNeutralOrBuilding(vecLeft) && vecLeftValid) {
+				// Ensure that a generated Position at the end of the Vector
+				// is actually a valid Point inside the map's boundaries. This
+				// check is necessary since other checks depend on comparing
+				// the boundaries of the checked Positions. Therefore these must
+				// NOT be null!
+				boolean vecLeftEndPositionValid = BaseAction.findBoundariesPositionIsIn(vecLeftEndPosition) != null;
+				boolean vecRightEndPositionValid = BaseAction.findBoundariesPositionIsIn(vecRightEndPosition) != null;
+
+				if (!isEndPositionBlockedByNeutralOrBuilding(vecLeft) && vecLeftValid && vecLeftEndPositionValid) {
 					possibleRetreatVector = vecLeft;
-				} else if (!isEndPositionBlockedByNeutralOrBuilding(vecRight) && vecRightValid) {
+				} else if (!isEndPositionBlockedByNeutralOrBuilding(vecRight) && vecRightValid
+						&& vecRightEndPositionValid) {
 					possibleRetreatVector = vecRight;
 				}
 
