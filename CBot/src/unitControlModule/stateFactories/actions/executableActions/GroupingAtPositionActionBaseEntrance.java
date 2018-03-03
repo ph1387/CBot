@@ -61,9 +61,10 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 
 	}
 
+	// TODO: UML CHANGE 128
 	// The length of the Vector emerging from the middle of the chosen
 	// ChokePoint.
-	private double vectorGatherLength = 128.;
+	private double vectorGatherLength = 256.;
 
 	/**
 	 * @param target
