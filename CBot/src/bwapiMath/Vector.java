@@ -18,8 +18,10 @@ public class Vector extends Point {
 	private static final Color DEFAULT_ARROW_COLOR = new Color(255, 255, 255);
 	private static final boolean DEFAULT_ARROW_DIRECTION_SHOWN = true;
 
-	private static final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
-	private static final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
+	// TODO: UML REMOVE
+	// private static final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
+	// TODO: UML REMOVE
+	// private static final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
 	private double dirX = 0., dirY = 0.;
 	private double length = 0.;
 
@@ -125,86 +127,11 @@ public class Vector extends Point {
 		this.length = Math.sqrt(Math.pow(this.dirX, 2) + Math.pow(this.dirY, 2));
 	}
 
-	/**
-	 * Function for determining the multiplier (r) with which the current Vector
-	 * calculates the X and Y values of the given Point.
-	 * 
-	 * @param point
-	 *            the Point the current Vector has to end at.
-	 * @return either the multiplier with which the targeted Vector (-> Point)
-	 *         is being reached or null, if the Point can not be reached.
-	 */
-	public Double getNeededMultiplier(Point point) {
-		// r = Vector length or direction multiplier
-		Double rX = null;
-		Double rY = null;
-		Double returnValue = null;
+	// TODO: UML REMOVE
+	// public Double getNeededMultiplier(Point point) {
 
-		// If the value of the direction vector in one side is zero, there only
-		// needs to be one check for the end point.
-		if (this.dirX == 0.) {
-			rY = new Double(new Double(-1 * this.y + point.y) / new Double(this.dirY));
-
-			if (Math.abs(Math.abs(this.x) - Math.abs(point.x)) < NEEDED_MP_MAX_DIFF) {
-				returnValue = rY;
-			}
-		} else if (this.dirY == 0.) {
-			rX = new Double(new Double(-1 * this.x + point.x) / new Double(this.dirX));
-
-			if (Math.abs(Math.abs(this.y) - Math.abs(point.y)) < NEEDED_MP_MAX_DIFF) {
-				returnValue = rX;
-			}
-		}
-
-		// Is only true if the check above was not successful
-		if (returnValue == null && (rX == null || rY == null)) {
-			// Could be split
-			rX = new Double(new Double(-1 * this.x + point.x) / new Double(this.dirX));
-			rY = new Double(new Double(-1 * this.y + point.y) / new Double(this.dirY));
-
-			if (this.dirX == 0 && this.x == point.x) {
-				rX = rY;
-			}
-			if (this.dirY == 0 && this.y == point.y) {
-				rY = rX;
-			}
-
-			if (Math.abs(Math.abs(rX) - Math.abs(rY)) < NEEDED_MP_MAX_DIFF) {
-				returnValue = rX; // Could also be rY
-			}
-		}
-		return returnValue;
-	}
-
-	/**
-	 * Function for getting the intersection between this Vector and another
-	 * one.
-	 * 
-	 * @param vectorB
-	 *            the Vector the check is done against.
-	 * @return the Point at which both Vectors intersect each other or null if
-	 *         they do not intersect each other.
-	 */
-	public Point getIntersection(Vector vectorB) {
-		// Vector-length / -direction multipliers
-		Double r = null;
-		Double s = (new Double(this.dirX * (this.y - vectorB.y) - this.dirY * (this.x - vectorB.x)))
-				/ new Double(this.dirX * vectorB.dirY - vectorB.dirX * this.dirY);
-
-		if (this.dirX == 0) {
-			r = (new Double(vectorB.y - this.y + s * vectorB.dirY)) / new Double(this.dirY);
-		} else {
-			r = (new Double(vectorB.x - this.x + s * vectorB.dirX)) / new Double(this.dirX);
-		}
-
-		if (Math.abs(Math.abs(this.x + r * this.dirX) - Math.abs(vectorB.x + s * vectorB.dirX)) < INTERSEC_MAX_DIFF
-				&& Math.abs(Math.abs(this.y + r * this.dirY)
-						- Math.abs(vectorB.y + s * vectorB.dirY)) < INTERSEC_MAX_DIFF) {
-			return new Point((int) (this.x + r * this.dirX), (int) (this.y + r * this.dirY), this.type);
-		} else {
-			return null;
-		}
-	}
+	// TODO: UML REMOVE
+	// public Point getIntersection(Vector vectorB) {
 
 	/**
 	 * Function for generating the cross product between this vector and another

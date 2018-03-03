@@ -4,6 +4,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -189,10 +190,45 @@ public class Polygon {
 		return this.polygon.contains(p.x, p.y);
 	}
 
+	// TODO: UML ADD
+	/**
+	 * Function for finding the closest intersection between this Polygon and a
+	 * given Line. This function returns a single Point or null, if no
+	 * intersection is found.
+	 * 
+	 * @param line
+	 *            the Line whose closest intersection to its starting Point with
+	 *            the Polygon is being calculated.
+	 * @return the closest intersection between the given Line and this Polygon
+	 *         relative to the line's starting Point.
+	 */
+	public Point getClosestIntersection(final Line line) {
+		List<Pair<Line, Point>> intersections = new ArrayList<>(this.findIntersections(line));
+		Point closestIntersection = null;
+
+		// Sort based on the closest intersection.
+		intersections.sort(new Comparator<Pair<Line, Point>>() {
+			@Override
+			public int compare(Pair<Line, Point> p1, Pair<Line, Point> p2) {
+				Line lineToFirstPoint = new Line(line.getStartPoint(), p1.second);
+				Line lineToSecondPoint = new Line(line.getStartPoint(), p2.second);
+
+				return Double.compare(lineToFirstPoint.length(), lineToSecondPoint.length());
+			}
+		});
+
+		if (!intersections.isEmpty()) {
+			closestIntersection = intersections.get(0).second;
+		}
+
+		return closestIntersection;
+	}
+
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for finding an intersection between this Polygon and a given
-	 * Vector. This function returns a List of Vector, Point Pairs. The Points
-	 * represent the Intersection itself, while the Vector is the segment of the
+	 * Line. This function returns a List of Line, Point Pairs. The Points
+	 * represent the Intersection itself, while the Line is the segment of the
 	 * Polygon that Point is on.
 	 * 
 	 * @param testVector
@@ -200,16 +236,15 @@ public class Polygon {
 	 *            tested.
 	 * @return a List of Pairs containing Vectors and Points.
 	 *         <ul>
-	 *         <li>Vector: the segment of the Polygon that is being
+	 *         <li>Line: the segment of the Polygon that is being
 	 *         intersected.</li>
 	 *         <li>Point: the intersection with the Polygon.</li>
 	 *         </ul>
 	 */
-	public List<Pair<Vector, Point>> findIntersections(Vector testVector) {
-		List<Pair<Vector, Point>> intersections = new ArrayList<>();
+	public List<Pair<Line, Point>> findIntersections(Line line) {
+		List<Pair<Line, Point>> intersections = new ArrayList<>();
 		PathIterator pathIterator = this.polygon.getPathIterator(null);
-		Line2D testLine = new Line2D.Double(testVector.x, testVector.y, testVector.x + testVector.getDirX(),
-				testVector.y + testVector.getDirY());
+		Line2D.Double testLine = Converter.convert(line);
 		boolean atEnd = false;
 
 		// Define the storage of the received coordinates
@@ -244,19 +279,9 @@ public class Polygon {
 
 			// Add an occurring intersection to the list of intersections found.
 			if (polyLine.intersectsLine(testLine)) {
-				// Extract the needed Vector information.
-				int posX = (int) polyLine.getX1();
-				int posY = (int) polyLine.getY1();
-				double dirX = polyLine.getX2() - polyLine.getX1();
-				double dirY = polyLine.getY2() - polyLine.getY1();
-				Vector polyVector = new Vector(posX, posY, dirX, dirY);
+				Point2D.Double intersection = Line.getIntersection(polyLine, testLine);
 
-				// Find the intersection itself.
-				Point intersection = testVector.getIntersection(polyVector);
-
-				if (intersection != null) {
-					intersections.add(new Pair<Vector, Point>(polyVector, intersection));
-				}
+				intersections.add(new Pair<Line, Point>(Converter.convert(polyLine), Converter.convert(intersection)));
 			}
 
 			// Swap the current coordinates with the previous ones.

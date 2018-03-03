@@ -6,6 +6,7 @@ import bwapi.Pair;
 import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapiMath.Line;
 import bwapiMath.Point;
 import bwapiMath.Polygon;
 import bwapiMath.Vector;
@@ -56,7 +57,7 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 	// possible Position to move to. The length does not matter as long as it is
 	// large enough for the Vectors to intersect wíth the current Region's
 	// boundaries.
-	private int vectorLength = 320000;
+	private final int vectorLength = 320000;
 	// The number of degrees the Vectors emerging from the start-Position that
 	// marks the possible Position to move to are turned left / right.
 	private int rotateDegrees = 90;
@@ -272,8 +273,8 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 
 		// Find the intersections with the current Region's boundaries.
 		Pair<Region, Polygon> boundaries = BaseAction.findBoundariesPositionIsIn(pathVector.toPosition());
-		List<Pair<Vector, Point>> intersectionsLeft = boundaries.second.findIntersections(moveVectorLeft);
-		List<Pair<Vector, Point>> intersectionsRight = boundaries.second.findIntersections(moveVectorRight);
+		List<Pair<Line, Point>> intersectionsLeft = boundaries.second.findIntersections(new Line(moveVectorLeft));
+		List<Pair<Line, Point>> intersectionsRight = boundaries.second.findIntersections(new Line(moveVectorRight));
 		Position intersectionLeft = intersectionsLeft.get(0).second.toPosition();
 		Position intersectionRight = intersectionsRight.get(0).second.toPosition();
 		Vector vecToIntersectionLeft = new Vector(pathVector.toPosition(), intersectionLeft);

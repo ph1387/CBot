@@ -5,6 +5,7 @@ import java.util.List;
 import bwapi.Pair;
 import bwapi.Position;
 import bwapi.Unit;
+import bwapiMath.Line;
 import bwapiMath.Point;
 import bwapiMath.Polygon;
 import bwapiMath.Vector;
@@ -74,7 +75,7 @@ public class SteeringFactory {
 		// The "hasPath" test is only used because some intersections were not
 		// found, which caused the Unit to simply abort the retreat Action and
 		// stand on one Point waiting for the enemy to kill it.
-		if (currentPolygon.findIntersections(vecLeft).isEmpty() && ((PlayerUnit) goapUnit).getUnit().hasPath(
+		if (currentPolygon.findIntersections(new Line(vecLeft)).isEmpty() && ((PlayerUnit) goapUnit).getUnit().hasPath(
 				new Position(vecLeft.getX() + (int) (vecLeft.getDirX()), vecLeft.getY() + (int) (vecLeft.getDirY())))) {
 			possibleRetreatVector = vecLeft; // OR vecRight, does not matter
 		} else if (nearestChoke != null) {
@@ -95,8 +96,8 @@ public class SteeringFactory {
 				}
 
 				// Gather the intersections with the map's boundaries.
-				List<Pair<Vector, Point>> intersectionsVecLeft = currentPolygon.findIntersections(vecLeft);
-				List<Pair<Vector, Point>> intersectionsVecRight = currentPolygon.findIntersections(vecRight);
+				List<Pair<Line, Point>> intersectionsVecLeft = currentPolygon.findIntersections(new Line(vecLeft));
+				List<Pair<Line, Point>> intersectionsVecRight = currentPolygon.findIntersections(new Line(vecRight));
 
 				// Determine the end-Points of the Vectors.
 				Position vecLeftEndPosition = new Position(vecLeft.getX() + (int) (vecLeft.getDirX()),
@@ -146,6 +147,7 @@ public class SteeringFactory {
 		return possibleRetreatVector;
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for determining if any intersection of a List of provided
 	 * intersections belongs to a ChokePoint.
@@ -159,10 +161,10 @@ public class SteeringFactory {
 	 *         the provided ChokePoint.
 	 */
 	private static boolean doesOneIntersectionBelongToChokePoint(Chokepoint chokePoint,
-			List<Pair<Vector, Point>> intersections) {
+			List<Pair<Line, Point>> intersections) {
 		boolean success = false;
 
-		for (Pair<Vector, Point> intersection : intersections) {
+		for (Pair<Line, Point> intersection : intersections) {
 			if (doesIntersectionBelongToChokePoint(chokePoint, intersection)) {
 				success = true;
 				break;
@@ -171,6 +173,7 @@ public class SteeringFactory {
 		return success;
 	}
 
+	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for determining if an intersection belongs to a ChokePoint.
 	 * 
@@ -183,23 +186,11 @@ public class SteeringFactory {
 	 * @return true or false depending if the intersection belongs to the
 	 *         provided ChokePoint.
 	 */
-	private static boolean doesIntersectionBelongToChokePoint(Chokepoint chokePoint, Pair<Vector, Point> intersection) {
-		// Test if the intersection belongs to a ChokePoint.
+	private static boolean doesIntersectionBelongToChokePoint(Chokepoint chokePoint, Pair<Line, Point> intersection) {
 		Position chokePositionOne = chokePoint.getSides().first;
 		Position chokePositionTwo = chokePoint.getSides().second;
 
-		Vector chokeAsVec = new Vector(chokePositionOne.getX(), chokePositionOne.getY(),
-				chokePositionTwo.getX() - chokePositionOne.getX(), chokePositionTwo.getY() - chokePositionOne.getY());
-		Double neededChokeMultiplier = chokeAsVec.getNeededMultiplier(intersection.second);
-
-		// If the intersection actually belongs to the ChokePoint, then the
-		// needed multiplier to display that is in between 0 and 1 (and not
-		// null).
-		if (neededChokeMultiplier != null && neededChokeMultiplier >= 0. && neededChokeMultiplier <= 1.) {
-			return true;
-		} else {
-			return false;
-		}
+		return (new Line(new Point(chokePositionOne), new Point(chokePositionTwo))).contains(intersection.second);
 	}
 
 	/**
