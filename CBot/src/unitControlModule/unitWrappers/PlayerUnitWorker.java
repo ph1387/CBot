@@ -165,39 +165,51 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	 */
 	private Unit tryMappingExecutingUnitToTargetOne(Unit targetUnit) {
 		UnitMapper unitMapper = this.informationStorage.getWorkerConfig().getUnitMapperAttack();
-		// PlayerUnit must not be the unitMappingTheTarget!
+		// PlayerUnit instance (this.unit) must not be the unitMappingTheTarget!
+		// The reference is taken from the unit mapper since another Unit might
+		// be mapped to the target one.
 		Unit unitMappingTheTarget = unitMapper.getMappingUnit(targetUnit);
 		Unit targetMappedByPlayerUnit = unitMapper.getMappedUnit(this.unit);
 		Unit returnUnit = null;
+		boolean unitGotUnmapped = true;
 
-		// Enemy ran away / is dead.
+		// Enemy ran away / is missing.
 		if (targetUnit == null && unitMapper.isMapped(this.unit)) {
 			unitMapper.unmapUnit(this.unit);
+			unitGotUnmapped = false;
 		}
 
 		// Own Unit dead, enemy Unit lives.
 		if (unitMapper.isBeingMapped(targetUnit) && unitMappingTheTarget != null && !unitMappingTheTarget.exists()) {
+			// Unit mapper is used since the player Unit that is mapped to this
+			// enemy one can not remove itself from the mapper.
 			unitMapper.unmapUnit(unitMapper.getMappingUnit(targetUnit));
+			unitGotUnmapped = false;
 		}
 		// Own Unit lives, enemy Unit dead.
 		if (targetMappedByPlayerUnit != null && !targetMappedByPlayerUnit.exists()) {
 			unitMapper.unmapUnit(this.unit);
+			unitGotUnmapped = false;
 		}
 
-		// Target is mapped to player Unit.
-		if (unitMapper.isBeingMapped(targetUnit)) {
-			if (unitMapper.getMappingUnit(targetUnit) == this.unit) {
+		// The Unit must NOT (!) be unmapped since it would be otherwise mapped
+		// again to the same target Unit.
+		if (unitGotUnmapped) {
+			// Target is already mapped to player Unit.
+			if (unitMapper.isBeingMapped(targetUnit)) {
+				if (unitMapper.getMappingUnit(targetUnit) == this.unit) {
+					returnUnit = targetUnit;
+				}
+			}
+			// PlayerUnit is (re-)mapped to a different Unit.
+			else {
+				if (unitMapper.isMapped(this.unit)) {
+					unitMapper.unmapUnit(this.unit);
+				}
+
+				unitMapper.mapUnit(this.unit, targetUnit);
 				returnUnit = targetUnit;
 			}
-		}
-		// PlayerUnit is (re-)mapped.
-		else {
-			if (unitMapper.isMapped(this.unit)) {
-				unitMapper.unmapUnit(this.unit);
-			}
-
-			unitMapper.mapUnit(this.unit, targetUnit);
-			returnUnit = targetUnit;
 		}
 
 		return returnUnit;
