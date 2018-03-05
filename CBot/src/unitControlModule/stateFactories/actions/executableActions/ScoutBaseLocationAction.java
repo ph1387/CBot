@@ -22,8 +22,9 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ScoutBaseLocationAction extends BaseAction {
 
-	// The time after a BaseLocation might be searched again.
-	public static final int BASELOCATIONS_TIME_PASSED = 60;
+	// TODO: UML CHANGE 60
+	// The time after a BaseLocation may be searched again.
+	public static final int BASELOCATIONS_TIME_PASSED = 300;
 
 	protected static Integer RANGE_TO_TARGET = null;
 
@@ -115,15 +116,27 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 			// TODO: Needed Change: Check for blocking minerals
 			if (baselocationsSearched.get(location) != null && playerUnit.getUnit().hasPath(baseRegion.getCenter())) {
+				boolean enoughTimePassed, isInitialBaseLocation, isBetterBaseLocation;
 				List<TilePosition> path = BWTA.getShortestPath(
 						((PlayerUnit) this.currentlyExecutingUnit).getUnit().getTilePosition(),
 						baseRegion.getCenter().toTilePosition());
 
-				if ((closestReachableBasePosition == null && Core.getInstance().getGame().elapsedTime()
-						- baselocationsSearched.get(location) >= BASELOCATIONS_TIME_PASSED)
-						|| (Core.getInstance().getGame().elapsedTime()
-								- baselocationsSearched.get(location) >= BASELOCATIONS_TIME_PASSED
-								&& path.size() < closestReachableBasePositionPathSize)) {
+				// Must be differentiated between because the scout will
+				// otherwise only stand at the starting BaseLocation until the
+				// time is reached (Then the actual scouting will begin).
+				if (Core.getInstance().getGame().elapsedTime() < BASELOCATIONS_TIME_PASSED) {
+					enoughTimePassed = baselocationsSearched.get(location).equals(0);
+				} else {
+					int timeDifference = Core.getInstance().getGame().elapsedTime()
+							- baselocationsSearched.get(location);
+					enoughTimePassed = timeDifference >= BASELOCATIONS_TIME_PASSED;
+				}
+
+				isInitialBaseLocation = closestReachableBasePosition == null && enoughTimePassed;
+				isBetterBaseLocation = !isInitialBaseLocation && enoughTimePassed
+						&& path.size() < closestReachableBasePositionPathSize;
+
+				if (isInitialBaseLocation || isBetterBaseLocation) {
 					closestReachableBasePosition = baseRegion.getCenter();
 					closestReachableBasePositionPathSize = path.size();
 				}
