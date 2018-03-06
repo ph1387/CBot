@@ -58,7 +58,8 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 			UnitType.Zerg_Spore_Colony, UnitType.Zerg_Sunken_Colony, UnitType.Terran_Medic });
 	// The closest enemy Unit this one can attack:
 	protected Unit closestAttackableEnemyUnitInConfidenceRange;
-	protected Unit closestAttackableEnemyUnitWithWeapon;
+	// TODO: UML RENAME closestAttackableEnemyUnitWithWeapon
+	protected Unit closestAttackableEnemyUnitWithWeaponInConfidenceRange;
 	protected Unit closestAttackableEnemySpecialUnitInConfidenceRange;
 	protected Unit closestAttackableEnemyWorkerInConfidenceRange;
 	protected Unit closestAttackableEnemySupplyProviderInConfidenceRange;
@@ -263,7 +264,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	private void resetUnitReferences() {
 		this.closestEnemyUnitInConfidenceRange = null;
 		this.closestAttackableEnemyUnitInConfidenceRange = null;
-		this.closestAttackableEnemyUnitWithWeapon = null;
+		this.closestAttackableEnemyUnitWithWeaponInConfidenceRange = null;
 		this.closestAttackableEnemySpecialUnitInConfidenceRange = null;
 		this.closestAttackableEnemyWorkerInConfidenceRange = null;
 		this.closestAttackableEnemySupplyProviderInConfidenceRange = null;
@@ -314,7 +315,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		// Flags for an efficient assigning of the different references. (O(n)
 		// instead of O(n*n)!).
 		boolean closestEnemyUnitInConfidenceRangeAssigned = false;
-		boolean closestAttackableEnemyUnitWithWeaponAssigned = false;
+		boolean closestAttackableEnemyUnitWithWeaponInConfidenceRangeAssigned = false;
 		boolean closestAttackableEnemyUnitInConfidenceRangeAssigned = false;
 		boolean closestAttackableEnemySpecialUnitInConfidenceRangeAssigned = false;
 		boolean closestAttackableEnemyWorkerInConfidenceRangeAssigned = false;
@@ -333,10 +334,10 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 				this.closestEnemyUnitInConfidenceRange = currentUnit;
 				closestEnemyUnitInConfidenceRangeAssigned = true;
 			}
-			if (!closestAttackableEnemyUnitWithWeaponAssigned && this.hasWeapon(currentUnit)
+			if (!closestAttackableEnemyUnitWithWeaponInConfidenceRangeAssigned && this.hasWeapon(currentUnit)
 					&& this.canAttack(currentUnit)) {
-				this.closestAttackableEnemyUnitWithWeapon = currentUnit;
-				closestAttackableEnemyUnitWithWeaponAssigned = true;
+				this.closestAttackableEnemyUnitWithWeaponInConfidenceRange = currentUnit;
+				closestAttackableEnemyUnitWithWeaponInConfidenceRangeAssigned = true;
 			}
 			if (!closestAttackableEnemyUnitInConfidenceRangeAssigned && this.canAttack(currentUnit)) {
 				this.closestAttackableEnemyUnitInConfidenceRange = currentUnit;
@@ -372,7 +373,8 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 			}
 
 			// Stop when each reference was updated.
-			running = !(closestEnemyUnitInConfidenceRangeAssigned && closestAttackableEnemyUnitWithWeaponAssigned
+			running = !(closestEnemyUnitInConfidenceRangeAssigned
+					&& closestAttackableEnemyUnitWithWeaponInConfidenceRangeAssigned
 					&& closestAttackableEnemyUnitInConfidenceRangeAssigned
 					&& closestAttackableEnemySpecialUnitInConfidenceRangeAssigned
 					&& closestAttackableEnemyWorkerInConfidenceRangeAssigned
@@ -402,8 +404,8 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		// Otherwise decide based on other conditions.
 		else if (this.closestAttackableEnemyUnitInConfidenceRange != null) {
 			// Enemies with weapons.
-			if (this.closestAttackableEnemyUnitWithWeapon != null) {
-				unitToReactTo = this.closestAttackableEnemyUnitWithWeapon;
+			if (this.closestAttackableEnemyUnitWithWeaponInConfidenceRange != null) {
+				unitToReactTo = this.closestAttackableEnemyUnitWithWeaponInConfidenceRange;
 			}
 			// Workers. (Probably never called since workers can attack ground
 			// Units)
@@ -1235,8 +1237,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return this.closestEnemyUnitInConfidenceRange;
 	}
 
-	public Unit getClosestAttackableEnemyUnitWithWeapon() {
-		return closestAttackableEnemyUnitWithWeapon;
+	// TODO: UML RENAME getClosestAttackableEnemyUnitWithWeapon
+	public Unit getClosestAttackableEnemyUnitWithWeaponInConfidenceRange() {
+		return closestAttackableEnemyUnitWithWeaponInConfidenceRange;
 	}
 
 	public Unit getClosestAttackableEnemyUnitInConfidenceRange() {
