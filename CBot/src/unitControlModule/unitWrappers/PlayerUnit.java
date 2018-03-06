@@ -262,6 +262,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 	 * types of enemy Units.
 	 */
 	private void resetUnitReferences() {
+		// Attackable enemy Unit references:
 		this.closestEnemyUnitInConfidenceRange = null;
 		this.closestAttackableEnemyUnitInConfidenceRange = null;
 		this.closestAttackableEnemyUnitWithWeaponInConfidenceRange = null;
@@ -270,6 +271,10 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		this.closestAttackableEnemySupplyProviderInConfidenceRange = null;
 		this.closestAttackableEnemyCenterInConfidenceRange = null;
 		this.attackableEnemyUnitToReactTo = null;
+		
+		// Attacking enemy Unit references:
+		this.closestAttackingEnemyUnitInConfidenceRange = null;
+		this.attackingEnemyUnitToReactTo = null;
 	}
 
 	/**
