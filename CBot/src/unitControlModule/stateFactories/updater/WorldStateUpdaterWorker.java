@@ -30,10 +30,10 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
+		super.update(playerUnit);
+		
 		// Extract the distance to the closest center building for later use.
 		Integer closestCenterDistance = playerUnit.generateClosestCenterDistance();
-		
-		super.update(playerUnit);
 
 		this.changeWorldStateEffect("gatheringMinerals", playerUnit.getUnit().isGatheringMinerals());
 		this.changeWorldStateEffect("gatheringGas", playerUnit.getUnit().isGatheringGas());

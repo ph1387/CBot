@@ -23,21 +23,6 @@ public class GoalStateUpdaterWorker extends GoalStateUpdaterGeneral {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
-		if (this.playerUnit.isConfidenceAboveThreshold()) {
-			this.changeGoalStateImportance("retreatFromUnit", 1);
-		} else {
-			this.changeGoalStateImportance("retreatFromUnit", 10);
-		}
-
-		// Let workers fight if an enemy is near them or they are assigned
-		// scouting.
-		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null
-				|| ((PlayerUnitWorker) this.playerUnit).isAssignedToSout()) {
-			this.changeGoalStateImportance("destroyUnit", 7);
-		} else {
-			this.changeGoalStateImportance("destroyUnit", 1);
-		}
-
 		// Initiate the scouting in the beginning of the match if certain
 		// criteria are matched. This transforms the worker Unit into a basic
 		// combat one.
@@ -52,6 +37,21 @@ public class GoalStateUpdaterWorker extends GoalStateUpdaterGeneral {
 			this.changeGoalStateImportance("enemyKnown", 1);
 			this.changeGoalStateImportance("destroyUnit", 2);
 			// Retreat stays the same
+		}
+		
+		if (this.playerUnit.isConfidenceAboveThreshold()) {
+			this.changeGoalStateImportance("retreatFromUnit", 1);
+		} else {
+			this.changeGoalStateImportance("retreatFromUnit", 10);
+		}
+
+		// Let workers fight if an enemy is near them or they are assigned
+		// scouting.
+		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null
+				|| ((PlayerUnitWorker) this.playerUnit).isAssignedToSout()) {
+			this.changeGoalStateImportance("destroyUnit", 7);
+		} else {
+			this.changeGoalStateImportance("destroyUnit", 1);
 		}
 	}
 }

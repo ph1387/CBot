@@ -22,12 +22,12 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 
 	@Override
 	public void update(PlayerUnit playerUnit) {
+		super.update(playerUnit);
+		
 		boolean isRepairing = playerUnit.getUnit().isRepairing() || playerUnit.getInformationStorage().getWorkerConfig()
 				.getUnitMapperRepair().isMapped(playerUnit.getUnit());
 		boolean isFollowing = playerUnit.getUnit().isFollowing() || playerUnit.getInformationStorage().getWorkerConfig()
 				.getUnitMapperFollow().isMapped(playerUnit.getUnit());
-
-		super.update(playerUnit);
 
 		this.changeWorldStateEffect("repairing", isRepairing);
 
