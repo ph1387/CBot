@@ -29,8 +29,10 @@ public class GoalStateUpdaterWorker extends GoalStateUpdaterGeneral {
 			this.changeGoalStateImportance("retreatFromUnit", 10);
 		}
 
-		// Let workers fight if an enemy is near them
-		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null) {
+		// Let workers fight if an enemy is near them or they are assigned
+		// scouting.
+		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null
+				|| ((PlayerUnitWorker) this.playerUnit).isAssignedToSout()) {
 			this.changeGoalStateImportance("destroyUnit", 7);
 		} else {
 			this.changeGoalStateImportance("destroyUnit", 1);
