@@ -8,6 +8,7 @@ import unitControlModule.stateFactories.actions.executableActions.worker.ScoutBa
 import unitControlModule.stateFactories.actions.executableActions.worker.UnloadGasAction;
 import unitControlModule.stateFactories.actions.executableActions.worker.UnloadMineralsAction;
 import unitControlModule.unitWrappers.PlayerUnit;
+import unitControlModule.unitWrappers.PlayerUnitWorker;
 
 /**
  * ActionUpdaterWorker.java --- Updater for updating a
@@ -63,9 +64,16 @@ public class ActionUpdaterWorker extends ActionUpdaterDefault {
 	protected TilePosition attackMoveToNearestKnownUnitConfiguration() {
 		TilePosition returnTilePosition = null;
 
-		// No buildings are attacked like in the superclass.
-		if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null) {
-			returnTilePosition = this.playerUnit.getAttackableEnemyUnitToReactTo().getTilePosition();
+		// No buildings are attacked like in the superclass. Moreover attacking
+		// structures far away is prohibited as only Units in confidence range
+		// (= Attackable ones) can return a TilePosition. Scouts are an
+		// exception since they must keep walking towards the enemy.
+		if (((PlayerUnitWorker) this.playerUnit).isAssignedToSout()) {
+			returnTilePosition = super.attackMoveToNearestKnownUnitConfiguration();
+		} else {
+			if (this.playerUnit.getAttackableEnemyUnitToReactTo() != null) {
+				returnTilePosition = this.playerUnit.getAttackableEnemyUnitToReactTo().getTilePosition();
+			}
 		}
 
 		return returnTilePosition;
