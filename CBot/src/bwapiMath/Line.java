@@ -3,6 +3,10 @@ package bwapiMath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
+import bwapi.Color;
+import bwapi.Game;
+import core.Core;
+
 // TODO: UML ADD
 /**
  * Line.java --- Class used for line operations (I.e.: Intersections).
@@ -12,6 +16,7 @@ import java.awt.geom.Point2D;
  */
 public class Line {
 
+	private static final Color DEFAULT_COLOR = new Color(255, 255, 255);
 	// The size of the box around the provided Point at a intersection
 	// calculation. This is needed since a Line does not have any covered area
 	// and therefore a check with the intersects function always returns false.
@@ -126,6 +131,25 @@ public class Line {
 		int height = POINT_BOX_SIZE;
 
 		return Converter.convert(this).intersects(boxX, boxY, width, height);
+	}
+
+	/**
+	 * Convenience function.
+	 */
+	public void display() {
+		this.display(DEFAULT_COLOR);
+	}
+
+	/**
+	 * Function for displaying the Line on the ingame map.
+	 * 
+	 * @param color
+	 *            the color of the displayed Line.
+	 */
+	public void display(Color color) {
+		Game game = Core.getInstance().getGame();
+
+		game.drawLineMap(this.startPoint.toPosition(), this.endPoint.toPosition(), color);
 	}
 
 	// ------------------------------ Getter / Setter
