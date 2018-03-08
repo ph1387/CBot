@@ -130,6 +130,10 @@ public class Init {
 				alreadyAddedChokePoints.add(chokepoint);
 			}
 		}
+
+		// TODO: DEBUG INFO
+		System.out.println(informationStorage.getMapInfo().getMineralBlockedChokePoints().size()
+				+ " ChokePoints are blocked by minerals.");
 	}
 
 	/**
