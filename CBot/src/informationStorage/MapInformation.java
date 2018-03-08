@@ -26,9 +26,10 @@ public class MapInformation {
 	// the Player's starting location. A Region used as a key provides the
 	// Region the Unit has to move to next (value).
 	private HashMap<Region, Region> reversedRegionAccessOrder = new HashMap<>();
+	// TODO: UML RENAME breadthAccessOrder
 	// The "standard" Region access order based on a breadth search from the
 	// Player's starting location.
-	private HashMap<Region, HashSet<Region>> breadthAccessOrder = new HashMap<>();
+	private HashMap<Region, HashSet<Region>> regionAccessOrder = new HashMap<>();
 
 	// TODO: UML ADD
 	// Collection of ChokePoints that are blocked by mineral patches at the
@@ -63,12 +64,14 @@ public class MapInformation {
 		this.reversedRegionAccessOrder = reversedRegionAccessOrder;
 	}
 
-	public HashMap<Region, HashSet<Region>> getBreadthAccessOrder() {
-		return breadthAccessOrder;
+	// TODO: UML RENAME getBreadthAccessOrder
+	public HashMap<Region, HashSet<Region>> getRegionAccessOrder() {
+		return regionAccessOrder;
 	}
 
-	public void setBreadthAccessOrder(HashMap<Region, HashSet<Region>> breadthAccessOrder) {
-		this.breadthAccessOrder = breadthAccessOrder;
+	// TODO UML RENAME setBreadthAccessOrder
+	public void setRegionAccessOrder(HashMap<Region, HashSet<Region>> breadthAccessOrder) {
+		this.regionAccessOrder = breadthAccessOrder;
 	}
 
 	// TODO: UML ADD

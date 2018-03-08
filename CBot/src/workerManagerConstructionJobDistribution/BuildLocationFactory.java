@@ -126,7 +126,7 @@ public class BuildLocationFactory {
 			// No free BaseLocations in the current Region => Check adjacent
 			// ones.
 			if (freeBaseLocations.isEmpty()) {
-				HashSet<Region> regionsToAdd = this.informationStorage.getMapInfo().getBreadthAccessOrder()
+				HashSet<Region> regionsToAdd = this.informationStorage.getMapInfo().getRegionAccessOrder()
 						.get(currentRegion);
 
 				if (regionsToAdd != null) {

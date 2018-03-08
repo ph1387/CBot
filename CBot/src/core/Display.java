@@ -322,7 +322,7 @@ public class Display {
 	 * are the centers of the Regions.
 	 */
 	private static void showBreadthAccessOrder() {
-		CBot.getInstance().getInformationStorage().getMapInfo().getBreadthAccessOrder()
+		CBot.getInstance().getInformationStorage().getMapInfo().getRegionAccessOrder()
 				.forEach(new BiConsumer<Region, HashSet<Region>>() {
 
 					@Override

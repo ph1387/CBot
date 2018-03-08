@@ -2,7 +2,6 @@ package core;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.function.BiConsumer;
 
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Game;
@@ -11,8 +10,11 @@ import bwapi.Pair;
 import bwapi.Position;
 import bwapi.Unit;
 import bwapiMath.Polygon;
-import bwapiMath.graph.BreadthFirstSearch;
-import bwapiMath.graph.DirectedGraphList;
+import bwapiMath.graph.BreadthAccessGenerator;
+import bwapiMath.graph.IConnector;
+import bwapiMath.graph.IInstanceMapper;
+import bwapiMath.graph.RegionConnector;
+import bwapiMath.graph.RegionInstanceMapper;
 import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
@@ -84,9 +86,7 @@ public class Init {
 				// Region it has to move to get to the Player's starting
 				// location.
 				informationStorage.getMapInfo().setReversedRegionAccessOrder(generateReversedRegionAccessOrder());
-
-				// Generate the breadth access order based on the reversed one.
-				informationStorage.getMapInfo().setBreadthAccessOrder(generateBreadthAccessOrder(informationStorage));
+				informationStorage.getMapInfo().setRegionAccessOrder(generateRegionAccessOrder());
 			}
 
 			// Add all BWTA-Polygons to the collection of Polygons in the
@@ -137,23 +137,6 @@ public class Init {
 	}
 
 	/**
-	 * Function for converting the BWTA-Polygon map boundaries into standard
-	 * Polygons that can be used for pathfinding etc.
-	 * 
-	 * @param informationStorage
-	 *            the location the newly generated Polygons are stored in.
-	 */
-	private static void convertBWTAPolygons(InformationStorage informationStorage) {
-		for (Region region : BWTA.getRegions()) {
-			Polygon regionPolygon = new Polygon(region.getPolygon());
-
-			regionPolygon.splitLongEdges(MAX_POLYGON_EDGE_LENGTH);
-			informationStorage.getMapInfo().getMapBoundaries()
-					.add(new Pair<bwta.Region, Polygon>(region, regionPolygon));
-		}
-	}
-
-	/**
 	 * Function for generating the reversed access order of all Regions of the
 	 * currently played map. Each entry contains a Region as a key and another
 	 * one which is the Region a Unit would have to move to to continue moving
@@ -171,183 +154,78 @@ public class Init {
 	 *         which leads towards the Player's starting location.
 	 */
 	private static HashMap<Region, Region> generateReversedRegionAccessOrder() {
-		HashMap<Region, Integer> regionMappedToIndex = generateRegionIndexHashMap();
-		DirectedGraphList directedGraph = new DirectedGraphList(regionMappedToIndex.size());
+		IConnector<Region> regionConnector = new RegionConnector();
+		IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper();
+		Region startRegion = BWTA.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition());
+		HashMap<Region, Region> reversedAccessOrder = new HashMap<>();
 
-		// TODO: DEBUG INFO
-		System.out.println(regionMappedToIndex.size() + " Regions added to the connection graph.");
-
-		// Add missing edges based on the map's ChokePoints.
-		addRegionConnectionsToGraph(directedGraph, regionMappedToIndex);
-
-		// Generate the breadth Region order starting from the Player's starting
-		// one.
-		return generateBreadthOrderToBase(directedGraph, regionMappedToIndex);
-	}
-
-	/**
-	 * Function used for mapping each Region of the currently played map to an
-	 * index / Integer. This HashMap functions as a key for the graph that is
-	 * being created since the graph uses Integers and not objects as its
-	 * vertices representation. Therefore a way of "encoding" and "decoding" the
-	 * information is ncecessary.
-	 * 
-	 * @return a HashMap with each Region of the map mapped to an Integer.
-	 */
-	private static HashMap<Region, Integer> generateRegionIndexHashMap() {
-		HashMap<Region, Integer> usedHashMap = new HashMap<>();
-		int counter = 0;
-
-		// Add an index / Integer to each Region. This is necessary since the
-		// graph used is based on an adjacency List using Integers.
-		for (Chokepoint chokePoint : BWTA.getChokepoints()) {
-			Region regionOne = chokePoint.getRegions().first;
-			Region regionTwo = chokePoint.getRegions().second;
-
-			// Add the Region references if they are not already inside the
-			// HashMap.
-			if (!usedHashMap.containsKey(regionOne)) {
-				usedHashMap.put(regionOne, counter);
-				counter++;
-			}
-			if (!usedHashMap.containsKey(regionTwo)) {
-				usedHashMap.put(regionTwo, counter);
-				counter++;
-			}
+		try {
+			reversedAccessOrder = BreadthAccessGenerator.generateReversedBreadthAccessOrder(regionInstanceMapper,
+					regionConnector, startRegion);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		return usedHashMap;
+		return reversedAccessOrder;
 	}
 
-	/**
-	 * Function for adding edges to a provided graph using the provided indices
-	 * of the mapped Regions based on the ChokePoints of the map's Regions. This
-	 * is necessary since the graph that is being used is using an adjacency
-	 * List which in return uses Integers as an internal representation of its
-	 * edges.
-	 * 
-	 * @param graph
-	 *            the graph to which the edges are being added.
-	 * @param regionsMappedToIndices
-	 *            a HashMap which mapped the Regions of the map to Integers that
-	 *            can be used to represent vertices and edges in the graph.
-	 */
-	private static void addRegionConnectionsToGraph(final DirectedGraphList graph,
-			final HashMap<Region, Integer> regionsMappedToIndices) {
-		// Add ChokePoints as edges to the created graph using the stored
-		// indices in the HashMap.
-		regionsMappedToIndices.forEach(new BiConsumer<Region, Integer>() {
+	// TODO: UML REMOVE
+	// private static HashMap<Region, Integer> generateRegionIndexHashMap() {
 
-			@Override
-			public void accept(Region region, Integer index) {
-				for (Chokepoint chokePoint : region.getChokepoints()) {
-					boolean chokePointFree = true;
+	// TODO: UML REMOVE
+	// private static void addRegionConnectionsToGraph(final DirectedGraphList
+	// graph,
+	// final HashMap<Region, Integer> regionsMappedToIndices) {
 
-					for (Pair<Unit, Chokepoint> blockedInstance : CBot.getInstance().getInformationStorage()
-							.getMapInfo().getMineralBlockedChokePoints()) {
-						// Equals of the ChokePoints can NOT be used here since
-						// the references are NOT the same! Therefore the
-						// Position of the sides must be checked.
-						if (blockedInstance.second.getSides().equals(chokePoint.getSides())) {
-							chokePointFree = false;
+	// TODO: UML REMOVE
+	// private static HashMap<Region, Region>
+	// generateBreadthOrderToBase(DirectedGraphList graph,
+	// HashMap<Region, Integer> regionMappedToIndex) {
 
-							break;
-						}
-					}
-
-					// Only add non-blocked ChokePoints to the connections.
-					if (chokePointFree) {
-						// Find the other region of the ChokePoint to determine
-						// the
-						// edge that must be added to the graph.
-						Region otherRegion = chokePoint.getRegions().first;
-
-						if (otherRegion == region) {
-							otherRegion = chokePoint.getRegions().second;
-						}
-
-						graph.addEdge(index, regionsMappedToIndices.get(otherRegion));
-					}
-				}
-			}
-		});
-	}
-
-	/**
-	 * Function for generating the order in which the Regions of the currently
-	 * played maps must be traversed in order to get to the Player's starting
-	 * location.
-	 * 
-	 * @param graph
-	 *            the graph which will be used to determine the order of Regions
-	 *            being traversed.
-	 * @param regionMappedToIndex
-	 *            the HashMap containing Integers mapped to Regions for decoding
-	 *            latter.
-	 * @return a HashMap of Regions mapped to other Regions. The value
-	 *         represents the Region which must be traveled in order to get
-	 *         closer to the Player's starting location.
-	 */
-	private static HashMap<Region, Region> generateBreadthOrderToBase(DirectedGraphList graph,
-			HashMap<Region, Integer> regionMappedToIndex) {
-		int start = regionMappedToIndex
-				.get(BWTA.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition()));
-		final int[] predecessors = BreadthFirstSearch.getPredecessors(graph, start);
-		HashMap<Region, Region> breadthOrderRegions = new HashMap<>();
-
-		// Resolve the indices of the predecessors and save the references to a
-		// separate variable.
-		for (int i = 0; i < predecessors.length; i++) {
-			final int currentIndex = i;
-			final Pair<Region, Region> regionFromTo = new Pair<>();
-
-			// Find both Region references based on the index and the Integer
-			// saved in the predecessor array.
-			// -> i = from, array[i] = to
-			regionMappedToIndex.forEach(new BiConsumer<Region, Integer>() {
-
-				@Override
-				public void accept(Region region, Integer index) {
-					if (index.equals(currentIndex)) {
-						regionFromTo.first = region;
-					} else if (index.equals(predecessors[currentIndex])) {
-						regionFromTo.second = region;
-					}
-				}
-			});
-
-			breadthOrderRegions.put(regionFromTo.first, regionFromTo.second);
-		}
-		return breadthOrderRegions;
-	}
-
+	// TODO: UML RENAME generateBreadthAccessOrder
 	/**
 	 * Function for generating the order in which the different Regions are
-	 * accessible beginning at the Player's starting location. This function
-	 * basically returns a HashMap representing the breadth search equivalent
-	 * and uses the reversed access order of the different Regions of the map.
+	 * accessible beginning at the Player's starting location.
+	 * <ul>
+	 * <li>Key: Any Region of the currently played map.</li>
+	 * <li>Value: An HashSet of adjacent Regions that can be accessed by the key
+	 * Region.</li>
+	 * </ul>
 	 * 
-	 * @param informationStorage
-	 *            the storages which provides the reversed access order of the
-	 *            Regions.
 	 * @return a HashMap containing the breadth search equivalent of the access
 	 *         order of the different map Regions.
 	 */
-	private static HashMap<Region, HashSet<Region>> generateBreadthAccessOrder(InformationStorage informationStorage) {
+	private static HashMap<Region, HashSet<Region>> generateRegionAccessOrder() {
+		IConnector<Region> regionConnector = new RegionConnector();
+		IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper();
+		Region startRegion = BWTA.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition());
 		HashMap<Region, HashSet<Region>> breadthAccessOrder = new HashMap<>();
 
-		for (Region to : informationStorage.getMapInfo().getReversedRegionAccessOrder().keySet()) {
-			Region from = informationStorage.getMapInfo().getReversedRegionAccessOrder().get(to);
-
-			if (from != null) {
-				if (!breadthAccessOrder.containsKey(from)) {
-					breadthAccessOrder.put(from, new HashSet<Region>());
-				}
-
-				breadthAccessOrder.get(from).add(to);
-			}
+		try {
+			breadthAccessOrder = BreadthAccessGenerator.generateBreadthAccessOrder(regionInstanceMapper,
+					regionConnector, startRegion);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return breadthAccessOrder;
 	}
+
+	/**
+	 * Function for converting the BWTA-Polygon map boundaries into standard
+	 * Polygons that can be used for pathfinding etc.
+	 * 
+	 * @param informationStorage
+	 *            the location the newly generated Polygons are stored in.
+	 */
+	private static void convertBWTAPolygons(InformationStorage informationStorage) {
+		for (Region region : BWTA.getRegions()) {
+			Polygon regionPolygon = new Polygon(region.getPolygon());
+
+			regionPolygon.splitLongEdges(MAX_POLYGON_EDGE_LENGTH);
+			informationStorage.getMapInfo().getMapBoundaries()
+					.add(new Pair<bwta.Region, Polygon>(region, regionPolygon));
+		}
+	}
+
 }
