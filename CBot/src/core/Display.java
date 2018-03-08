@@ -1,7 +1,9 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import bwapi.Color;
 import bwapi.Game;
@@ -13,6 +15,7 @@ import bwapi.UnitType;
 import bwapiMath.Line;
 import bwapiMath.Point;
 import bwapiMath.Polygon;
+import bwapiMath.Vector;
 import bwta.Chokepoint;
 import bwta.Region;
 import informationStorage.InformationStorage;
@@ -198,6 +201,9 @@ public class Display {
 		if (informationStorage.getiDisplayConfig().enableDisplayMineralBlockedChokePoints()) {
 			showMineralBlockedChokePoints();
 		}
+		if (informationStorage.getiDisplayConfig().enableDisplayBreadthAccessOrder()) {
+			showBreadthAccessOrder();
+		}
 	}
 
 	/**
@@ -307,6 +313,25 @@ public class Display {
 			Pair<Position, Position> sides = blockedChokePoint.second.getSides();
 			(new Line(new Point(sides.first), new Point(sides.second))).display(BLOCKING_MINERAL_COLOR);
 		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for displaying the breadth access order in which the different
+	 * Regions can be accessed by the Bot. The Points connected by the Vectors
+	 * are the centers of the Regions.
+	 */
+	private static void showBreadthAccessOrder() {
+		CBot.getInstance().getInformationStorage().getMapInfo().getBreadthAccessOrder()
+				.forEach(new BiConsumer<Region, HashSet<Region>>() {
+
+					@Override
+					public void accept(Region region, HashSet<Region> accessibleRegions) {
+						for (Region accessibleRegion : accessibleRegions) {
+							(new Vector(region.getCenter(), accessibleRegion.getCenter())).display();
+						}
+					}
+				});
 	}
 
 	/**
