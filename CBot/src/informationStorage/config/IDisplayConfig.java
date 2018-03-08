@@ -32,4 +32,12 @@ public interface IDisplayConfig {
 	 */
 	public boolean enableDisplayMapContendedTilePositions();
 
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return true for enabling the highlight of the ChokePoints (And the
+	 *         blocking mineral patches) that are being blocked by mineral
+	 *         patches.
+	 */
+	public boolean enableDisplayMineralBlockedChokePoints();
 }

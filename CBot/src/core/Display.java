@@ -6,10 +6,14 @@ import java.util.List;
 import bwapi.Color;
 import bwapi.Game;
 import bwapi.Pair;
+import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
+import bwapiMath.Line;
+import bwapiMath.Point;
 import bwapiMath.Polygon;
+import bwta.Chokepoint;
 import bwta.Region;
 import informationStorage.InformationStorage;
 
@@ -32,6 +36,10 @@ public class Display {
 	private static final Color RESERVED_SPACE_COLOR = new Color(255, 128, 0);
 	private static final int POLYGON_VERTEX_RADIUS = 5;
 	private static final Color CONTENDED_TILEPOSITION_COLOR = new Color(128, 128, 0);
+	// TODO: UML ADD
+	private static final int BLOCKING_MINERAL_POINT_RADIUS = 16;
+	// TODO: UML ADD
+	private static final Color BLOCKING_MINERAL_COLOR = new Color(255, 0, 0);
 
 	/**
 	 * Function for displaying a single Unit / draw a box around the tile the
@@ -187,6 +195,9 @@ public class Display {
 		if (informationStorage.getiDisplayConfig().enableDisplayReservedSpacePolygons()) {
 			showReservedSpacePolygons();
 		}
+		if (informationStorage.getiDisplayConfig().enableDisplayMineralBlockedChokePoints()) {
+			showMineralBlockedChokePoints();
+		}
 	}
 
 	/**
@@ -276,6 +287,25 @@ public class Display {
 	private static void showReservedSpacePolygons() {
 		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getReservedSpace()) {
 			polygon.display(RESERVED_SPACE_COLOR, true, POLYGON_VERTEX_RADIUS, false);
+		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for displaying all mineral blocked ChokePoints as well as the
+	 * mineral patches that are blocking them. These ChokePoints can not be
+	 * traversed by default.
+	 */
+	private static void showMineralBlockedChokePoints() {
+		for (Pair<Unit, Chokepoint> blockedChokePoint : CBot.getInstance().getInformationStorage().getMapInfo()
+				.getMineralBlockedChokePoints()) {
+			// Display blocking mineral.
+			(new Point(blockedChokePoint.first.getInitialPosition())).display(BLOCKING_MINERAL_POINT_RADIUS,
+					BLOCKING_MINERAL_COLOR, true);
+
+			// Display blocked ChokePoint.
+			Pair<Position, Position> sides = blockedChokePoint.second.getSides();
+			(new Line(new Point(sides.first), new Point(sides.second))).display(BLOCKING_MINERAL_COLOR);
 		}
 	}
 

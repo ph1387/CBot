@@ -52,6 +52,8 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	private boolean displayMapBoundaries = false;
 	private boolean displayReservedSpacePolygons = false;
 	private boolean displayMapContendedTilePositions = false;
+	// TODO: UML ADD
+	private boolean displayMineralBlockedChokePoints = false;
 
 	// UnitControlModule:
 	private boolean displayQueueInformation = true;
@@ -152,6 +154,12 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	@Override
 	public boolean enableDisplayMapContendedTilePositions() {
 		return this.displayMapContendedTilePositions;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean enableDisplayMineralBlockedChokePoints() {
+		return this.displayMineralBlockedChokePoints;
 	}
 
 	@Override
