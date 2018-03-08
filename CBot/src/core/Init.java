@@ -237,15 +237,33 @@ public class Init {
 			@Override
 			public void accept(Region region, Integer index) {
 				for (Chokepoint chokePoint : region.getChokepoints()) {
-					// Find the other region of the ChokePoint to determine the
-					// edge that must be added to the graph.
-					Region otherRegion = chokePoint.getRegions().first;
+					boolean chokePointFree = true;
 
-					if (otherRegion == region) {
-						otherRegion = chokePoint.getRegions().second;
+					for (Pair<Unit, Chokepoint> blockedInstance : CBot.getInstance().getInformationStorage()
+							.getMapInfo().getMineralBlockedChokePoints()) {
+						// Equals of the ChokePoints can NOT be used here since
+						// the references are NOT the same! Therefore the
+						// Position of the sides must be checked.
+						if (blockedInstance.second.getSides().equals(chokePoint.getSides())) {
+							chokePointFree = false;
+
+							break;
+						}
 					}
 
-					graph.addEdge(index, regionsMappedToIndices.get(otherRegion));
+					// Only add non-blocked ChokePoints to the connections.
+					if (chokePointFree) {
+						// Find the other region of the ChokePoint to determine
+						// the
+						// edge that must be added to the graph.
+						Region otherRegion = chokePoint.getRegions().first;
+
+						if (otherRegion == region) {
+							otherRegion = chokePoint.getRegions().second;
+						}
+
+						graph.addEdge(index, regionsMappedToIndices.get(otherRegion));
+					}
 				}
 			}
 		});
