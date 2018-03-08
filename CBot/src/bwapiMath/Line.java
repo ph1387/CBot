@@ -17,10 +17,10 @@ import core.Core;
 public class Line {
 
 	private static final Color DEFAULT_COLOR = new Color(255, 255, 255);
-	// The size of the box around the provided Point at a intersection
+	// The default size of the box around the provided Point at a intersection
 	// calculation. This is needed since a Line does not have any covered area
 	// and therefore a check with the intersects function always returns false.
-	private static final int POINT_BOX_SIZE = 16;
+	private static final int DEFAULT_POINT_BOX_SIZE = 16;
 
 	private Point startPoint;
 	private Point endPoint;
@@ -115,6 +115,7 @@ public class Line {
 	}
 
 	/**
+	 * Convenience function.<br>
 	 * Function for checking if the Line instance contains a Point.
 	 * 
 	 * @param point
@@ -122,13 +123,28 @@ public class Line {
 	 * @return true if the Point is on the Line, otherwise false.
 	 */
 	public boolean contains(Point point) {
+		return contains(point, DEFAULT_POINT_BOX_SIZE);
+	}
+
+	/**
+	 * Function for checking if the Line instance contains a Point.
+	 * 
+	 * @param point
+	 *            the Point that is going to be checked for.
+	 * @param totalPointBoxSize
+	 *            the total size of the box around the Point that is used in
+	 *            order to check if the Line contains it. The larger the total
+	 *            size, the further the Point can be away from the Line.
+	 * @return true if the Point is on the Line, otherwise false.
+	 */
+	public boolean contains(Point point, int totalPointBoxSize) {
 		// Box around the given Point is needed since a Line does not have any
 		// area. Therefore it can not intersect a single Point.
 		// -> Always returns false!
-		int boxX = point.x - POINT_BOX_SIZE / 2;
-		int boxY = point.y - POINT_BOX_SIZE / 2;
-		int width = POINT_BOX_SIZE;
-		int height = POINT_BOX_SIZE;
+		int boxX = point.x - totalPointBoxSize / 2;
+		int boxY = point.y - totalPointBoxSize / 2;
+		int width = totalPointBoxSize;
+		int height = totalPointBoxSize;
 
 		return Converter.convert(this).intersects(boxX, boxY, width, height);
 	}
