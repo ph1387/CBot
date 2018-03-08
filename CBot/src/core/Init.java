@@ -8,6 +8,8 @@ import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Game;
 import bwapi.Mirror;
 import bwapi.Pair;
+import bwapi.Position;
+import bwapi.Unit;
 import bwapiMath.Polygon;
 import bwapiMath.graph.BreadthFirstSearch;
 import bwapiMath.graph.DirectedGraphList;
@@ -28,6 +30,8 @@ public class Init {
 	private static final int UNIT_FLAG = 1;
 	private static final int GAME_SPEED = 0; // TODO: 20, 0, etc.
 	private static final int MAX_POLYGON_EDGE_LENGTH = 100;
+	// TODO: UML ADD
+	private static final int MINERAL_BLOCK_RANGE = 64;
 
 	/**
 	 * Function for initializing all important Functions in the beginning.
@@ -50,6 +54,11 @@ public class Init {
 			// Use BWTA to analyze map
 			BWTA.readMap();
 			BWTA.analyze();
+
+			// Find all ChokePoints that are blocked by mineral patches at the
+			// start of the game. This is needed since multiple components
+			// depend on this information (breadth access order, etc.).
+			extractMineralBlockedChokePoints(game, informationStorage);
 
 			// Add all default contended TilePositions.
 			if (informationStorage.getiInitConfig().enableGenerateDefaultContendedTilePositions()) {
@@ -93,6 +102,34 @@ public class Init {
 			successful = false;
 		}
 		return successful;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting all ChokePoints on the current map that are being
+	 * blocked by minerals and therefore can not be traversed.
+	 * 
+	 * @param game
+	 *            the game instance from which the initial mineral positions are
+	 *            being taken.
+	 * @param informationStorage
+	 *            the location the blocked ChokePoints are being stored in.
+	 */
+	private static void extractMineralBlockedChokePoints(Game game, InformationStorage informationStorage) {
+		HashSet<Chokepoint> alreadyAddedChokePoints = new HashSet<>();
+
+		// Iterate through each mineral patch and add blocked ChokePoints ONCE!
+		for (Unit mineral : game.getStaticMinerals()) {
+			Position initialPosition = mineral.getInitialPosition();
+			Chokepoint chokepoint = BWTA.getNearestChokepoint(initialPosition);
+
+			if (chokepoint.getDistance(initialPosition) <= MINERAL_BLOCK_RANGE
+					&& !alreadyAddedChokePoints.contains(chokepoint)) {
+				informationStorage.getMapInfo().getMineralBlockedChokePoints()
+						.add(new Pair<Unit, Chokepoint>(mineral, chokepoint));
+				alreadyAddedChokePoints.add(chokepoint);
+			}
+		}
 	}
 
 	/**

@@ -5,7 +5,9 @@ import java.util.HashSet;
 
 import bwapi.Pair;
 import bwapi.TilePosition;
+import bwapi.Unit;
 import bwapiMath.Polygon;
+import bwta.Chokepoint;
 import bwta.Region;
 
 /**
@@ -27,6 +29,11 @@ public class MapInformation {
 	// The "standard" Region access order based on a breadth search from the
 	// Player's starting location.
 	private HashMap<Region, HashSet<Region>> breadthAccessOrder = new HashMap<>();
+
+	// TODO: UML ADD
+	// Collection of ChokePoints that are blocked by mineral patches at the
+	// beginning of the game and therefore can not be traversed by default.
+	private HashSet<Pair<Unit, Chokepoint>> mineralBlockedChokePoints = new HashSet<>();
 
 	public MapInformation() {
 
@@ -62,5 +69,10 @@ public class MapInformation {
 
 	public void setBreadthAccessOrder(HashMap<Region, HashSet<Region>> breadthAccessOrder) {
 		this.breadthAccessOrder = breadthAccessOrder;
+	}
+
+	// TODO: UML ADD
+	public HashSet<Pair<Unit, Chokepoint>> getMineralBlockedChokePoints() {
+		return mineralBlockedChokePoints;
 	}
 }
