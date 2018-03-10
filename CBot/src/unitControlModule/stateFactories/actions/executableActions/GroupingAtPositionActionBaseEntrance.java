@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
+import bwapi.Pair;
 import bwapi.Position;
 import bwapi.Unit;
 import bwapiMath.Vector;
@@ -79,10 +80,12 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 	@Override
 	protected Position generateGroupingPosition(IGoapUnit goapUnit) {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
+		HashSet<Chokepoint> blockedChokePoints = this.extractBlockedChokePoints(
+				playerUnit.getInformationStorage().getMapInfo().getMineralBlockedChokePoints());
 		Position groupingPosition = null;
 
 		HashSet<Region> regionsWithCenters = this.extractRegionsWithCenters(playerUnit.getInformationStorage());
-		HashSet<Chokepoint> chokePoints = this.extractChokePoints(regionsWithCenters);
+		HashSet<Chokepoint> chokePoints = this.extractChokePoints(regionsWithCenters, blockedChokePoints);
 		List<RegionWrapper> regionWrappers = this.extractPossibleRegionWrappers(chokePoints, regionsWithCenters);
 
 		this.sortBasedOnDistance(regionWrappers, playerUnit);
@@ -94,6 +97,27 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 		}
 
 		return groupingPosition;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting the ChokePoint references from a HashSet of
+	 * Unit-ChokePoint-Pairs.
+	 * 
+	 * @param blockedChokePointsPairs
+	 *            a HashSet containing the Unit-ChokePoint-Pairs from which the
+	 *            ChokePoints are going to be extracted.
+	 * @return a HashSet of ChokePoints that the provided input HashSet
+	 *         contained.
+	 */
+	private HashSet<Chokepoint> extractBlockedChokePoints(HashSet<Pair<Unit, Chokepoint>> blockedChokePointsPairs) {
+		HashSet<Chokepoint> blockedChokePoints = new HashSet<>();
+
+		for (Pair<Unit, Chokepoint> pair : blockedChokePointsPairs) {
+			blockedChokePoints.add(pair.second);
+		}
+
+		return blockedChokePoints;
 	}
 
 	/**
@@ -117,6 +141,7 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 		return regionsWithCenters;
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for extracting ChokePoints from a provided HashSet of Regions.
 	 * Since a Region can hold multiple ChokePoints, iterating over each one
@@ -125,14 +150,34 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 	 * @param regions
 	 *            the Region instances that are going to be used for accessing
 	 *            all ChokePoints.
+	 * @param blockedChokePoints
+	 *            a HashSet containing all ChokePoints that can not be
+	 *            traversed.
 	 * @return a HashSet containing all ChokePoints that are part of the
 	 *         provided Region HashSet.
 	 */
-	private HashSet<Chokepoint> extractChokePoints(HashSet<Region> regions) {
+	private HashSet<Chokepoint> extractChokePoints(HashSet<Region> regions, HashSet<Chokepoint> blockedChokePoints) {
 		HashSet<Chokepoint> chokePointsAtBorders = new HashSet<>();
 
 		for (Region region : regions) {
-			chokePointsAtBorders.addAll(region.getChokepoints());
+			for (Chokepoint chokepoint : region.getChokepoints()) {
+				boolean free = true;
+
+				// ChokePoints can not be checked directly since the one
+				// retrieved by the used BWTA.function differ from the ones
+				// stored in the information storage.
+				for (Chokepoint referenceChokePoint : blockedChokePoints) {
+					if (chokepoint.getSides().equals(referenceChokePoint.getSides())) {
+						free = false;
+
+						break;
+					}
+				}
+
+				if (free) {
+					chokePointsAtBorders.add(chokepoint);
+				}
+			}
 		}
 
 		return chokePointsAtBorders;
