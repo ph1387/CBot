@@ -3,7 +3,6 @@ package core;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Game;
@@ -89,13 +88,13 @@ public class Init {
 				// Create the reversed Region access order. Reversed means that
 				// any Unit in a Region has access to the information to which
 				// Region it has to move to get to the Player's starting
-				// location.
+				// location. This contains ALL Regions on the map as keys.
 				HashMap<Region, Region> reversedRegionAccesOrder = generateReversedRegionAccessOrder(startRegion);
 
 				informationStorage.getMapInfo().setReversedRegionAccessOrder(reversedRegionAccesOrder);
 				informationStorage.getMapInfo().setRegionAccessOrder(regionAccessOrder);
-				informationStorage.getMapInfo()
-						.setPrecomputedRegionAcccessOrders(generateRegionAccessOrders(regionAccessOrder.keySet()));
+				informationStorage.getMapInfo().setPrecomputedRegionAcccessOrders(
+						generateRegionAccessOrders(reversedRegionAccesOrder.keySet()));
 			}
 
 			// Add all BWTA-Polygons to the collection of Polygons in the
