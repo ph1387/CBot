@@ -2,6 +2,8 @@ package core;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.function.BiConsumer;
 
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Game;
@@ -81,12 +83,19 @@ public class Init {
 			}
 
 			if (informationStorage.getiInitConfig().enableGenerateRegionAccessOrder()) {
+				Region startRegion = BWTA
+						.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition());
+				HashMap<Region, HashSet<Region>> regionAccessOrder = generateRegionAccessOrder(startRegion);
 				// Create the reversed Region access order. Reversed means that
 				// any Unit in a Region has access to the information to which
 				// Region it has to move to get to the Player's starting
 				// location.
-				informationStorage.getMapInfo().setReversedRegionAccessOrder(generateReversedRegionAccessOrder());
-				informationStorage.getMapInfo().setRegionAccessOrder(generateRegionAccessOrder());
+				HashMap<Region, Region> reversedRegionAccesOrder = generateReversedRegionAccessOrder(startRegion);
+
+				informationStorage.getMapInfo().setReversedRegionAccessOrder(reversedRegionAccesOrder);
+				informationStorage.getMapInfo().setRegionAccessOrder(regionAccessOrder);
+				informationStorage.getMapInfo()
+						.setPrecomputedRegionAcccessOrders(generateRegionAccessOrders(regionAccessOrder.keySet()));
 			}
 
 			// Add all BWTA-Polygons to the collection of Polygons in the
@@ -136,27 +145,27 @@ public class Init {
 				+ " ChokePoints are blocked by minerals.");
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for generating the reversed access order of all Regions of the
 	 * currently played map. Each entry contains a Region as a key and another
 	 * one which is the Region a Unit would have to move to to continue moving
-	 * towards the Player's starting location / its home location. The Region
-	 * containing the starting location is an entry as well with a value of null
-	 * since no further Region leads towards the starting location. <br>
+	 * towards the provided Region. The provided one has a value of null in the
+	 * HashMap since it has no previous Region. <br>
 	 * <ul>
 	 * <li>Key: Any Region of the currently played map.</li>
-	 * <li>Value: An adjacent Region which leads towards the Player's starting
-	 * location (If the key is not the Region containing the starting location).
-	 * </li>
+	 * <li>Value: An adjacent Region which leads towards the provided one. If
+	 * the key is the provided Region, the value is null.</li>
 	 * </ul>
 	 * 
-	 * @return a HashMap containing Regions mapped to another adjacent Region
-	 *         which leads towards the Player's starting location.
+	 * @param startRegion
+	 *            the Region that all other Regions must lead to.
+	 * @return a HashMap containing Regions mapped to another adjacent one which
+	 *         leads towards the provided start Region.
 	 */
-	private static HashMap<Region, Region> generateReversedRegionAccessOrder() {
+	private static HashMap<Region, Region> generateReversedRegionAccessOrder(Region startRegion) {
 		IConnector<Region> regionConnector = new RegionConnector();
 		IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper();
-		Region startRegion = BWTA.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition());
 		HashMap<Region, Region> reversedAccessOrder = new HashMap<>();
 
 		try {
@@ -182,23 +191,25 @@ public class Init {
 	// generateBreadthOrderToBase(DirectedGraphList graph,
 	// HashMap<Region, Integer> regionMappedToIndex) {
 
+	// TODO: UML PARAMS
 	// TODO: UML RENAME generateBreadthAccessOrder
 	/**
 	 * Function for generating the order in which the different Regions are
-	 * accessible beginning at the Player's starting location.
+	 * accessible beginning at a provided starting Region.
 	 * <ul>
 	 * <li>Key: Any Region of the currently played map.</li>
 	 * <li>Value: An HashSet of adjacent Regions that can be accessed by the key
 	 * Region.</li>
 	 * </ul>
 	 * 
+	 * @param startRegion
+	 *            the Region the access order starts at.
 	 * @return a HashMap containing the breadth search equivalent of the access
 	 *         order of the different map Regions.
 	 */
-	private static HashMap<Region, HashSet<Region>> generateRegionAccessOrder() {
+	private static HashMap<Region, HashSet<Region>> generateRegionAccessOrder(Region startRegion) {
 		IConnector<Region> regionConnector = new RegionConnector();
 		IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper();
-		Region startRegion = BWTA.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition());
 		HashMap<Region, HashSet<Region>> breadthAccessOrder = new HashMap<>();
 
 		try {
@@ -209,6 +220,32 @@ public class Init {
 		}
 
 		return breadthAccessOrder;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating the region access order for each provided Region.
+	 * <ul>
+	 * <li>Key: Any Region of the provided Set.</li>
+	 * <li>Value: The region access order for it in form of a HashMap.</li>
+	 * </ul>
+	 * 
+	 * @see #generateRegionAccessOrder(Region)
+	 * @param regions
+	 *            the Set of Regions which the access orders are generated for.
+	 * @return a HashMap containing all region access orders for the provided
+	 *         Set of Regions.
+	 */
+	private static HashMap<Region, HashMap<Region, HashSet<Region>>> generateRegionAccessOrders(Set<Region> regions) {
+		HashMap<Region, HashMap<Region, HashSet<Region>>> regionAccessOrders = new HashMap<>();
+
+		// This is used instead of BWTA.getRegions since that function returns
+		// different references.
+		for (Region region : regions) {
+			regionAccessOrders.put(region, generateRegionAccessOrder(region));
+		}
+
+		return regionAccessOrders;
 	}
 
 	/**

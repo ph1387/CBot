@@ -30,6 +30,14 @@ public class MapInformation {
 	// The "standard" Region access order based on a breadth search from the
 	// Player's starting location.
 	private HashMap<Region, HashSet<Region>> regionAccessOrder = new HashMap<>();
+	// TOOD: UML ADD
+	// A HashMap containing all region access orders for all Regions of the
+	// current Map.
+	// Note:
+	// The key references can NOT be accessed with the BWTA.getRegions functions
+	// since this one returns different references than
+	// BWTA.getRegion(Position)!
+	private HashMap<Region, HashMap<Region, HashSet<Region>>> precomputedRegionAcccessOrders = new HashMap<>();
 
 	// TODO: UML ADD
 	// Collection of ChokePoints that are blocked by mineral patches at the
@@ -72,6 +80,17 @@ public class MapInformation {
 	// TODO UML RENAME setBreadthAccessOrder
 	public void setRegionAccessOrder(HashMap<Region, HashSet<Region>> breadthAccessOrder) {
 		this.regionAccessOrder = breadthAccessOrder;
+	}
+
+	// TODO: UML ADD
+	public HashMap<Region, HashMap<Region, HashSet<Region>>> getPrecomputedRegionAcccessOrders() {
+		return precomputedRegionAcccessOrders;
+	}
+
+	// TODO: UML ADD
+	public void setPrecomputedRegionAcccessOrders(
+			HashMap<Region, HashMap<Region, HashSet<Region>>> precomputedAcccessOrders) {
+		this.precomputedRegionAcccessOrders = precomputedAcccessOrders;
 	}
 
 	// TODO: UML ADD
