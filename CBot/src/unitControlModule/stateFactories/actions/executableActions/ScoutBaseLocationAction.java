@@ -3,8 +3,6 @@ package unitControlModule.stateFactories.actions.executableActions;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.TreeSet;
 
 import bwapi.Position;
@@ -200,9 +198,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 	// TODO: UML ADD
 	/**
 	 * Function for generating the TreeSet with which the most suitable
-	 * BaseLocation to search is being calculated. This function utilizes a
-	 * Region access order to determine the order in which the different
-	 * distances must be added.
+	 * BaseLocation to search is being calculated.
 	 * 
 	 * @param goapUnit
 	 *            the executing Unit whose current Region is used to determine
@@ -213,32 +209,18 @@ public class ScoutBaseLocationAction extends BaseAction {
 	 */
 	private TreeSet<DistantBaseLocation> generateBaseLocationDistances(IGoapUnit goapUnit) {
 		Region startRegion = BWTA.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition());
-		HashMap<Region, HashSet<Region>> regionAccessOrder = ((PlayerUnit) goapUnit).getInformationStorage()
-				.getMapInfo().getPrecomputedRegionAcccessOrders().get(startRegion);
+		HashSet<DistantRegion> distantRegions = ((PlayerUnit) goapUnit).getInformationStorage().getMapInfo()
+				.getPrecomputedRegionDistances().get(startRegion);
 		TreeSet<DistantBaseLocation> baseLocationDistances = new TreeSet<>();
 
-		Queue<DistantRegion> regionsToCheck = new LinkedList<>();
-		regionsToCheck.add(new DistantRegion(0, startRegion, regionAccessOrder.get(startRegion)));
+		for (DistantRegion distantRegion : distantRegions) {
+			Position currentCenter = distantRegion.getRegion().getCenter();
 
-		while (!regionsToCheck.isEmpty()) {
-			DistantRegion currentDistantRegion = regionsToCheck.poll();
-			Position currentCenter = currentDistantRegion.getRegion().getCenter();
+			for (BaseLocation baseLocation : distantRegion.getRegion().getBaseLocations()) {
+				double distanceFromRegionCenter = currentCenter.getDistance(baseLocation.getPosition());
 
-			// Add all matching BaseLocations of the current Region to the
-			// TreeSet.
-			if (!currentDistantRegion.getRegion().getBaseLocations().isEmpty()) {
-				for (BaseLocation baseLocation : currentDistantRegion.getRegion().getBaseLocations()) {
-					double distanceFromRegionCenter = currentCenter.getDistance(baseLocation.getPosition());
-
-					baseLocationDistances.add(new DistantBaseLocation(
-							currentDistantRegion.getDistance() + distanceFromRegionCenter, baseLocation));
-				}
-			}
-
-			for (Region region : currentDistantRegion.getAccessibleRegions()) {
-				double distance = currentCenter.getDistance(region.getCenter());
-
-				regionsToCheck.add(new DistantRegion(distance, region, regionAccessOrder.get(region)));
+				baseLocationDistances.add(
+						new DistantBaseLocation(distantRegion.getDistance() + distanceFromRegionCenter, baseLocation));
 			}
 		}
 
