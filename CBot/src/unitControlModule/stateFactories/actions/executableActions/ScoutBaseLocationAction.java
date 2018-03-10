@@ -8,11 +8,6 @@ import java.util.Queue;
 import java.util.TreeSet;
 
 import bwapi.Position;
-import bwapiMath.graph.BreadthAccessGenerator;
-import bwapiMath.graph.IConnector;
-import bwapiMath.graph.IInstanceMapper;
-import bwapiMath.graph.RegionConnector;
-import bwapiMath.graph.RegionInstanceMapper;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
@@ -242,8 +237,9 @@ public class ScoutBaseLocationAction extends BaseAction {
 	 *         their total distances to the provided Unit.
 	 */
 	private TreeSet<DistantBaseLocation> generateBaseLocationDistances(IGoapUnit goapUnit) {
-		HashMap<Region, HashSet<Region>> regionAccessOrder = this.generateRegionAccessOrder(goapUnit);
 		Region startRegion = BWTA.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition());
+		HashMap<Region, HashSet<Region>> regionAccessOrder = ((PlayerUnit) goapUnit).getInformationStorage()
+				.getMapInfo().getPrecomputedRegionAcccessOrders().get(startRegion);
 		TreeSet<DistantBaseLocation> baseLocationDistances = new TreeSet<>();
 
 		Queue<DistantRegion> regionsToCheck = new LinkedList<>();
@@ -272,37 +268,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 		}
 
 		return baseLocationDistances;
-	}
-
-	// TODO: UML ADD
-	/**
-	 * Function for generating the order in which the different Regions are
-	 * accessible beginning at one the Unit is currently in.
-	 * <ul>
-	 * <li>Key: Any Region of the currently played map.</li>
-	 * <li>Value: An HashSet of adjacent Regions that can be accessed by the key
-	 * Region.</li>
-	 * </ul>
-	 * 
-	 * @param goapUnit
-	 *            the executing Unit whose current Region is used.
-	 * @return a HashMap containing the breadth search equivalent of the access
-	 *         order of the different map Regions.
-	 */
-	private HashMap<Region, HashSet<Region>> generateRegionAccessOrder(IGoapUnit goapUnit) {
-		IConnector<Region> regionConnector = new RegionConnector();
-		IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper();
-		Region startRegion = BWTA.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition());
-		HashMap<Region, HashSet<Region>> breadthAccessOrder = new HashMap<>();
-
-		try {
-			breadthAccessOrder = BreadthAccessGenerator.generateBreadthAccessOrder(regionInstanceMapper,
-					regionConnector, startRegion);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return breadthAccessOrder;
 	}
 
 	@Override
