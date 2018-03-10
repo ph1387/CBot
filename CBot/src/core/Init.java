@@ -2,6 +2,8 @@ package core;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 
 import buildingOrderModule.simulator.TypeWrapper;
@@ -19,6 +21,7 @@ import bwapiMath.graph.RegionInstanceMapper;
 import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
+import informationStorage.DistantRegion;
 import informationStorage.InformationStorage;
 
 /**
@@ -84,17 +87,24 @@ public class Init {
 			if (informationStorage.getiInitConfig().enableGenerateRegionAccessOrder()) {
 				Region startRegion = BWTA
 						.getRegion(BWTA.getStartLocation(Core.getInstance().getPlayer()).getTilePosition());
-				HashMap<Region, HashSet<Region>> regionAccessOrder = generateRegionAccessOrder(startRegion);
 				// Create the reversed Region access order. Reversed means that
 				// any Unit in a Region has access to the information to which
 				// Region it has to move to get to the Player's starting
 				// location. This contains ALL Regions on the map as keys.
 				HashMap<Region, Region> reversedRegionAccesOrder = generateReversedRegionAccessOrder(startRegion);
+				// The access order for the Player's starting location.
+				HashMap<Region, HashSet<Region>> regionAccessOrder = generateRegionAccessOrder(startRegion);
+				// The access orders for all Regions.
+				HashMap<Region, HashMap<Region, HashSet<Region>>> regionAccessOrders = generateRegionAccessOrders(
+						reversedRegionAccesOrder.keySet());
+				// DistantRegion instances for each Region of the current map.
+				HashMap<Region, HashSet<DistantRegion>> regionDistances = generateRegionDistances(regionAccessOrders,
+						reversedRegionAccesOrder.keySet());
 
 				informationStorage.getMapInfo().setReversedRegionAccessOrder(reversedRegionAccesOrder);
 				informationStorage.getMapInfo().setRegionAccessOrder(regionAccessOrder);
-				informationStorage.getMapInfo().setPrecomputedRegionAcccessOrders(
-						generateRegionAccessOrders(reversedRegionAccesOrder.keySet()));
+				informationStorage.getMapInfo().setPrecomputedRegionAcccessOrders(regionAccessOrders);
+				informationStorage.getMapInfo().setPrecomputedRegionDistances(regionDistances);
 			}
 
 			// Add all BWTA-Polygons to the collection of Polygons in the
@@ -245,6 +255,79 @@ public class Init {
 		}
 
 		return regionAccessOrders;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating all DistantRegion instances for a Set of provided
+	 * Regions. These Regions must be part of the Region access orders, which
+	 * hold their specific access orders. The result is a HashMap with following
+	 * content:
+	 * <ul>
+	 * <li>Key: A Region.</li>
+	 * <li>Value: The DistantRegion instances that are based on the key
+	 * Region.</li>
+	 * </ul>
+	 * 
+	 * @param regionAccessOrders
+	 *            the Region access orders for each Region of the provided Set.
+	 * @param regions
+	 *            the Regions for which the DistantRegion instances are being
+	 *            generated.
+	 * @return a HashMap containing different HashSets of DistantRegion
+	 *         instances that are based on the provided Region instances.
+	 */
+	private static HashMap<Region, HashSet<DistantRegion>> generateRegionDistances(
+			HashMap<Region, HashMap<Region, HashSet<Region>>> regionAccessOrders, Set<Region> regions) {
+		HashMap<Region, HashSet<DistantRegion>> regionDistances = new HashMap<>();
+
+		// This is used instead of BWTA.getRegions since that function returns
+		// different references.
+		for (Region region : regions) {
+			regionDistances.put(region, generateRegionDistances(regionAccessOrders.get(region), region));
+		}
+
+		return regionDistances;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating the DistantRegion instances based on a provided
+	 * starting Region. All distances are centered around this instance while
+	 * the order in which they are accessed is based on a provided Region access
+	 * order.
+	 * 
+	 * @param regionAccessOrder
+	 *            the order in which the different Regions are accessed,
+	 *            beginning with the provided starting Region.
+	 * @param startRegion
+	 *            the Region which the distance calculations are centered
+	 *            around. Must be a key in the provided Region access order.
+	 * @return a HashSet containing all DistantRegion instances based on the
+	 *         provided starting Region. Latter is also part of the HashSet with
+	 *         a distance of 0.
+	 */
+	private static HashSet<DistantRegion> generateRegionDistances(HashMap<Region, HashSet<Region>> regionAccessOrder,
+			Region startRegion) {
+		HashSet<DistantRegion> regionDistances = new HashSet<>();
+		Queue<DistantRegion> regionsToCheck = new LinkedList<>();
+		regionsToCheck.add(new DistantRegion(0, startRegion, regionAccessOrder.get(startRegion)));
+
+		while (!regionsToCheck.isEmpty()) {
+			DistantRegion currentDistantRegion = regionsToCheck.poll();
+			Position currentCenter = currentDistantRegion.getRegion().getCenter();
+
+			for (Region region : currentDistantRegion.getAccessibleRegions()) {
+				double distance = currentCenter.getDistance(region.getCenter());
+
+				regionsToCheck.add(new DistantRegion(currentDistantRegion.getDistance() + distance, region,
+						regionAccessOrder.get(region)));
+			}
+
+			regionDistances.add(currentDistantRegion);
+		}
+
+		return regionDistances;
 	}
 
 	/**

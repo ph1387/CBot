@@ -12,6 +12,7 @@ import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
 import core.Core;
+import informationStorage.DistantRegion;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -24,34 +25,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  *
  */
 public class ScoutBaseLocationAction extends BaseAction {
-
-	// TODO: UML ADD
-	/**
-	 * DistantRegion.java --- A wrapper Class used for encapsulating a single
-	 * Region. The total distance needed to reach it as well as the accessible
-	 * other Regions are also stored in this Class.
-	 * 
-	 * @author P H - 10.03.2018
-	 *
-	 */
-	private class DistantRegion {
-
-		public double distance = -1.;
-		public Region region;
-		public HashSet<Region> accessibleRegions;
-
-		public DistantRegion(double distance, Region region, HashSet<Region> accessibleRegions) {
-			this.distance = distance;
-			this.region = region;
-			this.accessibleRegions = accessibleRegions;
-
-			// Prevent NullPointer Exceptions!
-			if (this.accessibleRegions == null) {
-				this.accessibleRegions = new HashSet<>();
-			}
-		}
-
-	}
 
 	// TODO: UML ADD
 	/**
@@ -71,6 +44,8 @@ public class ScoutBaseLocationAction extends BaseAction {
 			this.distance = distance;
 			this.baseLocation = baseLocation;
 		}
+
+		// -------------------- Functions
 
 		@Override
 		public boolean equals(Object obj) {
@@ -247,20 +222,20 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 		while (!regionsToCheck.isEmpty()) {
 			DistantRegion currentDistantRegion = regionsToCheck.poll();
-			Position currentCenter = currentDistantRegion.region.getCenter();
+			Position currentCenter = currentDistantRegion.getRegion().getCenter();
 
 			// Add all matching BaseLocations of the current Region to the
 			// TreeSet.
-			if (!currentDistantRegion.region.getBaseLocations().isEmpty()) {
-				for (BaseLocation baseLocation : currentDistantRegion.region.getBaseLocations()) {
+			if (!currentDistantRegion.getRegion().getBaseLocations().isEmpty()) {
+				for (BaseLocation baseLocation : currentDistantRegion.getRegion().getBaseLocations()) {
 					double distanceFromRegionCenter = currentCenter.getDistance(baseLocation.getPosition());
 
 					baseLocationDistances.add(new DistantBaseLocation(
-							currentDistantRegion.distance + distanceFromRegionCenter, baseLocation));
+							currentDistantRegion.getDistance() + distanceFromRegionCenter, baseLocation));
 				}
 			}
 
-			for (Region region : currentDistantRegion.accessibleRegions) {
+			for (Region region : currentDistantRegion.getAccessibleRegions()) {
 				double distance = currentCenter.getDistance(region.getCenter());
 
 				regionsToCheck.add(new DistantRegion(distance, region, regionAccessOrder.get(region)));
