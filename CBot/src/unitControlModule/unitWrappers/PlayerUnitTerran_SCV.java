@@ -24,7 +24,8 @@ public class PlayerUnitTerran_SCV extends PlayerUnitWorker {
 	// on the battlefield.
 	private boolean isCombatEngineer = false;
 
-	private double combatEngineerTriggerPercentageEnroll = 0.3;
+	// TODO: UML CHANGE 0.3
+	private double combatEngineerTriggerPercentageEnroll = 0.2;
 	private double combatEngineerTriggerPercentageCancel = 0.8;
 	// The confidence multiplier for combat engineers following or repairing
 	// Units.
