@@ -94,6 +94,9 @@ public class Init {
 				HashMap<Region, Region> reversedRegionAccesOrder = generateReversedRegionAccessOrder(startRegion);
 				// The access order for the Player's starting location.
 				HashMap<Region, HashSet<Region>> regionAccessOrder = generateRegionAccessOrder(startRegion);
+				// The reversed Region access orders for all Regions.
+				HashMap<Region, HashMap<Region, Region>> reversedRegionAccessOrders = generateReversedRegionAccessOrders(
+						reversedRegionAccesOrder.keySet());
 				// The access orders for all Regions.
 				HashMap<Region, HashMap<Region, HashSet<Region>>> regionAccessOrders = generateRegionAccessOrders(
 						reversedRegionAccesOrder.keySet());
@@ -103,6 +106,7 @@ public class Init {
 
 				informationStorage.getMapInfo().setReversedRegionAccessOrder(reversedRegionAccesOrder);
 				informationStorage.getMapInfo().setRegionAccessOrder(regionAccessOrder);
+				informationStorage.getMapInfo().setPrecomputedReversedRegionAccessOrders(reversedRegionAccessOrders);
 				informationStorage.getMapInfo().setPrecomputedRegionAcccessOrders(regionAccessOrders);
 				informationStorage.getMapInfo().setPrecomputedRegionDistances(regionDistances);
 			}
@@ -229,6 +233,35 @@ public class Init {
 		}
 
 		return breadthAccessOrder;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating the reversed Region access orders for each Region
+	 * inside the provided Set.
+	 * <ul>
+	 * <li>Key: Any Region of the provided Set.</li>
+	 * <li>Value: The reversed Region access order for it in form of a
+	 * HashMap.</li>
+	 * </ul>
+	 * 
+	 * @see #generateReversedRegionAccessOrder(Region)
+	 * @param regions
+	 *            the Set of Regions which the reversed access orders are
+	 *            generated for.
+	 * @return a HashMap containing all reversed Region access orders for the
+	 *         provided Set of Regions.
+	 */
+	private static HashMap<Region, HashMap<Region, Region>> generateReversedRegionAccessOrders(Set<Region> regions) {
+		HashMap<Region, HashMap<Region, Region>> reversedRegionAccessOrders = new HashMap<>();
+
+		// This is used instead of BWTA.getRegions since that function returns
+		// different references.
+		for (Region region : regions) {
+			reversedRegionAccessOrders.put(region, generateReversedRegionAccessOrder(region));
+		}
+
+		return reversedRegionAccessOrders;
 	}
 
 	// TODO: UML ADD

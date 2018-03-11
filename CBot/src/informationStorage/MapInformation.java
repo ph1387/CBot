@@ -37,9 +37,13 @@ public class MapInformation {
 	// The "standard" Region access order based on a breadth search from the
 	// Player's starting location.
 	private HashMap<Region, HashSet<Region>> regionAccessOrder = new HashMap<>();
+	// TODO: UML ADD
+	// A HashMap containing all reversed Region access orders for all Region of
+	// the current map.
+	private HashMap<Region, HashMap<Region, Region>> precomputedReversedRegionAccessOrders = new HashMap<>();
 	// TOOD: UML ADD
-	// A HashMap containing all region access orders for all Regions of the
-	// current Map.
+	// A HashMap containing all Region access orders for all Regions of the
+	// current map.
 	private HashMap<Region, HashMap<Region, HashSet<Region>>> precomputedRegionAcccessOrders = new HashMap<>();
 	// TODO: UML ADD
 	// A HashMap containing precomputed distances in order to minimize the
@@ -88,6 +92,17 @@ public class MapInformation {
 	// TODO UML RENAME setBreadthAccessOrder
 	public void setRegionAccessOrder(HashMap<Region, HashSet<Region>> breadthAccessOrder) {
 		this.regionAccessOrder = breadthAccessOrder;
+	}
+
+	// TODO UML RENAME setBreadthAccessOrder
+	public HashMap<Region, HashMap<Region, Region>> getPrecomputedReversedRegionAccessOrders() {
+		return precomputedReversedRegionAccessOrders;
+	}
+
+	// TODO UML RENAME setBreadthAccessOrder
+	public void setPrecomputedReversedRegionAccessOrders(
+			HashMap<Region, HashMap<Region, Region>> precomputedReversedRegionAccessOrders) {
+		this.precomputedReversedRegionAccessOrders = precomputedReversedRegionAccessOrders;
 	}
 
 	// TODO: UML ADD

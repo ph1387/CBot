@@ -2,10 +2,11 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
-import bwapi.Pair;
 import bwapi.Position;
 import bwapi.Unit;
 import bwapiMath.Vector;
@@ -13,7 +14,9 @@ import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
 import core.Core;
+import informationStorage.DistantRegion;
 import informationStorage.InformationStorage;
+import informationStorage.MapInformation;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -80,13 +83,11 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 	@Override
 	protected Position generateGroupingPosition(IGoapUnit goapUnit) {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
-		HashSet<Chokepoint> blockedChokePoints = this.extractBlockedChokePoints(
-				playerUnit.getInformationStorage().getMapInfo().getMineralBlockedChokePoints());
-		Position groupingPosition = null;
-
 		HashSet<Region> regionsWithCenters = this.extractRegionsWithCenters(playerUnit.getInformationStorage());
-		HashSet<Chokepoint> chokePoints = this.extractChokePoints(regionsWithCenters, blockedChokePoints);
+		HashSet<Chokepoint> chokePoints = this.extractChokePoints(regionsWithCenters,
+				playerUnit.getInformationStorage().getMapInfo());
 		List<RegionWrapper> regionWrappers = this.extractPossibleRegionWrappers(chokePoints, regionsWithCenters);
+		Position groupingPosition = null;
 
 		this.sortBasedOnDistance(regionWrappers, playerUnit);
 
@@ -97,27 +98,6 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 		}
 
 		return groupingPosition;
-	}
-
-	// TODO: UML ADD
-	/**
-	 * Function for extracting the ChokePoint references from a HashSet of
-	 * Unit-ChokePoint-Pairs.
-	 * 
-	 * @param blockedChokePointsPairs
-	 *            a HashSet containing the Unit-ChokePoint-Pairs from which the
-	 *            ChokePoints are going to be extracted.
-	 * @return a HashSet of ChokePoints that the provided input HashSet
-	 *         contained.
-	 */
-	private HashSet<Chokepoint> extractBlockedChokePoints(HashSet<Pair<Unit, Chokepoint>> blockedChokePointsPairs) {
-		HashSet<Chokepoint> blockedChokePoints = new HashSet<>();
-
-		for (Pair<Unit, Chokepoint> pair : blockedChokePointsPairs) {
-			blockedChokePoints.add(pair.second);
-		}
-
-		return blockedChokePoints;
 	}
 
 	/**
@@ -150,37 +130,76 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 	 * @param regions
 	 *            the Region instances that are going to be used for accessing
 	 *            all ChokePoints.
-	 * @param blockedChokePoints
-	 *            a HashSet containing all ChokePoints that can not be
-	 *            traversed.
-	 * @return a HashSet containing all ChokePoints that are part of the
-	 *         provided Region HashSet.
+	 * @param mapInformation
+	 *            the MapInformation instance that holds all information
+	 *            regarding the Region access orders as well as the different
+	 *            region Distances.
+	 * @return a HashSet containing all ChokePoints that can be used as a
+	 *         grouping spot.
 	 */
-	private HashSet<Chokepoint> extractChokePoints(HashSet<Region> regions, HashSet<Chokepoint> blockedChokePoints) {
+	private HashSet<Chokepoint> extractChokePoints(HashSet<Region> regions, MapInformation mapInformation) {
 		HashSet<Chokepoint> chokePointsAtBorders = new HashSet<>();
 
+		// Each Region provides a single ChokePoint that can be used for
+		// grouping.
 		for (Region region : regions) {
-			for (Chokepoint chokepoint : region.getChokepoints()) {
-				boolean free = true;
+			HashMap<Region, Region> reversedRegionAccessOrder = mapInformation
+					.getPrecomputedReversedRegionAccessOrders().get(region);
+			HashSet<DistantRegion> regionDistances = mapInformation.getPrecomputedRegionDistances().get(region);
+			Chokepoint mostSuitedChokePoint = this.findMostSuitedGroupingGroupingChokePoint(region,
+					reversedRegionAccessOrder, regionDistances);
 
-				// ChokePoints can not be checked directly since the one
-				// retrieved by the used BWTA.function differ from the ones
-				// stored in the information storage.
-				for (Chokepoint referenceChokePoint : blockedChokePoints) {
-					if (chokepoint.getSides().equals(referenceChokePoint.getSides())) {
-						free = false;
-
-						break;
-					}
-				}
-
-				if (free) {
-					chokePointsAtBorders.add(chokepoint);
-				}
-			}
+			chokePointsAtBorders.add(mostSuitedChokePoint);
 		}
 
 		return chokePointsAtBorders;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for finding the most suited grouping ChokePoint for a single
+	 * Region. The chosen ChokePoint is the one that leads to the farthest
+	 * reachable Region possible.
+	 * 
+	 * @param region
+	 *            the Region from whose Collection of ChokePoints the final,
+	 *            most suited one is being chosen.
+	 * @param reversedRegionAccessOrder
+	 *            the reversed Region access order based on the provided
+	 *            starting Region.
+	 * @param regionDistances
+	 *            the different Region distances based on the provided starting
+	 *            Region.
+	 * @return the ChokePoint that is most suited for grouping and therefore
+	 *         leading to the farthest reachable Region possible.
+	 */
+	private Chokepoint findMostSuitedGroupingGroupingChokePoint(Region region,
+			HashMap<Region, Region> reversedRegionAccessOrder, HashSet<DistantRegion> regionDistances) {
+		Chokepoint mostSuitedChokePoint = null;
+
+		// Find the farthest Region possible.
+		TreeSet<DistantRegion> sortedDistantRegions = new TreeSet<>(regionDistances);
+		DistantRegion farthestDistantRegion = sortedDistantRegions.last();
+		Region currentRegion = farthestDistantRegion.getRegion();
+
+		// Find the Region next to the provided starting Region that leads to
+		// the farthest one.
+		while (reversedRegionAccessOrder.get(currentRegion) != region) {
+			currentRegion = reversedRegionAccessOrder.get(currentRegion);
+		}
+
+		// Extract the shared ChokePoint between the provided and current
+		// Region.
+		HashSet<Chokepoint> providedRegionsChokePoints = new HashSet<>(region.getChokepoints());
+		for (Chokepoint chokepoint : currentRegion.getChokepoints()) {
+			if (providedRegionsChokePoints.contains(chokepoint)) {
+				mostSuitedChokePoint = chokepoint;
+
+				break;
+			}
+		}
+
+		return mostSuitedChokePoint;
 	}
 
 	/**
