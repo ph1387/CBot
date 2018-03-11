@@ -8,7 +8,11 @@ import java.util.List;
 
 import bwapi.Position;
 import bwapi.Unit;
+import bwta.BWTA;
 import bwta.BaseLocation;
+import bwta.Region;
+import core.CBot;
+import informationStorage.DistantRegion;
 
 /**
  * MineralPatch.java --- Wrapper Class for mineral spots that are going to be
@@ -141,7 +145,22 @@ class MineralPatch implements GatheringSource {
 
 	@Override
 	public double getDistance(Position position) {
-		return this.baseLocation.getDistance(position);
+		Region thisRegion = BWTA.getRegion(this.baseLocation.getPosition());
+		Region comparedRegion = BWTA.getRegion(position);
+		HashSet<DistantRegion> distantRegions = CBot.getInstance().getInformationStorage().getMapInfo()
+				.getPrecomputedRegionDistances().get(thisRegion);
+		double distance = Double.MAX_VALUE;
+
+		// Find the distance associated with the other Region.
+		for (DistantRegion distantRegion : distantRegions) {
+			if (distantRegion.getRegion().equals(comparedRegion)) {
+				distance = distantRegion.getDistance();
+
+				break;
+			}
+		}
+
+		return distance;
 	}
 
 	@Override
