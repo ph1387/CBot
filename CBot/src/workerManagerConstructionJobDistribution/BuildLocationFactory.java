@@ -2,6 +2,7 @@ package workerManagerConstructionJobDistribution;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -378,17 +379,19 @@ public class BuildLocationFactory {
 			// Generate new TilePositions around a specific target.
 			for (int i = minWidth; i <= maxWidth && buildLocation == null; i++) {
 				for (int j = minHeight; j <= maxHeight && buildLocation == null; j++) {
-					TilePosition testPosition = new TilePosition(i, j);
+					TilePosition testTilePosition = new TilePosition(i, j);
 					HashSet<TilePosition> neededTilePositions = TilePositionFactory
-							.generateNeededTilePositions(building, testPosition);
+							.generateNeededTilePositions(building, testTilePosition);
+					Region baseRegion = BWTA.getRegion(testTilePosition);
 
 					// If the space is free, try changing the building's
 					// location.
-					if (Core.getInstance().getGame().canBuildHere(testPosition, building)
+					if (Core.getInstance().getGame().canBuildHere(testTilePosition, building)
 							&& !this.arePlayerUnitsBlocking(neededTilePositions, worker.getUnit())
 							&& !this.areTilePositionsContended(neededTilePositions,
-									this.informationStorage.getMapInfo().getTilePositionContenders())) {
-						buildLocation = testPosition;
+									this.informationStorage.getMapInfo().getTilePositionContenders())
+							&& this.isTargetTilePositionInValidRegion(testTilePosition, baseRegion)) {
+						buildLocation = testTilePosition;
 					}
 				}
 			}
@@ -443,6 +446,36 @@ public class BuildLocationFactory {
 			}
 		}
 		return false;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for checking if a provided TilePosition is in a valid Region
+	 * compared to a given base Region. This is due to the bot being otherwise
+	 * able to ignore blocking mineral patches as well as Region borders and
+	 * construct buildings far away from the main base. Using this function the
+	 * bot can only construct buildings in either the provided base Region or an
+	 * adjacent one.
+	 * 
+	 * @param testTilePosition
+	 *            the TilePosition whose Region is going to be tested.
+	 * @param baseRegion
+	 *            the reference Region which the TilePosition's Region must
+	 *            either match or to which it must be an adjacent one.
+	 * @return true if the provided TilePosition is either matching the given
+	 *         Region or is in an adjacent one.
+	 */
+	protected boolean isTargetTilePositionInValidRegion(TilePosition testTilePosition, Region baseRegion) {
+		Region region = BWTA.getRegion(testTilePosition);
+		boolean valid = false;
+
+		if (region != null) {
+			HashSet<Region> accessibleRegions = this.informationStorage.getMapInfo().getPrecomputedRegionAcccessOrders()
+					.get(baseRegion).get(baseRegion);
+			valid = baseRegion.equals(region) || accessibleRegions.contains(region);
+		}
+
+		return valid;
 	}
 
 }
