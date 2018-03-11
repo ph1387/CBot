@@ -1,6 +1,7 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -190,19 +191,19 @@ public class Display {
 		showFPS(OFFSET_LEFT, LINE_HEIGHT * 3);
 
 		if (informationStorage.getiDisplayConfig().enableDisplayMapContendedTilePositions()) {
-			showContendedTilePositions();
+			showContendedTilePositions(informationStorage.getMapInfo().getTilePositionContenders());
 		}
 		if (informationStorage.getiDisplayConfig().enableDisplayMapBoundaries()) {
-			showBoundaries();
+			showBoundaries(informationStorage.getMapInfo().getMapBoundaries());
 		}
 		if (informationStorage.getiDisplayConfig().enableDisplayReservedSpacePolygons()) {
-			showReservedSpacePolygons();
+			showReservedSpacePolygons(informationStorage.getMapInfo().getReservedSpace());
 		}
 		if (informationStorage.getiDisplayConfig().enableDisplayMineralBlockedChokePoints()) {
-			showMineralBlockedChokePoints();
+			showMineralBlockedChokePoints(informationStorage.getMapInfo().getMineralBlockedChokePoints());
 		}
 		if (informationStorage.getiDisplayConfig().enableDisplayBreadthAccessOrder()) {
-			showBreadthAccessOrder();
+			showBreadthAccessOrder(informationStorage.getMapInfo().getRegionAccessOrder());
 		}
 	}
 
@@ -257,16 +258,20 @@ public class Display {
 		GAME.drawTextScreen(offsetX, offsetY, "FPS: " + GAME.getFPS());
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for displaying the map's boundaries on the screen.
+	 * 
+	 * @param mapBoundaries
+	 *            the map's boundaries that are going to be displayed.
 	 */
-	private static void showBoundaries() {
+	private static void showBoundaries(HashSet<Pair<Region, Polygon>> mapBoundaries) {
 
 		// TODO: REMOVE DEBUG WIP
-		int boundaryCount = CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries().size();
+		int boundaryCount = mapBoundaries.size();
 		int stepSize = 0xFFFFFF / boundaryCount;
 		int currentCount = 1;
-		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
+		for (Pair<Region, Polygon> pair : mapBoundaries) {
 			int currentR = 0b111111110000000000000000 & (stepSize * currentCount);
 			int currentG = 0b000000001111111100000000 & (stepSize * currentCount);
 			int currentB = 0b000000000000000011111111 & (stepSize * currentCount);
@@ -276,35 +281,35 @@ public class Display {
 			pair.second.display(new Color(currentR, currentG, currentB), true, POLYGON_VERTEX_RADIUS, false);
 			currentCount++;
 		}
-
-		// Map boundaries:
-		// for (Pair<Region, Polygon> pair :
-		// CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries())
-		// {
-		// drawPolygon(pair.second, MAP_BONDARIES_COLOR, polygonVertexRadius);
-		// }
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for displaying all Polygons that represent the reserved space on
 	 * the map. No buildings can be constructed on TilePositions in this
 	 * Polygon.
+	 * 
+	 * @param reservedSpacePolygons
+	 *            the reserved space Polygons that are going to be displayed.
 	 */
-	private static void showReservedSpacePolygons() {
-		for (Polygon polygon : CBot.getInstance().getInformationStorage().getMapInfo().getReservedSpace()) {
+	private static void showReservedSpacePolygons(HashSet<Polygon> reservedSpacePolygons) {
+		for (Polygon polygon : reservedSpacePolygons) {
 			polygon.display(RESERVED_SPACE_COLOR, true, POLYGON_VERTEX_RADIUS, false);
 		}
 	}
 
 	// TODO: UML ADD
+	// TODO: UML PARAMS
 	/**
 	 * Function for displaying all mineral blocked ChokePoints as well as the
 	 * mineral patches that are blocking them. These ChokePoints can not be
 	 * traversed by default.
+	 * 
+	 * @param blockedChokePoints
+	 *            the blocked ChokePoints that are going to be displayed.
 	 */
-	private static void showMineralBlockedChokePoints() {
-		for (Pair<Unit, Chokepoint> blockedChokePoint : CBot.getInstance().getInformationStorage().getMapInfo()
-				.getMineralBlockedChokePoints()) {
+	private static void showMineralBlockedChokePoints(HashSet<Pair<Unit, Chokepoint>> blockedChokePoints) {
+		for (Pair<Unit, Chokepoint> blockedChokePoint : blockedChokePoints) {
 			// Display blocking mineral.
 			(new Point(blockedChokePoint.first.getInitialPosition())).display(BLOCKING_MINERAL_POINT_RADIUS,
 					BLOCKING_MINERAL_COLOR, true);
@@ -316,32 +321,39 @@ public class Display {
 	}
 
 	// TODO: UML ADD
+	// TODO: UML PARAMS
 	/**
 	 * Function for displaying the breadth access order in which the different
 	 * Regions can be accessed by the Bot. The Points connected by the Vectors
 	 * are the centers of the Regions.
+	 * 
+	 * @param breadthAccessOrder
+	 *            the breadth Region access order that is going to be displayed.
 	 */
-	private static void showBreadthAccessOrder() {
-		CBot.getInstance().getInformationStorage().getMapInfo().getRegionAccessOrder()
-				.forEach(new BiConsumer<Region, HashSet<Region>>() {
+	private static void showBreadthAccessOrder(HashMap<Region, HashSet<Region>> breadthAccessOrder) {
+		breadthAccessOrder.forEach(new BiConsumer<Region, HashSet<Region>>() {
 
-					@Override
-					public void accept(Region region, HashSet<Region> accessibleRegions) {
-						for (Region accessibleRegion : accessibleRegions) {
-							(new Vector(region.getCenter(), accessibleRegion.getCenter())).display();
-						}
-					}
-				});
+			@Override
+			public void accept(Region region, HashSet<Region> accessibleRegions) {
+				for (Region accessibleRegion : accessibleRegions) {
+					(new Vector(region.getCenter(), accessibleRegion.getCenter())).display();
+				}
+			}
+		});
 	}
 
+	// TODO: UML PARAMS
 	/**
 	 * Function for displaying the contended / blocked TilePositions on the map.
 	 * These are the ones that a worker is currently trying to construct a
 	 * building on and / or is prohibited to build onto.
+	 * 
+	 * @param tilePositionContenders
+	 *            the contended / blocked TilePositions that are going to be
+	 *            displayed.
 	 */
-	private static void showContendedTilePositions() {
-		for (TilePosition tilePosition : CBot.getInstance().getInformationStorage().getMapInfo()
-				.getTilePositionContenders()) {
+	private static void showContendedTilePositions(HashSet<TilePosition> tilePositionContenders) {
+		for (TilePosition tilePosition : tilePositionContenders) {
 			drawTileFilled(tilePosition.getX(), tilePosition.getY(), 1, 1, CONTENDED_TILEPOSITION_COLOR);
 		}
 	}
