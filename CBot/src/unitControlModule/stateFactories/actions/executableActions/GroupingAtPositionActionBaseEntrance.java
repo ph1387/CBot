@@ -146,7 +146,7 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 			HashMap<Region, Region> reversedRegionAccessOrder = mapInformation
 					.getPrecomputedReversedRegionAccessOrders().get(region);
 			HashSet<DistantRegion> regionDistances = mapInformation.getPrecomputedRegionDistances().get(region);
-			Chokepoint mostSuitedChokePoint = this.findMostSuitedGroupingGroupingChokePoint(region,
+			Chokepoint mostSuitedChokePoint = this.findMostSuitedGroupingChokePoint(region,
 					reversedRegionAccessOrder, regionDistances);
 
 			chokePointsAtBorders.add(mostSuitedChokePoint);
@@ -173,8 +173,9 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 	 * @return the ChokePoint that is most suited for grouping and therefore
 	 *         leading to the farthest reachable Region possible.
 	 */
-	private Chokepoint findMostSuitedGroupingGroupingChokePoint(Region region,
+	private Chokepoint findMostSuitedGroupingChokePoint(Region region,
 			HashMap<Region, Region> reversedRegionAccessOrder, HashSet<DistantRegion> regionDistances) {
+		HashSet<Chokepoint> providedRegionsChokePoints = new HashSet<>(region.getChokepoints());
 		Chokepoint mostSuitedChokePoint = null;
 
 		// Find the farthest Region possible.
@@ -190,7 +191,6 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 
 		// Extract the shared ChokePoint between the provided and current
 		// Region.
-		HashSet<Chokepoint> providedRegionsChokePoints = new HashSet<>(region.getChokepoints());
 		for (Chokepoint chokepoint : currentRegion.getChokepoints()) {
 			if (providedRegionsChokePoints.contains(chokepoint)) {
 				mostSuitedChokePoint = chokepoint;
