@@ -10,7 +10,7 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualC
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseVerySlow;
 import buildingOrderModule.scoringDirector.ScoreGenerator.proportion.ScoreGeneratorHealerTerran;
 import buildingOrderModule.scoringDirector.ScoreGenerator.proportion.ScoreGeneratorSupportTerran;
-import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificImprovementFacilityTerranBio;
+import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificBuildingTerranBio;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificTechTerranBio;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificUnitTerranBio;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificUpgradeTerranBio;
@@ -34,7 +34,8 @@ public class ScoreGeneratorFactoryTerranBio extends ScoreGeneratorFactoryTerranD
 	private ScoreGenerator scoreGeneratorSpecificTech;
 	private ScoreGenerator scoreGeneratorSpecificUpgrade;
 	private ScoreGenerator scoreGeneratorSpecificUnit;
-	private ScoreGenerator scoreGeneratorSpecificImprovementFacility;
+	// TODO: UML RENAME scoreGeneratorSpecificImprovementFacility
+	private ScoreGenerator scoreGeneratorSpecificBuilding;
 
 	public ScoreGeneratorFactoryTerranBio(BuildActionManager manager) {
 		super(manager);
@@ -49,8 +50,7 @@ public class ScoreGeneratorFactoryTerranBio extends ScoreGeneratorFactoryTerranD
 		this.scoreGeneratorSpecificTech = new ScoreGeneratorSpecificTechTerranBio(this.manager);
 		this.scoreGeneratorSpecificUpgrade = new ScoreGeneratorSpecificUpgradeTerranBio(this.manager);
 		this.scoreGeneratorSpecificUnit = new ScoreGeneratorSpecificUnitTerranBio(this.manager);
-		this.scoreGeneratorSpecificImprovementFacility = new ScoreGeneratorSpecificImprovementFacilityTerranBio(
-				this.manager);
+		this.scoreGeneratorSpecificBuilding = new ScoreGeneratorSpecificBuildingTerranBio(this.manager);
 	}
 
 	// -------------------- Functions
@@ -132,7 +132,7 @@ public class ScoreGeneratorFactoryTerranBio extends ScoreGeneratorFactoryTerranD
 	}
 
 	@Override
-	public ScoreGenerator generateSpecificImprovementFacilityGenerator() {
-		return this.scoreGeneratorSpecificImprovementFacility;
+	public ScoreGenerator generateSpecificBuildingGenerator() {
+		return this.scoreGeneratorSpecificBuilding;
 	}
 }

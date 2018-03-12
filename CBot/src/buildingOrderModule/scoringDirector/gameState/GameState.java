@@ -78,7 +78,7 @@ public abstract class GameState {
 	public static final GameState UpgradeFlyingUnits = new GameStateUpgrade_FlyingUnits();
 
 	// Specific GameStates for different Terran Units, Upgrades, Technologies
-	// and improvement facilities.
+	// and buildings.
 	// Units:
 	public static final GameState SpecificUnit_Terran_Goliath = new GameStateSpecific_Unit(UnitType.Terran_Goliath);
 	public static final GameState SpecificUnit_Terran_Marine = new GameStateSpecific_Unit(UnitType.Terran_Marine);
@@ -109,14 +109,18 @@ public abstract class GameState {
 	public static final GameState SpecificTech_Tank_Siege_Mode = new GameStateSpecific_Tech(TechType.Tank_Siege_Mode);
 	public static final GameState SpecificTech_Spider_Mines = new GameStateSpecific_Tech(TechType.Spider_Mines);
 	public static final GameState SpecificTech_Cloaking_Field = new GameStateSpecific_Tech(TechType.Cloaking_Field);
-	// Improvement facilities:
-	public static final GameState SpecificImprovementFacility_Terran_Academy = new GameStateSpecific_ImprovementFacility(
+	// Buildings:
+	// TODO: UML RENAME SpecificImprovementFacility_Terran_Academy
+	public static final GameState SpecificBuilding_Terran_Academy = new GameStateSpecific_Building(
 			UnitType.Terran_Academy);
-	public static final GameState SpecificImprovementFacility_Terran_Engineering_Bay = new GameStateSpecific_ImprovementFacility(
+	// TODO: UML RENAME SpecificImprovementFacility_Terran_Engineering_Bay
+	public static final GameState SpecificBuilding_Terran_Engineering_Bay = new GameStateSpecific_Building(
 			UnitType.Terran_Engineering_Bay);
-	public static final GameState SpecificImprovementFacility_Terran_Science_Facility = new GameStateSpecific_ImprovementFacility(
+	// TODO: UML RENAME SpecificImprovementFacility_Terran_Science_Facility
+	public static final GameState SpecifiBuilding_Terran_Science_Facility = new GameStateSpecific_Building(
 			UnitType.Terran_Science_Facility);
-	public static final GameState SpecificImprovementFacility_Terran_Armory = new GameStateSpecific_ImprovementFacility(
+	// TODO: UML RENAME SpecificImprovementFacility_Terran_Armory
+	public static final GameState SpecificBuilding_Terran_Armory = new GameStateSpecific_Building(
 			UnitType.Terran_Armory);
 
 	// The current score this state holds.

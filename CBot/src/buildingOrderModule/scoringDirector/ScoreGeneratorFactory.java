@@ -5,8 +5,9 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 /**
  * ScoreGeneratorFactory.java --- A Interface defining a factory for
  * {@link ScoreGenerator}s (Abstract Factory Pattern). </br>
- * <b>Note:</b></br> The objects returned by this factory must only be generated
- * <b>once</b> for any factory that relies on storing information!
+ * <b>Note:</b></br>
+ * The objects returned by this factory must only be generated <b>once</b> for
+ * any factory that relies on storing information!
  * 
  * @author P H - 16.07.2017
  *
@@ -187,12 +188,11 @@ public interface ScoreGeneratorFactory {
 	 */
 	public ScoreGenerator generateSpecificUnitScoreGenerator();
 
+	// TODO: UML RENAME generateSpecificImprovementFacilityGenerator
 	/**
 	 *
-	 * @return a {@link ScoreGenerator} for specific improvement facilities
-	 *         which are used to either research new technologies or upgrade
-	 *         existing ones.
+	 * @return a {@link ScoreGenerator} for specific buildings.
 	 */
-	public ScoreGenerator generateSpecificImprovementFacilityGenerator();
+	public ScoreGenerator generateSpecificBuildingGenerator();
 
 }

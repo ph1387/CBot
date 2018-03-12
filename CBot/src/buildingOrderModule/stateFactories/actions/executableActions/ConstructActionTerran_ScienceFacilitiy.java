@@ -30,7 +30,7 @@ public class ConstructActionTerran_ScienceFacilitiy extends ConstructBaseAction 
 		
 		this.addToGameStates(GameState.ResearchFlyingUnits);
 		this.addToGameStates(GameState.UpgradeFlyingUnits);
-		this.addToGameStates(GameState.SpecificImprovementFacility_Terran_Science_Facility);
+		this.addToGameStates(GameState.SpecifiBuilding_Terran_Science_Facility);
 	}
 
 	// -------------------- Functions

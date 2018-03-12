@@ -9,7 +9,7 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualC
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseVerySlow;
 import buildingOrderModule.scoringDirector.ScoreGenerator.proportion.ScoreGeneratorHealerTerran;
 import buildingOrderModule.scoringDirector.ScoreGenerator.proportion.ScoreGeneratorSupportTerran;
-import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificImprovementFacilityTerranMachines;
+import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificBuildingTerranMachines;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificTechTerranMachines;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificUnitTerranMachines;
 import buildingOrderModule.scoringDirector.ScoreGenerator.specific.ScoreGeneratorSpecificUpgradeTerranMachines;
@@ -32,7 +32,7 @@ public class ScoreGeneratorFactoryTerranMachines extends ScoreGeneratorFactoryTe
 	private ScoreGenerator scoreGeneratorSpecificTech;
 	private ScoreGenerator scoreGeneratorSpecificUpgrade;
 	private ScoreGenerator scoreGeneratorSpecificUnit;
-	private ScoreGenerator scoreGeneratorSpecificImprovementFacility;
+	private ScoreGenerator scoreGeneratorSpecificBuilding;
 
 	public ScoreGeneratorFactoryTerranMachines(BuildActionManager manager) {
 		super(manager);
@@ -46,8 +46,7 @@ public class ScoreGeneratorFactoryTerranMachines extends ScoreGeneratorFactoryTe
 		this.scoreGeneratorSpecificTech = new ScoreGeneratorSpecificTechTerranMachines(this.manager);
 		this.scoreGeneratorSpecificUpgrade = new ScoreGeneratorSpecificUpgradeTerranMachines(this.manager);
 		this.scoreGeneratorSpecificUnit = new ScoreGeneratorSpecificUnitTerranMachines(this.manager);
-		this.scoreGeneratorSpecificImprovementFacility = new ScoreGeneratorSpecificImprovementFacilityTerranMachines(
-				this.manager);
+		this.scoreGeneratorSpecificBuilding = new ScoreGeneratorSpecificBuildingTerranMachines(this.manager);
 	}
 
 	// -------------------- Functions
@@ -129,8 +128,8 @@ public class ScoreGeneratorFactoryTerranMachines extends ScoreGeneratorFactoryTe
 	}
 
 	@Override
-	public ScoreGenerator generateSpecificImprovementFacilityGenerator() {
-		return this.scoreGeneratorSpecificImprovementFacility;
+	public ScoreGenerator generateSpecificBuildingGenerator() {
+		return this.scoreGeneratorSpecificBuilding;
 	}
 
 }

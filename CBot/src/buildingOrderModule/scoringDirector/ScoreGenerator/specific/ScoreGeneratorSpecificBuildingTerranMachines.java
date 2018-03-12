@@ -8,21 +8,23 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualC
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
+// TODO: UML ADD
+// TODO: UML REMOVE ScoreGeneratorSpecificImprovementFacilityTerranMachines
 /**
- * ScoreGeneratorSpecificImprovementFacilityTerranMachines.java --- A
+ * ScoreGeneratorSpecificBuildingTerranMachines.java --- A
  * {@link ScoreGenerator} applying a target specific rate to the score. This
- * class focuses on Terran machine-Unit improvement facilities.
+ * class focuses on Terran machine-Unit buildings.
  * 
- * @author P H - 03.10.2017
+ * @author P H - 12.03.2018
  *
  */
-public class ScoreGeneratorSpecificImprovementFacilityTerranMachines extends ScoreGeneratorSpecificImprovementFacility {
+public class ScoreGeneratorSpecificBuildingTerranMachines extends ScoreGeneratorSpecificBuilding {
 
 	private ScoreGenerator scoreGeneratorIncreaseNormal;
 	private ScoreGenerator scoreGeneratorIncreaseSlow;
 	private ScoreGenerator scoreGeneratorIncreaseVerySlow;
 
-	public ScoreGeneratorSpecificImprovementFacilityTerranMachines(BuildActionManager manager) {
+	public ScoreGeneratorSpecificBuildingTerranMachines(BuildActionManager manager) {
 		super(manager);
 
 		this.scoreGeneratorIncreaseNormal = new ScoreGeneratorIncreaseNormal(this.manager);
