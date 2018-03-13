@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.Game;
 import bwapi.Mirror;
@@ -56,6 +57,10 @@ public class Init {
 
 			// Initialize the TypeWrapper types for the Simulator.
 			TypeWrapper.init();
+
+			// Reset all GameState instances. Needed when multiple games are run
+			// after one another.
+			GameState.resetAll();
 
 			// Use BWTA to analyze map
 			BWTA.readMap();

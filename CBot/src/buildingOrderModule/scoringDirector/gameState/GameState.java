@@ -123,6 +123,77 @@ public abstract class GameState {
 	public static final GameState SpecificBuilding_Terran_Armory = new GameStateSpecific_Building(
 			UnitType.Terran_Armory);
 
+	// TODO: UML ADD
+	/**
+	 * Function for resetting all GameStates.
+	 */
+	public static void resetAll() {
+		Expansion_Focused.reset();
+		Technology_Focused.reset();
+		Upgrade_Focused.reset();
+
+		Refinery_Units.reset();
+		Building_Units.reset();
+		Worker_Units.reset();
+		Combat_Units.reset();
+
+		Cheap_Units.reset();
+		Expensive_Units.reset();
+		Mineral_Units.reset();
+		Gas_Units.reset();
+
+		Flying_Units.reset();
+		Bio_Units.reset();
+		Machine_Units.reset();
+		Support_Units.reset();
+		Healer_Units.reset();
+
+		FreeTrainingFacility_Center.reset();
+		FreeTrainingFacility_Terran_Barracks.reset();
+		FreeTrainingFacility_Terran_CommandCenter.reset();
+		FreeTrainingFacility_Terran_Factory.reset();
+		FreeTrainingFacility_Terran_Starport.reset();
+
+		IdleTrainingFacility_Center.reset();
+		IdleTrainingFacility_Terran_Barracks.reset();
+		IdleTrainingFacility_Terran_CommandCenter.reset();
+		IdleTrainingFacility_Terran_Factory.reset();
+		IdleTrainingFacility_Terran_Starport.reset();
+
+		ResearchBioUnits.reset();
+		ResearchMachineUnits.reset();
+		ResearchFlyingUnits.reset();
+
+		UpgradeBioUnits.reset();
+		UpgradeMachineUnits.reset();
+		UpgradeFlyingUnits.reset();
+
+		SpecificUnit_Terran_Goliath.reset();
+		SpecificUnit_Terran_Marine.reset();
+		SpecificUnit_Terran_Medic.reset();
+		SpecificUnit_Terran_Science_Vessel.reset();
+		SpecificUnit_Terran_Siege_Tank_Tank_Mode.reset();
+		SpecificUnit_Terran_Vulture.reset();
+		SpecificUnit_Terran_Wraith.reset();
+
+		SpecificUpgrade_Terran_Infantry_Armor.reset();
+		SpecificUpgrade_Terran_Infantry_Weapons.reset();
+		SpecificUpgrade_Terran_Vehicle_Plating.reset();
+		SpecificUpgrade_Terran_Vehicle_Weapons.reset();
+		SpecificUpgrade_Ion_Thrusters.reset();
+		SpecificUpgrade_Charon_Boosters.reset();
+		SpecificUpgrade_U_238_Shells.reset();
+
+		SpecificTech_Stim_Packs.reset();
+		SpecificTech_Tank_Siege_Mode.reset();
+		SpecificTech_Spider_Mines.reset();
+		SpecificTech_Cloaking_Field.reset();
+		SpecificBuilding_Terran_Academy.reset();
+		SpecificBuilding_Terran_Engineering_Bay.reset();
+		SpecifiBuilding_Terran_Science_Facility.reset();
+		SpecificBuilding_Terran_Armory.reset();
+	}
+
 	// The current score this state holds.
 	private double currentScore = 0.;
 	// The number of times the state is going to be divided.
@@ -141,6 +212,19 @@ public abstract class GameState {
 	}
 
 	// -------------------- Functions
+
+	// TODO: UML ADD
+	/**
+	 * Function for resetting all properties of the GameState instance.
+	 */
+	public void reset() {
+		this.currentScore = 0.;
+		this.currentDivider = 1;
+		this.lastUpdateTimeStampScore = 0;
+		this.updateFramesPassedScore = 0;
+		this.lastUpdateTimeStampDivider = 0;
+		this.updateFramesPassedDivider = 0;
+	}
 
 	/**
 	 * Function for updating the current score of the GameState.
