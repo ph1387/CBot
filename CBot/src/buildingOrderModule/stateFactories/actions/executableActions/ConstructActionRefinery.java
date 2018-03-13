@@ -6,17 +6,17 @@ import core.Core;
 
 /**
  * ConstructActionRefinery.java --- Action for constructing a race specific
- * refinery. <br>
- * <b>NOTE:</b> <br>
- * The Simulator does not stop at a single instance of a building and can only
- * receive a single UnitType as condition. Therefore it is not advised to use
- * the Simulator for refineries.
+ * refinery.
  * 
  * @author P H - 30.04.2017
  *
  */
 public class ConstructActionRefinery extends ConstructBaseAction {
 
+	/**
+	 * @param target
+	 *            type: Integer
+	 */
 	public ConstructActionRefinery(Object target) {
 		super(target);
 

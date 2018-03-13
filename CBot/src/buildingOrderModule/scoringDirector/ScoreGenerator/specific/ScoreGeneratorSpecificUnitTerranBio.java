@@ -3,6 +3,7 @@ package buildingOrderModule.scoringDirector.ScoreGenerator.specific;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
 import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_Forbid;
+import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_One;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseFast;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseNormal;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseVerySlow;
@@ -19,6 +20,8 @@ import bwapi.UnitType;
  */
 public class ScoreGeneratorSpecificUnitTerranBio extends ScoreGeneratorSpecificUnit {
 
+	// TODO: UML ADD
+	private ScoreGenerator scoreGeneratorFixedOne;
 	private ScoreGenerator scoreGeneratorFixedForbid;
 
 	private ScoreGenerator scoreGeneratorIncreaseFast;
@@ -28,6 +31,7 @@ public class ScoreGeneratorSpecificUnitTerranBio extends ScoreGeneratorSpecificU
 	public ScoreGeneratorSpecificUnitTerranBio(BuildActionManager manager) {
 		super(manager);
 
+		this.scoreGeneratorFixedOne = new ScoreGeneratorFixed_One(this.manager);
 		this.scoreGeneratorFixedForbid = new ScoreGeneratorFixed_Forbid(this.manager);
 
 		this.scoreGeneratorIncreaseFast = new ScoreGeneratorIncreaseFast(this.manager);
@@ -43,6 +47,9 @@ public class ScoreGeneratorSpecificUnitTerranBio extends ScoreGeneratorSpecificU
 		double score = 0.;
 
 		switch (unitType.toString()) {
+		case "Terran_SCV":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
 		case "Terran_Goliath":
 			score = this.scoreGeneratorFixedForbid.generateScore(gameState, framesPassed);
 			break;

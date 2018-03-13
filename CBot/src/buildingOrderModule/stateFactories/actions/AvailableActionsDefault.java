@@ -8,6 +8,8 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
 import javaGOAP.GoapAction;
 
+// TODO: UML DEPRECATED
+@Deprecated
 /**
  * AvailableActionsDefault.java --- Default available actions for a
  * BuildActionManager.

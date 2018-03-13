@@ -25,6 +25,8 @@ public class ConstructActionTerran_Barracks extends ConstructBaseAction {
 		this.addToGameStates(GameState.Bio_Units);
 
 		this.addToGameStates(GameState.IdleTrainingFacility_Terran_Barracks);
+		
+		this.addToGameStates(GameState.SpecificBuilding_Terran_Barracks);
 	}
 
 	// -------------------- Functions

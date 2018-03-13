@@ -2,6 +2,7 @@ package buildingOrderModule.scoringDirector.ScoreGenerator.specific;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
+import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_One;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseNormal;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseSlow;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseVerySlow;
@@ -11,14 +12,17 @@ import bwapi.UnitType;
 // TOOD: UML ADD
 // TODO: UML REMOVE ScoreGeneratorSpecificImprovementFacilityTerranBio
 /**
- * ScoreGeneratorSpecificBuildingTerranBio.java --- A
- * {@link ScoreGenerator} applying a target specific rate to the score. This
- * class focuses on Terran bio-Unit buildings.
+ * ScoreGeneratorSpecificBuildingTerranBio.java --- A {@link ScoreGenerator}
+ * applying a target specific rate to the score. This class focuses on Terran
+ * bio-Unit buildings.
  * 
  * @author P H - 12.03.2018
  *
  */
 public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpecificBuilding {
+
+	// TODO: UML ADD
+	private ScoreGenerator scoreGeneratorFixedOne;
 
 	private ScoreGenerator scoreGeneratorIncreaseNormal;
 	private ScoreGenerator scoreGeneratorIncreaseSlow;
@@ -26,6 +30,8 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 
 	public ScoreGeneratorSpecificBuildingTerranBio(BuildActionManager manager) {
 		super(manager);
+
+		this.scoreGeneratorFixedOne = new ScoreGeneratorFixed_One(this.manager);
 
 		this.scoreGeneratorIncreaseNormal = new ScoreGeneratorIncreaseNormal(this.manager);
 		this.scoreGeneratorIncreaseSlow = new ScoreGeneratorIncreaseSlow(this.manager);
@@ -40,6 +46,7 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 		double score = 0.;
 
 		switch (unitType.toString()) {
+		// - Research / Upgrade:
 		case "Terran_Academy":
 			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
 			break;
@@ -51,6 +58,36 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 			break;
 		case "Terran_Armory":
 			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
+			break;
+
+		// - Addons:
+		case "Terran_Control_Tower":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
+		case "Terran_Machine_Shop":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
+
+		// - Training:
+		case "Terran_Command_Center":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
+		case "Terran_Barracks":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
+		case "Terran_Factory":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
+		case "Terran_Starport":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
+
+		// - Etc.:
+		case "Terran_Refinery":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
+		case "Terran_Supply_Depot":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
 			break;
 
 		default:

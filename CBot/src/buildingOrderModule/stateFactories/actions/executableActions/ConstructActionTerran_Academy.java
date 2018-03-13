@@ -27,6 +27,7 @@ public class ConstructActionTerran_Academy extends ConstructBaseAction {
 		
 		this.addToGameStates(GameState.ResearchBioUnits);
 		this.addToGameStates(GameState.UpgradeBioUnits);
+		
 		this.addToGameStates(GameState.SpecificBuilding_Terran_Academy);
 	}
 

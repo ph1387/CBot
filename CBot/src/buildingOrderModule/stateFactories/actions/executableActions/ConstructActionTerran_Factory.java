@@ -26,6 +26,8 @@ public class ConstructActionTerran_Factory extends ConstructBaseAction {
 		this.addToGameStates(GameState.Machine_Units);
 
 		this.addToGameStates(GameState.IdleTrainingFacility_Terran_Factory);
+		
+		this.addToGameStates(GameState.SpecificBuilding_Terran_Factory);
 	}
 
 	// -------------------- Functions

@@ -3,8 +3,10 @@ package buildingOrderModule.stateFactories.actions;
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_ControlTower;
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Barracks;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_CommandCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_EngineeringBay;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Refinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_ScienceFacilitiy;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Starport;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_CloakingField;
@@ -18,6 +20,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.ResearchActi
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Goliath;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Marine;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Medic;
+import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SCV;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_ScienceVessel;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Vulture;
@@ -46,8 +49,8 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ActionQueueStartingTerranRaxFE(1));
 		this.add(new ActionQueueStartingTerranBionic(1));
 
-		this.add(new ConstructActionCenter(1));
-		this.add(new ConstructActionRefinery(1));
+		this.add(new ConstructActionTerran_CommandCenter(1));
+		this.add(new ConstructActionTerran_Refinery(1));
 		this.add(new ConstructActionTerran_Barracks(1));
 		this.add(new ConstructActionTerran_Factory(1));
 		this.add(new ConstructActionTerran_Academy(1));
@@ -56,7 +59,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ConstructActionTerran_ScienceFacilitiy(1));
 		this.add(new ConstructActionTerran_Armory(1));
 
-		this.add(new TrainUnitActionWorker(1));
+		this.add(new TrainUnitActionTerran_SCV(1));
 		this.add(new TrainUnitActionTerran_Marine(1));
 		this.add(new TrainUnitActionTerran_SiegeTank(1));
 		this.add(new TrainUnitActionTerran_Vulture(1));

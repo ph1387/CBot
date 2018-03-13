@@ -31,6 +31,7 @@ public class ConstructActionTerran_Armory extends ConstructBaseAction {
 		this.addToGameStates(GameState.UpgradeMachineUnits);
 		this.addToGameStates(GameState.ResearchFlyingUnits);
 		this.addToGameStates(GameState.UpgradeFlyingUnits);
+		
 		this.addToGameStates(GameState.SpecificBuilding_Terran_Armory);
 	}
 

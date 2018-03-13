@@ -80,6 +80,8 @@ public abstract class GameState {
 	// Specific GameStates for different Terran Units, Upgrades, Technologies
 	// and buildings.
 	// Units:
+	// TODO: UML ADD
+	public static final GameState SpecificUnit_Terran_SCV = new GameStateSpecific_Unit(UnitType.Terran_SCV);
 	public static final GameState SpecificUnit_Terran_Goliath = new GameStateSpecific_Unit(UnitType.Terran_Goliath);
 	public static final GameState SpecificUnit_Terran_Marine = new GameStateSpecific_Unit(UnitType.Terran_Marine);
 	public static final GameState SpecificUnit_Terran_Medic = new GameStateSpecific_Unit(UnitType.Terran_Medic);
@@ -110,6 +112,7 @@ public abstract class GameState {
 	public static final GameState SpecificTech_Spider_Mines = new GameStateSpecific_Tech(TechType.Spider_Mines);
 	public static final GameState SpecificTech_Cloaking_Field = new GameStateSpecific_Tech(TechType.Cloaking_Field);
 	// Buildings:
+	// - Research / Upgrade:
 	// TODO: UML RENAME SpecificImprovementFacility_Terran_Academy
 	public static final GameState SpecificBuilding_Terran_Academy = new GameStateSpecific_Building(
 			UnitType.Terran_Academy);
@@ -122,6 +125,33 @@ public abstract class GameState {
 	// TODO: UML RENAME SpecificImprovementFacility_Terran_Armory
 	public static final GameState SpecificBuilding_Terran_Armory = new GameStateSpecific_Building(
 			UnitType.Terran_Armory);
+	// - Addons:
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_ControlTower = new GameStateSpecific_Building(
+			UnitType.Terran_Control_Tower);
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_MachineShop = new GameStateSpecific_Building(
+			UnitType.Terran_Machine_Shop);
+	// - Training:
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_CommandCenter = new GameStateSpecific_Building(
+			UnitType.Terran_Command_Center);
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_Barracks = new GameStateSpecific_Building(
+			UnitType.Terran_Barracks);
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_Factory = new GameStateSpecific_Building(
+			UnitType.Terran_Factory);
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_Starport = new GameStateSpecific_Building(
+			UnitType.Terran_Starport);
+	// - Etc.:
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_Refinery = new GameStateSpecific_Building(
+			UnitType.Terran_Refinery);
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_SupplyDepot = new GameStateSpecific_Building(
+			UnitType.Terran_Supply_Depot);
 
 	// TODO: UML ADD
 	/**
@@ -168,6 +198,7 @@ public abstract class GameState {
 		UpgradeMachineUnits.reset();
 		UpgradeFlyingUnits.reset();
 
+		SpecificUnit_Terran_SCV.reset();
 		SpecificUnit_Terran_Goliath.reset();
 		SpecificUnit_Terran_Marine.reset();
 		SpecificUnit_Terran_Medic.reset();
@@ -188,10 +219,19 @@ public abstract class GameState {
 		SpecificTech_Tank_Siege_Mode.reset();
 		SpecificTech_Spider_Mines.reset();
 		SpecificTech_Cloaking_Field.reset();
+
 		SpecificBuilding_Terran_Academy.reset();
 		SpecificBuilding_Terran_Engineering_Bay.reset();
 		SpecifiBuilding_Terran_Science_Facility.reset();
 		SpecificBuilding_Terran_Armory.reset();
+		SpecificBuilding_Terran_ControlTower.reset();
+		SpecificBuilding_Terran_MachineShop.reset();
+		SpecificBuilding_Terran_CommandCenter.reset();
+		SpecificBuilding_Terran_Barracks.reset();
+		SpecificBuilding_Terran_Factory.reset();
+		SpecificBuilding_Terran_Starport.reset();
+		SpecificBuilding_Terran_Refinery.reset();
+		SpecificBuilding_Terran_SupplyDepot.reset();
 	}
 
 	// The current score this state holds.
