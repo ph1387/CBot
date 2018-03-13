@@ -4,7 +4,6 @@ import buildingOrderModule.scoringDirector.gameState.GameState;
 import buildingOrderModule.simulator.TypeWrapper;
 import bwapi.UnitType;
 
-// TODO: WIP
 // TODO: UML ADD
 /**
  * TrainUnitActionTerran_SCV.java --- Action for training a Terran_SCV.
