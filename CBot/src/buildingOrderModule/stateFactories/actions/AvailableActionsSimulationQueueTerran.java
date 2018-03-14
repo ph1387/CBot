@@ -8,7 +8,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.ConstructAct
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_CommandCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_EngineeringBay;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_MissleTurret;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_MissileTurret;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Refinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_ScienceFacilitiy;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Starport;
@@ -56,7 +56,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ConstructActionTerran_EngineeringBay(1));
 		this.add(new ConstructActionTerran_ScienceFacilitiy(1));
 		this.add(new ConstructActionTerran_Armory(1));
-		this.add(new ConstructActionTerran_MissleTurret(1));
+		this.add(new ConstructActionTerran_MissileTurret(1));
 
 		this.add(new TrainUnitActionTerran_SCV(1));
 		this.add(new TrainUnitActionTerran_Marine(1));

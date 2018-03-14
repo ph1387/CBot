@@ -119,7 +119,7 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 						}
 						break;
 					case "Terran_Missile_Turret":
-						if (this.canAddMissleTurret(manager, actionType)) {
+						if (this.canAddMissileTurret(manager, actionType)) {
 							availableActionTypes.add(actionType);
 						}
 						break;
@@ -194,20 +194,20 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 
 	// TODO: UML ADD
 	/**
-	 * Function for determining if a Terran_Missle_Turret can be added towards
+	 * Function for determining if a Terran_Missile_Turret can be added towards
 	 * the construction Queue. This function takes (All) currently constructed
-	 * buildings as well as existing Terran_Missle_Turrets in consideration in
+	 * buildings as well as existing Terran_Missile_Turrets in consideration in
 	 * order to determine a maximum number of turrets.
 	 * 
 	 * @param manager
 	 *            the BuildActionManager for accessing the InformationStorage
 	 *            which contains all the current game information.
 	 * @param actionType
-	 *            the ActionType that is going to result in a Missle_Turret.
-	 * @return true if a Missle_Turret can be constructed, false otherwise.
+	 *            the ActionType that is going to result in a Missile_Turret.
+	 * @return true if a Missile_Turret can be constructed, false otherwise.
 	 */
-	private boolean canAddMissleTurret(BuildActionManager manager, ActionType actionType) {
-		Integer missleTurretCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+	private boolean canAddMissileTurret(BuildActionManager manager, ActionType actionType) {
+		Integer missileTurretCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
 				.getOrDefault(actionType.defineResultType().getUnitType(), 0);
 		Integer factoryCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
 				.getOrDefault(UnitType.Terran_Factory, 0);
@@ -227,7 +227,7 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 		int totalPossibleNumber = centerCount * 2 + (factoryCount + barrackCount + starportCount) / 2
 				+ (supplyDepotCount + refineryCount) / 4;
 
-		return missleTurretCount < totalPossibleNumber;
+		return missileTurretCount < totalPossibleNumber;
 	}
 
 }
