@@ -53,6 +53,8 @@ public class BuildingOrderModule {
 	private CommandSender sender = new BuildingOrderSender();
 	private GoapAgent buildingAgent;
 
+	// The generation of supply providers is NOT part of any occurring
+	// simulation!
 	private int supplyDepotTimeStamp = 0;
 	private int supplyDepotWaitTime = 60;
 	private int supplyDepotBuildTriggerPoint = 2;

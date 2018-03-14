@@ -45,6 +45,7 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 		UnitType unitType = this.extractUnitType(gameState);
 		double score = 0.;
 
+		// Supply_Depots not counted since they are not part of the simulation.
 		switch (unitType.toString()) {
 		// - Research / Upgrade:
 		case "Terran_Academy":
@@ -84,9 +85,6 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 
 		// - Etc.:
 		case "Terran_Refinery":
-			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
-			break;
-		case "Terran_Supply_Depot":
 			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Missile_Turret":

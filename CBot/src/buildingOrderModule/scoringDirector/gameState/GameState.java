@@ -150,9 +150,6 @@ public abstract class GameState {
 	public static final GameState SpecificBuilding_Terran_Refinery = new GameStateSpecific_Building(
 			UnitType.Terran_Refinery);
 	// TODO: UML ADD
-	public static final GameState SpecificBuilding_Terran_Supply_Depot = new GameStateSpecific_Building(
-			UnitType.Terran_Supply_Depot);
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Missile_Turret = new GameStateSpecific_Building(
 			UnitType.Terran_Missile_Turret);
 
@@ -234,7 +231,6 @@ public abstract class GameState {
 		SpecificBuilding_Terran_Factory.reset();
 		SpecificBuilding_Terran_Starport.reset();
 		SpecificBuilding_Terran_Refinery.reset();
-		SpecificBuilding_Terran_Supply_Depot.reset();
 		SpecificBuilding_Terran_Missile_Turret.reset();
 	}
 

@@ -4,7 +4,6 @@ import java.util.LinkedHashSet;
 
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionSupply;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
 import javaGOAP.GoapAction;
 
@@ -21,7 +20,6 @@ public class AvailableActionsDefault extends LinkedHashSet<GoapAction> {
 
 	public AvailableActionsDefault() {
 		this.add(new TrainUnitActionWorker(1));
-		this.add(new ConstructActionSupply(1));
 		this.add(new ConstructActionCenter(1));
 		this.add(new ConstructActionRefinery(1));
 	}
