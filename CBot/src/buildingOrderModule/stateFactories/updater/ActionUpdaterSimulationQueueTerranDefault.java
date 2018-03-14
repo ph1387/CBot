@@ -119,7 +119,9 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 						}
 						break;
 					case "Terran_Missile_Turret":
-						availableActionTypes.add(actionType);
+						if (this.canAddMissleTurret(manager, actionType)) {
+							availableActionTypes.add(actionType);
+						}
 						break;
 
 					// ----- Addons:
@@ -188,6 +190,44 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 				|| (factoriesExist && machineShopsExist && totalMachineShopCount < factoryCount);
 
 		return fewerMachineShopsThanFactories;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for determining if a Terran_Missle_Turret can be added towards
+	 * the construction Queue. This function takes (All) currently constructed
+	 * buildings as well as existing Terran_Missle_Turrets in consideration in
+	 * order to determine a maximum number of turrets.
+	 * 
+	 * @param manager
+	 *            the BuildActionManager for accessing the InformationStorage
+	 *            which contains all the current game information.
+	 * @param actionType
+	 *            the ActionType that is going to result in a Missle_Turret.
+	 * @return true if a Missle_Turret can be constructed, false otherwise.
+	 */
+	private boolean canAddMissleTurret(BuildActionManager manager, ActionType actionType) {
+		Integer missleTurretCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(actionType.defineResultType().getUnitType(), 0);
+		Integer factoryCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Factory, 0);
+		Integer centerCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Command_Center, 0);
+		Integer barrackCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Barracks, 0);
+		Integer starportCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Starport, 0);
+		Integer supplyDepotCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Supply_Depot, 0);
+		Integer refineryCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Refinery, 0);
+
+		// 2 for each Command_Center, 0.5 for each training building, 0.25 for
+		// each Supply_Depot or Refinery
+		int totalPossibleNumber = centerCount * 2 + (factoryCount + barrackCount + starportCount) / 2
+				+ (supplyDepotCount + refineryCount) / 4;
+
+		return missleTurretCount < totalPossibleNumber;
 	}
 
 }
