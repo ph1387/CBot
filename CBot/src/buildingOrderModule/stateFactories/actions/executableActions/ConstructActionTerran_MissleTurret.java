@@ -34,10 +34,10 @@ public class ConstructActionTerran_MissleTurret extends ConstructBaseAction {
 	protected UnitType defineType() {
 		return UnitType.Terran_Missile_Turret;
 	}
-	
+
 	@Override
 	public int defineMaxSimulationOccurrences() {
-		return -1;
+		return 1;
 	}
 
 }
