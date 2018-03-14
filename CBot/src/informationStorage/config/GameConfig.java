@@ -55,7 +55,7 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	// TODO: UML ADD
 	private boolean displayMineralBlockedChokePoints = false;
 	// TODO: UML ADD
-	private boolean displayBreadthAccessOrder = true;
+	private boolean displayBreadthAccessOrder = false;
 
 	// UnitControlModule:
 	private boolean displayQueueInformation = true;

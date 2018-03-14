@@ -2,18 +2,17 @@ package buildingOrderModule.stateFactories.actions;
 
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_ControlTower;
 import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTerran_MachineShop;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Armory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Barracks;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_CommandCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_EngineeringBay;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_MissleTurret;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Refinery;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_ScienceFacilitiy;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Starport;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_CloakingField;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionCenter;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionRefinery;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
-import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Armory;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SiegeMode;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_SpiderMines;
 import buildingOrderModule.stateFactories.actions.executableActions.ResearchActionTerran_StimPacks;
@@ -25,7 +24,6 @@ import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitAct
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_SiegeTank;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Vulture;
 import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionTerran_Wraith;
-import buildingOrderModule.stateFactories.actions.executableActions.TrainUnitActionWorker;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_CharonBoosters;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_InfantryArmor;
 import buildingOrderModule.stateFactories.actions.executableActions.UpgradeActionTerran_InfantryWeapons;
@@ -58,6 +56,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ConstructActionTerran_EngineeringBay(1));
 		this.add(new ConstructActionTerran_ScienceFacilitiy(1));
 		this.add(new ConstructActionTerran_Armory(1));
+		this.add(new ConstructActionTerran_MissleTurret(1));
 
 		this.add(new TrainUnitActionTerran_SCV(1));
 		this.add(new TrainUnitActionTerran_Marine(1));

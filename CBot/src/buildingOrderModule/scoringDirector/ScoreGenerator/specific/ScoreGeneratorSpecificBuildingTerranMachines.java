@@ -48,13 +48,13 @@ public class ScoreGeneratorSpecificBuildingTerranMachines extends ScoreGenerator
 		switch (unitType.toString()) {
 		// - Research / Upgrade:
 		case "Terran_Academy":
-			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
-			break;
-		case "Terran_Engineering_Bay":
 			score = this.scoreGeneratorIncreaseVerySlow.generateScore(gameState, framesPassed);
 			break;
-		case "Terran_Science_Facility":
+		case "Terran_Engineering_Bay":
 			score = this.scoreGeneratorIncreaseSlow.generateScore(gameState, framesPassed);
+			break;
+		case "Terran_Science_Facility":
+			score = this.scoreGeneratorIncreaseNormal.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Armory":
 			score = this.scoreGeneratorIncreaseSlow.generateScore(gameState, framesPassed);
@@ -87,6 +87,9 @@ public class ScoreGeneratorSpecificBuildingTerranMachines extends ScoreGenerator
 			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Supply_Depot":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
+		case "Terran_Missile_Turret":
 			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
 			break;
 

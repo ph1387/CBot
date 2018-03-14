@@ -118,6 +118,9 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 							availableActionTypes.add(actionType);
 						}
 						break;
+					case "Terran_Missile_Turret":
+						availableActionTypes.add(actionType);
+						break;
 
 					// ----- Addons:
 					case "Terran_Machine_Shop":
