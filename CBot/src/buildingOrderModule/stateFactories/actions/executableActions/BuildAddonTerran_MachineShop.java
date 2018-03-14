@@ -30,7 +30,7 @@ public class BuildAddonTerran_MachineShop extends BuildAddonBaseAction {
 		this.addToGameStates(GameState.ResearchMachineUnits);
 		this.addToGameStates(GameState.UpgradeMachineUnits);
 
-		this.addToGameStates(GameState.SpecificBuilding_Terran_MachineShop);
+		this.addToGameStates(GameState.SpecificBuilding_Terran_Machine_Shop);
 	}
 
 	// -------------------- Functions

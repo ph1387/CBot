@@ -130,11 +130,11 @@ public abstract class GameState {
 	public static final GameState SpecificBuilding_Terran_ControlTower = new GameStateSpecific_Building(
 			UnitType.Terran_Control_Tower);
 	// TODO: UML ADD
-	public static final GameState SpecificBuilding_Terran_MachineShop = new GameStateSpecific_Building(
+	public static final GameState SpecificBuilding_Terran_Machine_Shop = new GameStateSpecific_Building(
 			UnitType.Terran_Machine_Shop);
 	// - Training:
 	// TODO: UML ADD
-	public static final GameState SpecificBuilding_Terran_CommandCenter = new GameStateSpecific_Building(
+	public static final GameState SpecificBuilding_Terran_Command_Center = new GameStateSpecific_Building(
 			UnitType.Terran_Command_Center);
 	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Barracks = new GameStateSpecific_Building(
@@ -150,7 +150,7 @@ public abstract class GameState {
 	public static final GameState SpecificBuilding_Terran_Refinery = new GameStateSpecific_Building(
 			UnitType.Terran_Refinery);
 	// TODO: UML ADD
-	public static final GameState SpecificBuilding_Terran_SupplyDepot = new GameStateSpecific_Building(
+	public static final GameState SpecificBuilding_Terran_Supply_Depot = new GameStateSpecific_Building(
 			UnitType.Terran_Supply_Depot);
 
 	// TODO: UML ADD
@@ -225,13 +225,13 @@ public abstract class GameState {
 		SpecifiBuilding_Terran_Science_Facility.reset();
 		SpecificBuilding_Terran_Armory.reset();
 		SpecificBuilding_Terran_ControlTower.reset();
-		SpecificBuilding_Terran_MachineShop.reset();
-		SpecificBuilding_Terran_CommandCenter.reset();
+		SpecificBuilding_Terran_Machine_Shop.reset();
+		SpecificBuilding_Terran_Command_Center.reset();
 		SpecificBuilding_Terran_Barracks.reset();
 		SpecificBuilding_Terran_Factory.reset();
 		SpecificBuilding_Terran_Starport.reset();
 		SpecificBuilding_Terran_Refinery.reset();
-		SpecificBuilding_Terran_SupplyDepot.reset();
+		SpecificBuilding_Terran_Supply_Depot.reset();
 	}
 
 	// The current score this state holds.

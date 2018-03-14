@@ -22,7 +22,7 @@ public class ConstructActionTerran_CommandCenter extends ConstructActionCenter {
 
 		this.addToGameStates(GameState.IdleTrainingFacility_Terran_CommandCenter);
 
-		this.addToGameStates(GameState.SpecificBuilding_Terran_CommandCenter);
+		this.addToGameStates(GameState.SpecificBuilding_Terran_Command_Center);
 	}
 
 	// -------------------- Functions
