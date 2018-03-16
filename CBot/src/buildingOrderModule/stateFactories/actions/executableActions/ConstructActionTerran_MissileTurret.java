@@ -20,10 +20,10 @@ public class ConstructActionTerran_MissileTurret extends ConstructBaseAction {
 	public ConstructActionTerran_MissileTurret(Object target) {
 		super(target);
 
-		this.addToGameStates(GameState.Cheap_Units);
-		this.addToGameStates(GameState.Mineral_Units);
-		this.addToGameStates(GameState.Support_Units);
+		this.addToGameStates(GameState.Building_Units);
 		this.addToGameStates(GameState.Combat_Units);
+		this.addToGameStates(GameState.Mineral_Units);
+		this.addToGameStates(GameState.Cheap_Units);
 
 		this.addToGameStates(GameState.SpecificBuilding_Terran_Missile_Turret);
 	}
