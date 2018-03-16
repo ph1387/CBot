@@ -5,8 +5,10 @@ import java.util.HashSet;
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.simulator.ActionType;
 import buildingOrderModule.stateFactories.actions.AvailableActionsSimulationQueueTerran;
-import bwapi.Player;
+import bwapi.Unit;
 import bwapi.UnitType;
+import bwta.BWTA;
+import bwta.BaseLocation;
 import core.Core;
 import javaGOAP.GoapAction;
 
@@ -66,14 +68,7 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 						}
 						break;
 					case "Terran_Refinery":
-						Player player = Core.getInstance().getPlayer();
-						Integer playerCenterCount = manager.getCurrentGameInformation().getCurrentUnitCounts()
-								.getOrDefault(player.getRace().getCenter(), 0);
-						Integer playerRefineryCount = manager.getCurrentGameInformation().getCurrentUnitCounts()
-								.getOrDefault(player.getRace().getRefinery(), 0);
-
-						if (!this.wasForwardedOrQueued(actionType)
-								&& (playerRefineryCount.equals(0) || (playerCenterCount > playerRefineryCount))) {
+						if (!this.wasForwardedOrQueued(actionType) && this.canAddRefinery(manager, actionType)) {
 							availableActionTypes.add(actionType);
 						}
 						break;
@@ -159,6 +154,70 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 		}
 
 		return availableActionTypes;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for determining if a Terran_Refinery can be added towards the
+	 * construction Queue. The result of this function depends on the available
+	 * geysers near existing Terran_Command_Centers.
+	 * 
+	 * @param manager
+	 *            the BuildActionManager for accessing the InformationStorage
+	 *            which contains all the current game information.
+	 * @param actionType
+	 *            the ActionType that is going to result in a Refinery.
+	 * @return true if a Refinery can be constructed, false otherwise.
+	 */
+	private boolean canAddRefinery(BuildActionManager manager, ActionType actionType) {
+		HashSet<Unit> centers = manager.getCurrentGameInformation().getCurrentUnits()
+				.getOrDefault(UnitType.Terran_Command_Center, new HashSet<Unit>());
+		HashSet<Unit> freeGeysers = this.extractFreeGeysers(centers, actionType.defineResultType().getUnitType());
+
+		return freeGeysers.size() > 0;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting all unoccupied geyser Units on BaseLocations that
+	 * are being used by a provided HashSet of centers.
+	 * 
+	 * @param centers
+	 *            the centers whose BaseLocations are being checked for free
+	 *            geysers.
+	 * @param refineryType
+	 *            the UnitType of the refieries for which the check is being run
+	 *            for.
+	 * @return a HashSet of free geyser Units on which the provided refinery
+	 *         type can be constructed.
+	 */
+	private HashSet<Unit> extractFreeGeysers(HashSet<Unit> centers, UnitType refineryType) {
+		HashSet<Unit> freeGeysers = new HashSet<>();
+
+		for (Unit center : centers) {
+			BaseLocation baseLocation = BWTA.getNearestBaseLocation(center.getPosition());
+
+			// Extract only the free geysers on occupied BaseLocations since not
+			// all BaseLocations have one / many.
+			for (Unit geyser : baseLocation.getGeysers()) {
+				boolean free = true;
+
+				// Ensure only free geysers are counted.
+				for (Unit unit : Core.getInstance().getGame().getUnitsOnTile(geyser.getTilePosition())) {
+					if (unit.getType() == refineryType) {
+						free = false;
+
+						break;
+					}
+				}
+
+				if (free) {
+					freeGeysers.add(geyser);
+				}
+			}
+		}
+
+		return freeGeysers;
 	}
 
 	/**
