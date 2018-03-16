@@ -123,6 +123,11 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 							availableActionTypes.add(actionType);
 						}
 						break;
+					case "Terran_Bunker":
+						if (!this.wasForwardedOrQueued(actionType)) {
+							availableActionTypes.add(actionType);
+						}
+						break;
 
 					// ----- Addons:
 					case "Terran_Machine_Shop":

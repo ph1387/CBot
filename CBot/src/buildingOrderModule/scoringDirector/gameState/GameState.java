@@ -152,6 +152,9 @@ public abstract class GameState {
 	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Missile_Turret = new GameStateSpecific_Building(
 			UnitType.Terran_Missile_Turret);
+	// TODO: UML ADD
+	public static final GameState SpecificBuilding_Terran_Bunker = new GameStateSpecific_Building(
+			UnitType.Terran_Bunker);
 
 	// TODO: UML ADD
 	/**
@@ -232,6 +235,7 @@ public abstract class GameState {
 		SpecificBuilding_Terran_Starport.reset();
 		SpecificBuilding_Terran_Refinery.reset();
 		SpecificBuilding_Terran_Missile_Turret.reset();
+		SpecificBuilding_Terran_Bunker.reset();
 	}
 
 	// The current score this state holds.

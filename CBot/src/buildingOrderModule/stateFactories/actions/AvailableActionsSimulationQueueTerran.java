@@ -5,6 +5,7 @@ import buildingOrderModule.stateFactories.actions.executableActions.BuildAddonTe
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Academy;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Armory;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Barracks;
+import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Bunker;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_CommandCenter;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_EngineeringBay;
 import buildingOrderModule.stateFactories.actions.executableActions.ConstructActionTerran_Factory;
@@ -57,6 +58,7 @@ public class AvailableActionsSimulationQueueTerran extends AvailableActionsSimul
 		this.add(new ConstructActionTerran_ScienceFacilitiy(1));
 		this.add(new ConstructActionTerran_Armory(1));
 		this.add(new ConstructActionTerran_MissileTurret(1));
+		this.add(new ConstructActionTerran_Bunker(1));
 
 		this.add(new TrainUnitActionTerran_SCV(1));
 		this.add(new TrainUnitActionTerran_Marine(1));

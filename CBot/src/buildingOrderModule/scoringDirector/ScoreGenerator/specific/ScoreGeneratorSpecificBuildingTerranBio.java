@@ -90,6 +90,9 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 		case "Terran_Missile_Turret":
 			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
 			break;
+		case "Terran_Bunker":
+			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			break;
 
 		default:
 			throw new NullPointerException("Specific ScoreGeneration failed for UnitType: " + unitType);
