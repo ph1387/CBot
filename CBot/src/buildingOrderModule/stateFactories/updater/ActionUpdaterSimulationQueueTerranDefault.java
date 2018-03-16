@@ -124,7 +124,7 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 						}
 						break;
 					case "Terran_Bunker":
-						if (!this.wasForwardedOrQueued(actionType)) {
+						if (!this.wasForwardedOrQueued(actionType) && this.canAddBunker(manager, actionType)) {
 							availableActionTypes.add(actionType);
 						}
 						break;
@@ -233,6 +233,31 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 				+ (supplyDepotCount + refineryCount) / 4;
 
 		return missileTurretCount < totalPossibleNumber;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for determining if a Terran_Bunker can be added towards the
+	 * construction Queue.
+	 * 
+	 * @param manager
+	 *            the BuildActionManager for accessing the InformationStorage
+	 *            which contains all the current game information.
+	 * @param actionType
+	 *            the ActionType that is going to result in a Bunker.
+	 * @return true if a Bunker can be constructed, false otherwise.
+	 */
+	private boolean canAddBunker(BuildActionManager manager, ActionType actionType) {
+		Integer simulationResultBunkerCount = this.simulationQueueResultActionTypes
+				.getOrDefault(actionType.defineResultType(), 0);
+		Integer queuedBunkerCount = this.informationStorageQueuesActionTypes.getOrDefault(actionType.defineResultType(),
+				0);
+		Integer bunkerCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(actionType.defineResultType().getUnitType(), 0);
+		Integer centerCount = manager.getInformationStorage().getCurrentGameInformation().getCurrentUnitCounts()
+				.getOrDefault(UnitType.Terran_Command_Center, 0);
+
+		return (simulationResultBunkerCount + queuedBunkerCount + bunkerCount) < centerCount;
 	}
 
 }
