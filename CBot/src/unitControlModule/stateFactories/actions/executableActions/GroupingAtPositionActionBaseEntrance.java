@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
 
 import bwapi.Position;
 import bwapi.Unit;
@@ -146,8 +145,8 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 			HashMap<Region, Region> reversedRegionAccessOrder = mapInformation
 					.getPrecomputedReversedRegionAccessOrders().get(region);
 			HashSet<DistantRegion> regionDistances = mapInformation.getPrecomputedRegionDistances().get(region);
-			Chokepoint mostSuitedChokePoint = this.findMostSuitedGroupingChokePoint(region,
-					reversedRegionAccessOrder, regionDistances);
+			Chokepoint mostSuitedChokePoint = this.findMostSuitedGroupingChokePoint(region, reversedRegionAccessOrder,
+					regionDistances);
 
 			chokePointsAtBorders.add(mostSuitedChokePoint);
 		}
@@ -175,31 +174,11 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 	 */
 	private Chokepoint findMostSuitedGroupingChokePoint(Region region,
 			HashMap<Region, Region> reversedRegionAccessOrder, HashSet<DistantRegion> regionDistances) {
-		HashSet<Chokepoint> providedRegionsChokePoints = new HashSet<>(region.getChokepoints());
-		Chokepoint mostSuitedChokePoint = null;
+		Region farthestRegion = extractFarthestRegion(regionDistances).getRegion();
+		Region nextRegion = extractNextRegionTowardsTargetRegion(reversedRegionAccessOrder, farthestRegion, region);
+		Chokepoint sharedChokePoint = extractSharedChokePoint(region, nextRegion);
 
-		// Find the farthest Region possible.
-		TreeSet<DistantRegion> sortedDistantRegions = new TreeSet<>(regionDistances);
-		DistantRegion farthestDistantRegion = sortedDistantRegions.last();
-		Region currentRegion = farthestDistantRegion.getRegion();
-
-		// Find the Region next to the provided starting Region that leads to
-		// the farthest one.
-		while (reversedRegionAccessOrder.get(currentRegion) != region) {
-			currentRegion = reversedRegionAccessOrder.get(currentRegion);
-		}
-
-		// Extract the shared ChokePoint between the provided and current
-		// Region.
-		for (Chokepoint chokepoint : currentRegion.getChokepoints()) {
-			if (providedRegionsChokePoints.contains(chokepoint)) {
-				mostSuitedChokePoint = chokepoint;
-
-				break;
-			}
-		}
-
-		return mostSuitedChokePoint;
+		return sharedChokePoint;
 	}
 
 	/**
