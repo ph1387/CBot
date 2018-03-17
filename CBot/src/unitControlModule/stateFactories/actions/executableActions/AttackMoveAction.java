@@ -1,11 +1,8 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
+import bwapi.Position;
 import bwapi.TilePosition;
 import bwta.BWTA;
-import bwta.Chokepoint;
 import bwta.Region;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -20,6 +17,30 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
+	// TODO: UML ADD
+	/**
+	 * AttackMoveActionWrapper.java --- Wrapper Class used for smartly moving
+	 * between ChokePoints.
+	 * 
+	 * @author P H - 17.03.2018
+	 *
+	 */
+	private class AttackMoveActionWrapper implements SmartlyMovingActionWrapper {
+
+		@Override
+		public boolean performInternalAction(IGoapUnit goapUnit, Object target) {
+			return ((PlayerUnit) goapUnit).getUnit().attack(((TilePosition) target).toPosition());
+		}
+
+		@Override
+		public Position convertTarget(Object target) {
+			return ((TilePosition) target).toPosition();
+		}
+
+	}
+
+	// TODO: UML ADD
+	private SmartlyMovingActionWrapper actionWrapper = new AttackMoveActionWrapper();
 	private int maxGroupSize = 5;
 	private int maxLeaderTileDistance = 5;
 
@@ -48,52 +69,10 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 		boolean success = false;
 
 		try {
-			success = this.performBasedOnCurrentPosition((PlayerUnit) goapUnit);
+			Region targetRegion = BWTA.getRegion((TilePosition) this.target);
+			success = this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		return success;
-	}
-
-	// TODO: UML ADD
-	/**
-	 * Function for performing the action smartly, whereas smartly means moving
-	 * from ChokePoint to ChokePoint towards the target. This is due to the
-	 * Units sometimes getting stuck in Regions with either blocking minerals or
-	 * neutral structures. Therefore moving between ChokePoints is advised since
-	 * the used access order (= breadth-search) includes these. ChokePoints are
-	 * traversed until either the target Region matches the current one of the
-	 * Unit or is one of the directly accessible ones of the current Region.
-	 * 
-	 * @param playerUnit
-	 *            the executing Unit.
-	 * @return true if the action was performed successfully, which means either
-	 *         moving between ChokePoints or executing the actual action.
-	 * @throws Exception
-	 *             a Exception is thrown (Usually NullPointerException) when a
-	 *             Region can not be found via BWTA and therefore no region
-	 *             access order is available.
-	 */
-	private boolean performBasedOnCurrentPosition(PlayerUnit playerUnit) throws Exception {
-		Region currentRegion = BWTA.getRegion(playerUnit.getUnit().getPosition());
-		Region targetRegion = BWTA.getRegion((TilePosition) this.target);
-		HashMap<Region, HashSet<Region>> regionAccessOrder = playerUnit.getInformationStorage().getMapInfo()
-				.getPrecomputedRegionAcccessOrders().get(currentRegion);
-		boolean success = false;
-
-		// Target Region either is the current one or only one step / Region
-		// away.
-		if (targetRegion.equals(currentRegion) || regionAccessOrder.get(currentRegion).contains(targetRegion)) {
-			success = playerUnit.getUnit().attack(((TilePosition) this.target).toPosition());
-		}
-		// Target Region is farther away.
-		else {
-			Chokepoint chokePointToMoveTo = this.findNextChokePointTowardsTarget(
-					playerUnit.getInformationStorage().getMapInfo(), playerUnit.getUnit().getPosition(),
-					((TilePosition) this.target).toPosition());
-
-			success = playerUnit.getUnit().move(chokePointToMoveTo.getCenter());
 		}
 
 		return success;
@@ -121,7 +100,8 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 		boolean success = false;
 
 		try {
-			success = this.performBasedOnCurrentPosition((PlayerUnit) groupMember);
+			Region targetRegion = BWTA.getRegion((TilePosition) this.target);
+			success = this.performSmartlyMovingToRegion(groupMember, targetRegion, this.actionWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

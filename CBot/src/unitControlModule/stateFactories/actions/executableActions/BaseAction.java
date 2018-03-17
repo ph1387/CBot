@@ -32,6 +32,43 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public abstract class BaseAction extends GoapAction implements GroupableAction {
 
+	// TODO: UML ADD
+	/**
+	 * SmartlyMovingActionWrapper.java --- Interface for action wrappers using
+	 * the
+	 * {@link BaseAction#performSmartlyMovingToRegion(IGoapUnit, Region, SmartlyMovingActionWrapper)}
+	 * function.
+	 * 
+	 * @author P H - 17.03.2018
+	 *
+	 */
+	protected interface SmartlyMovingActionWrapper {
+
+		/**
+		 * Function for performing the general action of the Unit (Moving,
+		 * attacking, etc.).
+		 * 
+		 * @param goapUnit
+		 *            the executing Unit.
+		 * @param target
+		 *            the forwarded target of the current action.
+		 * @return true if the action was executed successfully, otherwise
+		 *         false.
+		 */
+		public boolean performInternalAction(IGoapUnit goapUnit, Object target);
+
+		/**
+		 * Function for converting the target into a Position.
+		 * 
+		 * @param target
+		 *            the forwarded target of the current action that must be
+		 *            converted.
+		 * @return the converted target as Position instance.
+		 */
+		public Position convertTarget(Object target);
+
+	}
+
 	private static final int EXPAND_MULTIPLIER_MAX = 5;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 	private static final int DEFAULT_SEARCH_STEP_DISTANCE = 200;
@@ -404,6 +441,57 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 			}
 		}
 		return closestUnit;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for performing the action smartly, whereas smartly means moving
+	 * from ChokePoint to ChokePoint towards the target. This is due to the
+	 * Units sometimes getting stuck in Regions with either blocking minerals or
+	 * neutral structures. Therefore moving between ChokePoints is advised since
+	 * the used access order (= breadth-search) includes these. ChokePoints are
+	 * traversed until either the target Region matches the current one of the
+	 * Unit or is one of the directly accessible ones of the current Region.
+	 * 
+	 * @param goapUnit
+	 *            the executing Unit.
+	 * @param targetRegion
+	 *            the target Region of the Unit.
+	 * @param actionWrapper
+	 *            the SmartlyMovingActionWrapper instance that contains
+	 *            converter functionalities as well as the concrete action that
+	 *            the Unit must take.
+	 * @return true if the action was performed successfully, which means either
+	 *         moving between ChokePoints or executing the actual action.
+	 * @throws Exception
+	 *             a Exception is thrown (Usually NullPointerException) when a
+	 *             Region can not be found via BWTA and therefore no region
+	 *             access order is available.
+	 */
+	protected boolean performSmartlyMovingToRegion(IGoapUnit goapUnit, Region targetRegion,
+			SmartlyMovingActionWrapper actionWrapper) throws Exception {
+		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
+		Region currentRegion = BWTA.getRegion(playerUnit.getUnit().getPosition());
+		HashMap<Region, HashSet<Region>> regionAccessOrder = playerUnit.getInformationStorage().getMapInfo()
+				.getPrecomputedRegionAcccessOrders().get(currentRegion);
+		boolean success = false;
+
+		// Target Region either is the current one or only one step away.
+		if (targetRegion.equals(currentRegion) || regionAccessOrder.get(currentRegion).contains(targetRegion)) {
+			success = actionWrapper.performInternalAction(goapUnit, this.target);
+		}
+		// Target Region is farther away.
+		else {
+			MapInformation mapInformation = playerUnit.getInformationStorage().getMapInfo();
+			Position currentPosition = playerUnit.getUnit().getPosition();
+			Position targetPosition = actionWrapper.convertTarget(this.target);
+			Chokepoint chokePointToMoveTo = this.findNextChokePointTowardsTarget(mapInformation, currentPosition,
+					targetPosition);
+
+			success = playerUnit.getUnit().move(chokePointToMoveTo.getCenter());
+		}
+
+		return success;
 	}
 
 	// TODO: UML ADD
