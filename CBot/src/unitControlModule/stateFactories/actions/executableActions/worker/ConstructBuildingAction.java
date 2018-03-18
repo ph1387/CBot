@@ -21,8 +21,8 @@ public class ConstructBuildingAction extends WorkerAction {
 
 	// TODO: UML ADD
 	/**
-	 * ConstructBuildingActionWrapper.java --- Wrapper Class used for smartly moving
-	 * between ChokePoints.
+	 * ConstructBuildingActionWrapper.java --- Wrapper Class used for smartly
+	 * moving between ChokePoints.
 	 * 
 	 * @author P H - 18.03.2018
 	 *
@@ -100,13 +100,14 @@ public class ConstructBuildingAction extends WorkerAction {
 		if (workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)) {
 			IConstrucionInformation constructionInformation = workerManagerConstructionJobDistribution
 					.getConstructionInformation((PlayerUnitWorker) goapUnit);
-			Region targetRegion = BWTA.getRegion(constructionInformation.getTilePosition());
 
-			if (this.actionWrapper == null) {
-				this.actionWrapper = new ConstructBuildingActionWrapper(constructionInformation);
-			}
-
+			// Smartly moving part of the action itself:
 			try {
+				if (this.actionWrapper == null) {
+					this.actionWrapper = new ConstructBuildingActionWrapper(constructionInformation);
+				}
+
+				Region targetRegion = BWTA.getRegion(constructionInformation.getTilePosition());
 				this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
 			} catch (Exception e) {
 				e.printStackTrace();

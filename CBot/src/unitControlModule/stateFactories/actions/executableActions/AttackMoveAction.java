@@ -68,6 +68,7 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = false;
 
+		// Smartly moving part of the action itself:
 		try {
 			Region targetRegion = BWTA.getRegion((TilePosition) this.target);
 			success = this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);

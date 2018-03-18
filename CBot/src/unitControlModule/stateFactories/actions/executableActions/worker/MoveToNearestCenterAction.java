@@ -75,14 +75,14 @@ public class MoveToNearestCenterAction extends WorkerAction {
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
 
-		if (this.centerToMoveTo == null) {
-			this.centerToMoveTo = (Unit) this.target;
-			this.actionWrapper = new MoveToNearestCenterActionWrapper(this.centerToMoveTo);
-		}
-
+		// Smartly moving part of the action itself:
 		try {
-			Region targetRegion = BWTA.getRegion(this.centerToMoveTo.getPosition());
+			if (this.centerToMoveTo == null) {
+				this.centerToMoveTo = (Unit) this.target;
+				this.actionWrapper = new MoveToNearestCenterActionWrapper(this.centerToMoveTo);
+			}
 
+			Region targetRegion = BWTA.getRegion(this.centerToMoveTo.getPosition());
 			this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
