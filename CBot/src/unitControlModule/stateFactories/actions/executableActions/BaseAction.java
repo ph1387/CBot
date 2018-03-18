@@ -76,7 +76,7 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	// TODO: UML ADD
 	// The distance towards ChokePoint at which the Region on the other side is
 	// used in finding the next ChokePoint towards a target.
-	private static final int SKIP_DISTANCE_TO_CHOKEPOINT = 128;
+	private static final int SKIP_DISTANCE_TO_CHOKEPOINT = 256;
 
 	// Flag for re-enabling the action change trigger when the Unit is the new
 	// leader of a group action.
@@ -477,7 +477,8 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		boolean success = false;
 
 		// Target Region either is the current one or only one step away.
-		if (targetRegion.equals(currentRegion) || regionAccessOrder.get(currentRegion).contains(targetRegion)) {
+		if (targetRegion.equals(currentRegion)
+				|| regionAccessOrder.getOrDefault(currentRegion, new HashSet<Region>()).contains(targetRegion)) {
 			success = actionWrapper.performInternalAction(goapUnit, this.target);
 		}
 		// Target Region is farther away.
