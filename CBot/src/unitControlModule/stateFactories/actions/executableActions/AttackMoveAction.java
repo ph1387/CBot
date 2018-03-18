@@ -4,6 +4,7 @@ import bwapi.Position;
 import bwapi.TilePosition;
 import bwta.BWTA;
 import bwta.Region;
+import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -34,7 +35,14 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
 		@Override
 		public Position convertTarget(Object target) {
-			return ((TilePosition) target).toPosition();
+			Position convertedTilePosition = ((TilePosition) target).toPosition();
+			int centeredPositionX = convertedTilePosition.getX() + Core.getInstance().getTileSize() / 2;
+			int centeredPositionY = convertedTilePosition.getY() + Core.getInstance().getTileSize() / 2;
+
+			// Default toPosition function returns the upper left corner, which
+			// can be outside of a Region.
+			// -> Does not remove any possible NullPointers, but reduces them!
+			return new Position(centeredPositionX, centeredPositionY);
 		}
 
 	}
