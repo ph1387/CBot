@@ -1,6 +1,9 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
+import bwapi.Position;
 import bwapi.Unit;
+import bwta.BWTA;
+import bwta.Region;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -14,6 +17,37 @@ import unitControlModule.unitWrappers.PlayerUnit;
  *
  */
 public class MoveToNearestCenterAction extends WorkerAction {
+
+	// TODO: UML ADD
+	/**
+	 * MoveToNearestCenterActionWrapper.java --- Wrapper Class used for smartly
+	 * moving between ChokePoints.
+	 * 
+	 * @author P H - 18.03.2018
+	 *
+	 */
+	private class MoveToNearestCenterActionWrapper implements SmartlyMovingActionWrapper {
+
+		private Unit centerToMoveTo;
+
+		public MoveToNearestCenterActionWrapper(Unit centerToMoveTo) {
+			this.centerToMoveTo = centerToMoveTo;
+		}
+
+		@Override
+		public boolean performInternalAction(IGoapUnit goapUnit, Object target) {
+			return ((PlayerUnit) goapUnit).getUnit().move(this.centerToMoveTo.getPosition());
+		}
+
+		@Override
+		public Position convertTarget(Object target) {
+			return this.centerToMoveTo.getPosition();
+		}
+
+	}
+
+	// TODO: UML ADD
+	private SmartlyMovingActionWrapper actionWrapper;
 
 	// The distance at which the isDone function returns true and the Action is
 	// finished.
@@ -43,15 +77,24 @@ public class MoveToNearestCenterAction extends WorkerAction {
 
 		if (this.centerToMoveTo == null) {
 			this.centerToMoveTo = (Unit) this.target;
-
-			success = ((PlayerUnit) goapUnit).getUnit().move(this.centerToMoveTo.getPosition());
+			this.actionWrapper = new MoveToNearestCenterActionWrapper(this.centerToMoveTo);
 		}
+
+		try {
+			Region targetRegion = BWTA.getRegion(this.centerToMoveTo.getPosition());
+
+			this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return success;
 	}
 
 	@Override
 	protected void resetSpecific() {
 		this.centerToMoveTo = null;
+		this.actionWrapper = null;
 	}
 
 	@Override
