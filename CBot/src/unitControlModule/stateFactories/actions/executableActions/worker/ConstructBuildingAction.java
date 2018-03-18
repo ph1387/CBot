@@ -21,7 +21,7 @@ public class ConstructBuildingAction extends WorkerAction {
 
 	// TODO: UML ADD
 	/**
-	 * AttackMoveActionWrapper.java --- Wrapper Class used for smartly moving
+	 * ConstructBuildingActionWrapper.java --- Wrapper Class used for smartly moving
 	 * between ChokePoints.
 	 * 
 	 * @author P H - 18.03.2018
