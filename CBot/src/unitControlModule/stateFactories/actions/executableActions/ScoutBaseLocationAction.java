@@ -63,12 +63,42 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	}
 
+	// TODO: UML ADD
+	/**
+	 * ScoutBaseLocationActionWrapper.java --- Wrapper Class used for smartly
+	 * moving between ChokePoints.
+	 * 
+	 * @author P H - 18.03.2018
+	 *
+	 */
+	private class ScoutBaseLocationActionWrapper implements SmartlyMovingActionWrapper {
+
+		private Position targetPosition;
+
+		public ScoutBaseLocationActionWrapper(Position targetPosition) {
+			this.targetPosition = targetPosition;
+		}
+
+		@Override
+		public boolean performInternalAction(IGoapUnit goapUnit, Object target) {
+			return ((PlayerUnit) goapUnit).getUnit().move(this.targetPosition);
+		}
+
+		@Override
+		public Position convertTarget(Object target) {
+			return this.targetPosition;
+		}
+
+	}
+
 	// TODO: UML CHANGE 60
 	// The time after a BaseLocation may be searched again.
 	public static final int BASELOCATIONS_TIME_PASSED = 300;
 
 	protected static Integer RANGE_TO_TARGET = null;
 
+	// TODO: UML ADD
+	private SmartlyMovingActionWrapper actionWrapper;
 	private Position targetPosition = null;
 
 	/**
@@ -99,17 +129,18 @@ public class ScoutBaseLocationAction extends BaseAction {
 	@Override
 	protected boolean performSpecificAction(IGoapUnit goapUnit) {
 		boolean success = true;
-		boolean executeMove = false;
 
-		if (this.targetPosition == null) {
-			this.targetPosition = this.findClosestReachableBasePosition(goapUnit);
-			executeMove = true;
-		}
+		// Smartly moving part of the action itself:
+		try {
+			if (this.targetPosition == null) {
+				this.targetPosition = this.findClosestReachableBasePosition(goapUnit);
+				this.actionWrapper = new ScoutBaseLocationActionWrapper(this.targetPosition);
+			}
 
-		if (this.targetPosition != null && executeMove) {
-			success &= ((PlayerUnit) goapUnit).getUnit().move(this.targetPosition);
-		} else if (this.targetPosition == null) {
-			success = false;
+			Region targetRegion = BWTA.getRegion(this.targetPosition);
+			success = this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return success;
@@ -256,6 +287,7 @@ public class ScoutBaseLocationAction extends BaseAction {
 	protected void resetSpecific() {
 		this.target = new Object();
 		this.targetPosition = null;
+		this.actionWrapper = null;
 	}
 
 	// -------------------- Group
