@@ -1,5 +1,8 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
+import bwapi.Position;
+import bwta.BWTA;
+import bwta.Region;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -15,6 +18,55 @@ import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDist
  *
  */
 public class ConstructBuildingAction extends WorkerAction {
+
+	// TODO: UML ADD
+	/**
+	 * AttackMoveActionWrapper.java --- Wrapper Class used for smartly moving
+	 * between ChokePoints.
+	 * 
+	 * @author P H - 18.03.2018
+	 *
+	 */
+	private class ConstructBuildingActionWrapper implements SmartlyMovingActionWrapper {
+
+		private IConstrucionInformation constructionInformation;
+
+		public ConstructBuildingActionWrapper(IConstrucionInformation constructionInformation) {
+			this.constructionInformation = constructionInformation;
+		}
+
+		@Override
+		public boolean performInternalAction(IGoapUnit goapUnit, Object target) {
+			PlayerUnitWorker worker = (PlayerUnitWorker) goapUnit;
+
+			// Update the ConstructionJob first.
+			this.constructionInformation.update();
+
+			// Walk to the TilePosition the building is being created on when it
+			// is undiscovered.
+			if (!Core.getInstance().getGame().isExplored(this.constructionInformation.getTilePosition())) {
+				worker.getUnit().move(constructionInformation.getTilePosition().toPosition());
+			}
+			// Initiate the construction of the building if necessary.
+			else if (!this.constructionInformation.constructionStarted()) {
+				worker.getUnit().build(this.constructionInformation.getUnitType(),
+						this.constructionInformation.getTilePosition());
+			}
+
+			// Always return true since the build command might fail i.e. when a
+			// Unit is blocking the spot.
+			return true;
+		}
+
+		@Override
+		public Position convertTarget(Object target) {
+			return this.constructionInformation.getTilePosition().toPosition();
+		}
+
+	}
+
+	// TODO: UML ADD
+	private SmartlyMovingActionWrapper actionWrapper;
 
 	/**
 	 * @param target
@@ -48,19 +100,16 @@ public class ConstructBuildingAction extends WorkerAction {
 		if (workerManagerConstructionJobDistribution.isAssignedConstructing((PlayerUnitWorker) goapUnit)) {
 			IConstrucionInformation constructionInformation = workerManagerConstructionJobDistribution
 					.getConstructionInformation((PlayerUnitWorker) goapUnit);
+			Region targetRegion = BWTA.getRegion(constructionInformation.getTilePosition());
 
-			// Update the ConstructionJob first.
-			constructionInformation.update();
-
-			// Walk to the TilePosition the building is being created on when it
-			// is undiscovered.
-			if (!Core.getInstance().getGame().isExplored(constructionInformation.getTilePosition())) {
-				((PlayerUnitWorker) goapUnit).getUnit().move(constructionInformation.getTilePosition().toPosition());
+			if (this.actionWrapper == null) {
+				this.actionWrapper = new ConstructBuildingActionWrapper(constructionInformation);
 			}
-			// Initiate the construction of the building if necessary.
-			else if (!constructionInformation.constructionStarted()) {
-				((PlayerUnitWorker) goapUnit).getUnit().build(constructionInformation.getUnitType(),
-						constructionInformation.getTilePosition());
+
+			try {
+				this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			success = true;
@@ -83,6 +132,7 @@ public class ConstructBuildingAction extends WorkerAction {
 		}
 
 		this.target = new Object();
+		this.actionWrapper = null;
 	}
 
 	@Override
