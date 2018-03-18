@@ -83,7 +83,7 @@ public class MoveToNearestCenterAction extends WorkerAction {
 			}
 
 			Region targetRegion = BWTA.getRegion(this.centerToMoveTo.getPosition());
-			this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
+			success = this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
