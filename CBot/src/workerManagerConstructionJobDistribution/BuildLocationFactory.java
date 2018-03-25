@@ -61,6 +61,7 @@ public class BuildLocationFactory {
 		return TilePositionFactory.generateNeededTilePositions(unitType, targetTilePosition);
 	}
 
+	// TODO: UML PARAMS WORKER
 	/**
 	 * Function for finding a suitable building location around a given
 	 * TilePosition.
@@ -70,14 +71,10 @@ public class BuildLocationFactory {
 	 * @param targetTilePosition
 	 *            the TilePosition the new TilePosition is going to be
 	 *            calculated around.
-	 * @param worker
-	 *            the ConstructionWorker that is going to be constructing the
-	 *            building.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
 	 */
-	public TilePosition generateBuildLocation(UnitType building, TilePosition targetTilePosition,
-			ConstructionWorker worker) {
+	public TilePosition generateBuildLocation(UnitType building, TilePosition targetTilePosition) {
 		TilePosition buildLocation = null;
 
 		// If the building is a center then search specifically for a base
@@ -93,7 +90,7 @@ public class BuildLocationFactory {
 		// If none of the above match the criteria just look for a standard
 		// build location.
 		else {
-			buildLocation = this.findStandardBuildLocation(building, targetTilePosition, worker);
+			buildLocation = this.findStandardBuildLocation(building, targetTilePosition);
 		}
 
 		return buildLocation;
@@ -349,6 +346,7 @@ public class BuildLocationFactory {
 		return freeGeysers;
 	}
 
+	// TODO: UML PARAMS WORKER
 	/**
 	 * Function for finding a suitable building location around a given
 	 * TilePosition with a max range for a standard building. This includes all
@@ -359,14 +357,10 @@ public class BuildLocationFactory {
 	 * @param targetTilePosition
 	 *            the TilePosition the new TilePosition is going to be
 	 *            calculated around.
-	 * @param worker
-	 *            the ConstructionWorker that is going to be constructing the
-	 *            building.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
 	 */
-	private TilePosition findStandardBuildLocation(UnitType building, TilePosition targetTilePosition,
-			ConstructionWorker worker) {
+	private TilePosition findStandardBuildLocation(UnitType building, TilePosition targetTilePosition) {
 		HashSet<TilePosition> alreadyCheckedTilePositions = new HashSet<>();
 		HashSet<Region> alreadyCheckedRegions = new HashSet<>();
 		Queue<TilePosition> tilePositionsToCheck = new LinkedList<>();
