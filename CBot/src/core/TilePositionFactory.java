@@ -14,8 +14,8 @@ import bwapi.UnitType;
  */
 public class TilePositionFactory {
 
-	private static int RowAdditionTop = 1;
-	private static int RowAdditionRight = 1;
+	private static int RowAdditionTop = 0;
+	private static int RowAdditionRight = 0;
 	private static int RowAdditionBottom = 1;
 	private static int RowAdditionLeft = 1;
 
