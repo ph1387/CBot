@@ -34,7 +34,7 @@ import unitControlModule.stateFactories.updater.Updater;
  * @author P H - 20.02.2017
  *
  */
-public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
+public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlayerUnitWrapper {
 
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
 	// own parameters
@@ -1110,12 +1110,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit {
 		return confidence >= CONFIDENCE_THRESHHOLD;
 	}
 
-	/**
-	 * Function for reseting all actions, values and references associated with
-	 * the {@link PlayerUnit} instance. This function should only be called when
-	 * the reference to this instance is discarded and therefore not being used
-	 * anymore.
-	 */
+	@Override
 	public void destroy() {
 		this.manuallyResetActions();
 

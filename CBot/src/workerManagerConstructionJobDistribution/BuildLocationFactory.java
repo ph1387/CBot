@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -29,9 +30,10 @@ public class BuildLocationFactory {
 
 	private InformationStorage informationStorage;
 
+	// TODO: UML REMOVE
 	// Due to the large tile range there should not be any trouble finding a
 	// suitable building location.
-	private int maxTileRange = 50;
+	// private int maxTileRange = 50;
 	// The maximum acceptable range for checking the distance between a free
 	// geyser and a center building.
 	private int maxDistanceGeysers = 320;
@@ -365,117 +367,308 @@ public class BuildLocationFactory {
 	 */
 	private TilePosition findStandardBuildLocation(UnitType building, TilePosition targetTilePosition,
 			ConstructionWorker worker) {
-		TilePosition buildLocation = null;
-		int counter = 0;
+		HashSet<TilePosition> alreadyCheckedTilePositions = new HashSet<>();
+		HashSet<Region> alreadyCheckedRegions = new HashSet<>();
+		Queue<TilePosition> tilePositionsToCheck = new LinkedList<>();
+		Queue<Region> regionsToCheck = new LinkedList<>();
+		TilePosition currentTilePosition = null;
+		Region currentRegion = null;
+		HashSet<TilePosition> currentRegionUncontendedTilePositions = null;
+		HashSet<TilePosition> currentRegionTilePositions = null;
 
-		while (buildLocation == null && counter < this.maxTileRange) {
-			// Prevent out of bounds calculations
-			int minWidth = Math.max(targetTilePosition.getX() - counter, 0);
-			int minHeight = Math.max(targetTilePosition.getY() - counter, 0);
-			int maxWidth = Math.min(targetTilePosition.getX() + counter, Core.getInstance().getGame().mapWidth());
-			int maxHeight = Math.min(targetTilePosition.getY() + counter, Core.getInstance().getGame().mapHeight());
+		TilePosition foundTilePosition = null;
+		int maxIterations = 100000;
+		int iterationCounter = 0;
 
-			// TODO: Possible change: Optimize!
-			// Generate new TilePositions around a specific target.
-			for (int i = minWidth; i <= maxWidth && buildLocation == null; i++) {
-				for (int j = minHeight; j <= maxHeight && buildLocation == null; j++) {
-					TilePosition testTilePosition = new TilePosition(i, j);
-					HashSet<TilePosition> neededTilePositions = TilePositionFactory
-							.generateNeededTilePositions(building, testTilePosition);
-					Region baseRegion = BWTA.getRegion(testTilePosition);
+		while (iterationCounter < maxIterations && foundTilePosition == null) {
+			if (tilePositionsToCheck.isEmpty()) {
+				// First initialization.
+				if (iterationCounter == 0) {
+					currentRegion = BWTA.getRegion(targetTilePosition.toPosition());
+					currentRegionUncontendedTilePositions = this.extractUncontendedRegionTilePositions(currentRegion);
+					currentRegionTilePositions = this.extractRegionTilePositions(currentRegion);
 
-					// If the space is free, try changing the building's
-					// location.
-					if (Core.getInstance().getGame().canBuildHere(testTilePosition, building)
-							&& !this.arePlayerUnitsBlocking(neededTilePositions, worker.getUnit())
-							&& !this.areTilePositionsContended(neededTilePositions,
-									this.informationStorage.getMapInfo().getTilePositionContenders())
-							&& this.isTargetTilePositionInValidRegion(testTilePosition, baseRegion)) {
-						buildLocation = testTilePosition;
-					}
+					// TODO: WIP Needed Change: Check TilePositions outside of
+					// Regions!
+
+					tilePositionsToCheck.add(targetTilePosition);
+					alreadyCheckedRegions.add(currentRegion);
+				}
+				// Otherwise get a TilePosition from a new Region.
+				else {
+					this.addUncheckedRegions(currentRegion, alreadyCheckedRegions, regionsToCheck);
+
+					// Get a new Region and find the closest TilePosition from
+					// the previous one's center.
+					Position prevRegionCenter = currentRegion.getCenter();
+					currentRegion = regionsToCheck.poll();
+
+					currentRegionUncontendedTilePositions = this.extractUncontendedRegionTilePositions(currentRegion);
+					currentRegionTilePositions = this.extractRegionTilePositions(currentRegion);
+					TilePosition closestNextTilePosition = this.getClosestTilePosition(prevRegionCenter,
+							currentRegionTilePositions);
+
+					tilePositionsToCheck.add(closestNextTilePosition);
+					alreadyCheckedRegions.add(currentRegion);
 				}
 			}
 
-			counter++;
-		}
-		return buildLocation;
-	}
+			currentTilePosition = tilePositionsToCheck.poll();
 
-	/**
-	 * Function for testing if a Player's Unit is blocking the desired
-	 * TilePosition.
-	 * 
-	 * @param desiredTilePositions
-	 *            the TilePositions that are going to be checked against all
-	 *            Player Units.
-	 * @param constructor
-	 *            the Unit that is going to be building at the TilePosition.
-	 *            Needed to exclude the constructor from the blocking Units.
-	 * @return true or false depending if a Player Unit is blocking the desired
-	 *         TilePosition / a desired TilePosition.
-	 */
-	protected boolean arePlayerUnitsBlocking(HashSet<TilePosition> desiredTilePositions, Unit constructor) {
-		// Check each player Unit except the constructor itself
-		for (TilePosition tilePosition : desiredTilePositions) {
-			for (Unit unit : Core.getInstance().getGame().getUnitsOnTile(tilePosition)) {
-				if (unit != constructor) {
-					return true;
-				}
+			if (this.isTilePositionValidConstructionSpot(building, currentTilePosition, currentRegionTilePositions,
+					currentRegionUncontendedTilePositions)) {
+				foundTilePosition = currentTilePosition;
 			}
-		}
-		return false;
-	}
 
-	/**
-	 * Function for testing if one of the desired TilePositions is already
-	 * contended.
-	 * 
-	 * @param desiredTilePositions
-	 *            the TilePositions that are going to be checked against all
-	 *            contended TilePositions.
-	 * @param tilePositionContenders
-	 *            the HashSet that stores all currently contended TilePositions.
-	 * @return true or false depending if one of the desired TilePositions is
-	 *         already contended.
-	 */
-	protected boolean areTilePositionsContended(HashSet<TilePosition> desiredTilePositions,
-			HashSet<TilePosition> tilePositionContenders) {
-		for (TilePosition tilePosition : desiredTilePositions) {
-			if (tilePositionContenders.contains(tilePosition)) {
-				return true;
+			// Add all free adjacent TilePositions to the Queue for checking.
+			if (foundTilePosition == null) {
+				HashSet<TilePosition> possibleAdjacentTilePositions = this.generatePossibleAdjacentTilePositions(
+						currentTilePosition, currentRegionTilePositions, alreadyCheckedTilePositions);
+
+				tilePositionsToCheck.addAll(possibleAdjacentTilePositions);
+				alreadyCheckedTilePositions.add(currentTilePosition);
+				// Added here since another failed iteration would otherwise add
+				// the same elements to the Queue.
+				alreadyCheckedTilePositions.addAll(possibleAdjacentTilePositions);
 			}
+
+			iterationCounter++;
 		}
-		return false;
+
+		return foundTilePosition;
 	}
 
 	// TODO: UML ADD
 	/**
-	 * Function for checking if a provided TilePosition is in a valid Region
-	 * compared to a given base Region. This is due to the bot being otherwise
-	 * able to ignore blocking mineral patches as well as Region borders and
-	 * construct buildings far away from the main base. Using this function the
-	 * bot can only construct buildings in either the provided base Region or an
-	 * adjacent one.
+	 * Function for retrieving the TilePositions inside a specific Region.
 	 * 
-	 * @param testTilePosition
-	 *            the TilePosition whose Region is going to be tested.
-	 * @param baseRegion
-	 *            the reference Region which the TilePosition's Region must
-	 *            either match or to which it must be an adjacent one.
-	 * @return true if the provided TilePosition is either matching the given
-	 *         Region or is in an adjacent one.
+	 * @param region
+	 *            the Region instance whose TilePositions are going to be
+	 *            returned.
+	 * @return a HashSet containing all TilePositions belonging to the provided
+	 *         Region.
 	 */
-	protected boolean isTargetTilePositionInValidRegion(TilePosition testTilePosition, Region baseRegion) {
-		Region region = BWTA.getRegion(testTilePosition);
-		boolean valid = false;
+	private HashSet<TilePosition> extractRegionTilePositions(Region region) {
+		return this.informationStorage.getMapInfo().getPrecomputedRegionTilePositions().get(region);
+	}
 
-		if (region != null) {
-			HashSet<Region> accessibleRegions = this.informationStorage.getMapInfo().getPrecomputedRegionAcccessOrders()
-					.get(baseRegion).get(baseRegion);
-			valid = baseRegion.equals(region) || accessibleRegions.contains(region);
+	// TODO: UML ADD
+	/**
+	 * Function for retrieving the <b>uncontended</b> TilePositions inside a
+	 * specific Region.
+	 * 
+	 * @param region
+	 *            the Region instance whose uncontended TilePositions are going
+	 *            to be returned.
+	 * @return a HashSet containing all uncontended TilePositions belonging to
+	 *         the provided Region.
+	 */
+	private HashSet<TilePosition> extractUncontendedRegionTilePositions(Region region) {
+		HashSet<TilePosition> regionTilePositions = this.extractRegionTilePositions(region);
+		HashSet<TilePosition> contendedTilePositions = this.informationStorage.getMapInfo().getTilePositionContenders();
+		HashSet<TilePosition> regionTilePositionsCopy = new HashSet<>(regionTilePositions);
+
+		// Extract all uncontended TilePositions from the current selected
+		// Region.
+		regionTilePositionsCopy.removeAll(contendedTilePositions);
+		return regionTilePositionsCopy;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for adding all immediately accessible Regions from the provided
+	 * one that are not already checked (= Inside the provided HashSet) to the
+	 * given Queue of Regions to check.
+	 * 
+	 * @param currentRegion
+	 *            the Region whose neighbour-Regions are going to be added
+	 *            towards the Queue.
+	 * @param alreadyCheckedRegions
+	 *            the Regions that are going to be ignored.
+	 * @param regionsToCheck
+	 *            the Queue which the neighbour Regions are going to be added
+	 *            to.
+	 */
+	private void addUncheckedRegions(Region currentRegion, HashSet<Region> alreadyCheckedRegions,
+			Queue<Region> regionsToCheck) {
+		HashMap<Region, HashSet<Region>> regionAccessOrder = this.informationStorage.getMapInfo()
+				.getPrecomputedRegionAcccessOrders().get(currentRegion);
+		HashSet<Region> currentAccessibleRegions = regionAccessOrder.get(currentRegion);
+
+		// Add all adjacent Regions to the Queue. They must NOT be already
+		// checked!
+		for (Region region : currentAccessibleRegions) {
+			if (!alreadyCheckedRegions.contains(region)) {
+				regionsToCheck.add(region);
+			}
+		}
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for extracting the closest TilePosition to a given Position from
+	 * a HashSet of TilePosition instances.
+	 * 
+	 * @param target
+	 *            the target Position instance to which the distance will be
+	 *            calculated.
+	 * @param tilePositions
+	 *            the HashSet of TilePositions which the function will iterate
+	 *            over.
+	 * @return either the closest TilePosition from the provided HashSet of
+	 *         TilePositions to the given Position or null if the HashSet is
+	 *         empty.
+	 */
+	private TilePosition getClosestTilePosition(Position target, HashSet<TilePosition> tilePositions) {
+		TilePosition closestTilePosition = null;
+		double closestTilePositionDistance = -1;
+
+		for (TilePosition tilePosition : tilePositions) {
+			double distance = target.getDistance(tilePosition.toPosition());
+
+			if (closestTilePosition == null || distance < closestTilePositionDistance) {
+				closestTilePosition = tilePosition;
+				closestTilePositionDistance = distance;
+			}
 		}
 
-		return valid;
+		return closestTilePosition;
 	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating the TilePositions that are the direct neighbours
+	 * of a provided TilePosition instance. This includes the TilePositions
+	 * matching the following orientations:
+	 * <ul>
+	 * <li>Top-Left</li>
+	 * <li>Top</li>
+	 * <li>Top-Right</li>
+	 * <li>Left</li>
+	 * <li>Right</li>
+	 * <li>Bottom-Left</li>
+	 * <li>Bottom</li>
+	 * <li>Bottom-Right</li>
+	 * </ul>
+	 * The function then checks if the generated TilePositions are inside the
+	 * provided HashSet of possible Region TilePositions and <b>not</b> inside
+	 * the checked one! Only TilePositions matching both criteria are being
+	 * returned in the resulting HashSet.
+	 * 
+	 * @param tilePosition
+	 *            the TilePosition whose neighbours are being generated.
+	 * @param regionTilePositions
+	 *            a HashSet containing all possible TilePositions that can be
+	 *            returned.
+	 * @param checkedTilePositions
+	 *            a HashSet containing all TilePositions that must not be
+	 *            returned.
+	 * @return a HashSet containing the neighbour TilePositions from the
+	 *         provided TilePosition instance matching the criteria mentioned
+	 *         above.
+	 */
+	private HashSet<TilePosition> generatePossibleAdjacentTilePositions(TilePosition tilePosition,
+			HashSet<TilePosition> regionTilePositions, HashSet<TilePosition> checkedTilePositions) {
+		int x = tilePosition.getX();
+		int y = tilePosition.getY();
+
+		TilePosition topLeft = new TilePosition(x - 1, y - 1);
+		TilePosition top = new TilePosition(x, y - 1);
+		TilePosition topRight = new TilePosition(x + 1, y - 1);
+		TilePosition left = new TilePosition(x - 1, y);
+		TilePosition right = new TilePosition(x + 1, y);
+		TilePosition bottomLeft = new TilePosition(x - 1, y + 1);
+		TilePosition bottom = new TilePosition(x, y + 1);
+		TilePosition bottomRight = new TilePosition(x + 1, y + 1);
+
+		// Shortened in order to process inline.
+		HashSet<TilePosition> rTp = regionTilePositions;
+		HashSet<TilePosition> cTp = checkedTilePositions;
+		HashSet<TilePosition> newTilePositions = new HashSet<>();
+
+		if (this.isInRegionAndUnchecked(topLeft, rTp, cTp))
+			newTilePositions.add(topLeft);
+		if (this.isInRegionAndUnchecked(top, rTp, cTp))
+			newTilePositions.add(top);
+		if (this.isInRegionAndUnchecked(topRight, rTp, cTp))
+			newTilePositions.add(topRight);
+		if (this.isInRegionAndUnchecked(left, rTp, cTp))
+			newTilePositions.add(left);
+		if (this.isInRegionAndUnchecked(right, rTp, cTp))
+			newTilePositions.add(right);
+		if (this.isInRegionAndUnchecked(bottomLeft, rTp, cTp))
+			newTilePositions.add(bottomLeft);
+		if (this.isInRegionAndUnchecked(bottom, rTp, cTp))
+			newTilePositions.add(bottom);
+		if (this.isInRegionAndUnchecked(bottomRight, rTp, cTp))
+			newTilePositions.add(bottomRight);
+
+		return newTilePositions;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for checking if a TilePosition instance is inside the HashSet of
+	 * Region TilePositions and not inside the ones marking the already checked
+	 * ones.
+	 * 
+	 * @param tilePosition
+	 *            the TilePosition instance that is going to be checked.
+	 * @param regionTilePositions
+	 *            the HashSet of Region TilePositions.
+	 * @param checkedTilePositions
+	 *            the HashSet of TilePositions that are forbidden / already
+	 *            marked.
+	 * @return true if the Region TilePosition HashSet contains the provided
+	 *         TilePosition while the checked TilePosition HashSet does not.
+	 */
+	private boolean isInRegionAndUnchecked(TilePosition tilePosition, HashSet<TilePosition> regionTilePositions,
+			HashSet<TilePosition> checkedTilePositions) {
+		return regionTilePositions.contains(tilePosition) && !checkedTilePositions.contains(tilePosition);
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for checking if a provided TilePosition can be used as a
+	 * construction spot. This takes the dimensions of the building and the
+	 * possible + uncontended TilePositions of the Region into account.
+	 * 
+	 * @param building
+	 *            the type of building that is going to be constructed.
+	 * @param possibleTilePosition
+	 *            the TilePosition that is being tested as a possible
+	 *            construction spot.
+	 * @param currentRegionTilePositions
+	 *            the possible TilePositions of the Region.
+	 * @param currentRegionUncontendedTilePositions
+	 *            the free TilePositions of the Region.
+	 * @return true if the building can be constructed on the provided
+	 *         TilePosition, false if not.
+	 */
+	private boolean isTilePositionValidConstructionSpot(UnitType building, TilePosition possibleTilePosition,
+			HashSet<TilePosition> currentRegionTilePositions,
+			HashSet<TilePosition> currentRegionUncontendedTilePositions) {
+		// Check for availability. Differentiate between "inRegion" and
+		// "uncontended" since both bear different meaning!
+		HashSet<TilePosition> estimatedTilePositions = TilePositionFactory.generateNeededTilePositions(building,
+				possibleTilePosition);
+		boolean areInRegion = currentRegionTilePositions.containsAll(estimatedTilePositions);
+		boolean areUncontended = currentRegionUncontendedTilePositions.containsAll(estimatedTilePositions);
+
+		return areInRegion && areUncontended;
+	}
+
+	// TODO: UML REMOVE
+	// protected boolean arePlayerUnitsBlocking(HashSet<TilePosition>
+	// desiredTilePositions, Unit constructor) {
+
+	// TOOD: UML REMOVE
+	// protected boolean areTilePositionsContended(HashSet<TilePosition>
+	// desiredTilePositions,
+	// HashSet<TilePosition> tilePositionContenders) {
+
+	// TODO: UML REMOVE
+	// protected boolean isTargetTilePositionInValidRegion(TilePosition
+	// testTilePosition, Region baseRegion) {
 
 }

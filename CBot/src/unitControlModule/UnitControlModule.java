@@ -8,15 +8,14 @@ import java.util.Queue;
 
 import bwapi.Color;
 import bwapi.TechType;
-import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
 import bwapi.UpgradeType;
 import core.Core;
 import core.Display;
-import core.TilePositionContenderFactory;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapAgent;
+import unitControlModule.unitWrappers.IPlayerUnitWrapper;
 import unitControlModule.unitWrappers.PlayerBuilding;
 import unitControlModule.unitWrappers.PlayerUnit;
 import unitControlModule.unitWrappers.RemoveAgentEvent;
@@ -234,7 +233,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 	 *            the building (Unit) that is going to be removed.
 	 */
 	private void removeBuilding(Unit unit) {
-		PlayerBuilding matchingObject = null;
+		IPlayerUnitWrapper matchingObject = null;
 
 		for (PlayerBuilding building : this.agentUpdateQueueBuildings) {
 			// Reference of the Unit changes!
@@ -249,6 +248,8 @@ public class UnitControlModule implements RemoveAgentEvent {
 		if (matchingObject != null) {
 			this.agentUpdateQueueBuildings.remove(matchingObject);
 			this.buildings.remove(matchingObject);
+
+			matchingObject.destroy();
 		}
 		// TODO: REMOVE Safety feature since it is not clear if the Unit is
 		// found.
@@ -259,37 +260,10 @@ public class UnitControlModule implements RemoveAgentEvent {
 				e.printStackTrace();
 			}
 		}
-
-		// If the building can construct addons, remove the contended
-		// TilePositions that block any other buildings. This is only done with
-		// buildings and not addons themselves since removing the contended
-		// TilePositions when the addon is destroyed would allow workers to
-		// construct other buildings on these tiles even though the main
-		// building is still intact and could add a new addon itself.
-		this.removeExtraAddonContendedTilePositions(unit);
 	}
 
-	/**
-	 * Function for removing any contended TilePositions that were contended by
-	 * default to ensure the construction of any future addons. This function is
-	 * directed towards Terran structures like the Terran_Factory that are able
-	 * to construct an addon to change their behavior. These TilePositions must
-	 * be freed again after the building is destroyed.
-	 * 
-	 * @param unit
-	 *            the building whose addon spots are going to be reserved. Must
-	 *            be able to construct addons for this function to have any
-	 *            effect at all.
-	 */
-	private void removeExtraAddonContendedTilePositions(Unit unit) {
-		if (unit.canBuildAddon()) {
-			HashSet<TilePosition> extraAddonSpace = new HashSet<>();
-			TilePositionContenderFactory.addAdditionalAddonSpace(unit.getType(), unit.getTilePosition(),
-					extraAddonSpace);
-
-			this.informationStorage.getMapInfo().getTilePositionContenders().removeAll(extraAddonSpace);
-		}
-	}
+	// TODO: UML REMOVE
+	// private void removeExtraAddonContendedTilePositions(Unit unit) {
 
 	/**
 	 * Function for removing a Unit from the collection of tracked Units.
@@ -319,8 +293,7 @@ public class UnitControlModule implements RemoveAgentEvent {
 			this.agentUpdateQueueCombatUnits.remove(matchingAgent);
 			this.agents.remove(matchingAgent);
 
-			// Signal the agent that it is getting destroyed.
-			((PlayerUnit) matchingAgent.getAssignedGoapUnit()).destroy();
+			((IPlayerUnitWrapper) matchingAgent.getAssignedGoapUnit()).destroy();
 		}
 		// TODO: REMOVE Safety feature since it is not clear if the Unit is
 		// found.

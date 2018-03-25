@@ -19,7 +19,7 @@ import informationStorage.InformationStorage;
  * @author P H - 06.04.2017
  *
  */
-public class PlayerBuilding {
+public class PlayerBuilding implements IPlayerUnitWrapper {
 
 	/**
 	 * QueueElementChecker.java --- Wrapper for Classes used in the
@@ -271,9 +271,13 @@ public class PlayerBuilding {
 			}
 		}
 
-		// If the building can construct addons, contend the default location
-		// for them in order to ensure that they can be build.
-		this.addExtraAddonContendedTilePositions();
+		this.addContendedTilePositions();
+	}
+
+	// TODO: UML ADD
+	@Override
+	public void destroy() {
+		this.removeContendedTilePositions();
 	}
 
 	/**
@@ -353,21 +357,32 @@ public class PlayerBuilding {
 		return matchingElement;
 	}
 
+	// TODO: UML ADD
 	/**
-	 * Function for adding the extra TilePositions to the contended ones that
-	 * represent the default Position of the addon. This is needed since no
-	 * other building is allowed to block any addons from being constructed
-	 * which might happen if the space is not reserved.
+	 * Function for adding the TilePositions the building is contending to the
+	 * shared information storage.
 	 */
-	private void addExtraAddonContendedTilePositions() {
-		if (this.unit.canBuildAddon()) {
-			HashSet<TilePosition> extraAddonSpace = new HashSet<>();
-			TilePositionContenderFactory.addAdditionalAddonSpace(this.unit.getType(), this.unit.getTilePosition(),
-					extraAddonSpace);
+	private void addContendedTilePositions() {
+		HashSet<TilePosition> contendedTilePositions = TilePositionContenderFactory
+				.generateNeededTilePositions(this.unit.getType(), this.unit.getTilePosition());
 
-			this.informationStorage.getMapInfo().getTilePositionContenders().addAll(extraAddonSpace);
-		}
+		this.informationStorage.getMapInfo().getTilePositionContenders().addAll(contendedTilePositions);
 	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for removing the TilePositions the building is contending from
+	 * the shared information storage.
+	 */
+	private void removeContendedTilePositions() {
+		HashSet<TilePosition> contendedTilePositions = TilePositionContenderFactory
+				.generateNeededTilePositions(this.unit.getType(), this.unit.getTilePosition());
+
+		this.informationStorage.getMapInfo().getTilePositionContenders().removeAll(contendedTilePositions);
+	}
+
+	// TODO: UML REMOVE
+	// private void addExtraAddonContendedTilePositions() {
 
 	// ------------------------------ Getter / Setter
 
