@@ -31,4 +31,12 @@ public interface IInitConfig {
 	 */
 	public boolean enableGenerateRegionAccessOrder();
 
+	// TODO: UML ADD
+	/**
+	 *
+	 * @return true for enabling the generation of the Region TilePositions,
+	 *         false for disabling it.
+	 */
+	public boolean enableGenerateRegionTilePositions();
+
 }

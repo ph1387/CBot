@@ -22,6 +22,11 @@ public class MapInformation {
 	private HashSet<Polygon> reservedSpace = new HashSet<>();
 	private HashSet<Pair<bwta.Region, Polygon>> mapBoundaries = new HashSet<>();
 
+	// TODO: UML ADD
+	// Collection of ChokePoints that are blocked by mineral patches at the
+	// beginning of the game and therefore can not be traversed by default.
+	private HashSet<Pair<Unit, Chokepoint>> mineralBlockedChokePoints = new HashSet<>();
+
 	// ----------
 	// Note:
 	// The key references can NOT be accessed with the BWTA.getRegions functions
@@ -50,11 +55,10 @@ public class MapInformation {
 	// calculation time in certain algorithms. All DistantRegion instances are
 	// based on the Region key they are accessed with.
 	private HashMap<Region, HashSet<DistantRegion>> precomputedRegionDistances = new HashMap<>();
-
 	// TODO: UML ADD
-	// Collection of ChokePoints that are blocked by mineral patches at the
-	// beginning of the game and therefore can not be traversed by default.
-	private HashSet<Pair<Unit, Chokepoint>> mineralBlockedChokePoints = new HashSet<>();
+	// A HashMap containing the Regions and their corresponding TilePositions
+	// based on the current map.
+	private HashMap<Region, HashSet<TilePosition>> precomputedRegionTilePositions = new HashMap<>();
 
 	public MapInformation() {
 
@@ -74,6 +78,11 @@ public class MapInformation {
 
 	public HashSet<Pair<bwta.Region, Polygon>> getMapBoundaries() {
 		return mapBoundaries;
+	}
+
+	// TODO: UML ADD
+	public HashSet<Pair<Unit, Chokepoint>> getMineralBlockedChokePoints() {
+		return mineralBlockedChokePoints;
 	}
 
 	public HashMap<Region, Region> getReversedRegionAccessOrder() {
@@ -127,7 +136,14 @@ public class MapInformation {
 	}
 
 	// TODO: UML ADD
-	public HashSet<Pair<Unit, Chokepoint>> getMineralBlockedChokePoints() {
-		return mineralBlockedChokePoints;
+	public HashMap<Region, HashSet<TilePosition>> getPrecomputedRegionTilePositions() {
+		return precomputedRegionTilePositions;
 	}
+
+	// TODO: UML ADD
+	public void setPrecomputedRegionTilePositions(
+			HashMap<Region, HashSet<TilePosition>> precomputedRegionTilePositions) {
+		this.precomputedRegionTilePositions = precomputedRegionTilePositions;
+	}
+
 }

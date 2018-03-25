@@ -1,8 +1,10 @@
 package core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -12,7 +14,9 @@ import bwapi.Game;
 import bwapi.Mirror;
 import bwapi.Pair;
 import bwapi.Position;
+import bwapi.TilePosition;
 import bwapi.Unit;
+import bwapiMath.PointTypeException;
 import bwapiMath.Polygon;
 import bwapiMath.graph.BreadthAccessGenerator;
 import bwapiMath.graph.IConnector;
@@ -114,6 +118,12 @@ public class Init {
 				informationStorage.getMapInfo().setPrecomputedReversedRegionAccessOrders(reversedRegionAccessOrders);
 				informationStorage.getMapInfo().setPrecomputedRegionAcccessOrders(regionAccessOrders);
 				informationStorage.getMapInfo().setPrecomputedRegionDistances(regionDistances);
+			}
+
+			if (informationStorage.getiInitConfig().enableGenerateRegionTilePositions()) {
+				HashMap<Region, HashSet<TilePosition>> regionTilePositions = generateRegionTilePositions();
+
+				informationStorage.getMapInfo().setPrecomputedRegionTilePositions(regionTilePositions);
 			}
 
 			// Add all BWTA-Polygons to the collection of Polygons in the
@@ -366,6 +376,41 @@ public class Init {
 		}
 
 		return regionDistances;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for generating a HashMap containing the different Region of the
+	 * current map as keys and their contained TilePositions as values:
+	 * <li>Key: A Region.</li>
+	 * <li>Value: The TilePositions that are inside the Region..</li>
+	 * </ul>
+	 * 
+	 * @return a HashMap containing the Regions and their TilePositions.
+	 */
+	private static HashMap<Region, HashSet<TilePosition>> generateRegionTilePositions() {
+		HashMap<Region, HashSet<TilePosition>> regionTilePositions = new HashMap<>();
+		List<Region> regions = new ArrayList<>();
+
+		// Needed since the references given by the BWTA.getRegions function
+		// differ from the ones obtained by the BWTA.getRegion function. Latter
+		// is used to access the HashMap.
+		for (Region region : BWTA.getRegions()) {
+			regions.add(BWTA.getRegion(region.getCenter()));
+		}
+
+		for (Region region : regions) {
+			Polygon polygon = new Polygon(region.getPolygon());
+
+			try {
+				HashSet<TilePosition> coveredTilePositions = polygon.getCoveredTilePositions();
+				regionTilePositions.put(region, coveredTilePositions);
+			} catch (PointTypeException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return regionTilePositions;
 	}
 
 	/**
