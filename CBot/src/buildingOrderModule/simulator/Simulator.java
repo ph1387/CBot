@@ -267,15 +267,16 @@ public class Simulator {
 		// Extract the ActionTypes in each Node.
 		for (Node currentNode : branch) {
 			// TODO: DEBUG INFO
-			System.out.println(" Node Score: " + currentNode.getScore());
+			// System.out.println(" Node Score: " + currentNode.getScore());
 
 			if (!currentNode.getChosenActions().isEmpty()) {
 				// TODO: DEBUG INFO
-				System.out.println(" Sequence start:");
+				// System.out.println(" Sequence start:");
 
 				for (ActionType actionType : currentNode.getChosenActions()) {
 					// TODO: DEBUG INFO
-					System.out.println(" - " + actionType.getClass().getSimpleName());
+					// System.out.println(" - " +
+					// actionType.getClass().getSimpleName());
 					actionTypeSequence.add(actionType);
 				}
 			}

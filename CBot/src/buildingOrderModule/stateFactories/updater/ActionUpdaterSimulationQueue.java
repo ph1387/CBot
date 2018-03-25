@@ -331,8 +331,7 @@ public abstract class ActionUpdaterSimulationQueue extends ActionUpdaterGeneral 
 		this.lastSimulationTimeStampFrames = currentFrameTimeStamp;
 
 		// TODO: DEBUG INFO
-		System.out
-				.println("Simulation + forwarding time: " + ((double) (System.nanoTime() - start) / 1000000) + "ms\n");
+		System.out.println("Simulation + forwarding time: " + ((double) (System.nanoTime() - start) / 1000000) + "ms");
 	}
 
 	// -------------------- Specific tests
