@@ -3,5 +3,5 @@
 /core/
 /informationStorage/
 /unitControlModule/
+/unitTrackerModule/
 /workerManagerConstructionJobDistribution/
-/workerManagerResourceSpotAllocation/
