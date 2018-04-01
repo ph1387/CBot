@@ -144,7 +144,7 @@ public class BWTAWrapper {
 		}
 
 		// Emergency stop notification.
-		if (counter >= maxIterations) {
+		if (counter >= maxIterations && region == null) {
 			throw new Exception("Max number of iterations reached while searching for a Region!");
 		}
 

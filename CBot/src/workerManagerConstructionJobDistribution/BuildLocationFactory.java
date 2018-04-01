@@ -90,7 +90,13 @@ public class BuildLocationFactory {
 		// If none of the above match the criteria just look for a standard
 		// build location.
 		else {
-			buildLocation = this.findStandardBuildLocation(building, targetTilePosition);
+			int maxTries = 1000;
+
+			try {
+				buildLocation = this.forceFindStandardBuildLocation(building, targetTilePosition, maxTries);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return buildLocation;
@@ -346,21 +352,30 @@ public class BuildLocationFactory {
 		return freeGeysers;
 	}
 
+	// TOOD: UML RENAME findStandardBuildLocation
 	// TODO: UML PARAMS WORKER
+	// TODO: UML PARAMS MAXITERATIONS
+	// TODO: UML PARAMS EXCEPTION
 	/**
-	 * Function for finding a suitable building location around a given
-	 * TilePosition with a max range for a standard building. This includes all
-	 * buildings except refineries and center buildings.
+	 * Function for initializing a force search for a possible construction
+	 * spot. This function performs a flood-fill for TilePostions until either a
+	 * spot is found or a threshold is reached.
 	 *
 	 * @param building
 	 *            the UnitType of the building that is going to be built.
 	 * @param targetTilePosition
 	 *            the TilePosition the new TilePosition is going to be
 	 *            calculated around.
+	 * @param maxIterations
+	 *            the max number of iterations until the search is stopped.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
+	 * @throws Exception
+	 *             an Exception is thrown when the maximum number of iterations
+	 *             is reached.
 	 */
-	private TilePosition findStandardBuildLocation(UnitType building, TilePosition targetTilePosition) {
+	private TilePosition forceFindStandardBuildLocation(UnitType building, TilePosition targetTilePosition,
+			int maxIterations) throws Exception {
 		HashSet<TilePosition> alreadyCheckedTilePositions = new HashSet<>();
 		HashSet<Region> alreadyCheckedRegions = new HashSet<>();
 		Queue<TilePosition> tilePositionsToCheck = new LinkedList<>();
@@ -371,13 +386,12 @@ public class BuildLocationFactory {
 		HashSet<TilePosition> currentRegionTilePositions = null;
 
 		TilePosition foundTilePosition = null;
-		int maxIterations = 100000;
-		int iterationCounter = 0;
+		int counter = 0;
 
-		while (iterationCounter < maxIterations && foundTilePosition == null) {
+		while (counter < maxIterations && foundTilePosition == null) {
 			if (tilePositionsToCheck.isEmpty()) {
 				// First initialization.
-				if (iterationCounter == 0) {
+				if (counter == 0) {
 					currentRegion = BWTA.getRegion(targetTilePosition.toPosition());
 					currentRegionUncontendedTilePositions = this.extractUncontendedRegionTilePositions(currentRegion);
 					currentRegionTilePositions = this.extractRegionTilePositions(currentRegion);
@@ -426,7 +440,12 @@ public class BuildLocationFactory {
 				alreadyCheckedTilePositions.addAll(possibleAdjacentTilePositions);
 			}
 
-			iterationCounter++;
+			counter++;
+		}
+
+		// Emergency stop notification.
+		if (counter >= maxIterations && foundTilePosition == null) {
+			throw new Exception("Max number of iterations reached while searching for a standard buildlocation!");
 		}
 
 		return foundTilePosition;
