@@ -133,17 +133,20 @@ public class BWTAWrapper {
 
 		while (counter < maxIterations && region == null) {
 			Position currentPosition = positionsToCheck.poll();
-			region = BWTA.getRegion(currentPosition);
 
-			if (region == null) {
-				HashSet<Position> adjacentPositions = generatePossibleAdjacentPositions(position, checkedPositions,
-						stepSize);
+			if (positionIsValid(currentPosition)) {
+				region = BWTA.getRegion(currentPosition);
 
-				positionsToCheck.addAll(adjacentPositions);
-				checkedPositions.add(currentPosition);
-				// Added here since another failed iteration would otherwise add
-				// the same elements to the Queue.
-				checkedPositions.addAll(adjacentPositions);
+				if (region == null) {
+					HashSet<Position> adjacentPositions = generatePossibleAdjacentPositions(position, checkedPositions,
+							stepSize);
+
+					positionsToCheck.addAll(adjacentPositions);
+					checkedPositions.add(currentPosition);
+					// Added here since another failed iteration would otherwise
+					// add the same elements to the Queue.
+					checkedPositions.addAll(adjacentPositions);
+				}
 			}
 		}
 
@@ -153,6 +156,33 @@ public class BWTAWrapper {
 		}
 
 		return region;
+	}
+
+	// TODO: UML ADD
+	/**
+	 * Function for testing if a Position is a valid one. This includes checking
+	 * that it is not null and between the min and max values for the map's
+	 * boundaries.
+	 * 
+	 * @param position
+	 *            the Position that is going to be checked.
+	 * @return true if the Position is not null inside the map's boundaries,
+	 *         otherwise false.
+	 */
+	private static boolean positionIsValid(Position position) {
+		boolean notNull = position != null;
+		boolean result = notNull;
+
+		if (notNull) {
+			int maxX = Core.getInstance().getGame().mapWidth() * Core.getInstance().getTileSize();
+			int maxY = Core.getInstance().getGame().mapHeight() * Core.getInstance().getTileSize();
+			boolean validX = position.getX() >= 0 && position.getX() <= maxX;
+			boolean validY = position.getY() >= 0 && position.getY() <= maxY;
+
+			result &= validX && validY;
+		}
+
+		return result;
 	}
 
 	/**
