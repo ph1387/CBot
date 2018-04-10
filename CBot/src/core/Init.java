@@ -429,7 +429,6 @@ public class Init {
 		}
 	}
 
-	// TODO: WIP
 	// TODO: UML ADD
 	/**
 	 * Function for generating the "correct" BWTA Region references for all
