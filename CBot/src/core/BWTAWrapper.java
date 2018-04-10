@@ -139,8 +139,8 @@ public class BWTAWrapper {
 			}
 
 			if (region == null) {
-				HashSet<Position> adjacentPositions = generatePossibleAdjacentPositions(position, checkedPositions,
-						stepSize);
+				HashSet<Position> adjacentPositions = generatePossibleAdjacentPositions(currentPosition,
+						checkedPositions, stepSize);
 
 				positionsToCheck.addAll(adjacentPositions);
 				checkedPositions.add(currentPosition);
@@ -148,7 +148,7 @@ public class BWTAWrapper {
 				// add the same elements to the Queue.
 				checkedPositions.addAll(adjacentPositions);
 			}
-			
+
 			counter++;
 		}
 
