@@ -136,18 +136,20 @@ public class BWTAWrapper {
 
 			if (positionIsValid(currentPosition)) {
 				region = BWTA.getRegion(currentPosition);
-
-				if (region == null) {
-					HashSet<Position> adjacentPositions = generatePossibleAdjacentPositions(position, checkedPositions,
-							stepSize);
-
-					positionsToCheck.addAll(adjacentPositions);
-					checkedPositions.add(currentPosition);
-					// Added here since another failed iteration would otherwise
-					// add the same elements to the Queue.
-					checkedPositions.addAll(adjacentPositions);
-				}
 			}
+
+			if (region == null) {
+				HashSet<Position> adjacentPositions = generatePossibleAdjacentPositions(position, checkedPositions,
+						stepSize);
+
+				positionsToCheck.addAll(adjacentPositions);
+				checkedPositions.add(currentPosition);
+				// Added here since another failed iteration would otherwise
+				// add the same elements to the Queue.
+				checkedPositions.addAll(adjacentPositions);
+			}
+			
+			counter++;
 		}
 
 		// Emergency stop notification.
