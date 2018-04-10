@@ -11,6 +11,7 @@ import bwapi.Unit;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
+import core.BWTAWrapper;
 import core.CBot;
 import informationStorage.DistantRegion;
 
@@ -146,7 +147,8 @@ class MineralPatch implements GatheringSource {
 	@Override
 	public double getDistance(Position position) {
 		Region thisRegion = BWTA.getRegion(this.baseLocation.getPosition());
-		Region comparedRegion = BWTA.getRegion(position);
+		// Wrapper used since Position could be outside of a Region.
+		Region comparedRegion = BWTAWrapper.getRegion(position);
 		HashSet<DistantRegion> distantRegions = CBot.getInstance().getInformationStorage().getMapInfo()
 				.getPrecomputedRegionDistances().get(thisRegion);
 		double distance = Double.MAX_VALUE;

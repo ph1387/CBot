@@ -270,7 +270,7 @@ public class Init {
 	private static HashMap<Region, HashMap<Region, Region>> generateReversedRegionAccessOrders(Set<Region> regions) {
 		HashMap<Region, HashMap<Region, Region>> reversedRegionAccessOrders = new HashMap<>();
 
-		// This is used instead of BWTA.getRegions since that function returns
+		// This is used instead of BWTA.getRegions() since that function returns
 		// different references.
 		for (Region region : regions) {
 			reversedRegionAccessOrders.put(region, generateReversedRegionAccessOrder(region));
@@ -296,7 +296,7 @@ public class Init {
 	private static HashMap<Region, HashMap<Region, HashSet<Region>>> generateRegionAccessOrders(Set<Region> regions) {
 		HashMap<Region, HashMap<Region, HashSet<Region>>> regionAccessOrders = new HashMap<>();
 
-		// This is used instead of BWTA.getRegions since that function returns
+		// This is used instead of BWTA.getRegions() since that function returns
 		// different references.
 		for (Region region : regions) {
 			regionAccessOrders.put(region, generateRegionAccessOrder(region));
@@ -329,7 +329,7 @@ public class Init {
 			HashMap<Region, HashMap<Region, HashSet<Region>>> regionAccessOrders, Set<Region> regions) {
 		HashMap<Region, HashSet<DistantRegion>> regionDistances = new HashMap<>();
 
-		// This is used instead of BWTA.getRegions since that function returns
+		// This is used instead of BWTA.getRegions() since that function returns
 		// different references.
 		for (Region region : regions) {
 			regionDistances.put(region, generateRegionDistances(regionAccessOrders.get(region), region));
@@ -390,14 +390,9 @@ public class Init {
 	 */
 	private static HashMap<Region, HashSet<TilePosition>> generateRegionTilePositions() {
 		HashMap<Region, HashSet<TilePosition>> regionTilePositions = new HashMap<>();
-		List<Region> regions = new ArrayList<>();
-
-		// Needed since the references given by the BWTA.getRegions function
-		// differ from the ones obtained by the BWTA.getRegion function. Latter
-		// is used to access the HashMap.
-		for (Region region : BWTA.getRegions()) {
-			regions.add(BWTA.getRegion(region.getCenter()));
-		}
+		// This is used instead of BWTA.getRegions() since that function returns
+		// different references.
+		List<Region> regions = getConvertedRegionInstances();
 
 		for (Region region : regions) {
 			Polygon polygon = new Polygon(region.getPolygon());
@@ -421,7 +416,11 @@ public class Init {
 	 *            the location the newly generated Polygons are stored in.
 	 */
 	private static void convertBWTAPolygons(InformationStorage informationStorage) {
-		for (Region region : BWTA.getRegions()) {
+		// This is used instead of BWTA.getRegions() since that function returns
+		// different references.
+		List<Region> regions = getConvertedRegionInstances();
+
+		for (Region region : regions) {
 			Polygon regionPolygon = new Polygon(region.getPolygon());
 
 			regionPolygon.splitLongEdges(MAX_POLYGON_EDGE_LENGTH);
@@ -430,4 +429,24 @@ public class Init {
 		}
 	}
 
+	// TODO: WIP
+	// TODO: UML ADD
+	/**
+	 * Function for generating the "correct" BWTA Region references for all
+	 * existing map Regions. The references are the ones obtained by the
+	 * .getRegion() function.
+	 * 
+	 * @return a List containing all "correct" BWTA Region instances.
+	 */
+	private static List<Region> getConvertedRegionInstances() {
+		List<Region> regions = new ArrayList<>();
+
+		// Needed since the references given by the BWTA.getRegions function
+		// differ from the ones obtained by the BWTA.getRegion function.
+		for (Region region : BWTA.getRegions()) {
+			regions.add(BWTA.getRegion(region.getCenter()));
+		}
+
+		return regions;
+	}
 }

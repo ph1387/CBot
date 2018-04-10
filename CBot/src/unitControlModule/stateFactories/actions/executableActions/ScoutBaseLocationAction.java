@@ -9,6 +9,7 @@ import bwapi.Position;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
+import core.BWTAWrapper;
 import core.Core;
 import informationStorage.DistantRegion;
 import javaGOAP.GoapState;
@@ -137,7 +138,9 @@ public class ScoutBaseLocationAction extends BaseAction {
 				this.actionWrapper = new ScoutBaseLocationActionWrapper(this.targetPosition);
 			}
 
-			Region targetRegion = BWTA.getRegion(this.targetPosition);
+			// Wrapper used since the target Position could be outside of a
+			// Region.
+			Region targetRegion = BWTAWrapper.getRegion(this.targetPosition);
 			success = this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();

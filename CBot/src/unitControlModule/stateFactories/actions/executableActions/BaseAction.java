@@ -10,9 +10,9 @@ import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapiMath.Polygon;
-import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
+import core.BWTAWrapper;
 import core.CBot;
 import core.Core;
 import informationStorage.BaseActionSharedInformation;
@@ -471,7 +471,8 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	protected boolean performSmartlyMovingToRegion(IGoapUnit goapUnit, Region targetRegion,
 			SmartlyMovingActionWrapper actionWrapper) throws Exception {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
-		Region currentRegion = BWTA.getRegion(playerUnit.getUnit().getPosition());
+		// Wrapper used since the Unit could be outside of a Region.
+		Region currentRegion = BWTAWrapper.getRegion(playerUnit.getUnit().getPosition());
 		HashMap<Region, HashSet<Region>> regionAccessOrder = playerUnit.getInformationStorage().getMapInfo()
 				.getPrecomputedRegionAcccessOrders().get(currentRegion);
 		boolean success = false;
@@ -515,8 +516,9 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	 */
 	protected Chokepoint findNextChokePointTowardsTarget(MapInformation mapInformation, Position currentPosition,
 			Position targetPosition) {
-		Region targetRegion = BWTA.getRegion(targetPosition);
-		Region currentRegion = BWTA.getRegion(currentPosition);
+		// Wrapper used since the Positions could be outside of Regions.
+		Region targetRegion = BWTAWrapper.getRegion(targetPosition);
+		Region currentRegion = BWTAWrapper.getRegion(currentPosition);
 		HashMap<Region, Region> reversedRegionAccessOrder = mapInformation.getPrecomputedReversedRegionAccessOrders()
 				.get(currentRegion);
 		Chokepoint nextChokePoint = null;

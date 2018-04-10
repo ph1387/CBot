@@ -4,9 +4,9 @@ import bwapi.Color;
 import bwapi.Position;
 import bwapiMath.Point;
 import bwapiMath.Vector;
-import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
+import core.BWTAWrapper;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -88,7 +88,8 @@ public class RetreatActionInPreviousAdjacentRegion extends RetreatActionGeneralS
 	private Position generatePrevRegionRetreatPosition(IGoapUnit goapUnit) {
 		// Find the current Region and the one that the Unit must retreat to
 		// in order to get to the starting location.
-		Region curRegion = BWTA.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition());
+		// Wrapper used since the Unit could be outside of a Region.
+		Region curRegion = BWTAWrapper.getRegion(((PlayerUnit) goapUnit).getUnit().getPosition());
 		Region prevRegion = ((PlayerUnit) goapUnit).getInformationStorage().getMapInfo().getReversedRegionAccessOrder()
 				.get(curRegion);
 		Position generatedPosition = null;

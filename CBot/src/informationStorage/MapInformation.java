@@ -20,8 +20,6 @@ public class MapInformation {
 
 	private HashSet<TilePosition> tilePositionContenders = new HashSet<>();
 	private HashSet<Polygon> reservedSpace = new HashSet<>();
-	private HashSet<Pair<bwta.Region, Polygon>> mapBoundaries = new HashSet<>();
-
 	// TODO: UML ADD
 	// Collection of ChokePoints that are blocked by mineral patches at the
 	// beginning of the game and therefore can not be traversed by default.
@@ -34,6 +32,9 @@ public class MapInformation {
 	// BWTA.getRegion(Position)!
 	// ----------
 
+	// TODO: UML ORDER
+	private HashSet<Pair<Region, Polygon>> mapBoundaries = new HashSet<>();
+	
 	// This order determines the Regions a Unit has to move along to get towards
 	// the Player's starting location. A Region used as a key provides the
 	// Region the Unit has to move to next (value).

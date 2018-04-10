@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.actions.executableActions.steering;
 
+import java.util.HashMap;
 import java.util.List;
 
 import bwapi.Pair;
@@ -11,6 +12,7 @@ import bwapiMath.Vector;
 import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
+import core.BWTAWrapper;
 import core.Core;
 import javaGOAP.IGoapUnit;
 import unitControlModule.unitWrappers.PlayerUnit;
@@ -29,7 +31,7 @@ public class SteeringOperationChokePoints extends BaseSteeringOperation {
 	// for using the path with the element at the provided index towards the
 	// ChokePoint rather than the general Vector towards the center.
 	private static final int CHOKE_POINT_PATH_INDEX = 4;
-	
+
 	// The Region and Polygon the Unit is currently in.
 	private Pair<Region, Polygon> polygonPairUnitIsIn;
 
@@ -38,7 +40,7 @@ public class SteeringOperationChokePoints extends BaseSteeringOperation {
 
 		this.polygonPairUnitIsIn = polygonPairUnitIsIn;
 	}
-	
+
 	public SteeringOperationChokePoints(IGoapUnit goapUnit) {
 		this(goapUnit, null);
 	}
@@ -48,9 +50,13 @@ public class SteeringOperationChokePoints extends BaseSteeringOperation {
 	@Override
 	public void applySteeringForce(Vector targetVector, Double intensity) {
 		try {
-			Region regionToFallBackTo = ((PlayerUnit) this.goapUnit).getInformationStorage().getMapInfo()
-					.getReversedRegionAccessOrder()
-					.get(BWTA.getRegion(((PlayerUnit) this.goapUnit).getUnit().getPosition()));
+			PlayerUnit playerUnit = (PlayerUnit) this.goapUnit;
+			HashMap<Region, Region> reversedRegionAccessOrder = playerUnit.getInformationStorage().getMapInfo()
+					.getReversedRegionAccessOrder();
+			// Wrapper used since the Unit's Position could be outside of a
+			// Region.
+			Region currentRegion = BWTAWrapper.getRegion(playerUnit.getUnit().getPosition());
+			Region regionToFallBackTo = reversedRegionAccessOrder.get(currentRegion);
 
 			// Only change the Vectors direction if the Unit is not currently
 			// inside the Player's starting region since this would cause the
@@ -131,9 +137,9 @@ public class SteeringOperationChokePoints extends BaseSteeringOperation {
 
 		return retreatChokePoint;
 	}
-	
+
 	// ------------------------------ Getter / Setter
-	
+
 	public void setPolygonPairUnitIsIn(Pair<Region, Polygon> polygonPairUnitIsIn) {
 		this.polygonPairUnitIsIn = polygonPairUnitIsIn;
 	}

@@ -12,6 +12,7 @@ import bwapiMath.Vector;
 import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
+import core.BWTAWrapper;
 import core.Core;
 import informationStorage.DistantRegion;
 import informationStorage.InformationStorage;
@@ -275,7 +276,9 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 				vectorToGatherPosition.getX() + (int) (vectorToGatherPosition.getDirX()),
 				vectorToGatherPosition.getY() + (int) (vectorToGatherPosition.getDirY()));
 
-		if (!BWTA.getRegion(vectorEndPosition).equals(targetRegion)) {
+		// Wrapper used since the Vectors end-position could be outside of a
+		// Region.
+		if (!BWTAWrapper.getRegion(vectorEndPosition).equals(targetRegion)) {
 			vectorToGatherPosition.rotateLeftDEG(180);
 			vectorEndPosition = new Position(vectorToGatherPosition.getX() + (int) (vectorToGatherPosition.getDirX()),
 					vectorToGatherPosition.getY() + (int) (vectorToGatherPosition.getDirY()));

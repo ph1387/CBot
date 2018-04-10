@@ -15,6 +15,7 @@ import bwapi.UnitType;
 import bwta.BWTA;
 import bwta.BaseLocation;
 import bwta.Region;
+import core.BWTAWrapper;
 import core.Core;
 import core.TilePositionFactory;
 import informationStorage.InformationStorage;
@@ -392,12 +393,11 @@ public class BuildLocationFactory {
 			if (tilePositionsToCheck.isEmpty()) {
 				// First initialization.
 				if (counter == 0) {
-					currentRegion = BWTA.getRegion(targetTilePosition.toPosition());
+					// Wrapper used since target TilePosition could be outside
+					// of a Region.
+					currentRegion = BWTAWrapper.getRegion(targetTilePosition);
 					currentRegionUncontendedTilePositions = this.extractUncontendedRegionTilePositions(currentRegion);
 					currentRegionTilePositions = this.extractRegionTilePositions(currentRegion);
-
-					// TODO: WIP Needed Change: Check TilePositions outside of
-					// Regions!
 
 					tilePositionsToCheck.add(targetTilePosition);
 					alreadyCheckedRegions.add(currentRegion);

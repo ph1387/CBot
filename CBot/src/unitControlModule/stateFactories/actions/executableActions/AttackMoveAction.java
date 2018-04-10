@@ -4,6 +4,7 @@ import bwapi.Position;
 import bwapi.TilePosition;
 import bwta.BWTA;
 import bwta.Region;
+import core.BWTAWrapper;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -78,7 +79,8 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
 		// Smartly moving part of the action itself:
 		try {
-			Region targetRegion = BWTA.getRegion((TilePosition) this.target);
+			// Wrapper used since target TilePosition could be outside of a Region.
+			Region targetRegion = BWTAWrapper.getRegion((TilePosition) this.target);
 			success = this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -109,7 +111,8 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 		boolean success = false;
 
 		try {
-			Region targetRegion = BWTA.getRegion((TilePosition) this.target);
+			// Wrapper used since target TilePosition could be outside of a Region.
+			Region targetRegion = BWTAWrapper.getRegion((TilePosition) this.target);
 			success = this.performSmartlyMovingToRegion(groupMember, targetRegion, this.actionWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
