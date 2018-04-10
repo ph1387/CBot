@@ -595,30 +595,39 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	// TODO: UML ADD
 	/**
 	 * Function for extracting the Region that leads towards a provided target
-	 * Region based on a starting Region.
+	 * Region based on a starting Region. The algorithm works as follows:
+	 * <ol>
+	 * <li>Since the reversed access order is used, each key only returns a
+	 * single Region</li>
+	 * <li>All Regions stored in the HashMap eventually lead towards the base
+	 * Region</li>
+	 * <li>Therefore following the target one back towards the base Region
+	 * yields the next one that a possible Unit has to move to in order to get
+	 * closer to the target Region</li>
+	 * </ol>
 	 * 
 	 * @param reversedRegionAccessOrder
 	 *            the reversed Region access order which is based on the
-	 *            provided starting Region.
+	 *            provided base Region.
 	 * @param targetRegion
-	 *            the target Region which the returned one must lead to.
-	 * @param startRegion
-	 *            the starting Region on which the reversed Region access order
-	 *            is based upon. The Region returned is one accessible by this
-	 *            one.
-	 * @return the next Region accessible by the provided starting one that
-	 *         leads towards the target Region.
+	 *            the target Region which the returned one must eventually lead
+	 *            to.
+	 * @param baseRegion
+	 *            the base Region on which the reversed Region access order is
+	 *            based upon. The Region returned is one accessible by this one.
+	 * @return the next Region accessible by the provided base one that leads
+	 *         towards the target Region.
 	 */
 	public static Region extractNextRegionTowardsTargetRegion(HashMap<Region, Region> reversedRegionAccessOrder,
-			Region targetRegion, Region startRegion) {
+			Region targetRegion, Region baseRegion) {
 		Region currentRegion = targetRegion;
 
 		// The Regions might be the same, in which the "next" Region towards the
-		// target one is the starting / target Region itself.
-		if (targetRegion != startRegion) {
+		// target one is the base / target Region itself.
+		if (targetRegion != baseRegion) {
 			// Iterate until the NEXT Region is the start one.
 			// -> Current one is the one leading towards the target Region.
-			while (reversedRegionAccessOrder.get(currentRegion) != startRegion) {
+			while (reversedRegionAccessOrder.get(currentRegion) != baseRegion) {
 				currentRegion = reversedRegionAccessOrder.get(currentRegion);
 			}
 		}
