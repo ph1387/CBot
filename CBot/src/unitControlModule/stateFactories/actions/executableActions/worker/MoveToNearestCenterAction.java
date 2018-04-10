@@ -2,8 +2,6 @@ package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import bwapi.Position;
 import bwapi.Unit;
-import bwta.BWTA;
-import bwta.Region;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -82,8 +80,7 @@ public class MoveToNearestCenterAction extends WorkerAction {
 				this.actionWrapper = new MoveToNearestCenterActionWrapper(this.centerToMoveTo);
 			}
 
-			Region targetRegion = BWTA.getRegion(this.centerToMoveTo.getPosition());
-			success = this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
+			success = this.performSmartlyMovingToRegion(goapUnit, this.actionWrapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

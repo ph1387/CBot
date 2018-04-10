@@ -1,7 +1,9 @@
 package unitControlModule.stateFactories.actions.executableActions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TreeSet;
 
 import bwapi.Game;
@@ -84,6 +86,13 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 
 	protected boolean actionChangeTrigger = false;
 	protected IGoapUnit currentlyExecutingUnit;
+
+	// TODO: UML ADD
+	// ChokePoint used by the smartly moving function in order to determine the
+	// next ChokePoint the Unit has to move to since that can prove to be
+	// difficult when the Unit is directly standing on top of a ChokePoint and
+	// therefore can possibly be assigned the wrong Region.
+	private Chokepoint currentSmartlyMovingChokePoint = null;
 
 	public BaseAction(Object target) {
 		super(target);
@@ -223,6 +232,9 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		}
 		// Reset the group leader flag.
 		this.wasPrevLeader = false;
+
+		// Reset any possible smartly moving associations.
+		this.currentSmartlyMovingChokePoint = null;
 	}
 
 	/**
@@ -455,8 +467,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	 * 
 	 * @param goapUnit
 	 *            the executing Unit.
-	 * @param targetRegion
-	 *            the target Region of the Unit.
 	 * @param actionWrapper
 	 *            the SmartlyMovingActionWrapper instance that contains
 	 *            converter functionalities as well as the concrete action that
@@ -468,11 +478,12 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	 *             Region can not be found via BWTA and therefore no region
 	 *             access order is available.
 	 */
-	protected boolean performSmartlyMovingToRegion(IGoapUnit goapUnit, Region targetRegion,
-			SmartlyMovingActionWrapper actionWrapper) throws Exception {
+	protected boolean performSmartlyMovingToRegion(IGoapUnit goapUnit, SmartlyMovingActionWrapper actionWrapper)
+			throws Exception {
 		PlayerUnit playerUnit = (PlayerUnit) goapUnit;
 		// Wrapper used since the Unit could be outside of a Region.
 		Region currentRegion = BWTAWrapper.getRegion(playerUnit.getUnit().getPosition());
+		Region targetRegion = BWTAWrapper.getRegion(actionWrapper.convertTarget(this.target));
 		HashMap<Region, HashSet<Region>> regionAccessOrder = playerUnit.getInformationStorage().getMapInfo()
 				.getPrecomputedRegionAcccessOrders().get(currentRegion);
 		boolean success = false;
@@ -487,10 +498,10 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 			MapInformation mapInformation = playerUnit.getInformationStorage().getMapInfo();
 			Position currentPosition = playerUnit.getUnit().getPosition();
 			Position targetPosition = actionWrapper.convertTarget(this.target);
-			Chokepoint chokePointToMoveTo = this.findNextChokePointTowardsTarget(mapInformation, currentPosition,
-					targetPosition);
+			this.currentSmartlyMovingChokePoint = this.findNextChokePointTowardsTarget(mapInformation, currentPosition,
+					targetPosition, currentRegion, targetRegion);
 
-			success = playerUnit.getUnit().move(chokePointToMoveTo.getCenter());
+			success = playerUnit.getUnit().move(this.currentSmartlyMovingChokePoint.getCenter());
 		}
 
 		return success;
@@ -499,9 +510,7 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	// TODO: UML ADD
 	/**
 	 * Function for finding the next ChokePoint to which a Unit must move in
-	 * order to get closer to a given target Position. Since an executing Unit
-	 * traverses ChokePoints a check is being performed at which it's different
-	 * Regions are used as starting Region.
+	 * order to get closer to a given target Position.
 	 * 
 	 * @param mapInformation
 	 *            MapInformation instance that holds all necessary breadth
@@ -510,38 +519,51 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	 *            the current Position of the executing Unit.
 	 * @param targetPosition
 	 *            the target Position of the action.
+	 * @param currentRegion
+	 *            the current Region of the executing Unit.
+	 * @param targetRegion
+	 *            the target Region of the action.
 	 * @return the next ChokePoint that must be traveled to in order to get
 	 *         closer towards the target Position, or null if none can be
 	 *         generated / found.
 	 */
 	protected Chokepoint findNextChokePointTowardsTarget(MapInformation mapInformation, Position currentPosition,
-			Position targetPosition) {
-		// Wrapper used since the Positions could be outside of Regions.
-		Region targetRegion = BWTAWrapper.getRegion(targetPosition);
-		Region currentRegion = BWTAWrapper.getRegion(currentPosition);
+			Position targetPosition, Region currentRegion, Region targetRegion) {
+		boolean newChokePointNeeded = this.currentSmartlyMovingChokePoint == null || this.currentSmartlyMovingChokePoint
+				.getCenter().getDistance(currentPosition) < SKIP_DISTANCE_TO_CHOKEPOINT;
+		Chokepoint nextChokePoint = this.currentSmartlyMovingChokePoint;
 		HashMap<Region, Region> reversedRegionAccessOrder = mapInformation.getPrecomputedReversedRegionAccessOrders()
 				.get(currentRegion);
-		Chokepoint nextChokePoint = null;
 
 		try {
-			nextChokePoint = this.findNextChokePointTowardsTarget(reversedRegionAccessOrder, currentRegion,
-					targetRegion);
+			// Should not happen but might be possible.
+			if (targetRegion == currentRegion) {
+				nextChokePoint = null;
+			} else if (newChokePointNeeded) {
+				List<Chokepoint> chokePointsBetweenRegions = new ArrayList<>();
+				List<Region> regionsToTravelThrough = new ArrayList<>();
+				Region tempRegion = targetRegion;
 
-			if (nextChokePoint.getCenter().getDistance(currentPosition) < SKIP_DISTANCE_TO_CHOKEPOINT) {
-				// Get the Region on the other side of the ChokePoint and
-				// calculate again. This effectively prevents the Unit from
-				// getting stuck on a single ChokePoint and not moving any
-				// further.
-				if (nextChokePoint.getRegions().first.equals(currentRegion)) {
-					currentRegion = nextChokePoint.getRegions().second;
-				} else {
-					currentRegion = nextChokePoint.getRegions().first;
+				// Fill the List with the path of Regions from the target to the
+				// current one.
+				while (tempRegion != null) {
+					regionsToTravelThrough.add(tempRegion);
+					tempRegion = reversedRegionAccessOrder.get(tempRegion);
 				}
 
-				reversedRegionAccessOrder = mapInformation.getPrecomputedReversedRegionAccessOrders()
-						.get(currentRegion);
-				nextChokePoint = this.findNextChokePointTowardsTarget(reversedRegionAccessOrder, currentRegion,
-						targetRegion);
+				// Fill the List with the ChokePoints between the Regions.
+				for (int i = 0; i < regionsToTravelThrough.size() - 1; i++) {
+					Region r1 = regionsToTravelThrough.get(i);
+					Region r2 = regionsToTravelThrough.get(i + 1);
+					Chokepoint chokePoint = extractSharedChokePoint(r1, r2);
+
+					chokePointsBetweenRegions.add(chokePoint);
+				}
+
+				// Remove the current ChokePoint. If it exists, then it is the
+				// last one.
+				chokePointsBetweenRegions.remove(nextChokePoint);
+				nextChokePoint = chokePointsBetweenRegions.get(chokePointsBetweenRegions.size() - 1);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -550,31 +572,11 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return nextChokePoint;
 	}
 
+	// TODO: UML REMOVE
 	// TODO: UML ADD
-	/**
-	 * Internally used function for extracting the actual ChokePoint to which a
-	 * Unit must move in order to get closer to a given target Position.
-	 * 
-	 * @param reversedRegionAccessOrder
-	 *            the reversed access order for the Regions based on the current
-	 *            Region.
-	 * @param currentRegion
-	 *            the current Region the Unit is in. Must be the one the
-	 *            reversed Region access order is based on.
-	 * @param targetRegion
-	 *            the target Region the Unit is trying to move to.
-	 * @return the next ChokePoint the Unit must move to in order to get closer
-	 *         towards the given target Region or null if no ChokePoint can be
-	 *         generated / found.
-	 */
-	private Chokepoint findNextChokePointTowardsTarget(HashMap<Region, Region> reversedRegionAccessOrder,
-			Region currentRegion, Region targetRegion) {
-		Region nextRegion = extractNextRegionTowardsTargetRegion(reversedRegionAccessOrder, targetRegion,
-				currentRegion);
-		Chokepoint nextChokePoint = extractSharedChokePoint(currentRegion, nextRegion);
-
-		return nextChokePoint;
-	}
+	// private Chokepoint findNextChokePointTowardsTarget(HashMap<Region,
+	// Region> reversedRegionAccessOrder,
+	// Region currentRegion, Region targetRegion) {
 
 	// TODO: UML ADD
 	/**

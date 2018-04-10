@@ -1,8 +1,6 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import bwapi.Position;
-import bwta.Region;
-import core.BWTAWrapper;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -107,10 +105,7 @@ public class ConstructBuildingAction extends WorkerAction {
 					this.actionWrapper = new ConstructBuildingActionWrapper(constructionInformation);
 				}
 
-				// Wrapper used since the TilePosition could be outside of a
-				// Region.
-				Region targetRegion = BWTAWrapper.getRegion(constructionInformation.getTilePosition());
-				this.performSmartlyMovingToRegion(goapUnit, targetRegion, this.actionWrapper);
+				this.performSmartlyMovingToRegion(goapUnit, this.actionWrapper);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
