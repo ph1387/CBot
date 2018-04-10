@@ -12,7 +12,11 @@ import bwta.Region;
 // TODO: UML ADD
 /**
  * BWTAWrapper.java --- Wrapper-Class for some BWTA functions. Used since some
- * of them can return null under certain circumstances.
+ * of them can return null under certain circumstances. <br>
+ * Should be used when the Tile- / Position of a target could be <b>outside</b>
+ * of a specific Region's bounds. Targets for which this is not the case (I.e.
+ * mineral patches or baselocations) can use the "normal", non-force-find
+ * version of this function since the latter only ensures finding a Region.
  * 
  * @author P H - 01.04.2018
  *
