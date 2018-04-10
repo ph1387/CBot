@@ -91,7 +91,7 @@ public class BuildLocationFactory {
 		// If none of the above match the criteria just look for a standard
 		// build location.
 		else {
-			int maxTries = 1000;
+			int maxTries = 5000;
 
 			try {
 				buildLocation = this.forceFindStandardBuildLocation(building, targetTilePosition, maxTries);
