@@ -478,7 +478,7 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		boolean success = false;
 
 		// Target Region either is the current one or only one step away.
-		if (targetRegion.equals(currentRegion)
+		if (targetRegion == currentRegion
 				|| regionAccessOrder.getOrDefault(currentRegion, new HashSet<Region>()).contains(targetRegion)) {
 			success = actionWrapper.performInternalAction(goapUnit, this.target);
 		}
@@ -611,10 +611,14 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 			Region targetRegion, Region startRegion) {
 		Region currentRegion = targetRegion;
 
-		// Iterate until the NEXT Region is the start one.
-		// -> Current one is the one leading towards the target Region.
-		while (reversedRegionAccessOrder.get(currentRegion) != startRegion) {
-			currentRegion = reversedRegionAccessOrder.get(currentRegion);
+		// The Regions might be the same, in which the "next" Region towards the
+		// target one is the starting / target Region itself.
+		if (targetRegion != startRegion) {
+			// Iterate until the NEXT Region is the start one.
+			// -> Current one is the one leading towards the target Region.
+			while (reversedRegionAccessOrder.get(currentRegion) != startRegion) {
+				currentRegion = reversedRegionAccessOrder.get(currentRegion);
+			}
 		}
 
 		return currentRegion;
