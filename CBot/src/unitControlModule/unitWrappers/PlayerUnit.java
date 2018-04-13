@@ -18,6 +18,7 @@ import bwapi.WeaponType;
 import bwapiMath.Point;
 import bwta.BWTA;
 import bwta.BaseLocation;
+import bwta.Chokepoint;
 import core.Core;
 import informationStorage.InformationStorage;
 import javaGOAP.GoapUnit;
@@ -25,6 +26,7 @@ import javaGOAP.GoapAction;
 import unitControlModule.stateFactories.StateFactory;
 import unitControlModule.stateFactories.actions.executableActions.BaseAction;
 import unitControlModule.stateFactories.actions.executableActions.RetreatUnit;
+import unitControlModule.stateFactories.actions.executableActions.SmartlyMovingPerformer;
 import unitControlModule.stateFactories.updater.Updater;
 
 /**
@@ -34,7 +36,7 @@ import unitControlModule.stateFactories.updater.Updater;
  * @author P H - 20.02.2017
  *
  */
-public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlayerUnitWrapper {
+public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlayerUnitWrapper, SmartlyMovingPerformer {
 
 	// TODO: Possible Change: Reevaluate the importance of Units choosing their
 	// own parameters
@@ -120,6 +122,13 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlaye
 	// Listeners for removing the corresponding Agent from the collection of
 	// active Agents.
 	private List<Object> agentRemoveListeners = new ArrayList<Object>();
+
+	// TODO: UML ADD
+	// Components / Flags used by the Unit for smartly moving between
+	// ChokePoints.
+	private Chokepoint smartlyMovingLastChokePoint = null;
+	// TODO: UML ADD
+	private boolean smartlyMovingReachedLastChokePoint = false;
 
 	/**
 	 * @param unit
@@ -271,7 +280,7 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlaye
 		this.closestAttackableEnemySupplyProviderInConfidenceRange = null;
 		this.closestAttackableEnemyCenterInConfidenceRange = null;
 		this.attackableEnemyUnitToReactTo = null;
-		
+
 		// Attacking enemy Unit references:
 		this.closestAttackingEnemyUnitInConfidenceRange = null;
 		this.attackingEnemyUnitToReactTo = null;
@@ -1221,6 +1230,45 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlaye
 
 	public Point defineCurrentPosition() {
 		return new Point(this.unit.getPosition());
+	}
+
+	// -------------------- SmartlyMovingPerformer
+
+	// TODO: UML ADD
+	@Override
+	public boolean isAlreadySmartlyMoving() {
+		return this.smartlyMovingLastChokePoint != null;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public Chokepoint getLastChokePoint() {
+		return this.smartlyMovingLastChokePoint;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public void setLastChokePoint(Chokepoint chokePoint) {
+		this.smartlyMovingLastChokePoint = chokePoint;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public void setReachedLastChokePoint(boolean value) {
+		this.smartlyMovingReachedLastChokePoint = value;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public boolean hasReachedLastChokePoint() {
+		return this.smartlyMovingReachedLastChokePoint;
+	}
+
+	// TODO: UML ADD
+	@Override
+	public void resetSmartlyMovingValues() {
+		this.smartlyMovingLastChokePoint = null;
+		this.smartlyMovingReachedLastChokePoint = false;
 	}
 
 	// ------------------------------ Getter / Setter
