@@ -62,7 +62,7 @@ public class BuildLocationFactory {
 		return TilePositionFactory.generateNeededTilePositions(unitType, targetTilePosition);
 	}
 
-	// TODO: UML PARAMS WORKER
+	// TODO: UML CHECK PARAMS WORKER
 	/**
 	 * Function for finding a suitable building location around a given
 	 * TilePosition.
@@ -72,10 +72,14 @@ public class BuildLocationFactory {
 	 * @param targetTilePosition
 	 *            the TilePosition the new TilePosition is going to be
 	 *            calculated around.
+	 * @param worker
+	 *            the ConstructionWorker that is going to be constructing the
+	 *            building.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
 	 */
-	public TilePosition generateBuildLocation(UnitType building, TilePosition targetTilePosition) {
+	public TilePosition generateBuildLocation(UnitType building, TilePosition targetTilePosition,
+			ConstructionWorker worker) {
 		TilePosition buildLocation = null;
 
 		// If the building is a center then search specifically for a base
@@ -94,7 +98,7 @@ public class BuildLocationFactory {
 			int maxTries = 5000;
 
 			try {
-				buildLocation = this.forceFindStandardBuildLocation(building, targetTilePosition, maxTries);
+				buildLocation = this.forceFindStandardBuildLocation(building, targetTilePosition, maxTries, worker);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -354,7 +358,7 @@ public class BuildLocationFactory {
 	}
 
 	// TOOD: UML RENAME findStandardBuildLocation
-	// TODO: UML PARAMS WORKER
+	// TODO: UML CHECK PARAMS WORKER
 	// TODO: UML PARAMS MAXITERATIONS
 	// TODO: UML PARAMS EXCEPTION
 	/**
@@ -369,6 +373,9 @@ public class BuildLocationFactory {
 	 *            calculated around.
 	 * @param maxIterations
 	 *            the max number of iterations until the search is stopped.
+	 * @param worker
+	 *            the ConstructionWorker that is going to be constructing the
+	 *            building.
 	 * @return a TilePosition at which the given building can be constructed or
 	 *         null, if none is found.
 	 * @throws Exception
@@ -376,7 +383,7 @@ public class BuildLocationFactory {
 	 *             is reached.
 	 */
 	private TilePosition forceFindStandardBuildLocation(UnitType building, TilePosition targetTilePosition,
-			int maxIterations) throws Exception {
+			int maxIterations, ConstructionWorker worker) throws Exception {
 		HashSet<TilePosition> alreadyCheckedTilePositions = new HashSet<>();
 		HashSet<Region> alreadyCheckedRegions = new HashSet<>();
 		Queue<TilePosition> tilePositionsToCheck = new LinkedList<>();
@@ -390,6 +397,8 @@ public class BuildLocationFactory {
 		int counter = 0;
 
 		while (counter < maxIterations && foundTilePosition == null) {
+			boolean isValidConstructionSpot = false;
+
 			if (tilePositionsToCheck.isEmpty()) {
 				// First initialization.
 				if (counter == 0) {
@@ -422,9 +431,14 @@ public class BuildLocationFactory {
 			}
 
 			currentTilePosition = tilePositionsToCheck.poll();
+			// Ensure that the TilePositions are not contended AND the
+			// construction is possible (I.e. TilePositions mapped to Regions
+			// that are barely outside of it)!
+			isValidConstructionSpot = this.isTilePositionValidConstructionSpot(building, currentTilePosition,
+					currentRegionTilePositions, currentRegionUncontendedTilePositions)
+					&& Core.getInstance().getGame().canBuildHere(currentTilePosition, building, worker.getUnit());
 
-			if (this.isTilePositionValidConstructionSpot(building, currentTilePosition, currentRegionTilePositions,
-					currentRegionUncontendedTilePositions)) {
+			if (isValidConstructionSpot) {
 				foundTilePosition = currentTilePosition;
 			}
 

@@ -51,7 +51,8 @@ class ConstructionJob implements IConstrucionInformation {
 
 		// Get a location to construct the building and the required space.
 		this.tilePosition = this.workerManagerConstructionJobDistribution.getBuildLocationFactory()
-				.generateBuildLocation(this.unitType, this.assignedWorker.getUnit().getTilePosition());
+				.generateBuildLocation(this.unitType, this.assignedWorker.getUnit().getTilePosition(),
+						this.assignedWorker);
 		this.contendedTilePositions = this.workerManagerConstructionJobDistribution.getBuildLocationFactory()
 				.generateNeededTilePositions(this.unitType, this.tilePosition);
 	}
