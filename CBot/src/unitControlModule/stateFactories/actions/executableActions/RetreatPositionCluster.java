@@ -120,6 +120,15 @@ public class RetreatPositionCluster {
 
 		// The Vector pointing towards the leader's end position.
 		Vector vecLeaderToRetreatPos = new Vector(this.leader.defineCurrentPosition(), this.leaderPosition);
+		// Directions are 0 when the Positions are the same. If not checked,
+		// the 0 values cause the following generated directions to be NaN and
+		// therefore the resulting Positions to be the same as the leader's one.
+		if (vecLeaderToRetreatPos.getDirX() == 0.0) {
+			vecLeaderToRetreatPos.setDirX(1);
+		}
+		if (vecLeaderToRetreatPos.getDirY() == 0.0) {
+			vecLeaderToRetreatPos.setDirY(1);
+		}
 		vecLeaderToRetreatPos.setToLength(this.distanceBetweenUnits);
 
 		// Two Vectors for applying the orientation to the generation of the
