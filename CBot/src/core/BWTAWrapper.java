@@ -79,18 +79,23 @@ public class BWTAWrapper {
 	 * @return the Region of the provided Position instance.
 	 */
 	public static Region getRegion(Position position, int stepSize) {
-		Region region = BWTA.getRegion(position);
+		Region region = null;
 
-		// Provided Position is NOT inside a Region (I.e. due to TilePosition
-		// using the top-left side or a Unit's Position being directly on top of
-		// a Region's bounds).
-		if (region == null) {
-			int maxTries = 1000;
+		// Prevent memory errors and therefore crashing as well.
+		if (position != null) {
+			region = BWTA.getRegion(position);
 
-			try {
-				region = forceFindRegion(position, maxTries, stepSize);
-			} catch (Exception e) {
-				e.printStackTrace();
+			// Provided Position is NOT inside a Region (I.e. due to
+			// TilePosition using the top-left side or a Unit's Position being
+			// directly on top of a Region's bounds).
+			if (region == null) {
+				int maxTries = 1000;
+
+				try {
+					region = forceFindRegion(position, maxTries, stepSize);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
