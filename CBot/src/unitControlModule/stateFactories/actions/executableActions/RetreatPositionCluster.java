@@ -149,6 +149,9 @@ public class RetreatPositionCluster {
 				Vector vecPosX = this.directionVectorX.clone();
 				Vector vecPosY = this.directionVectorY.clone();
 
+				// Center of the matrix is the leader's position.
+				boolean isLeaderPosition = multiplyAmountX == 0 && multiplyAmountY == 0;
+
 				// Apply the different multipliers to the Vectors specifying the
 				// positions.
 				vecPosX.setDirX(vecPosX.getDirX() * multiplyAmountX);
@@ -166,7 +169,7 @@ public class RetreatPositionCluster {
 				// If the check fails, no Unit can be assigned to it (I.e. out
 				// of bounds).
 				endpositionClusterElements[i][j] = new RetreatPositionClusterElement(finalPosition,
-						this.retreatPositionValidator.validatePosition(finalPosition));
+						this.retreatPositionValidator.validatePosition(finalPosition, isLeaderPosition));
 			}
 		}
 

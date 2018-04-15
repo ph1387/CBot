@@ -272,7 +272,7 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 		moveVectorRight.rotateRightDEG(this.rotateDegrees);
 
 		// Find the intersections with the current Region's boundaries.
-		Pair<Region, Polygon> boundaries = BaseAction.findBoundariesPositionIsIn(pathVector.toPosition());
+		Pair<Region, Polygon> boundaries = BaseAction.findBoundariesPositionIsIn(pathVector.toPosition(), false);
 		List<Pair<Line, Point>> intersectionsLeft = boundaries.second.findIntersections(new Line(moveVectorLeft));
 		List<Pair<Line, Point>> intersectionsRight = boundaries.second.findIntersections(new Line(moveVectorRight));
 		Position intersectionLeft = intersectionsLeft.get(0).second.toPosition();

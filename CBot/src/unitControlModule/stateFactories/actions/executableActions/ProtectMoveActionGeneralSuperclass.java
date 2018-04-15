@@ -71,7 +71,7 @@ public abstract class ProtectMoveActionGeneralSuperclass extends BaseAction impl
 		// Generate a new Position to move to.
 		if (this.moveEndPosition == null) {
 			Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(
-					((PlayerUnit) goapUnit).getUnit().getPosition());
+					((PlayerUnit) goapUnit).getUnit().getPosition(), true);
 			Chokepoint nearestChoke = BWTA.getNearestChokepoint(((PlayerUnit) goapUnit).getUnit().getPosition());
 			Vector vecToTarget = this.generateGeneralizedRetreatVector(goapUnit, matchingRegionPolygonPair);
 

@@ -79,7 +79,7 @@ public class TerranVulture_SpiderMines_RepositionEnemy extends BaseAction {
 	protected Position generateTempRetreatPosition(IGoapUnit goapUnit) {
 		Chokepoint nearestChoke = BWTA.getNearestChokepoint(((PlayerUnit) goapUnit).getUnit().getPosition());
 		Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(
-				((PlayerUnit) goapUnit).getUnit().getPosition());
+				((PlayerUnit) goapUnit).getUnit().getPosition(), true);
 		Polygon currentPolygon = matchingRegionPolygonPair.second;
 		Vector generalizedTargetVector = this.generateRetreatVector(goapUnit);
 		Position generatedPosition = null;

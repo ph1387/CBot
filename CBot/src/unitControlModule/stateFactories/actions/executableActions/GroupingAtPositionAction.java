@@ -52,13 +52,22 @@ public abstract class GroupingAtPositionAction extends BaseAction {
 		}
 
 		@Override
-		public boolean validatePosition(Point position) {
-			Position checkedPosition = new Position(position.getX(), position.getY());
-			Pair<Region, Polygon> boundaries = BaseAction.findBoundariesPositionIsIn(checkedPosition);
-			boolean positionBlocked = SteeringFactory.isEndPositionBlockedByNeutralOrBuilding(checkedPosition);
+		public boolean validatePosition(Point position, boolean isLeaderPosition) {
+			boolean result = isLeaderPosition;
 
-			return boundaries != null && boundaries.equals(BaseAction.findBoundariesPositionIsIn(this.groupingPosition))
-					&& !positionBlocked;
+			if (!isLeaderPosition) {
+				Position checkedPosition = new Position(position.getX(), position.getY());
+				Pair<Region, Polygon> boundaries = BaseAction.findBoundariesPositionIsIn(checkedPosition,
+						isLeaderPosition);
+				boolean positionBlocked = SteeringFactory.isEndPositionBlockedByNeutralOrBuilding(checkedPosition);
+
+				result = boundaries != null
+						&& boundaries
+								.equals(BaseAction.findBoundariesPositionIsIn(this.groupingPosition, isLeaderPosition))
+						&& !positionBlocked;
+			}
+
+			return result;
 		}
 
 	}

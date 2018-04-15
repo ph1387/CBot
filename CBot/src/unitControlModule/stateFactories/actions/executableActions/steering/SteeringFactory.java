@@ -120,8 +120,10 @@ public class SteeringFactory {
 				// check is necessary since other checks depend on comparing
 				// the boundaries of the checked Positions. Therefore these must
 				// NOT be null!
-				boolean vecLeftEndPositionValid = BaseAction.findBoundariesPositionIsIn(vecLeftEndPosition) != null;
-				boolean vecRightEndPositionValid = BaseAction.findBoundariesPositionIsIn(vecRightEndPosition) != null;
+				boolean vecLeftEndPositionValid = BaseAction.findBoundariesPositionIsIn(vecLeftEndPosition,
+						false) != null;
+				boolean vecRightEndPositionValid = BaseAction.findBoundariesPositionIsIn(vecRightEndPosition,
+						false) != null;
 
 				if (!isEndPositionBlockedByNeutralOrBuilding(vecLeft) && vecLeftValid && vecLeftEndPositionValid) {
 					possibleRetreatVector = vecLeft;

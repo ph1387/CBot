@@ -98,9 +98,8 @@ public class TerranSiegeTank_TankMode_MoveIntoSiegeRange extends BaseAction {
 				vecEU.getDirY());
 
 		// Generate the rest of the needed information.
-		Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(
-				((PlayerUnit) goapUnit).getUnit().getPosition());
-		Chokepoint nearestChoke = BWTA.getNearestChokepoint(((PlayerUnit) goapUnit).getUnit().getPosition());
+		Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(playerUnitPosition, true);
+		Chokepoint nearestChoke = BWTA.getNearestChokepoint(playerUnitPosition);
 
 		// Generate a move Vector from the gathered information using
 		// the Vector to the target Position as direction.

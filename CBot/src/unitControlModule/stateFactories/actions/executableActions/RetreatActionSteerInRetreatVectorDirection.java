@@ -60,7 +60,7 @@ public class RetreatActionSteerInRetreatVectorDirection extends RetreatActionGen
 	protected Position generateTempRetreatPosition(IGoapUnit goapUnit) {
 		Chokepoint nearestChoke = BWTA.getNearestChokepoint(((PlayerUnit) goapUnit).getUnit().getPosition());
 		Pair<Region, Polygon> matchingRegionPolygonPair = findBoundariesPositionIsIn(
-				((PlayerUnit) goapUnit).getUnit().getPosition());
+				((PlayerUnit) goapUnit).getUnit().getPosition(), true);
 		Polygon currentPolygon = matchingRegionPolygonPair.second;
 		Vector generalizedTargetVector = this.generateGeneralizedRetreatVector(goapUnit, matchingRegionPolygonPair);
 		Position generatedPosition = null;

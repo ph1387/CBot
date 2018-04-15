@@ -12,6 +12,7 @@ import bwapi.Position;
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapiMath.Polygon;
+import bwta.BWTA;
 import bwta.Chokepoint;
 import bwta.Region;
 import core.BWTAWrapper;
@@ -239,24 +240,40 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	 */
 	protected abstract void resetSpecific();
 
+	// TODO: UML ADD PARAMS
 	/**
 	 * Function for finding the Polygon that the Position is in.
 	 * 
 	 * @param position
 	 *            the Position that is being checked.
+	 * @param useBWTAWrapper
+	 *            flag indicating whether the BWTAWrapper should be used for
+	 *            resolving the Region the Position is in, or not.
 	 * @return the Region and the Polygon that the Position is located in.
 	 */
-	public static Pair<Region, Polygon> findBoundariesPositionIsIn(Position position) {
+	public static Pair<Region, Polygon> findBoundariesPositionIsIn(Position position, boolean useBWTAWrapper) {
 		Pair<Region, Polygon> matchingRegionPolygonPair = null;
 
-		// Search for the Pair of Regions and Polygons that includes the Unit's
-		// Position.
-		for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo().getMapBoundaries()) {
-			if (pair.first.getPolygon().isInside(position)) {
-				matchingRegionPolygonPair = pair;
-				break;
+		if (position != null) {
+			Region region;
+
+			if (useBWTAWrapper) {
+				region = BWTAWrapper.getRegion(position);
+			} else {
+				region = BWTA.getRegion(position);
+			}
+
+			// Search for the Pair of Regions and Polygons that includes the
+			// Unit's Position.
+			for (Pair<Region, Polygon> pair : CBot.getInstance().getInformationStorage().getMapInfo()
+					.getMapBoundaries()) {
+				if (region == pair.first) {
+					matchingRegionPolygonPair = pair;
+					break;
+				}
 			}
 		}
+
 		return matchingRegionPolygonPair;
 	}
 
