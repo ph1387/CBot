@@ -23,7 +23,7 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
-		
+
 		boolean isRepairing = playerUnit.getUnit().isRepairing() || playerUnit.getInformationStorage().getWorkerConfig()
 				.getUnitMapperRepair().isMapped(playerUnit.getUnit());
 		boolean isFollowing = playerUnit.getUnit().isFollowing() || playerUnit.getInformationStorage().getWorkerConfig()
@@ -40,6 +40,7 @@ public class WorldStateUpdaterTerran_SCV extends WorldStateUpdaterWorker {
 			this.changeWorldStateEffect("allowGathering", false);
 		} else {
 			this.changeWorldStateEffect("canConstruct", true);
+			this.changeWorldStateEffect("allowGathering", true);
 		}
 
 		this.changeWorldStateEffect("isFollowingUnit", isFollowing);

@@ -31,7 +31,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 	@Override
 	public void update(PlayerUnit playerUnit) {
 		super.update(playerUnit);
-		
+
 		// Extract the distance to the closest center building for later use.
 		Integer closestCenterDistance = playerUnit.generateClosestCenterDistance();
 
@@ -67,6 +67,7 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("canConstruct", true);
 
 			// Only allow gathering if the Unit is near a center building.
+			this.changeWorldStateEffect("allowGathering", true);
 			this.changeWorldStateEffect("canGather", closestCenterDistance != null
 					&& closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter);
 		}
