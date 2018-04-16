@@ -179,11 +179,14 @@ public class TerranSiegeTank_TankMode_MoveIntoExpectedSiegeRange extends BaseAct
 			TilePosition freeTilePositionRight = this.extractFreeTilePosition(pathToIntersectionRight);
 			TilePosition closestTilePosition = this.findCloserTilePosition(freeTilePositionLeft, freeTilePositionRight);
 
-			possibleMovePosition = closestTilePosition.toPosition();
+			// NullPointer is possible here!
+			if (closestTilePosition == null) {
+				possibleMovePosition = path.get(possiblePositionIndex).toPosition();
+			} else {
+				possibleMovePosition = closestTilePosition.toPosition();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-
-			possibleMovePosition = path.get(possiblePositionIndex).toPosition();
 		}
 
 		return possibleMovePosition;
