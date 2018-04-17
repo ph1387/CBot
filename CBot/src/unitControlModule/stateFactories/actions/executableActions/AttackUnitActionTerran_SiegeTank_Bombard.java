@@ -36,9 +36,11 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 	@Override
 	protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
 		PlayerUnitTerran_SiegeTank siegeTank = (PlayerUnitTerran_SiegeTank) goapUnit;
+		Unit target = (Unit) this.target;
 
-		return this.target != null && siegeTank.isInSiegeRange((Unit) this.target)
-				&& !siegeTank.isBelowSiegeRange((Unit) this.target);
+		// Only rudimentary check performed since the Unit could otherwise end
+		// up morphing most of the time!
+		return this.target != null && siegeTank.isInSiegeRange(target) && !siegeTank.isBelowSiegeRange(target);
 	}
 
 	@Override
@@ -48,15 +50,18 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
+		PlayerUnitTerran_SiegeTank siegeTank = (PlayerUnitTerran_SiegeTank) goapUnit;
+		Unit target = (Unit) this.target;
 		boolean isDone = true;
 
-		if (this.target != null) {
-			boolean isConfidenceLow = ((PlayerUnit) goapUnit).isConfidenceBelowThreshold();
-			boolean isEnemyInWeaponRange = !((PlayerUnit) goapUnit).getAllEnemyUnitsInWeaponRange()
-					.contains(this.target);
-			boolean isEnemyTooClose = ((PlayerUnitTerran_SiegeTank) goapUnit).isBelowSiegeRange((Unit) this.target);
+		if (target != null) {
+			boolean isConfidenceLow = siegeTank.isConfidenceBelowThreshold();
+			boolean isEnemyOutOfWeaponRange = !siegeTank.getAllEnemyUnitsInWeaponRange().contains(this.target);
+			// Only rudimentary check performed since the Unit could otherwise
+			// end up morphing most of the time!
+			boolean isEnemyTooClose = siegeTank.isBelowSiegeRange(target);
 
-			isDone = isEnemyInWeaponRange || isConfidenceLow || isEnemyTooClose;
+			isDone = isEnemyOutOfWeaponRange || isConfidenceLow || isEnemyTooClose;
 		}
 
 		return isDone;
@@ -67,7 +72,15 @@ public class AttackUnitActionTerran_SiegeTank_Bombard extends BaseAction {
 		boolean success = true;
 
 		if (this.actionChangeTrigger) {
-			success = ((PlayerUnit) goapUnit).getUnit().attack(((Unit) this.target));
+			// Do NOT change the return value here. This is due to the action
+			// failing under certain circumstances i.e. when Units are either
+			// too close or too far away. Since the target is constantly being
+			// adjusted and the attack parameters therefore changing the Action
+			// would often return false. Further checks in the "isDone" or
+			// "checkProceduralPrecondition" functions are not advised since the
+			// Unit could end up morphin between the Tank- and SiegeMode most of
+			// the time.
+			((PlayerUnit) goapUnit).getUnit().attack(((Unit) this.target));
 		}
 
 		return success;
