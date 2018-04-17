@@ -474,6 +474,8 @@ public class Init {
 
 			if (regions.contains(actualRegion)) {
 				throw new Exception("The Region " + actualRegion + " was already added!");
+			} else if(actualRegion == null) {
+				throw new Exception("The Region " + region + " was converted to null!");
 			}
 
 			regions.add(actualRegion);
