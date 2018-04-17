@@ -193,11 +193,12 @@ public class Init {
 	 *         leads towards the provided start Region.
 	 */
 	private static HashMap<Region, Region> generateReversedRegionAccessOrder(Region startRegion) {
-		IConnector<Region> regionConnector = new RegionConnector();
-		IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper();
 		HashMap<Region, Region> reversedAccessOrder = new HashMap<>();
 
 		try {
+			List<Region> regions = getConvertedRegionInstances();
+			IConnector<Region> regionConnector = new RegionConnector();
+			IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper(regions);
 			reversedAccessOrder = BreadthAccessGenerator.generateReversedBreadthAccessOrder(regionInstanceMapper,
 					regionConnector, startRegion);
 		} catch (Exception e) {
@@ -237,11 +238,13 @@ public class Init {
 	 *         order of the different map Regions.
 	 */
 	private static HashMap<Region, HashSet<Region>> generateRegionAccessOrder(Region startRegion) {
-		IConnector<Region> regionConnector = new RegionConnector();
-		IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper();
 		HashMap<Region, HashSet<Region>> breadthAccessOrder = new HashMap<>();
 
 		try {
+			List<Region> regions = getConvertedRegionInstances();
+			IConnector<Region> regionConnector = new RegionConnector();
+			IInstanceMapper<Region> regionInstanceMapper = new RegionInstanceMapper(regions);
+
 			breadthAccessOrder = BreadthAccessGenerator.generateBreadthAccessOrder(regionInstanceMapper,
 					regionConnector, startRegion);
 		} catch (Exception e) {
@@ -474,7 +477,7 @@ public class Init {
 
 			if (regions.contains(actualRegion)) {
 				throw new Exception("The Region " + actualRegion + " was already added!");
-			} else if(actualRegion == null) {
+			} else if (actualRegion == null) {
 				throw new Exception("The Region " + region + " was converted to null!");
 			}
 

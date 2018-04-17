@@ -1,9 +1,8 @@
 package bwapiMath.graph;
 
 import java.util.HashMap;
+import java.util.List;
 
-import bwta.BWTA;
-import bwta.Chokepoint;
 import bwta.Region;
 
 //TODO: UML ADD
@@ -16,31 +15,24 @@ import bwta.Region;
  */
 public class RegionInstanceMapper implements IInstanceMapper<Region> {
 
+	// TODO: UML ADD
+	private List<Region> regions;
+	
+	// TODO: UML ADD
+	public RegionInstanceMapper(List<Region> regions) {
+		this.regions = regions;
+	}
+	
 	// -------------------- Functions
 
 	@Override
 	public HashMap<Region, Integer> map() {
 		HashMap<Region, Integer> usedHashMap = new HashMap<>();
-		int counter = 0;
 
 		// Add an index / Integer to each Region. This is necessary since the
-		// graph used is based on an adjacency List using Integers. ChokePoints
-		// are used since the references obtained by them and BWTA.getRegions()
-		// differ!
-		for (Chokepoint chokePoint : BWTA.getChokepoints()) {
-			Region regionOne = chokePoint.getRegions().first;
-			Region regionTwo = chokePoint.getRegions().second;
-
-			// Add the Region references if they are not already inside the
-			// HashMap.
-			if (!usedHashMap.containsKey(regionOne)) {
-				usedHashMap.put(regionOne, counter);
-				counter++;
-			}
-			if (!usedHashMap.containsKey(regionTwo)) {
-				usedHashMap.put(regionTwo, counter);
-				counter++;
-			}
+		// graph used is based on an adjacency List using Integers.
+		for(int i = 0; i < this.regions.size(); i++) {
+			usedHashMap.put(this.regions.get(i), i);
 		}
 
 		return usedHashMap;
