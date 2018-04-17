@@ -24,6 +24,7 @@ import bwapiMath.graph.IInstanceMapper;
 import bwapiMath.graph.RegionConnector;
 import bwapiMath.graph.RegionInstanceMapper;
 import bwta.BWTA;
+import bwta.BaseLocation;
 import bwta.Chokepoint;
 import bwta.Region;
 import informationStorage.DistantRegion;
@@ -387,8 +388,11 @@ public class Init {
 	 * </ul>
 	 * 
 	 * @return a HashMap containing the Regions and their TilePositions.
+	 * @throws Exception
+	 *             an Exception is thrown when the TilePositions of a Region
+	 *             could not be generated.
 	 */
-	private static HashMap<Region, HashSet<TilePosition>> generateRegionTilePositions() {
+	private static HashMap<Region, HashSet<TilePosition>> generateRegionTilePositions() throws Exception {
 		HashMap<Region, HashSet<TilePosition>> regionTilePositions = new HashMap<>();
 		// This is used instead of BWTA.getRegions() since that function returns
 		// different references.
@@ -408,14 +412,18 @@ public class Init {
 		return regionTilePositions;
 	}
 
+	// TODO: UML ADD EXCEPTION
 	/**
 	 * Function for converting the BWTA-Polygon map boundaries into standard
 	 * Polygons that can be used for pathfinding etc.
 	 * 
 	 * @param informationStorage
 	 *            the location the newly generated Polygons are stored in.
+	 * @throws Exception
+	 *             an Exception is thrown when the Regions of the map could not
+	 *             be converted into Polygons.
 	 */
-	private static void convertBWTAPolygons(InformationStorage informationStorage) {
+	private static void convertBWTAPolygons(InformationStorage informationStorage) throws Exception {
 		// This is used instead of BWTA.getRegions() since that function returns
 		// different references.
 		List<Region> regions = getConvertedRegionInstances();
@@ -436,16 +444,41 @@ public class Init {
 	 * .getRegion() function.
 	 * 
 	 * @return a List containing all "correct" BWTA Region instances.
+	 * @throws Exception
+	 *             an Exception is thrown when a Region instance could not be
+	 *             converted to the "correct" one or got added twice to the
+	 *             Collection.
 	 */
-	private static List<Region> getConvertedRegionInstances() {
-		List<Region> regions = new ArrayList<>();
+	private static List<Region> getConvertedRegionInstances() throws Exception {
+		// Using a HashSet saves "contains" lookup time event though all
+		// elements must be transferred later on.
+		HashSet<Region> regions = new HashSet<>();
 
 		// Needed since the references given by the BWTA.getRegions function
 		// differ from the ones obtained by the BWTA.getRegion function.
 		for (Region region : BWTA.getRegions()) {
-			regions.add(BWTA.getRegion(region.getCenter()));
+			Region actualRegion = BWTA.getRegion(region.getCenter());
+
+			// Some maps contain Regions whose centers are outside themselves
+			// (I.e. the corners on "Benzene").
+			if (actualRegion == null) {
+				// In some cases the Region itself does not contain any
+				// baselocations!
+				if (region.getBaseLocations().isEmpty()) {
+					throw new Exception("Region " + region + " could not be resolved!");
+				} else {
+					BaseLocation base = region.getBaseLocations().get(0);
+					actualRegion = BWTA.getRegion(base.getPosition());
+				}
+			}
+
+			if (regions.contains(actualRegion)) {
+				throw new Exception("The Region " + actualRegion + " was already added!");
+			}
+
+			regions.add(actualRegion);
 		}
 
-		return regions;
+		return new ArrayList<>(regions);
 	}
 }
