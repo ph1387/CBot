@@ -219,9 +219,9 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	 * Convenience function.
 	 * 
 	 * @param unit
-	 *            the Unit that is going to be checked if it is in the siege
-	 *            range.
-	 * @return true if the Unit is in the siege range, false if not.
+	 *            the Unit that is going to be checked if the distance towards
+	 *            it is in the siege range.
+	 * @return true if the Unit is in siege range, false if not.
 	 */
 	public boolean isInSiegeRange(Unit unit) {
 		return this.isInSiegeRange(unit.getPosition());
@@ -233,7 +233,7 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	 * @param tilePosition
 	 *            the TilePosition that is going to be checked if it is in the
 	 *            siege range.
-	 * @return true if the TilePosition is in the siege range, false if not.
+	 * @return true if the TilePosition is in siege range, false if not.
 	 */
 	public boolean isInSiegeRange(TilePosition tilePosition) {
 		return this.isInSiegeRange(tilePosition.toPosition());
@@ -246,7 +246,7 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	 * 
 	 * @param position
 	 *            the Position that is going to be tested.
-	 * @return true if the Position is inside the siege range, false if not.
+	 * @return true if the Position is in siege range, false if not.
 	 */
 	public boolean isInSiegeRange(Position position) {
 		double distance = this.unit.getDistance(position);
@@ -257,10 +257,10 @@ public class PlayerUnitTerran_SiegeTank extends PlayerUnitTypeRanged {
 	/**
 	 * Convenience function.
 	 * 
-	 * @param tilePosition
-	 *            the TilePosition that is going to be checked if it is in the
-	 *            siege range.
-	 * @return true if the Position is below the siege range, false if not.
+	 * @param unit
+	 *            the Unit that is going to be checked if the distance towards
+	 *            it is below the siege range.
+	 * @return true if the Unit is below the siege range, false if not.
 	 */
 	public boolean isBelowSiegeRange(Unit unit) {
 		return this.isBelowSiegeRange(unit.getPosition());
