@@ -250,15 +250,8 @@ public class UnitControlModule implements RemoveAgentEvent {
 			this.buildings.remove(matchingObject);
 
 			matchingObject.destroy();
-		}
-		// TODO: REMOVE Safety feature since it is not clear if the Unit is
-		// found.
-		else {
-			try {
-				throw new Exception("No Matching Agent was found -> " + unit + " " + unit.getType());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		} else {
+			System.err.println("No Matching Agent was found -> " + unit + " " + unit.getType());
 		}
 	}
 
@@ -294,15 +287,8 @@ public class UnitControlModule implements RemoveAgentEvent {
 			this.agents.remove(matchingAgent);
 
 			((IPlayerUnitWrapper) matchingAgent.getAssignedGoapUnit()).destroy();
-		}
-		// TODO: REMOVE Safety feature since it is not clear if the Unit is
-		// found.
-		else {
-			try {
-				throw new Exception("No Matching Agent was found for -> " + unit + " " + unit.getType());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		} else {
+			System.err.println("No Matching Agent was found for -> " + unit + " " + unit.getType());
 		}
 	}
 
