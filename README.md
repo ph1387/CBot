@@ -28,6 +28,17 @@ Each Unit is wrapped inside a GoapAgent and placed inside the UnitControlModule 
 The building orders are based on a simulation performed inside one of the BuildingOrderModule's action updaters (ActionQueueSimulationResults performs upon the action Queue, ActionUpdaterSimulationQueue generates the action Queue). Each build / training / research / upgrade action is given a certain score based on the current state of the game. These scores are then added together and sums are generated for different action sequences. The one with the highest score is taken and forwarded sequentially to the UnitControlModule.
 
 ## Changelog
+v1.1 - 25.04.2018
+
+- Made the scout not constantly retreat when finding the enemy
+- Added the (reversed) breadth access order for each Region as well as the distances to each other
+- Excluded ChokePoints blocked by mineral patches from the breadth access order
+- Actions depending on distances between Regions now use the pre-calculated values
+- Added smartly moving between ChokePoints in order to prevent Units getting stuck
+- Added bunkers and missile turrets to the construction planner
+- Fixed Crashes on certain maps due to Region conversion problems
+- Improved buildlocation search algorithm
+
 v1.0 - 20.01.2018
 
 - First release
