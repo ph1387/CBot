@@ -19,7 +19,6 @@ import bwapi.UpgradeType;
  */
 public class TypeWrapper {
 
-	// TODO: Possible Change: Add more than only the Terran values.
 	// TODO: Needed Change: Add more types.
 	// UnitType wrappers:
 	public static final TypeWrapper UnitType_Terran_Barracks = new TypeWrapper(UnitType.Terran_Barracks);
@@ -45,9 +44,7 @@ public class TypeWrapper {
 	public static final TypeWrapper UnitType_Terran_Goliath = new TypeWrapper(UnitType.Terran_Goliath);
 	public static final TypeWrapper UnitType_Terran_Science_Vessel = new TypeWrapper(UnitType.Terran_Science_Vessel);
 	public static final TypeWrapper UnitType_Terran_Control_Tower = new TypeWrapper(UnitType.Terran_Control_Tower);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Missile_Turret = new TypeWrapper(UnitType.Terran_Missile_Turret);
-	// TODO: UML ADD
 	public static final TypeWrapper UnitType_Terran_Bunker = new TypeWrapper(UnitType.Terran_Bunker);
 
 	// UpgradeType wrappers:

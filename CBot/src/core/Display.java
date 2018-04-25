@@ -40,9 +40,7 @@ public class Display {
 	private static final Color RESERVED_SPACE_COLOR = new Color(255, 128, 0);
 	private static final int POLYGON_VERTEX_RADIUS = 5;
 	private static final Color CONTENDED_TILEPOSITION_COLOR = new Color(128, 128, 0);
-	// TODO: UML ADD
 	private static final int BLOCKING_MINERAL_POINT_RADIUS = 16;
-	// TODO: UML ADD
 	private static final Color BLOCKING_MINERAL_COLOR = new Color(255, 0, 0);
 
 	/**
@@ -258,7 +256,6 @@ public class Display {
 		GAME.drawTextScreen(offsetX, offsetY, "FPS: " + GAME.getFPS());
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for displaying the map's boundaries on the screen.
 	 * 
@@ -266,11 +263,11 @@ public class Display {
 	 *            the map's boundaries that are going to be displayed.
 	 */
 	private static void showBoundaries(HashSet<Pair<Region, Polygon>> mapBoundaries) {
-
-		// TODO: REMOVE DEBUG WIP
 		int boundaryCount = mapBoundaries.size();
 		int stepSize = 0xFFFFFF / boundaryCount;
 		int currentCount = 1;
+
+		// Linear interpolate the color based on the number of Regions.
 		for (Pair<Region, Polygon> pair : mapBoundaries) {
 			int currentR = 0b111111110000000000000000 & (stepSize * currentCount);
 			int currentG = 0b000000001111111100000000 & (stepSize * currentCount);
@@ -283,7 +280,6 @@ public class Display {
 		}
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for displaying all Polygons that represent the reserved space on
 	 * the map. No buildings can be constructed on TilePositions in this
@@ -298,8 +294,6 @@ public class Display {
 		}
 	}
 
-	// TODO: UML ADD
-	// TODO: UML PARAMS
 	/**
 	 * Function for displaying all mineral blocked ChokePoints as well as the
 	 * mineral patches that are blocking them. These ChokePoints can not be
@@ -320,8 +314,6 @@ public class Display {
 		}
 	}
 
-	// TODO: UML ADD
-	// TODO: UML PARAMS
 	/**
 	 * Function for displaying the breadth access order in which the different
 	 * Regions can be accessed by the Bot. The Points connected by the Vectors
@@ -342,7 +334,6 @@ public class Display {
 		});
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for displaying the contended / blocked TilePositions on the map.
 	 * These are the ones that a worker is currently trying to construct a

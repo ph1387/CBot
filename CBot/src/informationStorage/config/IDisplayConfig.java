@@ -32,7 +32,6 @@ public interface IDisplayConfig {
 	 */
 	public boolean enableDisplayMapContendedTilePositions();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the ChokePoints (And the
@@ -41,7 +40,6 @@ public interface IDisplayConfig {
 	 */
 	public boolean enableDisplayMineralBlockedChokePoints();
 
-	// TODO: UML ADD
 	/**
 	 *
 	 * @return true for enabling the highlight of the generated breadth access

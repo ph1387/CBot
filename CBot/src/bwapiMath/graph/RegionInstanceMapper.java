@@ -5,7 +5,6 @@ import java.util.List;
 
 import bwta.Region;
 
-//TODO: UML ADD
 /**
  * RegionInstanceMapper.java --- Class implementing the IIstanceMapper-Interface
  * for mapping BWTA.Region instances to unique indices.
@@ -15,10 +14,8 @@ import bwta.Region;
  */
 public class RegionInstanceMapper implements IInstanceMapper<Region> {
 
-	// TODO: UML ADD
 	private List<Region> regions;
 	
-	// TODO: UML ADD
 	public RegionInstanceMapper(List<Region> regions) {
 		this.regions = regions;
 	}

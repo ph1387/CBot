@@ -16,7 +16,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
-	// TODO: UML ADD
 	/**
 	 * AttackMoveActionWrapper.java --- Wrapper Class used for smartly moving
 	 * between ChokePoints.
@@ -45,7 +44,6 @@ public class AttackMoveAction extends AttackActionGeneralSuperclass {
 
 	}
 
-	// TODO: UML ADD
 	private SmartlyMovingActionWrapper actionWrapper = new AttackMoveActionWrapper();
 	private int maxGroupSize = 5;
 	private int maxLeaderTileDistance = 5;

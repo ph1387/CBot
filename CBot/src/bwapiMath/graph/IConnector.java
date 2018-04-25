@@ -2,7 +2,6 @@ package bwapiMath.graph;
 
 import java.util.HashMap;
 
-//TODO: UML ADD
 /**
  * IConnector.java --- Interface defining the function for adding edges to a
  * DirectedGraph instance.

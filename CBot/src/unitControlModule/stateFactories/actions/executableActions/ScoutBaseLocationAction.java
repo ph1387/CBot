@@ -24,7 +24,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class ScoutBaseLocationAction extends BaseAction {
 
-	// TODO: UML ADD
 	/**
 	 * DistantBaseLocation.java --- A wrapper Class used for encapsulating a
 	 * single BaseLocation. It stores the targeted BaseLocation as well as the
@@ -63,7 +62,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	}
 
-	// TODO: UML ADD
 	/**
 	 * ScoutBaseLocationActionWrapper.java --- Wrapper Class used for smartly
 	 * moving between ChokePoints.
@@ -91,13 +89,9 @@ public class ScoutBaseLocationAction extends BaseAction {
 
 	}
 
-	// TODO: UML CHANGE 60
 	// The time after a BaseLocation may be searched again.
 	public static final int BASELOCATIONS_TIME_PASSED = 300;
 
-	protected static Integer RANGE_TO_TARGET = null;
-
-	// TODO: UML ADD
 	private SmartlyMovingActionWrapper actionWrapper;
 	private Position targetPosition = null;
 
@@ -119,8 +113,8 @@ public class ScoutBaseLocationAction extends BaseAction {
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
 		boolean targetPositionChosen = this.targetPosition != null;
-		boolean isNearTargetPosition = targetPositionChosen && ((PlayerUnit) goapUnit)
-				.isNearTilePosition(((Position) this.targetPosition).toTilePosition(), RANGE_TO_TARGET);
+		boolean isNearTargetPosition = targetPositionChosen
+				&& ((PlayerUnit) goapUnit).isNearTilePosition(((Position) this.targetPosition).toTilePosition(), null);
 		boolean enemyKnown = ((PlayerUnit) goapUnit).currentState == PlayerUnit.UnitStates.ENEMY_KNOWN;
 
 		return targetPositionChosen && (isNearTargetPosition || enemyKnown);
@@ -145,7 +139,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 		return success;
 	}
 
-	// TODO: UML VISIBILITY
 	/**
 	 * Function for finding the closest BaseLocation, that must be visited by
 	 * the Unit in order to find enemy buildings.
@@ -170,8 +163,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 		return closestPosition;
 	}
 
-	// TODO: UML PARAMS
-	// TODO: UML RENAME findCLosestReachableBaseLocation
 	/**
 	 * Function for finding the closest, reachable BaseLocation with a
 	 * timeStamp:
@@ -225,7 +216,6 @@ public class ScoutBaseLocationAction extends BaseAction {
 		return closestReachableBasePosition;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating the TreeSet with which the most suitable
 	 * BaseLocation to search is being calculated.

@@ -42,7 +42,6 @@ public class Init {
 	private static final int UNIT_FLAG = 1;
 	private static final int GAME_SPEED = 0; // TODO: 20, 0, etc.
 	private static final int MAX_POLYGON_EDGE_LENGTH = 100;
-	// TODO: UML ADD
 	private static final int MINERAL_BLOCK_RANGE = 64;
 
 	/**
@@ -142,7 +141,6 @@ public class Init {
 		return successful;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all ChokePoints on the current map that are being
 	 * blocked by minerals and therefore can not be traversed.
@@ -174,7 +172,6 @@ public class Init {
 				+ " ChokePoints are blocked by minerals.");
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for generating the reversed access order of all Regions of the
 	 * currently played map. Each entry contains a Region as a key and another
@@ -208,21 +205,6 @@ public class Init {
 		return reversedAccessOrder;
 	}
 
-	// TODO: UML REMOVE
-	// private static HashMap<Region, Integer> generateRegionIndexHashMap() {
-
-	// TODO: UML REMOVE
-	// private static void addRegionConnectionsToGraph(final DirectedGraphList
-	// graph,
-	// final HashMap<Region, Integer> regionsMappedToIndices) {
-
-	// TODO: UML REMOVE
-	// private static HashMap<Region, Region>
-	// generateBreadthOrderToBase(DirectedGraphList graph,
-	// HashMap<Region, Integer> regionMappedToIndex) {
-
-	// TODO: UML PARAMS
-	// TODO: UML RENAME generateBreadthAccessOrder
 	/**
 	 * Function for generating the order in which the different Regions are
 	 * accessible beginning at a provided starting Region.
@@ -254,7 +236,6 @@ public class Init {
 		return breadthAccessOrder;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating the reversed Region access orders for each Region
 	 * inside the provided Set.
@@ -283,7 +264,6 @@ public class Init {
 		return reversedRegionAccessOrders;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating the region access order for each provided Region.
 	 * <ul>
@@ -309,7 +289,6 @@ public class Init {
 		return regionAccessOrders;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating all DistantRegion instances for a Set of provided
 	 * Regions. These Regions must be part of the Region access orders, which
@@ -342,7 +321,6 @@ public class Init {
 		return regionDistances;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating the DistantRegion instances based on a provided
 	 * starting Region. All distances are centered around this instance while
@@ -382,7 +360,6 @@ public class Init {
 		return regionDistances;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating a HashMap containing the different Region of the
 	 * current map as keys and their contained TilePositions as values:
@@ -415,7 +392,6 @@ public class Init {
 		return regionTilePositions;
 	}
 
-	// TODO: UML ADD EXCEPTION
 	/**
 	 * Function for converting the BWTA-Polygon map boundaries into standard
 	 * Polygons that can be used for pathfinding etc.
@@ -440,7 +416,6 @@ public class Init {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating the "correct" BWTA Region references for all
 	 * existing map Regions. The references are the ones obtained by the

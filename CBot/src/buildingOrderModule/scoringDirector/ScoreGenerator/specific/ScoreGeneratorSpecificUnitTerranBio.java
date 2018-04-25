@@ -20,7 +20,6 @@ import bwapi.UnitType;
  */
 public class ScoreGeneratorSpecificUnitTerranBio extends ScoreGeneratorSpecificUnit {
 
-	// TODO: UML ADD
 	private ScoreGenerator scoreGeneratorFixedOne;
 	private ScoreGenerator scoreGeneratorFixedForbid;
 

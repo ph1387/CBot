@@ -156,7 +156,6 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 		return availableActionTypes;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for determining if a Terran_Refinery can be added towards the
 	 * construction Queue. The result of this function depends on the available
@@ -177,7 +176,6 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 		return freeGeysers.size() > 0;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all unoccupied geyser Units on BaseLocations that
 	 * are being used by a provided HashSet of centers.
@@ -256,7 +254,6 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 		return fewerMachineShopsThanFactories;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for determining if a Terran_Missile_Turret can be added towards
 	 * the construction Queue. This function takes (All) currently constructed
@@ -294,7 +291,6 @@ public abstract class ActionUpdaterSimulationQueueTerranDefault extends ActionUp
 		return missileTurretCount < totalPossibleNumber;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for determining if a Terran_Bunker can be added towards the
 	 * construction Queue.

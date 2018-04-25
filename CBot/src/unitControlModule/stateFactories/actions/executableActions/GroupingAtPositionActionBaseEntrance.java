@@ -65,7 +65,6 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 
 	}
 
-	// TODO: UML CHANGE 128
 	// The length of the Vector emerging from the middle of the chosen
 	// ChokePoint.
 	private double vectorGatherLength = 256.;
@@ -121,7 +120,6 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 		return regionsWithCenters;
 	}
 
-	// TODO: UML PARAMS
 	/**
 	 * Function for extracting ChokePoints from a provided HashSet of Regions.
 	 * Since a Region can hold multiple ChokePoints, iterating over each one
@@ -155,7 +153,6 @@ public class GroupingAtPositionActionBaseEntrance extends GroupingAtPositionActi
 		return chokePointsAtBorders;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for finding the most suited grouping ChokePoint for a single
 	 * Region. The chosen ChokePoint is the one that leads to the farthest

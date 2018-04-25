@@ -35,7 +35,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public abstract class BaseAction extends GoapAction implements GroupableAction {
 
-	// TODO: UML ADD
 	/**
 	 * SmartlyMovingActionWrapper.java --- Interface for action wrappers using
 	 * the
@@ -72,11 +71,36 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 
 	}
 
+	/**
+	 * PlayerUnitSearchCondition.java --- Interface for the
+	 * {@link BaseAction#getPlayerUnitsInIncreasingRange(PlayerUnit, double, double, PlayerUnitSearchCondition)}
+	 * function.
+	 * 
+	 * @author P H - 24.04.2018
+	 *
+	 */
+	protected interface PlayerUnitSearchCondition {
+
+		/**
+		 * Function for specifying a condition that a Unit in the increasing
+		 * range around a given PlayerUnit must meet in order to be added to the
+		 * returned HashSet.
+		 * 
+		 * @param playerUnit
+		 *            the executing PlayerUnit itself.
+		 * @param testingUnit
+		 *            the Unit around the executing PlayerUnit.
+		 * @return true if the Unit should be added towards the returned
+		 *         HashSet.
+		 */
+		public boolean isConditionMet(PlayerUnit playerUnit, Unit testingUnit);
+
+	}
+
 	private static final int EXPAND_MULTIPLIER_MAX = 5;
 	private static final int TILE_RADIUS_AROUND_UNITS_SEARCH = 1;
 	private static final int DEFAULT_SEARCH_STEP_DISTANCE = 200;
 	private static final int DEFAULT_MIN_DISTANCE = 256;
-	// TODO: UML ADD
 	// The distance towards ChokePoint at which the Region on the other side is
 	// used in finding the next ChokePoint towards a target.
 	private static final int SKIP_DISTANCE_TO_CHOKEPOINT = 256;
@@ -240,7 +264,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 	 */
 	protected abstract void resetSpecific();
 
-	// TODO: UML ADD PARAMS
 	/**
 	 * Function for finding the Polygon that the Position is in.
 	 * 
@@ -275,10 +298,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		}
 
 		return matchingRegionPolygonPair;
-	}
-
-	protected interface PlayerUnitSearchCondition {
-		public boolean isConditionMet(PlayerUnit playerUnit, Unit testingUnit);
 	}
 
 	/**
@@ -371,8 +390,7 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 
 			if (condition == null) {
 				// Test all found Units, a Unit has to have a minimum distance
-				// to
-				// the PlayerUnit.
+				// to the PlayerUnit.
 				for (Unit unit : foundUnits) {
 					if (!unitsTooClose.contains(unit)
 							&& playerUnit.getUnit().getDistance(unit.getPosition()) < minDistance) {
@@ -382,8 +400,7 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 				}
 			} else {
 				// Test all found Units, a Unit has to have a minimum distance
-				// to
-				// the PlayerUnit AND also fulfill the given condition.
+				// to the PlayerUnit AND also fulfill the given condition.
 				for (Unit unit : foundUnits) {
 					if (!unitsTooClose.contains(unit)
 							&& playerUnit.getUnit().getDistance(unit.getPosition()) < minDistance
@@ -467,7 +484,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return closestUnit;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for performing the action smartly, whereas smartly means moving
 	 * from ChokePoint to ChokePoint towards the target. This is due to the
@@ -529,7 +545,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return success;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for initializing the provided SmartlyMovingPerformer instance.
 	 * This includes:
@@ -578,7 +593,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return success;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the List of ChokePoints that lie between two
 	 * provided Region instances. The returned List starts with the ChokePoints
@@ -620,7 +634,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return chokePointsBetweenRegions;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting all Regions a Unit would have to move through in
 	 * order to reach a specific Region. This function includes the starting and
@@ -657,7 +670,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return regionsToTravelThrough;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for issuing the "Move" command for a Unit based upon a List of
 	 * ChokePoints. The Unit is ordered to move from ChokePoint to ChokePoint.
@@ -691,19 +703,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return success;
 	}
 
-	// TODO: UML REMOVE
-	// TODO: UML ADD
-	// protected Chokepoint findNextChokePointTowardsTarget(MapInformation
-	// mapInformation, Position currentPosition,
-	// Position targetPosition, Region currentRegion, Region targetRegion) {
-
-	// TODO: UML REMOVE
-	// TODO: UML ADD
-	// private Chokepoint findNextChokePointTowardsTarget(HashMap<Region,
-	// Region> reversedRegionAccessOrder,
-	// Region currentRegion, Region targetRegion) {
-
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the farthest Region instance from a HashSet of
 	 * given DistantRegions.
@@ -717,7 +716,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return new TreeSet<DistantRegion>(regionDistances).last();
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the Region that leads towards a provided target
 	 * Region based on a starting Region. The algorithm works as follows:
@@ -760,7 +758,6 @@ public abstract class BaseAction extends GoapAction implements GroupableAction {
 		return currentRegion;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the ChokePoint between two Regions.
 	 * 

@@ -2,7 +2,6 @@ package bwapiMath.graph;
 
 import java.util.HashMap;
 
-// TODO: UML ADD
 /**
  * IInstanceMapper.java --- Interface defining a mapping function for generating
  * a HashMap containing instances mapped to unique indices.

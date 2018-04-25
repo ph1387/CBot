@@ -18,10 +18,6 @@ public class Vector extends Point {
 	private static final Color DEFAULT_ARROW_COLOR = new Color(255, 255, 255);
 	private static final boolean DEFAULT_ARROW_DIRECTION_SHOWN = true;
 
-	// TODO: UML REMOVE
-	// private static final double INTERSEC_MAX_DIFF = Math.pow(10, -6);
-	// TODO: UML REMOVE
-	// private static final double NEEDED_MP_MAX_DIFF = Math.pow(10, -1);
 	private double dirX = 0., dirY = 0.;
 	private double length = 0.;
 
@@ -126,12 +122,6 @@ public class Vector extends Point {
 	private void updateLength() {
 		this.length = Math.sqrt(Math.pow(this.dirX, 2) + Math.pow(this.dirY, 2));
 	}
-
-	// TODO: UML REMOVE
-	// public Double getNeededMultiplier(Point point) {
-
-	// TODO: UML REMOVE
-	// public Point getIntersection(Vector vectorB) {
 
 	/**
 	 * Function for generating the cross product between this vector and another

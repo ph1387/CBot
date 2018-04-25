@@ -18,8 +18,7 @@ import bwapi.UnitType;
  *
  */
 public class ScoreGeneratorSpecificUnitTerranMachines extends ScoreGeneratorSpecificUnit {
-	
-	// TODO: UML ADD
+
 	private ScoreGenerator scoreGeneratorFixedOne;
 
 	private ScoreGenerator scoreGeneratorIncreaseNormal;

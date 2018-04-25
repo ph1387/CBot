@@ -9,7 +9,6 @@ import bwapi.TilePosition;
 import bwta.BWTA;
 import bwta.Region;
 
-// TODO: UML ADD
 /**
  * BWTAWrapper.java --- Wrapper-Class for some BWTA functions. Used since some
  * of them can return null under certain circumstances. <br>
@@ -165,7 +164,6 @@ public class BWTAWrapper {
 		return region;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for testing if a Position is a valid one. This includes checking
 	 * that it is not null and between the min and max values for the map's

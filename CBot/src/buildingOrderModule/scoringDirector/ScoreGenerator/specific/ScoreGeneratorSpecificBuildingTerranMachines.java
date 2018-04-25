@@ -9,8 +9,6 @@ import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualC
 import buildingOrderModule.scoringDirector.gameState.GameState;
 import bwapi.UnitType;
 
-// TODO: UML ADD
-// TODO: UML REMOVE ScoreGeneratorSpecificImprovementFacilityTerranMachines
 /**
  * ScoreGeneratorSpecificBuildingTerranMachines.java --- A
  * {@link ScoreGenerator} applying a target specific rate to the score. This
@@ -21,7 +19,6 @@ import bwapi.UnitType;
  */
 public class ScoreGeneratorSpecificBuildingTerranMachines extends ScoreGeneratorSpecificBuilding {
 
-	// TODO: UML ADD
 	private ScoreGenerator scoreGeneratorFixedOne;
 
 	private ScoreGenerator scoreGeneratorIncreaseNormal;

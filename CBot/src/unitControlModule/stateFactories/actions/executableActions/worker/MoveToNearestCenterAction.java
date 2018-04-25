@@ -16,7 +16,6 @@ import unitControlModule.unitWrappers.PlayerUnit;
  */
 public class MoveToNearestCenterAction extends WorkerAction {
 
-	// TODO: UML ADD
 	/**
 	 * MoveToNearestCenterActionWrapper.java --- Wrapper Class used for smartly
 	 * moving between ChokePoints.
@@ -44,7 +43,6 @@ public class MoveToNearestCenterAction extends WorkerAction {
 
 	}
 
-	// TODO: UML ADD
 	private SmartlyMovingActionWrapper actionWrapper;
 
 	// The distance at which the isDone function returns true and the Action is

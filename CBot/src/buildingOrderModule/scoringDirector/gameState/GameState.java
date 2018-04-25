@@ -80,7 +80,6 @@ public abstract class GameState {
 	// Specific GameStates for different Terran Units, Upgrades, Technologies
 	// and buildings.
 	// Units:
-	// TODO: UML ADD
 	public static final GameState SpecificUnit_Terran_SCV = new GameStateSpecific_Unit(UnitType.Terran_SCV);
 	public static final GameState SpecificUnit_Terran_Goliath = new GameStateSpecific_Unit(UnitType.Terran_Goliath);
 	public static final GameState SpecificUnit_Terran_Marine = new GameStateSpecific_Unit(UnitType.Terran_Marine);
@@ -113,50 +112,55 @@ public abstract class GameState {
 	public static final GameState SpecificTech_Cloaking_Field = new GameStateSpecific_Tech(TechType.Cloaking_Field);
 	// Buildings:
 	// - Research / Upgrade:
-	// TODO: UML RENAME SpecificImprovementFacility_Terran_Academy
 	public static final GameState SpecificBuilding_Terran_Academy = new GameStateSpecific_Building(
 			UnitType.Terran_Academy);
-	// TODO: UML RENAME SpecificImprovementFacility_Terran_Engineering_Bay
 	public static final GameState SpecificBuilding_Terran_Engineering_Bay = new GameStateSpecific_Building(
 			UnitType.Terran_Engineering_Bay);
-	// TODO: UML RENAME SpecificImprovementFacility_Terran_Science_Facility
 	public static final GameState SpecifiBuilding_Terran_Science_Facility = new GameStateSpecific_Building(
 			UnitType.Terran_Science_Facility);
-	// TODO: UML RENAME SpecificImprovementFacility_Terran_Armory
 	public static final GameState SpecificBuilding_Terran_Armory = new GameStateSpecific_Building(
 			UnitType.Terran_Armory);
 	// - Addons:
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_ControlTower = new GameStateSpecific_Building(
 			UnitType.Terran_Control_Tower);
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Machine_Shop = new GameStateSpecific_Building(
 			UnitType.Terran_Machine_Shop);
 	// - Training:
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Command_Center = new GameStateSpecific_Building(
 			UnitType.Terran_Command_Center);
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Barracks = new GameStateSpecific_Building(
 			UnitType.Terran_Barracks);
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Factory = new GameStateSpecific_Building(
 			UnitType.Terran_Factory);
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Starport = new GameStateSpecific_Building(
 			UnitType.Terran_Starport);
 	// - Etc.:
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Refinery = new GameStateSpecific_Building(
 			UnitType.Terran_Refinery);
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Missile_Turret = new GameStateSpecific_Building(
 			UnitType.Terran_Missile_Turret);
-	// TODO: UML ADD
 	public static final GameState SpecificBuilding_Terran_Bunker = new GameStateSpecific_Building(
 			UnitType.Terran_Bunker);
 
-	// TODO: UML ADD
+	// The current score this state holds.
+	private double currentScore = 0.;
+	// The number of times the state is going to be divided.
+	private int currentDivider = 1;
+	// The frame time stamp of the last score update.
+	protected int lastUpdateTimeStampScore = 0;
+	// The frames that have passed since the last score update.
+	protected int updateFramesPassedScore = 0;
+	// The frame time stamp of the last divider update.
+	protected int lastUpdateTimeStampDivider = 0;
+	// The frames that have passed since the last divider update.
+	protected int updateFramesPassedDivider = 0;
+
+	public GameState() {
+
+	}
+
+	// -------------------- Functions
+
 	/**
 	 * Function for resetting all GameStates.
 	 */
@@ -238,26 +242,6 @@ public abstract class GameState {
 		SpecificBuilding_Terran_Bunker.reset();
 	}
 
-	// The current score this state holds.
-	private double currentScore = 0.;
-	// The number of times the state is going to be divided.
-	private int currentDivider = 1;
-	// The frame time stamp of the last score update.
-	protected int lastUpdateTimeStampScore = 0;
-	// The frames that have passed since the last score update.
-	protected int updateFramesPassedScore = 0;
-	// The frame time stamp of the last divider update.
-	protected int lastUpdateTimeStampDivider = 0;
-	// The frames that have passed since the last divider update.
-	protected int updateFramesPassedDivider = 0;
-
-	public GameState() {
-
-	}
-
-	// -------------------- Functions
-
-	// TODO: UML ADD
 	/**
 	 * Function for resetting all properties of the GameState instance.
 	 */

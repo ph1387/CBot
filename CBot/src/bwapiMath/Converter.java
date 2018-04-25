@@ -3,7 +3,6 @@ package bwapiMath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
-// TODO: UML ADD
 /**
  * Converter.java --- Class used for converting java.awt objects into wrapper
  * ones and vice versa.

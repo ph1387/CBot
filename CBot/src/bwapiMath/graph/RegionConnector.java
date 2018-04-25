@@ -9,7 +9,6 @@ import bwta.Chokepoint;
 import bwta.Region;
 import core.CBot;
 
-//TODO: UML ADD
 /**
  * RegionConnector.java --- Class implementing the IConnector-Interface
  * connecting BWTA.Regions in the graph based on their accessibility to one

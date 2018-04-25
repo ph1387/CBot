@@ -34,7 +34,6 @@ public class ScoreGeneratorFactoryTerranBio extends ScoreGeneratorFactoryTerranD
 	private ScoreGenerator scoreGeneratorSpecificTech;
 	private ScoreGenerator scoreGeneratorSpecificUpgrade;
 	private ScoreGenerator scoreGeneratorSpecificUnit;
-	// TODO: UML RENAME scoreGeneratorSpecificImprovementFacility
 	private ScoreGenerator scoreGeneratorSpecificBuilding;
 
 	public ScoreGeneratorFactoryTerranBio(BuildActionManager manager) {

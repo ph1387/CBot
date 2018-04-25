@@ -70,7 +70,6 @@ public class SteeringFactory {
 		vecRight.setToLength(toalRetreatDistance);
 
 		// Test if any intersections are found along the retreat path.
-		// TODO: Possible Change: Remove hasPath check.
 		// NOTICE:
 		// The "hasPath" test is only used because some intersections were not
 		// found, which caused the Unit to simply abort the retreat Action and
@@ -131,25 +130,12 @@ public class SteeringFactory {
 						&& vecRightEndPositionValid) {
 					possibleRetreatVector = vecRight;
 				}
-
-				// TODO: DEBUG INFO
-				// Position to which the Unit retreats to
-				// Core.getInstance().getGame().drawLineMap(((PlayerUnit)
-				// goapUnit).getUnit().getPosition(),
-				// new Position((int)(vecLeft.getX() + vecLeft.dirX),
-				// (int)(vecLeft.getY() + vecLeft.dirY)), new Color(255, 0, 0));
-				// Core.getInstance().getGame().drawLineMap(((PlayerUnit)
-				// goapUnit).getUnit().getPosition(),
-				// new Position((int)(vecRight.getX() + vecRight.dirX),
-				// (int)(vecRight.getY() + vecRight.dirY)), new Color(0, 0,
-				// 255));
 			}
 		}
 
 		return possibleRetreatVector;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for determining if any intersection of a List of provided
 	 * intersections belongs to a ChokePoint.
@@ -175,7 +161,6 @@ public class SteeringFactory {
 		return success;
 	}
 
-	// TODO: UML CHANGE PARAMS
 	/**
 	 * Function for determining if an intersection belongs to a ChokePoint.
 	 * 

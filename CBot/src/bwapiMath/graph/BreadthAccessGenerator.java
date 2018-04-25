@@ -6,7 +6,6 @@ import java.util.function.BiConsumer;
 
 import bwapi.Pair;
 
-//TODO: UML ADD
 /**
  * BreadthAccessGenerator.java --- Class containing functions for performing
  * (reversed) breadth searches with IInstanceMapper and IConnector instances.

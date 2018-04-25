@@ -17,13 +17,12 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	private boolean generateDefaultContendedTilePositions = true;
 	private boolean generateDefaultContendedPolygons = true;
 	private boolean generateRegionAccessOrder = true;
-	// TODO: UML ADD
 	private boolean generateRegionTilePositions = true;
 
 	// BuildingOrderModule:
 	private boolean enableBuildingOrderModuleUpdates = true;
 
-	// ----- Following settings work on custom maps:
+	// ----- Following settings (should) work on custom maps:
 
 	// UnitTrackerModule:
 	private boolean enableUnitTrackerModuleUpdates = true;
@@ -54,9 +53,7 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 	private boolean displayMapBoundaries = false;
 	private boolean displayReservedSpacePolygons = false;
 	private boolean displayMapContendedTilePositions = false;
-	// TODO: UML ADD
 	private boolean displayMineralBlockedChokePoints = false;
-	// TODO: UML ADD
 	private boolean displayBreadthAccessOrder = false;
 
 	// UnitControlModule:
@@ -165,13 +162,11 @@ public class GameConfig implements IBuildingOrderModuleConfig, IDisplayConfig, I
 		return this.displayMapContendedTilePositions;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayMineralBlockedChokePoints() {
 		return this.displayMineralBlockedChokePoints;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean enableDisplayBreadthAccessOrder() {
 		return this.displayBreadthAccessOrder;

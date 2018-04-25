@@ -4,8 +4,6 @@ import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoringDirector;
 import bwapi.UnitType;
 
-// TODO: UML ADD
-// TODO: UML REMOVE GameStateSpecific_ImprovementFacility
 /**
  * GameStateSpecific_Building.java --- A GameState focused on specific
  * buildings.

@@ -17,7 +17,6 @@ import workerManagerConstructionJobDistribution.WorkerManagerConstructionJobDist
  */
 public class ConstructBuildingAction extends WorkerAction {
 
-	// TODO: UML ADD
 	/**
 	 * ConstructBuildingActionWrapper.java --- Wrapper Class used for smartly
 	 * moving between ChokePoints.
@@ -63,7 +62,6 @@ public class ConstructBuildingAction extends WorkerAction {
 
 	}
 
-	// TODO: UML ADD
 	private SmartlyMovingActionWrapper actionWrapper;
 
 	/**

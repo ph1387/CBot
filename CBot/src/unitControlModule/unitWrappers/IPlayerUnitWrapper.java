@@ -1,6 +1,5 @@
 package unitControlModule.unitWrappers;
 
-// TODO: UML ADD
 /**
  * IPlayerUnitWrapper.java --- Interface for controllable wrapper Player Units.
  * Mainly used for accessing the {@link IPlayerUnitWrapper#destroy()} function.

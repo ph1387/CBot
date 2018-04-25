@@ -4,7 +4,6 @@ import java.util.HashSet;
 
 import bwta.Region;
 
-// TODO: UML ADD
 /**
  * DistantRegion.java --- A wrapper Class used for encapsulating a single
  * Region. The total distance needed to reach it as well as the accessible other

@@ -188,7 +188,6 @@ public interface ScoreGeneratorFactory {
 	 */
 	public ScoreGenerator generateSpecificUnitScoreGenerator();
 
-	// TODO: UML RENAME generateSpecificImprovementFacilityGenerator
 	/**
 	 *
 	 * @return a {@link ScoreGenerator} for specific buildings.

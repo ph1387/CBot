@@ -31,10 +31,6 @@ public class BuildLocationFactory {
 
 	private InformationStorage informationStorage;
 
-	// TODO: UML REMOVE
-	// Due to the large tile range there should not be any trouble finding a
-	// suitable building location.
-	// private int maxTileRange = 50;
 	// The maximum acceptable range for checking the distance between a free
 	// geyser and a center building.
 	private int maxDistanceGeysers = 320;
@@ -62,7 +58,6 @@ public class BuildLocationFactory {
 		return TilePositionFactory.generateNeededTilePositions(unitType, targetTilePosition);
 	}
 
-	// TODO: UML CHECK PARAMS WORKER
 	/**
 	 * Function for finding a suitable building location around a given
 	 * TilePosition.
@@ -357,10 +352,6 @@ public class BuildLocationFactory {
 		return freeGeysers;
 	}
 
-	// TOOD: UML RENAME findStandardBuildLocation
-	// TODO: UML CHECK PARAMS WORKER
-	// TODO: UML PARAMS MAXITERATIONS
-	// TODO: UML PARAMS EXCEPTION
 	/**
 	 * Function for initializing a force search for a possible construction
 	 * spot. This function performs a flood-fill for TilePostions until either a
@@ -465,7 +456,6 @@ public class BuildLocationFactory {
 		return foundTilePosition;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for retrieving the TilePositions inside a specific Region.
 	 * 
@@ -479,7 +469,6 @@ public class BuildLocationFactory {
 		return this.informationStorage.getMapInfo().getPrecomputedRegionTilePositions().get(region);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for retrieving the <b>uncontended</b> TilePositions inside a
 	 * specific Region.
@@ -501,7 +490,6 @@ public class BuildLocationFactory {
 		return regionTilePositionsCopy;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for adding all immediately accessible Regions from the provided
 	 * one that are not already checked (= Inside the provided HashSet) to the
@@ -531,7 +519,6 @@ public class BuildLocationFactory {
 		}
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for extracting the closest TilePosition to a given Position from
 	 * a HashSet of TilePosition instances.
@@ -562,7 +549,6 @@ public class BuildLocationFactory {
 		return closestTilePosition;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for generating the TilePositions that are the direct neighbours
 	 * of a provided TilePosition instance. This includes the TilePositions
@@ -633,7 +619,6 @@ public class BuildLocationFactory {
 		return newTilePositions;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for checking if a TilePosition instance is inside the HashSet of
 	 * Region TilePositions and not inside the ones marking the already checked
@@ -654,7 +639,6 @@ public class BuildLocationFactory {
 		return regionTilePositions.contains(tilePosition) && !checkedTilePositions.contains(tilePosition);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for checking if a provided TilePosition can be used as a
 	 * construction spot. This takes the dimensions of the building and the
@@ -684,18 +668,5 @@ public class BuildLocationFactory {
 
 		return areInRegion && areUncontended;
 	}
-
-	// TODO: UML REMOVE
-	// protected boolean arePlayerUnitsBlocking(HashSet<TilePosition>
-	// desiredTilePositions, Unit constructor) {
-
-	// TOOD: UML REMOVE
-	// protected boolean areTilePositionsContended(HashSet<TilePosition>
-	// desiredTilePositions,
-	// HashSet<TilePosition> tilePositionContenders) {
-
-	// TODO: UML REMOVE
-	// protected boolean isTargetTilePositionInValidRegion(TilePosition
-	// testTilePosition, Region baseRegion) {
 
 }

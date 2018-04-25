@@ -255,9 +255,6 @@ public class UnitControlModule implements RemoveAgentEvent {
 		}
 	}
 
-	// TODO: UML REMOVE
-	// private void removeExtraAddonContendedTilePositions(Unit unit) {
-
 	/**
 	 * Function for removing a Unit from the collection of tracked Units.
 	 * 

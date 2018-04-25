@@ -7,7 +7,6 @@ import bwapi.Color;
 import bwapi.Game;
 import core.Core;
 
-// TODO: UML ADD
 /**
  * Line.java --- Class used for line operations (I.e.: Intersections).
  * 

@@ -60,7 +60,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlaye
 			UnitType.Zerg_Spore_Colony, UnitType.Zerg_Sunken_Colony, UnitType.Terran_Medic });
 	// The closest enemy Unit this one can attack:
 	protected Unit closestAttackableEnemyUnitInConfidenceRange;
-	// TODO: UML RENAME closestAttackableEnemyUnitWithWeapon
 	protected Unit closestAttackableEnemyUnitWithWeaponInConfidenceRange;
 	protected Unit closestAttackableEnemySpecialUnitInConfidenceRange;
 	protected Unit closestAttackableEnemyWorkerInConfidenceRange;
@@ -123,11 +122,9 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlaye
 	// active Agents.
 	private List<Object> agentRemoveListeners = new ArrayList<Object>();
 
-	// TODO: UML ADD
 	// Components / Flags used by the Unit for smartly moving between
 	// ChokePoints.
 	private Chokepoint smartlyMovingLastChokePoint = null;
-	// TODO: UML ADD
 	private boolean smartlyMovingReachedLastChokePoint = false;
 
 	/**
@@ -1234,37 +1231,31 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlaye
 
 	// -------------------- SmartlyMovingPerformer
 
-	// TODO: UML ADD
 	@Override
 	public boolean isAlreadySmartlyMoving() {
 		return this.smartlyMovingLastChokePoint != null;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public Chokepoint getLastChokePoint() {
 		return this.smartlyMovingLastChokePoint;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public void setLastChokePoint(Chokepoint chokePoint) {
 		this.smartlyMovingLastChokePoint = chokePoint;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public void setReachedLastChokePoint(boolean value) {
 		this.smartlyMovingReachedLastChokePoint = value;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public boolean hasReachedLastChokePoint() {
 		return this.smartlyMovingReachedLastChokePoint;
 	}
 
-	// TODO: UML ADD
 	@Override
 	public void resetSmartlyMovingValues() {
 		this.smartlyMovingLastChokePoint = null;
@@ -1285,7 +1276,6 @@ public abstract class PlayerUnit extends GoapUnit implements RetreatUnit, IPlaye
 		return this.closestEnemyUnitInConfidenceRange;
 	}
 
-	// TODO: UML RENAME getClosestAttackableEnemyUnitWithWeapon
 	public Unit getClosestAttackableEnemyUnitWithWeaponInConfidenceRange() {
 		return closestAttackableEnemyUnitWithWeaponInConfidenceRange;
 	}

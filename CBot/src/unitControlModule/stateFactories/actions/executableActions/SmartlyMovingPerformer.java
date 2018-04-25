@@ -2,7 +2,6 @@ package unitControlModule.stateFactories.actions.executableActions;
 
 import bwta.Chokepoint;
 
-// TODO: UML ADD
 /**
  * SmartlyMovingPerformer.java --- Interface used for Units capable of moving
  * smartly between ChokePoints towards a certain target.

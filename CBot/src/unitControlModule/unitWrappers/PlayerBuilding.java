@@ -274,7 +274,6 @@ public class PlayerBuilding implements IPlayerUnitWrapper {
 		this.addContendedTilePositions();
 	}
 
-	// TODO: UML ADD
 	@Override
 	public void destroy() {
 		this.removeContendedTilePositions();
@@ -357,7 +356,6 @@ public class PlayerBuilding implements IPlayerUnitWrapper {
 		return matchingElement;
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for adding the TilePositions the building is contending to the
 	 * shared information storage.
@@ -369,7 +367,6 @@ public class PlayerBuilding implements IPlayerUnitWrapper {
 		this.informationStorage.getMapInfo().getTilePositionContenders().addAll(contendedTilePositions);
 	}
 
-	// TODO: UML ADD
 	/**
 	 * Function for removing the TilePositions the building is contending from
 	 * the shared information storage.
@@ -380,9 +377,6 @@ public class PlayerBuilding implements IPlayerUnitWrapper {
 
 		this.informationStorage.getMapInfo().getTilePositionContenders().removeAll(contendedTilePositions);
 	}
-
-	// TODO: UML REMOVE
-	// private void addExtraAddonContendedTilePositions() {
 
 	// ------------------------------ Getter / Setter
 
