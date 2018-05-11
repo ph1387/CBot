@@ -50,14 +50,21 @@ public class UnitTrackerModule {
 	private List<EnemyUnit> enemyBuildings = new ArrayList<EnemyUnit>();
 	private List<EnemyUnit> enemyUnits = new ArrayList<EnemyUnit>();
 
+	// TODO: UML CHANGE FF INIT VALUES
 	// Current Player / Game information.
-	private int unitCountTotal;
-	private int unitCountWorkers;
-	private int unitCountBuildings;
-	private int unitCountCombat;
-	private double currentWorkerPercent;
-	private double currentBuildingsPercent;
-	private double currentCombatUnitsPercent;
+	private int unitCountTotal = 0;
+	private int unitCountWorkers = 0;
+	private int unitCountBuildings = 0;
+	private int unitCountCombat = 0;
+	// TODO: UML ADD
+	private int currentMineralGatherers = 0;
+	// TODO: UML ADD
+	private int currentGasGatherers = 0;
+	// TODO: UML ADD
+	private int currentConstructionWorkers = 0;
+	private double currentWorkerPercent = 0.0;
+	private double currentBuildingsPercent = 0.0;
+	private double currentCombatUnitsPercent = 0.0;
 	private HashMap<UnitType, HashSet<Unit>> currentUnits = new HashMap<>();
 
 	// The container holding all information.
@@ -180,6 +187,9 @@ public class UnitTrackerModule {
 		this.unitCountBuildings = 0;
 		this.unitCountCombat = 0;
 		this.unitCountTotal = 0;
+		this.currentMineralGatherers = 0;
+		this.currentGasGatherers = 0;
+		this.currentConstructionWorkers = 0;
 
 		// Extract all necessary information from the current state of the game.
 		// This does NOT include any building Queues etc. These factors must be
@@ -198,11 +208,20 @@ public class UnitTrackerModule {
 			// Count the different types of Units.
 			if (type.isWorker()) {
 				this.unitCountWorkers++;
+
+				if (unit.isGatheringMinerals()) {
+					this.currentMineralGatherers++;
+				} else if (unit.isGatheringGas()) {
+					this.currentGasGatherers++;
+				} else if (unit.isConstructing()) {
+					this.currentConstructionWorkers++;
+				}
 			} else if (type.isBuilding()) {
 				this.unitCountBuildings++;
 			} else {
 				this.unitCountCombat++;
 			}
+
 			this.unitCountTotal++;
 		}
 
@@ -250,6 +269,9 @@ public class UnitTrackerModule {
 		currentGameInfo.setCurrentWorkerCount(this.unitCountWorkers);
 		currentGameInfo.setCurrentBuildingCount(this.unitCountBuildings);
 		currentGameInfo.setCurrentCombatUnitCount(this.unitCountCombat);
+		currentGameInfo.setCurrentMineralGatherers(this.currentMineralGatherers);
+		currentGameInfo.setCurrentGasGatherers(this.currentGasGatherers);
+		currentGameInfo.setCurrentConstructionWorkers(this.currentConstructionWorkers);
 		currentGameInfo.setCurrentWorkerPercent(this.currentWorkerPercent);
 		currentGameInfo.setCurrentBuildingsPercent(this.currentBuildingsPercent);
 		currentGameInfo.setCurrentCombatUnitsPercent(this.currentCombatUnitsPercent);

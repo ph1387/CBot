@@ -23,6 +23,13 @@ public class CurrentGameInformation {
 	private int currentBuildingCount = 0;
 	private int currentCombatUnitCount = 0;
 
+	// TODO: UML ADD
+	private int currentMineralGatherers = 0;
+	// TODO: UML ADD
+	private int currentGasGatherers = 0;
+	// TODO: UML ADD
+	private int currentConstructionWorkers = 0;
+
 	private double currentWorkerPercent = 0.;
 	private double currentBuildingsPercent = 0.;
 	private double currentCombatUnitsPercent = 0.;
@@ -45,6 +52,12 @@ public class CurrentGameInformation {
 	 *            the number of buildings.
 	 * @param currentCombatUnitCount
 	 *            the number of combat Units.
+	 * @param currentMineralGatherers
+	 *            the number of mineral gathering worker Units.
+	 * @param currentGasGatherers
+	 *            the number of gas gathering worker Units.
+	 * @param currentConstructionWorkers
+	 *            the number of worker Units constructing buildings.
 	 * @param currentWorkerPercent
 	 *            the actual current percentage of worker Units.
 	 * @param currentBuildingsPercent
@@ -59,13 +72,18 @@ public class CurrentGameInformation {
 	 *            all currently performed UpgradeTypes of the desired ones.
 	 */
 	public CurrentGameInformation(int currentUnitCountTotal, int currentWorkerCount, int currentBuildingCount,
-			int currentCombatUnitCount, double currentWorkerPercent, double currentBuildingsPercent,
+			int currentCombatUnitCount, int currentMineralGatherers, int currentGasGatherers,
+			int currentConstructionWorkers, double currentWorkerPercent, double currentBuildingsPercent,
 			double currentCombatUnitsPercent, HashMap<UnitType, HashSet<Unit>> currentUnits,
 			HashSet<TechType> currentTechs, HashMap<UpgradeType, Integer> currentUpgrades) {
 		this.currentUnitCountTotal = currentUnitCountTotal;
 		this.currentWorkerCount = currentWorkerCount;
 		this.currentBuildingCount = currentBuildingCount;
 		this.currentCombatUnitCount = currentCombatUnitCount;
+
+		this.currentMineralGatherers = currentMineralGatherers;
+		this.currentGasGatherers = currentGasGatherers;
+		this.currentConstructionWorkers = currentConstructionWorkers;
 
 		this.currentWorkerPercent = currentWorkerPercent;
 		this.currentBuildingsPercent = currentBuildingsPercent;
@@ -133,6 +151,36 @@ public class CurrentGameInformation {
 
 	public void setCurrentCombatUnitCount(int currentCombatUnitCount) {
 		this.currentCombatUnitCount = currentCombatUnitCount;
+	}
+	
+	// TODO: UML ADD
+	public int getCurrentMineralGatherers() {
+		return currentMineralGatherers;
+	}
+
+	// TODO: UML ADD
+	public void setCurrentMineralGatherers(int currentMineralGatherers) {
+		this.currentMineralGatherers = currentMineralGatherers;
+	}
+
+	// TODO: UML ADD
+	public int getCurrentGasGatherers() {
+		return currentGasGatherers;
+	}
+
+	// TODO: UML ADD
+	public void setCurrentGasGatherers(int currentGasGatherers) {
+		this.currentGasGatherers = currentGasGatherers;
+	}
+
+	// TODO: UML ADD
+	public int getCurrentConstructionWorkers() {
+		return currentConstructionWorkers;
+	}
+
+	// TODO: UML ADD
+	public void setCurrentConstructionWorkers(int currentConstructionWorkers) {
+		this.currentConstructionWorkers = currentConstructionWorkers;
 	}
 
 	public double getCurrentWorkerPercent() {
