@@ -10,7 +10,8 @@ public class WorkerConfiguration {
 
 	// Initial scouting configuration
 	private int workerScoutingTrigger = 9;
-	private int totalWorkerCount = 0;
+	// TODO: UML REMOVE
+	// private int totalWorkerCount = 0;
 	private int totalCombatEngineerCount = 0;
 	private boolean workerOnceAssignedScouting = false;
 
@@ -31,13 +32,10 @@ public class WorkerConfiguration {
 
 	// -------------------- Functions
 
-	public void incrementTotalWorkerCount() {
-		this.totalWorkerCount++;
-	}
-
-	public void decrementTotalWorkerCount() {
-		this.totalWorkerCount--;
-	}
+	// TODO: UML REMOVE
+	// public void incrementTotalWorkerCount() {
+	// TODO: UML REMOVE
+	// public void decrementTotalWorkerCount() {
 
 	public void incrementCombatEngineerCount() {
 		this.totalCombatEngineerCount++;
@@ -53,9 +51,8 @@ public class WorkerConfiguration {
 		return workerScoutingTrigger;
 	}
 
-	public int getTotalWorkerCount() {
-		return totalWorkerCount;
-	}
+	// TODO: UML REMOVE
+	// public int getTotalWorkerCount() {
 
 	public int getTotalCombatEngineerCount() {
 		return totalCombatEngineerCount;

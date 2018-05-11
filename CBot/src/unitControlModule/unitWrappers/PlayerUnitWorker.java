@@ -45,7 +45,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 			WorkerManagerConstructionJobDistribution workerManagerConstructionJobDistribution) {
 		super(unit, informationStorage);
 
-		this.informationStorage.getWorkerConfig().incrementTotalWorkerCount();
 		this.workerManagerResourceSpotAllocation = workerManagerResourceSpotAllocation;
 		this.workerManagerConstructionJobDistribution = workerManagerConstructionJobDistribution;
 
@@ -95,7 +94,7 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 
 		// Act differently if the worker is / must be assigned scouting.
 		if (!this.informationStorage.getWorkerConfig().isWorkerOnceAssignedScouting()
-				&& this.informationStorage.getWorkerConfig().getTotalWorkerCount() >= this.informationStorage
+				&& this.informationStorage.getCurrentGameInformation().getCurrentWorkerCount() >= this.informationStorage
 						.getWorkerConfig().getWorkerScoutingTrigger()
 				&& !CBot.getInstance().getWorkerManagerConstructionJobDistribution().isAssignedConstructing(this)
 				&& !this.unit.isGatheringGas() && !this.unit.isConstructing()
@@ -234,7 +233,6 @@ public abstract class PlayerUnitWorker extends PlayerUnitTypeMelee implements Re
 	public void destroy() {
 		super.destroy();
 
-		this.informationStorage.getWorkerConfig().decrementTotalWorkerCount();
 		// Free any reserved Unit from the worker UnitMapper.
 		this.informationStorage.getWorkerConfig().getUnitMapperAttack().unmapUnit(this.unit);
 	}
