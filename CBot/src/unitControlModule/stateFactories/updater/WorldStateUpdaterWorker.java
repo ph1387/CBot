@@ -70,14 +70,14 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 			this.changeWorldStateEffect("isScout", true);
 			this.changeWorldStateEffect("canConstruct", false);
 			this.changeWorldStateEffect("allowGathering", false);
-			this.changeWorldStateEffect("canGather", false);
+			this.changeWorldStateEffect("isNearCenter", false);
 		} else {
 			this.changeWorldStateEffect("isScout", false);
 			this.changeWorldStateEffect("canConstruct", true);
 
 			// Only allow gathering if the Unit is near a center building.
 			this.changeWorldStateEffect("allowGathering", true);
-			this.changeWorldStateEffect("canGather", closestCenterDistance != null
+			this.changeWorldStateEffect("isNearCenter", closestCenterDistance != null
 					&& closestCenterDistance <= this.maxPixelResourceSearchDistanceToCenter);
 		}
 	}
