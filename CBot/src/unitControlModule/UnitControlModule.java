@@ -130,20 +130,30 @@ public class UnitControlModule implements RemoveAgentEvent {
 					// TODO: Possible Change: Move to factory
 					// TODO: Possible Change: Add Listener like below!
 					PlayerBuilding building = new PlayerBuilding(unit, this.informationStorage);
+
+					// Immediately update the building since it is inserted at
+					// the last place in the Queue.
+					building.update();
+
 					this.agentUpdateQueueBuildings.add(building);
 					this.buildings.add(building);
 				} else {
 					GoapAgent agent = this.goapAgentFactory.createAgent(unit);
 
+					// Some agents like the Terran_Siege_Tank require the agent
+					// to be removed since the Unit morphs into another one.
 					((PlayerUnit) agent.getAssignedGoapUnit()).addAgentRemoveListener(this);
-					this.agents.add(agent);
 
-					// Add the agent towards the appropriate update Queue.
+					// Immediately update the agent since it is inserted at the
+					// last place in the Queue.
+					this.updateGoapAgentProcedure(agent);
+
 					if (unit.getType().isWorker()) {
 						this.agentUpdateQueueWorkers.add(agent);
 					} else {
 						this.agentUpdateQueueCombatUnits.add(agent);
 					}
+					this.agents.add(agent);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
