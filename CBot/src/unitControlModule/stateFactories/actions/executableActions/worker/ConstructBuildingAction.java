@@ -1,6 +1,7 @@
 package unitControlModule.stateFactories.actions.executableActions.worker;
 
 import bwapi.Position;
+import bwapi.TilePosition;
 import core.Core;
 import javaGOAP.GoapState;
 import javaGOAP.IGoapUnit;
@@ -35,17 +36,29 @@ public class ConstructBuildingAction extends WorkerAction {
 		@Override
 		public boolean performInternalAction(IGoapUnit goapUnit, Object target) {
 			PlayerUnitWorker worker = (PlayerUnitWorker) goapUnit;
+			boolean constructionAreaIsUnexplored = false;
 
 			// Update the ConstructionJob first.
 			this.constructionInformation.update();
 
-			// Walk to the TilePosition the building is being created on when it
-			// is undiscovered.
-			if (!Core.getInstance().getGame().isExplored(this.constructionInformation.getTilePosition())) {
-				worker.getUnit().move(constructionInformation.getTilePosition().toPosition());
+			// Each TilePosition that is used in the construction must be
+			// checked since i.e. command centers require a lot of space and
+			// only the top left TilePosition might be explored. Nevertheless
+			// the building can not be constructed since the rest of the needed
+			// TilePosition are still unexplored. Fog of war is okay, not
+			// knowing the spot is not!
+			for (TilePosition tilePosition : this.constructionInformation.getContendedTilePositions()) {
+				if (!Core.getInstance().getGame().isExplored(tilePosition)) {
+					constructionAreaIsUnexplored = true;
+					break;
+				}
 			}
-			// Initiate the construction of the building if necessary.
-			else if (!this.constructionInformation.constructionStarted()) {
+
+			// Walk to the TilePosition the building is being created on when it
+			// is unexplored.
+			if (constructionAreaIsUnexplored) {
+				worker.getUnit().move(constructionInformation.getTilePosition().toPosition());
+			} else {
 				worker.getUnit().build(this.constructionInformation.getUnitType(),
 						this.constructionInformation.getTilePosition());
 			}

@@ -1,5 +1,7 @@
 package workerManagerConstructionJobDistribution;
 
+import java.util.HashSet;
+
 import bwapi.TilePosition;
 import bwapi.Unit;
 import bwapi.UnitType;
@@ -66,5 +68,14 @@ public interface IConstrucionInformation {
 	 * which the information of it is / can be updated.
 	 */
 	public void update();
+
+	// TODO: UML ADD
+	/**
+	 * Function for retrieving all TilePositions that are going to be contended
+	 * by the constructed building.
+	 * 
+	 * @return a HashSet containing all contended TilePositions.
+	 */
+	public HashSet<TilePosition> getContendedTilePositions();
 
 }

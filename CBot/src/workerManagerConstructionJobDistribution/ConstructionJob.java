@@ -157,12 +157,12 @@ class ConstructionJob implements IConstrucionInformation {
 	public TilePosition getTilePosition() {
 		return this.tilePosition;
 	}
-
-	// ------------------------------ Getter / Setter
-
+	
 	public HashSet<TilePosition> getContendedTilePositions() {
 		return this.contendedTilePositions;
 	}
+
+	// ------------------------------ Getter / Setter
 
 	public Unit getBuilding() {
 		return building;
