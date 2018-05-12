@@ -2,6 +2,7 @@ package buildingOrderModule.scoringDirector.ScoreGenerator.specific;
 
 import buildingOrderModule.buildActionManagers.BuildActionManager;
 import buildingOrderModule.scoringDirector.ScoreGenerator.ScoreGenerator;
+import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_Force;
 import buildingOrderModule.scoringDirector.ScoreGenerator.fixed.ScoreGeneratorFixed_One;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseNormal;
 import buildingOrderModule.scoringDirector.ScoreGenerator.gradualChange.gradualChangeTarget.ScoreGeneratorIncreaseSlow;
@@ -19,6 +20,8 @@ import bwapi.UnitType;
  */
 public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpecificBuilding {
 
+	// TODO: UML ADD
+	private ScoreGenerator scoreGeneratorFixedForce;
 	private ScoreGenerator scoreGeneratorFixedOne;
 
 	private ScoreGenerator scoreGeneratorIncreaseNormal;
@@ -28,6 +31,7 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 	public ScoreGeneratorSpecificBuildingTerranBio(BuildActionManager manager) {
 		super(manager);
 
+		this.scoreGeneratorFixedForce = new ScoreGeneratorFixed_Force(this.manager);
 		this.scoreGeneratorFixedOne = new ScoreGeneratorFixed_One(this.manager);
 
 		this.scoreGeneratorIncreaseNormal = new ScoreGeneratorIncreaseNormal(this.manager);
@@ -85,10 +89,10 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Missile_Turret":
-			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForce.generateScore(gameState, framesPassed);
 			break;
 		case "Terran_Bunker":
-			score = this.scoreGeneratorFixedOne.generateScore(gameState, framesPassed);
+			score = this.scoreGeneratorFixedForce.generateScore(gameState, framesPassed);
 			break;
 
 		default:
@@ -100,7 +104,14 @@ public class ScoreGeneratorSpecificBuildingTerranBio extends ScoreGeneratorSpeci
 
 	@Override
 	protected int generateDividerForGameState(GameState gameState, int framesPassed) throws Exception {
-		return 1;
+		UnitType unitType = this.extractUnitType(gameState);
+		int divider = 1;
+		
+		if(unitType == UnitType.Terran_Missile_Turret || unitType == UnitType.Terran_Bunker) {
+			divider = this.scoreGeneratorFixedForce.generateDivider(gameState, framesPassed);
+		}
+		
+		return divider;
 	}
 
 }
