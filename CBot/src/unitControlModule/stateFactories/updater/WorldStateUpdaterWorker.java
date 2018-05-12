@@ -21,6 +21,10 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 	// spots and refineries. Beyond this distance the worker must first return
 	// to his nearest center building before searching around him.
 	private int maxPixelResourceSearchDistanceToCenter = 300;
+	// TODO: UML ADD
+	// The minimum number of workers that must be gathering minerals before any
+	// are assigned to refineries.
+	private int minWorkerCountGatheringMinerals = 10;
 
 	public WorldStateUpdaterWorker(PlayerUnit playerUnit) {
 		super(playerUnit);
@@ -34,6 +38,11 @@ public class WorldStateUpdaterWorker extends WorldStateUpdaterDefault {
 
 		// Extract the distance to the closest center building for later use.
 		Integer closestCenterDistance = playerUnit.generateClosestCenterDistance();
+
+		// Ensure that always enough workers are gathering minerals.
+		boolean enoughMineralGatherers = playerUnit.getInformationStorage().getCurrentGameInformation()
+				.getCurrentMineralGatherers() >= this.minWorkerCountGatheringMinerals;
+		this.changeWorldStateEffect("allowGatheringGas", enoughMineralGatherers);
 
 		this.changeWorldStateEffect("gatheringMinerals", playerUnit.getUnit().isGatheringMinerals());
 		this.changeWorldStateEffect("gatheringGas", playerUnit.getUnit().isGatheringGas());

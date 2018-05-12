@@ -22,6 +22,7 @@ public class GatherGasAction extends GatherAction {
 		super(new Object());
 
 		this.addEffect(new GoapState(0, "gatheringGas", true));
+		this.addPrecondition(new GoapState(0, "allowGatheringGas", true));
 	}
 
 	// -------------------- Functions

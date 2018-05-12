@@ -15,6 +15,7 @@ public class UnitWorldStateWorker extends UnitWorldStateDefault {
 		this.add(new GoapState(0, "gatheringGas", false));
 		this.add(new GoapState(0, "constructing", false));
 		this.add(new GoapState(0, "allowGathering", true));
+		this.add(new GoapState(0, "allowGatheringGas", true));
 		this.add(new GoapState(0, "canGather", false));
 		this.add(new GoapState(0, "isCarryingMinerals", false));
 		this.add(new GoapState(0, "isCarryingGas", false));
