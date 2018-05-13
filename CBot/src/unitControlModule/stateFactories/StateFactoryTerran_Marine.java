@@ -1,11 +1,14 @@
 package unitControlModule.stateFactories;
 
 import java.util.HashSet;
+import java.util.List;
 
 import javaGOAP.GoapAction;
 import javaGOAP.GoapState;
 import unitControlModule.stateFactories.actions.AvailableActionsTerran_Marine;
+import unitControlModule.stateFactories.goals.UnitGoalStateTerran_Marine;
 import unitControlModule.stateFactories.updater.ActionUpdaterTerran_Marine;
+import unitControlModule.stateFactories.updater.GoalStateUpdaterTerran_Marine;
 import unitControlModule.stateFactories.updater.Updater;
 import unitControlModule.stateFactories.updater.WorldStateUpdaterAbilityUsingUnitsTerran_Marine;
 import unitControlModule.stateFactories.worldStates.UnitWorldStateAbilityUsingUnitsTerran_Marine;
@@ -40,5 +43,17 @@ public class StateFactoryTerran_Marine extends StateFactoryDefault {
 	@Override
 	public Updater getMatchingWorldStateUpdater(PlayerUnit playerUnit) {
 		return new WorldStateUpdaterAbilityUsingUnitsTerran_Marine(playerUnit);
+	}
+	
+	// TODO: UML ADD
+	@Override
+	public List<GoapState> generateGoalState() {
+		return new UnitGoalStateTerran_Marine();
+	}
+	
+	// TODO: UML ADD
+	@Override
+	public Updater getMatchingGoalStateUpdater(PlayerUnit playerUnit) {
+		return new GoalStateUpdaterTerran_Marine(playerUnit);
 	}
 }

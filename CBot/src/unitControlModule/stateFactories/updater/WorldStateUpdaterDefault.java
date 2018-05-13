@@ -1,5 +1,6 @@
 package unitControlModule.stateFactories.updater;
 
+import bwapi.UnitType;
 import unitControlModule.stateFactories.worldStates.UnitWorldStateDefault;
 import unitControlModule.unitWrappers.PlayerUnit;
 
@@ -32,6 +33,21 @@ public class WorldStateUpdaterDefault extends WorldStateUpdaterGeneral {
 
 		// Needs to be changed to ensure that the Units move together.
 		this.changeWorldStateEffect("needsGrouping", playerUnit.needsGrouping());
+
+		// Some Units can be loaded into others. Remember resetting the values
+		// in the else block when the Unit is not inside another one!
+		if (playerUnit.getUnit().isLoaded()) {
+			UnitType loadedIntoUnitType = playerUnit.getUnit().getTransport().getType();
+
+			this.changeWorldStateEffect("isLoaded", true);
+
+			if (loadedIntoUnitType == UnitType.Terran_Bunker) {
+				this.changeWorldStateEffect("isLoadedIntoBunker", true);
+			}
+		} else {
+			this.changeWorldStateEffect("isLoaded", false);
+			this.changeWorldStateEffect("isLoadedIntoBunker", false);
+		}
 	}
 
 }

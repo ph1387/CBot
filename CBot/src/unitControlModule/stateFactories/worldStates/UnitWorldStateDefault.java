@@ -25,5 +25,7 @@ public class UnitWorldStateDefault extends HashSet<GoapState> {
 		this.add(new GoapState(0, "mayCloak", false));
 		this.add(new GoapState(0, "grouped", false));
 		this.add(new GoapState(0, "needsGrouping", true));
+		this.add(new GoapState(0, "isLoaded", false));
+		this.add(new GoapState(0, "isLoadedIntoBunker", false));
 	}
 }
