@@ -7,10 +7,10 @@ Creator: P H, ph1387@t-online.de
 ## Overview
 
 <p align="center">
-  <img width="638" height="477" src="https://github.com/p1387h/CBot/blob/master/terran.gif">
+  <img width="638" height="477" src="https://github.com/ph1387/CBot/blob/master/terran.gif">
 </p>
 
-CBot uses the [BWMirror library](https://github.com/vjurenka/BWMirror) as well as a [JavaGOAP library](https://github.com/p1387h/JavaGOAP) which consists of five major parts:
+CBot uses the [BWMirror library](https://github.com/vjurenka/BWMirror) as well as a [JavaGOAP library](https://github.com/ph1387/JavaGOAP) which consists of five major parts:
 
  1. GoapAgent - the main component of the system representing a single agent.
  2. GoapPlanner - generates the final Queue of GoapActions that must be taken in order to fulfill a GoalState.
@@ -29,7 +29,7 @@ For this project to work you will need to install the 32 bit JRE. When using Ecl
 - StarCraft: Brood War v1.16.1
 - BWAPI (with the Chaoslauncher)
 
-How to install all of these is described on the [sscaitournament](https://sscaitournament.com/index.php?action=tutorial) site. You can follow the instructions until the "Excample Bot" is mentioned. You can either configure your own bwapi.ini or use the one ([bwapi.ini](https://github.com/p1387h/CBot/blob/master/bwapi.ini)) in the repository. Note that there are two main things that can go wrong / crash your game so make sure that starting a normal game via the Chaoslauncher works before attempting to run the bot:
+How to install all of these is described on the [sscaitournament](https://sscaitournament.com/index.php?action=tutorial) site. You can follow the instructions until the "Excample Bot" is mentioned. You can either configure your own bwapi.ini or use the one ([bwapi.ini](https://github.com/ph1387/CBot/blob/master/bwapi.ini)) in the repository. Note that there are two main things that can go wrong / crash your game so make sure that starting a normal game via the Chaoslauncher works before attempting to run the bot:
 
 #### Chaoslauncher does not recognize the StarCraft path / crashes on start
 
@@ -43,9 +43,9 @@ When the game can be started via the Chaoslauncher simply run the project (prefe
 
 ### How to configure
 
-- [bwapi.ini](https://github.com/p1387h/CBot/blob/master/bwapi.ini) for changing general settings like enemy race, map etc.
-- [GameConfig.java](https://github.com/p1387h/CBot/blob/master/CBot/src/informationStorage/config/GameConfig.java) for configuring ingame display settings like queues etc.
-- [Init.java](https://github.com/p1387h/CBot/blob/master/CBot/src/core/Init.java) for changing i.e. the speed of the game
+- [bwapi.ini](https://github.com/ph1387/CBot/blob/master/bwapi.ini) for changing general settings like enemy race, map etc.
+- [GameConfig.java](https://github.com/ph1387/CBot/blob/master/CBot/src/informationStorage/config/GameConfig.java) for configuring ingame display settings like queues etc.
+- [Init.java](https://github.com/ph1387/CBot/blob/master/CBot/src/core/Init.java) for changing i.e. the speed of the game
 
 ### How it works
 
@@ -85,8 +85,8 @@ v0.0 - 07.01.2017
 
 ## References
  - [BWMirror](https://github.com/vjurenka/BWMirror)
- - [Javadoc](https://p1387h.github.io/CBot/index.html)
- - [JavaGOAP library](https://github.com/p1387h/JavaGOAP)
+ - [Javadoc](https://ph1387.github.io/CBot/index.html)
+ - [JavaGOAP library](https://github.com/ph1387/JavaGOAP)
 
 ## License
-MIT [license](https://github.com/p1387h/CBot/blob/master/LICENSE.txt)
+MIT [license](https://github.com/ph1387/CBot/blob/master/LICENSE.txt)
